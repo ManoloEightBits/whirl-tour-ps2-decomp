@@ -4,8 +4,8 @@
 #include "common/types.h"
 
 // Whirl Tour: IVP_Listener_Object, IVP_Listener_Collision, DD_Event_Listener, DD_Collision_Listener,
-// AI_PedestrianCL, MBCL, ScootCL, LunActCL, MarActCL
-// (all RTTI class names recovered from SLUS_204.89).
+// AI_PedestrianCL, MBCL, ScootCL, LunActCL, MarActCL, IVP_Listener_Phantom, Global_Phantom_Listener,
+// IVP_Mindist_Base (all RTTI class names recovered from SLUS_204.89).
 
 struct IVP_Real_Object_Stub;
 struct IVP_Event_Collision;
@@ -17,9 +17,16 @@ typedef void (*DD_CollisionCallback)(IVP_Real_Object_Stub *self, IVP_Real_Object
 struct DD_CollisionEntry
 {
     u32 mMask00;                     // 0x00: matched against the collision mask
-    DD_CollisionCallback mCallback04; // 0x04
-    int field_0x08;
+    DD_CollisionCallback mCallback04; // 0x04: on contact (DD_Collision_Listener, entering a phantom)
+    DD_CollisionCallback mCallback08; // 0x08: on leaving a phantom (Global_Phantom_Listener)
     void *mObj0C;                    // 0x0C: passed to func_00126708(obj, 0)
+};
+
+// An effect spawned by func_00116B00 when the actor hits something hard enough (8 bytes).
+struct DD_HitEffect
+{
+    int mId00;    // 0x00: UnkEffect id
+    u32 mMask04;  // 0x04: matched against the other object's mFlags88
 };
 
 struct DD_ActorData
@@ -27,7 +34,12 @@ struct DD_ActorData
     char field_0x00[0x6D];
     u8 mNumEntries6D;                 // 0x6D
     char field_0x6E[0x1A];
-    DD_CollisionEntry mEntries88[1];  // 0x88: mNumEntries6D entries
+    DD_CollisionEntry mEntries88[6];  // 0x88: mNumEntries6D entries (at most 6 fit before 0xE8)
+    char field_0xE8[8];
+    f32 field_0xF0;                   // 0xF0: passed to the UnkEffect constructor
+    u8 mNumHitEffectsF4;              // 0xF4
+    char field_0xF5[3];
+    DD_HitEffect mHitEffectsF8[1];    // 0xF8: mNumHitEffectsF4 entries
 };
 
 struct UnkActorRef
@@ -65,12 +77,23 @@ struct DD_ActorInfo
     }
 };
 
+// Pointed to by IVP_Real_Object_Stub::field_0x9C; type unknown.
+struct UnkObjProps
+{
+    char field_0x000[0x150];
+    f32 field_0x150; // func_00116B00 adds both objects' values
+};
+
 struct IVP_Real_Object_Stub
 {
-    char field_0x00[0x88];
+    char field_0x00[0x1C];
+    int field_0x1C;         // 0x1C: Global_Phantom_Listener skips the other object unless this is 0
+    char field_0x20[0x68];
     u32 mFlags88;           // 0x88: collision type bits (MarActCL tests 0x800 and 0x400)
     u32 mMask8C;            // 0x8C: types this object reacts to (DD_Collision_Listener)
-    char field_0x90[0x18];
+    char field_0x90[0xC];
+    UnkObjProps *field_0x9C; // 0x9C
+    char field_0xA0[8];
     DD_ActorInfo *mActorA8; // 0xA8
 };
 
@@ -139,7 +162,7 @@ struct IVP_Friction_Info
 
 struct IVP_Event_Collision
 {
-    int mField00;
+    f32 mField00;  // 0x00: func_00116B00 spawns hit effects only above 0.75 (1 without an event)
     int mField04;
     IVP_Contact_Situation *mContact08; // 0x08
 };
@@ -173,6 +196,15 @@ public:
     // would be emitted in this class's key-function TU, and the game has no such copy.
     virtual void event_pre_collision(IVP_Event_Collision *);  // slot 1: 0x00116C80
     virtual void event_post_collision(IVP_Event_Collision *); // slot 2: 0x00117718
+
+    // Run the DD_CollisionEntry reactions of a's actor against b: mCallback04 (and func_00126708) on
+    // contact, mCallback08 on leaving a phantom. Defined inline in DD_Event_Listener.cpp, which inlines
+    // them and also emits out-of-line copies (this class's key-function TU); other TUs call the copies
+    // (func_00117550 from 0x0018CB38 and 0x0018D4D4).
+    static void func_001173B8(IVP_Real_Object_Stub *a, IVP_Real_Object_Stub *b, u32 mask, IVP_Event_Collision *ev);
+    static void func_00117498(IVP_Real_Object_Stub *a, IVP_Real_Object_Stub *b, u32 mask, IVP_Event_Collision *ev);
+    static void func_00117550(IVP_Real_Object_Stub *a, IVP_Real_Object_Stub *b, IVP_Event_Collision *ev);
+    static void func_00117648(IVP_Real_Object_Stub *a, IVP_Real_Object_Stub *b, IVP_Event_Collision *ev);
 };
 
 class AI_PedestrianCL : public IVP_Listener_Collision
@@ -185,6 +217,39 @@ public:
     IVP_Real_Object_Stub *mObj08; // 0x08: the pedestrian's own object
     IVP_U_Float_Point mNormal0C;  // 0x0C: contact normal pointing away from the other object
     DD_ActorData *mData18;        // 0x18: actor data of the object it touched
+};
+
+// IVP class; only the virtual function game code calls. The int before the first virtual function
+// puts _vptr at +0x04.
+class IVP_Mindist_Base
+{
+public:
+    int field_0x00;
+    virtual void func_001FBBC8() = 0;                             // slot 1
+    virtual void get_objects(IVP_Real_Object_Stub *objects[2]) = 0; // slot 2: 0x001CAD78
+};
+
+// No RTTI in the game; name from the IVP API.
+struct IVP_Controller_Phantom
+{
+    IVP_Real_Object_Stub *mObject00; // 0x00: the phantom's own object
+};
+
+// Three pure virtual functions and no virtual destructor (vtable 0x002AA080).
+class IVP_Listener_Phantom
+{
+public:
+    virtual void mindist_entered_volume(IVP_Controller_Phantom *, IVP_Mindist_Base *) = 0; // slot 1
+    virtual void mindist_left_volume(IVP_Controller_Phantom *, IVP_Mindist_Base *) = 0;    // slot 2
+    virtual void phantom_is_going_to_be_deleted_event(IVP_Controller_Phantom *) = 0;       // slot 3
+};
+
+class Global_Phantom_Listener : public IVP_Listener_Phantom
+{
+public:
+    virtual void mindist_entered_volume(IVP_Controller_Phantom *, IVP_Mindist_Base *); // slot 1: 0x00116E50
+    virtual void mindist_left_volume(IVP_Controller_Phantom *, IVP_Mindist_Base *);    // slot 2: 0x00117060
+    virtual void phantom_is_going_to_be_deleted_event(IVP_Controller_Phantom *);       // slot 3: 0x00117720
 };
 
 class MBCL : public IVP_Listener_Collision

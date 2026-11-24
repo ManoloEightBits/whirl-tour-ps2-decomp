@@ -369,11 +369,12 @@ def main():
         addresses = load_symbols()
         sources = [p.resolve() for p in args.sources] or sorted(SRC.rglob('*.cpp'))
         total, count, failed = 0, 0, 0
+        found = []
         objects = build_all(lambda source: build(args.compilers, source, args.defines), sources)
         for source, obj in zip(sources, objects):
             if not args.quiet:
                 print(source.relative_to(ROOT).as_posix())
-            matched, functions, problems = compare(obj, game, game_base, addresses, args.verbose)
+            matched, functions, problems = compare(obj, game, game_base, addresses, args.verbose, found)
             total += matched
             count += functions
             failed += len(problems)
@@ -383,6 +384,10 @@ def main():
                 print('  FAIL ' + p)
         print('%d functions match: %d bytes, %.3f%% of the game code; %d problems'
               % (count, total, 100.0 * total / len(game), failed))
+        if not args.sources and not args.defines:
+            # The analysis tools read this list to tell matched functions from ones that only have a name.
+            lines = ['0x%08X %d %s' % f for f in sorted(set(found))]
+            (BUILD / 'matched.txt').write_text('\n'.join(lines) + '\n')
         return 1 if failed else 0
     except VerifyError as e:
         print('verify: ' + str(e), file=sys.stderr)

@@ -100,6 +100,18 @@ file with `diff_func.py <file.cpp> <symbol> --variants <json>`. That command onl
 - **Which FP register a temporary gets depends on what is live at the time.** In the same function,
   `up.k[0]` lands in `$f1` only if it is read *before* the `if` that uses it, so that its life overlaps
   the compared value in `$f0`. The delay-slot filler then moves the load to the same place either way.
+- **The same `do { } while (0)` around a vector copy.** In `func_00116B00`, copying a `Vec4f` into a
+  `Vec3f` field by field interleaves loads and stores, and moves the call's `$a0` setup out of the
+  `bc1f` delay slot. Wrapped in `do { } while (0)` (as in `AI_PedestrianCL`), the three loads come before
+  the three stores, as in the game. `diff_func.py --variants` found it among four candidates.
+- **Locals get stack slots in declaration order, from `$sp` upwards.** In `func_00116B00`, the game passes
+  `sp+0x10` and `sp+0x00` to `func_001F3F30(obj, &rot, &pos)`. Declaring `pos` before `rot` gives that.
+- **Static helpers with an out-of-line copy that nothing in the TU calls are inline members.**
+  `DD_Event_Listener.cpp` has four entry-loop helpers (`0x001173B8`..`0x00117648`) that are inlined into
+  the listeners and also exist on their own. Two have no callers at all, and another TU calls the third
+  (`0x0018CB38`). Declared as static members of `DD_Collision_Listener` in the header and defined with
+  `inline` in the `.cpp` (before their callers), GCC inlines them in this TU and also emits the copies,
+  because the class's key function is here. Other TUs, which see only the declaration, call the copies.
 - **`base ... with only non-default constructor in class without a constructor`.** GCC 2.95 gives this
   error when a derived class declares no constructor at all. Declare the real one, even if its body is
   not decompiled yet (see `MBCL` and `ScootCL`).

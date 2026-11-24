@@ -22,6 +22,7 @@ from pathlib import Path
 import rabbitizer
 
 from whirl_paths import REPO, SLUS, SPLIT  # noqa: E402
+import whirl_paths  # noqa: E402
 SPLIT_TEXT = SPLIT / 'asm' / 'text.s'
 
 import extract_rtti as e  # noqa: E402
@@ -293,8 +294,16 @@ def decompile_m2c(addr, words, addr_to_sym):
         Path(tf_path).unlink(missing_ok=True)
 
 
+MATCHED = set()  # filled by main() from whirl_paths.matched_addresses()
+
+
 def print_func_summary(info, show_dis=False, show_m2c=False, addr_to_sym=None):
-    status = ('MATCHED (%s)' % info['sym']) if info['sym'] else 'UNMATCHED'
+    if info['addr'] in MATCHED:
+        status = 'MATCHED (%s)' % info['sym']
+    elif info['sym']:
+        status = 'UNMATCHED (named %s)' % info['sym']
+    else:
+        status = 'UNMATCHED'
     print('0x%08X [%3d insns, %4d B] %s' % (info['addr'], info['insns'], info['size'], status))
     if info['vtables']:
         print('  vtables : ' + ', '.join('%s (0x%08X)' % (n, a) for a, n in info['vtables']))
@@ -349,6 +358,7 @@ def main():
 
     sym_to_addr = verify.load_symbols()
     addr_to_sym = {a: s for s, a in sym_to_addr.items()}
+    MATCHED.update(whirl_paths.matched_addresses(addr_to_sym))
     starts = parse_func_boundaries(text)
 
     def end_of(addr):
@@ -397,7 +407,7 @@ def main():
         in_range = [s for s in starts if lo <= s < hi]
         found = 0
         for addr in in_range:
-            if addr in addr_to_sym:
+            if addr in MATCHED:
                 continue
             info = analyze_function(addr, end_of(addr), text, rodata, addr_to_sym, vtable_addrs)
             if info['suggestion'] and info['insns'] <= 8:

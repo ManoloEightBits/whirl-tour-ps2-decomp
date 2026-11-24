@@ -40,7 +40,6 @@ _$_19IVP_Listener_Spring
 _$_20IVP_3D_Solver_PF_NPF
 _$_20IVP_3D_Solver_S_VALS
 _$_20IVP_Constraint_Local
-_$_20IVP_Listener_Phantom
 _$_20IVP_Material_Manager
 _$_20IVP_Ray_Hit_Listener
 _$_20IVP_Universe_Manager
@@ -50,7 +49,6 @@ _$_21IVP_3D_Solver_PK_COLL
 _$_21IVP_Anchor_Check_Dist
 _$_21IVP_Controller_Motion
 _$_22IVP_PerformanceCounter
-_$_23Global_Phantom_Listener
 _$_23IVP_Collision_Delegator
 _$_23IVP_Friction_Sys_Energy
 _$_23IVP_Friction_Sys_Static
@@ -112,7 +110,6 @@ __19IVP_Listener_Spring
 __20IVP_3D_Solver_PF_NPF
 __20IVP_3D_Solver_S_VALS
 __20IVP_Constraint_Local
-__20IVP_Listener_Phantom
 __20IVP_Material_Manager
 __20IVP_Ray_Hit_Listener
 __20IVP_Universe_Manager
@@ -122,7 +119,6 @@ __21IVP_3D_Solver_PK_COLL
 __21IVP_Anchor_Check_Dist
 __21IVP_Controller_Motion
 __22IVP_PerformanceCounter
-__23Global_Phantom_Listener
 __23IVP_Collision_Delegator
 __23IVP_Friction_Sys_Energy
 __23IVP_Friction_Sys_Static

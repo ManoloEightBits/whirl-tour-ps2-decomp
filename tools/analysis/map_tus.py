@@ -14,6 +14,7 @@ import sys
 from pathlib import Path
 
 from whirl_paths import REPO  # noqa: E402,F401
+import whirl_paths  # noqa: E402
 
 import extract_rtti as e  # noqa: E402
 import inspect_tu as itu  # noqa: E402
@@ -56,6 +57,7 @@ def main():
     vtable_addrs = {v['vtable_addr']: v['vtable_symbol'] for v in vtables}
     sym_to_addr = verify.load_symbols()
     addr_to_sym = {a: s for s, a in sym_to_addr.items()}
+    matched = whirl_paths.matched_addresses(addr_to_sym)
     starts = itu.parse_func_boundaries(text)
 
     def end_of(addr):
@@ -111,7 +113,7 @@ def main():
         min_addr = min([tf_min] + local_slots)
         max_addr = max([tf_max] + local_slots)
         funcs_in_span = [s for s in starts if min_addr <= s <= max_addr]
-        matched_in_span = sum(1 for s in funcs_in_span if s in addr_to_sym)
+        matched_in_span = sum(1 for s in funcs_in_span if s in matched)
         vptrs = []
         for v in cl:
             vo = infer_vptr_offset(v, text)

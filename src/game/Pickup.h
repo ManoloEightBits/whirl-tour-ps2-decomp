@@ -3,6 +3,7 @@
 
 #include "common/types.h"
 #include "game/Player.h"
+#include "game/UnkEffect.h"
 
 // Whirl Tour: EnvObj, Pickup and its 10 subclasses (all RTTI class names).
 // Note: in EnvObj, the vtable pointer is at offset +0x7C (after 0x7C bytes of non-polymorphic
@@ -40,16 +41,6 @@ struct UnkNode
 UnkNode *func_00194DE0(int id);  // 0x00194DE0
 void func_00194F40(UnkNode *);   // 0x00194F40
 void func_00194F90(UnkNode *);   // 0x00194F90
-
-// 0x30-byte object spawned at a position (constructor 0x001418E0); also used by func_00116B00.
-class UnkEffect
-{
-public:
-    UnkEffect(int id, const Vec3f *pos, int, f32, f32, f32); // 0x001418E0
-    void func_001419A0(int);                                 // 0x001419A0
-
-    char pad_0x00[0x30];
-};
 
 // Definition data of a pickup type (name from FindPickupDef, 0x00126518).
 struct PickupDef

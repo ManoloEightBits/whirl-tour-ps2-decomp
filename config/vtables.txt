@@ -24,6 +24,8 @@
 0x002A4860 ScootCL game/CollisionListeners.h
 0x00289680 MarActCL game/CollisionListeners.h
 0x002840B8 DD_Collision_Listener game/CollisionListeners.h
+0x002AA080 IVP_Listener_Phantom game/CollisionListeners.h
+0x00284090 Global_Phantom_Listener game/CollisionListeners.h
 0x00289438 LunActCL game/CollisionListeners.h
 0x00281708 AI_PedestrianCL game/CollisionListeners.h
 0x002AB9D8 IVP_Controller game/Controllers.h

@@ -48,7 +48,7 @@ Python prints a `sys.prefix` warning. Every tool finds the game files through `W
 | Tool | What it does |
 | :--- | :--- |
 | `tools/check_all.py [--no-rebuild]` | Runs `verify -q`, `verify_vtables -q`, `rebuild -q --allow-kept` and `check_repo`; one summary line each. |
-| `tools/verify.py [-q\|-v] [file.cpp ...]` | Builds `src/` with the game's compiler and compares every function with `SLUS_204.89`. `-v` lists each match with address and size. Its `assemble()` (also used by `verify_vtables`, `rebuild` and `scratch_cc`) adds the retail assembler's `mtc1` pair nops first (see [MATCHING.md](MATCHING.md)). |
+| `tools/verify.py [-q\|-v] [file.cpp ...]` | Builds `src/` with the game's compiler and compares every function with `SLUS_204.89`. `-v` lists each match with address and size. A full run (no files, no `-D`) also writes the list of matches to `build/matched.txt`, which the analysis tools read. Its `assemble()` (also used by `verify_vtables`, `rebuild` and `scratch_cc`) adds the retail assembler's `mtc1` pair nops first (see [MATCHING.md](MATCHING.md)). |
 | `tools/verify_vtables.py [-q\|-v]` | Compares each vtable declared in `config/vtables.txt` slot by slot. Destructor and pure-virtual slots are not counted. |
 | `tools/progress.py [--write] [--no-rebuild]` | Computes the README progress table (bytes per binary-map region included) and writes it between the `progress:begin/end` markers. It refuses to write while a check fails. |
 | `rebuild/rebuild.py -q --allow-kept` | Relinks the compiled functions into the split assembly and checks the SHA-1 of the result. |
@@ -68,6 +68,11 @@ the other tools directly.
 | `diff_func.py file.cpp <mangled> [--all] [-D X] [--variants v.json]` | Side-by-side R5900 diff of one repository function, or a batch of source variants (`{"target": "...", "candidates": [...]}`). |
 | `scratch_cc.py snippet.cpp\|- [--func S] [--vs ADDR] [--asm] [--regs] [-D X]` | Compiles a loose snippet in `build/scratch/` with the exact flags of `verify.py` (it can include repository headers). Shows its disassembly with relocations, or a side-by-side diff against any game address (`--vs`), GCC's `.s` (`--asm`), and the register-allocation table (`--regs`). |
 | `find_pattern.py '<re1>; <re2>; ...' [--range A B] [--context N] [--count]` | Searches `.text` for a sequence of instructions (one regex per instruction, `*` matches any). Each hit is labelled with the nearest known symbol. About 0.5 s for the whole binary. Put the pattern in single quotes so the shell keeps `\$`. |
+
+A function counts as matched when it is in `build/matched.txt`. `config/symbols.txt` is not enough: it
+also names functions that matched code only calls. `inspect_tu.py` shows those as
+`UNMATCHED (named ...)`. Without `build/matched.txt` (run `tools/check_all.py` once), the tools fall back
+to `symbols.txt` and print a note.
 
 Examples (venv active, from the repository root):
 

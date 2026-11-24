@@ -12,6 +12,7 @@ import sys
 from pathlib import Path
 
 from whirl_paths import REPO  # noqa: E402,F401
+import whirl_paths  # noqa: E402
 
 import extract_rtti as e  # noqa: E402
 import inspect_tu as itu  # noqa: E402
@@ -36,6 +37,7 @@ def main():
 
     sym_to_addr = verify.load_symbols()
     addr_to_sym = {a: s for s, a in sym_to_addr.items()}
+    matched = whirl_paths.matched_addresses(addr_to_sym)
     starts = [s for s in itu.parse_func_boundaries(text) if e.TEXT_BASE <= s < GAME_END]
     start_idx = {s: i for i, s in enumerate(starts)}
 
@@ -68,7 +70,7 @@ def main():
                 continue
             for slot in vt['slots']:
                 faddr = slot['func']
-                if faddr in addr_to_sym or faddr in seen_funcs or faddr >= GAME_END:
+                if faddr in matched or faddr in seen_funcs or faddr >= GAME_END:
                     continue
                 seen_funcs.add(faddr)
                 info = itu.analyze_function(faddr, end_of(faddr), text, rodata, addr_to_sym, vtable_addrs)
@@ -83,7 +85,7 @@ def main():
 
     rows = []
     for addr in starts:
-        if addr in addr_to_sym:
+        if addr in matched:
             continue
         near = nearest_class(addr)
         if args.class_filter and args.class_filter.lower() not in near.lower():
