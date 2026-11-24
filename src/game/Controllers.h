@@ -90,8 +90,12 @@ class MBCtrl : public IVP_Controller_Independent
 public:
     WHIRL_CONTROLLER_SLOTS(MBCtrl) // 0x0018EA78, 0x0018E9B8, 0x0018E890, 0x0018EB18
 
-    char field_0x04[0x20];
-    void *mCore24; // 0x24
+    u8 mFlags04;      // 0x04: bit 0 = reset the core to mPos14 on the next step
+    char pad_0x05[3];
+    Vec3f mVel08;     // 0x08
+    Vec3f mPos14;     // 0x14
+    int field_0x20;
+    UnkCore *mCore24; // 0x24
 };
 
 #endif

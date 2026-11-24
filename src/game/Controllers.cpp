@@ -85,6 +85,45 @@ void MBCtrl::core_is_going_to_be_deleted_event(void *)
     delete this;
 }
 
+static inline void VecZero(Vec3f *v)
+{
+    v->x = 0.0f;
+    v->y = 0.0f;
+    v->z = 0.0f;
+}
+
+static inline void VecSet(Vec3f *d, const Vec3f *s)
+{
+    d->x = s->x;
+    d->y = s->y;
+    d->z = s->z;
+}
+
+static inline void VecSetElems(Vec3f *d, f32 x, f32 y, f32 z)
+{
+    d->x = x;
+    d->y = y;
+    d->z = z;
+}
+
+static inline void VecAddScaled(Vec3f *d, const Vec3f *s, f32 f)
+{
+    VecSetElems(d, d->x + f * s->x, d->y + f * s->y, d->z + f * s->z);
+}
+
+void MBCtrl::do_simulation_controller(void *event, void *)
+{
+    if (mFlags04 & 1)
+    {
+        mFlags04 &= ~1;
+        VecZero(&mCore24->field_0x90);
+        VecSet(&mCore24->field_0xB0, &mPos14);
+    }
+    f32 dt = *(f32 *)event;
+    VecAddScaled(&mCore24->field_0xB0, &mVel08, dt);
+    VecSetElems(&mPos14, mCore24->field_0xB0.x, mCore24->field_0xB0.y, mCore24->field_0xB0.z);
+}
+
 int MBCtrl::get_controller_priority()
 {
     return 500;
