@@ -1,131 +1,131 @@
-#include "game/ScootCtrl.h"
+#include "game/Scooter.h"
 
-int ScootCtrl::IsBoostInactive()
+int Scooter::IsBoostInactive()
 {
     return mBoostState < 1;
 }
 
-int ScootCtrl::IsBoostUnavailable()
+int Scooter::IsBoostUnavailable()
 {
     return ~(u32)mBoostState >> 31;
 }
 
-void ScootCtrl::SetBoostField62C(f32 val)
+void Scooter::SetBoostField62C(f32 val)
 {
     mField62C = val;
 }
 
-void ScootCtrl::SetBoostField630(f32 val)
+void Scooter::SetBoostField630(f32 val)
 {
     mField630 = val;
 }
 
-void ScootCtrl::AddHealth(f32 percent)
+void Scooter::AddHealth(f32 percent)
 {
     mHealth += percent * 100.0f;
     if (mHealth > 100.0f)
         mHealth = 100.0f;
 }
 
-void ScootCtrl::AddSpeedBoost(f32 amount, f32 dur)
+void Scooter::AddSpeedBoost(f32 amount, f32 dur)
 {
     mSpeedBoostAmount = amount;
     mSpeedBoostDuration = dur;
 }
 
-void ScootCtrl::AddSpinBoost(f32 amount, f32 dur)
+void Scooter::AddSpinBoost(f32 amount, f32 dur)
 {
     mSpinBoostAmount = amount;
     mSpinBoostDuration = dur;
 }
 
-void ScootCtrl::AddJumpBoost(f32 amount, f32 dur)
+void Scooter::AddJumpBoost(f32 amount, f32 dur)
 {
     mJumpBoostAmount = amount;
     mJumpBoostDuration = dur;
 }
 
-void ScootCtrl::AddBalanceBoost(f32 amount, f32 dur)
+void Scooter::AddBalanceBoost(f32 amount, f32 dur)
 {
     mBalanceBoostAmount = amount;
     mBalanceBoostDuration = dur;
 }
 
-int ScootCtrl::GetField1D0()
+int Scooter::GetField1D0()
 {
     return mField1D0;
 }
 
-int ScootCtrl::GetField1CC()
+int Scooter::GetField1CC()
 {
     return mField1CC;
 }
 
-f32 ScootCtrl::GetField90()
+f32 Scooter::GetField90()
 {
     return mField90;
 }
 
-void *ScootCtrl::GetPtr84()
+void *Scooter::GetPtr84()
 {
     return mBlock84;
 }
 
-void *ScootCtrl::GetPtr130()
+void *Scooter::GetPtr130()
 {
     return mBlock130;
 }
 
-void *ScootCtrl::GetPtrE0()
+void *Scooter::GetPtrE0()
 {
     return mBlockE0;
 }
 
-f32 ScootCtrl::GetField98()
+f32 Scooter::GetField98()
 {
     return mField98;
 }
 
-void ScootCtrl::SetField180(f32 val)
+void Scooter::SetField180(f32 val)
 {
     mField180 = val;
 }
 
-void ScootCtrl::EnableField170()
+void Scooter::EnableField170()
 {
     mField170 = 1;
 }
 
-void ScootCtrl::DisableField170()
+void Scooter::DisableField170()
 {
     mField170 = 0;
 }
 
-void ScootCtrl::SetVec174(f32 x, f32 y, f32 z)
+void Scooter::SetVec174(f32 x, f32 y, f32 z)
 {
     mVec174X = x;
     mVec174Y = y;
     mVec174Z = z;
 }
 
-void *ScootCtrl::GetPtr78()
+void *Scooter::GetPtr78()
 {
     return mBlock78;
 }
 
-int ScootCtrl::GetField1A0()
+int Scooter::GetField1A0()
 {
     return mField1A0;
 }
 
-int ScootCtrl::HasAdrenaline()
+int Scooter::HasAdrenaline()
 {
     if (mAdrenaline > 0.0f)
         return 1;
     return 0;
 }
 
-int ScootCtrl::IsGrounded()
+int Scooter::IsGrounded()
 {
     return (mFlags18 & 4) || mGround68 != 0;
 }
@@ -136,7 +136,7 @@ int ScootCtrl::IsGrounded()
 // lives longer and loses priority. In the game 0.0f gets $f0, next $f1 and cur $f2, and the
 // zero store moves into a bc1tl delay slot. Result variables, do/while(0) and reordered
 // conditions did not change it.
-f32 ScootCtrl::ConsumeAdrenaline(f32 amount)
+f32 Scooter::ConsumeAdrenaline(f32 amount)
 {
     f32 cur = mAdrenaline;
     f32 next = cur - amount;
@@ -149,18 +149,3 @@ f32 ScootCtrl::ConsumeAdrenaline(f32 amount)
     return amount;
 }
 #endif
-
-void ScootCtrl::core_is_going_to_be_deleted_event(void *)
-{
-    delete this;
-}
-
-int ScootCtrl::get_controller_priority()
-{
-    return 500;
-}
-
-ScootCtrl::~ScootCtrl()
-{
-    func_001FA170(this, mCore24);
-}

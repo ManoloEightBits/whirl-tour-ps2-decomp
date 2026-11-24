@@ -2,7 +2,7 @@
 #define GAME_PLAYER_H
 
 #include "common/types.h"
-#include "game/ScootCtrl.h"
+#include "game/Scooter.h"
 
 // Whirl Tour: the object a pickup is handed when collected. The class name is ours (hypothesis);
 // offsets and method shapes are proven by 0x00123548..0x001237A0 and the Pickup subclasses.
@@ -33,7 +33,7 @@ public:
     f32 ConsumeAdrenaline(f32 amount);           // 0x00123788
 
     char field_0x00[0x2C];
-    ScootCtrl *mScootCtrl;  // 0x2C
+    Scooter *mScooter;  // 0x2C
     char field_0x30[0x74];
     int mKeys;              // 0xA4
     int mNumBGMs;           // 0xA8

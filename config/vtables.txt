@@ -33,4 +33,4 @@
 0x002841D0 IP_RotCtrl game/Controllers.h
 0x002A4478 IP_AnimCtrl game/Controllers.h
 0x002A5518 MBCtrl game/Controllers.h
-0x002A48C0 ScootCtrl game/ScootCtrl.h
+0x002A48C0 ScootCtrl game/Controllers.h

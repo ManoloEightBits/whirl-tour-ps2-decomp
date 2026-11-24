@@ -1,8 +1,8 @@
 #include "game/Player.h"
 
 void UnlockScooterGlobal(int scooterId);  // 0x00153C10
-void SubComponentAction1(ScootCtrl *);    // 0x001722B0
-void SubComponentAction2(ScootCtrl *);    // 0x001723F0
+void SubComponentAction1(Scooter *);    // 0x001722B0
+void SubComponentAction2(Scooter *);    // 0x001723F0
 
 void Player::AddKey()
 {
@@ -16,27 +16,27 @@ int Player::GetKeys()
 
 void Player::AddSpeedBoost(f32 amount, f32 dur)
 {
-    mScootCtrl->AddSpeedBoost(amount, dur);
+    mScooter->AddSpeedBoost(amount, dur);
 }
 
 void Player::AddSpinBoost(f32 amount, f32 dur)
 {
-    mScootCtrl->AddSpinBoost(amount, dur);
+    mScooter->AddSpinBoost(amount, dur);
 }
 
 void Player::AddJumpBoost(f32 amount, f32 dur)
 {
-    mScootCtrl->AddJumpBoost(amount, dur);
+    mScooter->AddJumpBoost(amount, dur);
 }
 
 void Player::AddBalanceBoost(f32 amount, f32 dur)
 {
-    mScootCtrl->AddBalanceBoost(amount, dur);
+    mScooter->AddBalanceBoost(amount, dur);
 }
 
 void Player::AddHealth(f32 percent)
 {
-    mScootCtrl->AddHealth(percent);
+    mScooter->AddHealth(percent);
 }
 
 void Player::AddScooter(int scooterId)
@@ -62,42 +62,42 @@ int Player::GetBGM(int index)
 
 f32 Player::GetStatFactor()
 {
-    return mScootCtrl->GetStatFactor();
+    return mScooter->GetStatFactor();
 }
 
 int Player::IsBoostInactive()
 {
-    return mScootCtrl->IsBoostInactive();
+    return mScooter->IsBoostInactive();
 }
 
 int Player::IsBoostUnavailable()
 {
-    return mScootCtrl->IsBoostUnavailable();
+    return mScooter->IsBoostUnavailable();
 }
 
 void Player::SetBoostField62C(f32 val)
 {
-    mScootCtrl->SetBoostField62C(val);
+    mScooter->SetBoostField62C(val);
 }
 
 void Player::SetBoostField630(f32 val)
 {
-    mScootCtrl->SetBoostField630(val);
+    mScooter->SetBoostField630(val);
 }
 
 void Player::ApplySpecialAction(int mode)
 {
-    mScootCtrl->ApplySpecialAction(mode);
+    mScooter->ApplySpecialAction(mode);
 }
 
 void Player::Action1722B0()
 {
-    SubComponentAction1(mScootCtrl);
+    SubComponentAction1(mScooter);
 }
 
 void Player::Action1723F0()
 {
-    SubComponentAction2(mScootCtrl);
+    SubComponentAction2(mScooter);
 }
 
 f32 Player::GetMaxConstant1000()
@@ -107,10 +107,10 @@ f32 Player::GetMaxConstant1000()
 
 int Player::HasAdrenaline()
 {
-    return mScootCtrl->HasAdrenaline();
+    return mScooter->HasAdrenaline();
 }
 
 f32 Player::ConsumeAdrenaline(f32 amount)
 {
-    return mScootCtrl->ConsumeAdrenaline(amount);
+    return mScooter->ConsumeAdrenaline(amount);
 }

@@ -98,4 +98,16 @@ public:
     UnkCore *mCore24; // 0x24
 };
 
+class ScootCtrl : public IVP_Controller_Independent
+{
+public:
+    WHIRL_CONTROLLER_SLOTS(ScootCtrl) // 0x00180780, 0x00180560, 0x00180690, 0x00180820
+
+    int mFlags04;     // 0x04: bits 0..2 = set the core's x/y/z to mPos08 on the next step
+    Vec3f mPos08;     // 0x08
+    Vec3f mVel14;     // 0x14
+    int field_0x20;
+    UnkCore *mCore24; // 0x24
+};
+
 #endif

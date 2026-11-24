@@ -133,3 +133,44 @@ MBCtrl::~MBCtrl()
 {
     func_001FA170(this, mCore24);
 }
+
+void ScootCtrl::core_is_going_to_be_deleted_event(void *)
+{
+    delete this;
+}
+
+int ScootCtrl::get_controller_priority()
+{
+    return 500;
+}
+
+ScootCtrl::~ScootCtrl()
+{
+    func_001FA170(this, mCore24);
+}
+
+void ScootCtrl::do_simulation_controller(void *event, void *)
+{
+    if (mFlags04 & 7)
+        VecZero(&mCore24->field_0x90);
+    if (mFlags04 & 1)
+    {
+        f32 v = mPos08.x;
+        mFlags04 &= ~1;
+        mCore24->field_0xB0.x = v;
+    }
+    if (mFlags04 & 2)
+    {
+        f32 v = mPos08.y;
+        mFlags04 &= ~2;
+        mCore24->field_0xB0.y = v;
+    }
+    if (mFlags04 & 4)
+    {
+        f32 v = mPos08.z;
+        mFlags04 &= ~4;
+        mCore24->field_0xB0.z = v;
+    }
+    f32 dt = *(f32 *)event;
+    VecAddScaled(&mCore24->field_0xB0, &mVel14, dt);
+}
