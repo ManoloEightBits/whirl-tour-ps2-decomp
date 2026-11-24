@@ -143,12 +143,16 @@ def resolve_local_data(source, dest, addresses, slus):
 
 def classify(obj, addresses):
     symbols = obj.symbols()
+    probes = verify.load_probes()
     linked, kept, calls = {}, {}, {}
     for name, _, _, kind, shndx in symbols:
         if kind != verify.STT_FUNC or not 0 < shndx < len(obj.sections):
             continue
         section = obj.sections[shndx]
         if section['name'] != '.text.' + name:
+            continue
+        if name in probes:
+            kept[name] = 'probe helper function'
             continue
         reason = None if name in addresses else 'has no address in config/symbols.txt'
         for kind, index in obj.relocations(shndx).values():

@@ -7,12 +7,20 @@
 // Whirl Tour: EnvObj, Pickup and its 10 subclasses (all RTTI class names).
 // Note: in EnvObj, the vtable pointer is at offset +0x7C (after 0x7C bytes of non-polymorphic
 // base data), as proven by every Pickup constructor and destructor storing the vtable at 0x7C($this).
-class EnvObjBaseData
+struct PickupSpawnInfo
+{
+    char field_0x00[0x10];
+    int mParam10;     // 0x10 (used by ScooterPickup and BGMPickup for mScooterId / mBGMId)
+    int mType14;      // 0x14
+    Vec3f mPos18;     // 0x18
+};
+
+class EnvObj
 {
 public:
     void *mField00;          // 0x00
     char field_0x04[0x14];
-    void *mPhysicsObj;       // 0x18
+    void *mPhysicsObj18;     // 0x18
     char field_0x1C[0x18];
     int mCount34;            // 0x34
     int mCount38;            // 0x38
@@ -30,20 +38,16 @@ public:
     int mField78;            // 0x78
 };
 
-class EnvObj : public EnvObjBaseData
-{
-public:
-    virtual ~EnvObj();
-};
-
 class Pickup : public EnvObj
 {
 public:
     Pickup();
-    virtual ~Pickup();
-    virtual void Update(f32 dt);
-    virtual void OnCollected(Player *player);
+    Pickup(const Vec3f *pos, int type, void *def);   // 0x0011B060
+    inline virtual ~Pickup();                        // 0x0011CB58
+    virtual void Update(f32 dt);                     // 0x0011B3D8
+    inline virtual void OnCollected(Player *player); // 0x0011CEB0
 
+    void Call11B2A0();                // 0x0011CE70
     Vec3f *GetPos44();                // 0x0011CE90
     Vec3f *GetPos50();                // 0x0011CE98
     int IsState4();                   // 0x0011CEA0
@@ -53,7 +57,7 @@ public:
 class KeyPickup : public Pickup
 {
 public:
-    virtual ~KeyPickup();
+    KeyPickup(const Vec3f *pos); // 0x0011B900
     virtual void Update(f32 dt);
     virtual void OnCollected(Player *player);
 
@@ -65,14 +69,14 @@ public:
 class HealthPickup : public Pickup
 {
 public:
-    virtual ~HealthPickup();
+    HealthPickup(PickupSpawnInfo *info); // 0x0011D130
     virtual void OnCollected(Player *player);
 };
 
 class ScooterPickup : public Pickup
 {
 public:
-    virtual ~ScooterPickup();
+    ScooterPickup(PickupSpawnInfo *info); // 0x0011D1B8
     virtual void OnCollected(Player *player);
 
     int mScooterId; // 0x80
@@ -81,7 +85,7 @@ public:
 class BGMPickup : public Pickup
 {
 public:
-    virtual ~BGMPickup();
+    BGMPickup(PickupSpawnInfo *info); // 0x0011D248
     virtual void OnCollected(Player *player);
 
     int mBGMId; // 0x80
@@ -90,42 +94,42 @@ public:
 class TransmitterPickup : public Pickup
 {
 public:
-    virtual ~TransmitterPickup();
+    TransmitterPickup(PickupSpawnInfo *info); // 0x0011D2D8
     virtual void OnCollected(Player *player);
 };
 
 class SpeedPickup : public Pickup
 {
 public:
-    virtual ~SpeedPickup();
+    SpeedPickup(PickupSpawnInfo *info); // 0x0011D340
     virtual void OnCollected(Player *player);
 };
 
 class SpinPickup : public Pickup
 {
 public:
-    virtual ~SpinPickup();
+    SpinPickup(PickupSpawnInfo *info); // 0x0011D3C8
     virtual void OnCollected(Player *player);
 };
 
 class JumpPickup : public Pickup
 {
 public:
-    virtual ~JumpPickup();
+    JumpPickup(PickupSpawnInfo *info); // 0x0011D450
     virtual void OnCollected(Player *player);
 };
 
 class BalancePickup : public Pickup
 {
 public:
-    virtual ~BalancePickup();
+    BalancePickup(PickupSpawnInfo *info); // 0x0011D4D8
     virtual void OnCollected(Player *player);
 };
 
 class TimerPickup : public Pickup
 {
 public:
-    virtual ~TimerPickup();
+    TimerPickup(PickupSpawnInfo *info); // 0x0011D560
     virtual void OnCollected(Player *player);
 };
 

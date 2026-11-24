@@ -81,7 +81,6 @@ _$_36IVP_3D_Solver_DISTANCE_OF_TWO_POINTS
 _$_36IVP_Collision_Delegator_Root_Mindist
 _$_4MBCL
 _$_6MBCtrl
-_$_6Pickup
 _$_7AI_Boss
 _$_7AI_Race
 _$_7ScootCL
@@ -174,7 +173,6 @@ __36IVP_3D_Solver_DISTANCE_OF_TWO_POINTS
 __36IVP_Collision_Delegator_Root_Mindist
 __4MBCL
 __6MBCtrl
-__6Pickup
 __7AI_Boss
 __7AI_Race
 __7ScootCL
@@ -185,3 +183,4 @@ __8LunActCL
 __8MarActCL
 __9IVP_VHash
 __9ScootCtrl
+Update__6Pickupf

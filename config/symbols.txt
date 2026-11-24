@@ -250,17 +250,17 @@
 0x002BC710 __ti23Global_Phantom_Listener
 0x002BC720 __ti10MotionCtrl
 0x002BC730 __ti10IP_RotCtrl
+0x002BC740 __ti13ScooterPickup
+0x002BC750 __ti10JumpPickup
 0x002BC760 __ti6Pickup
-0x002BC760 __ti9KeyPickup
-0x002BC760 __ti12HealthPickup
-0x002BC760 __ti13ScooterPickup
-0x002BC760 __ti9BGMPickup
-0x002BC760 __ti17TransmitterPickup
-0x002BC760 __ti11SpeedPickup
-0x002BC760 __ti10SpinPickup
-0x002BC760 __ti10JumpPickup
-0x002BC760 __ti13BalancePickup
-0x002BC760 __ti11TimerPickup
+0x002BC770 __ti12HealthPickup
+0x002BC780 __ti9BGMPickup
+0x002BC790 __ti11TimerPickup
+0x002BC7A0 __ti9KeyPickup
+0x002BC7B0 __ti17TransmitterPickup
+0x002BC7C0 __ti11SpeedPickup
+0x002BC7D0 __ti10SpinPickup
+0x002BC7E0 __ti13BalancePickup
 0x002BC7F0 __ti8LunActCL
 0x002BC800 __ti8MarActCL
 0x002BC810 __ti7AI_Boss
@@ -358,8 +358,6 @@
 0x00101CC8 __tf6EnvObj
 0x001DDC68 __tft23IVP_Listener_Set_Active1Z8IVP_Core
 0x00100C08 __builtin_delete
-0x0011D110 OnCollected__9KeyPickupP6Player
-0x00123548 AddKey__6Player
 
 # ScootCtrl (src/game/ScootCtrl.cpp)
 0x0017E958 GetStatFactor__9ScootCtrl
@@ -391,6 +389,7 @@
 0x0017ED28 ConsumeAdrenaline__9ScootCtrlf
 
 # Player (src/game/Player.cpp)
+0x00123548 AddKey__6Player
 0x00123558 GetKeys__6Player
 0x00123560 AddSpeedBoost__6Playerff
 0x00123580 AddSpinBoost__6Playerff
@@ -417,21 +416,52 @@
 0x001723F0 SubComponentAction2__FP9ScootCtrl
 
 # Pickup and subclasses (src/game/KeyPickup.cpp)
+0x00100C48 __builtin_vec_delete
+0x0014FB70 EnvObjCleanup14FB70__FP6EnvObj
+0x00194EC0 CleanupNode194EC0__FPv
+0x001F21A8 PhysicsDestroy1F21A8__FPv
+0x001F34B0 PhysicsClear1F34B0__FPvi
+0x001F3A70 PhysicsRelease1F3A70__FPv
+0x0011B060 __6PickupPC5Vec3fiPv
+0x0011B2A0 PickupHelper11B2A0__FP6Pickup
 0x0011B3D8 Update__6Pickupf
+0x0011CB58 _$_6Pickup
+0x0011CFD8 _$_9KeyPickup
+0x0011BB10 _$_12HealthPickup
+0x0011BCD0 _$_13ScooterPickup
+0x0011BE90 _$_9BGMPickup
+0x0011C050 _$_17TransmitterPickup
+0x0011C210 _$_11SpeedPickup
+0x0011C3D0 _$_10SpinPickup
+0x0011C590 _$_10JumpPickup
+0x0011C750 _$_13BalancePickup
+0x0011C910 _$_11TimerPickup
 0x0011CF18 Update__9KeyPickupf
+0x0011CE70 Call11B2A0__6Pickup
 0x0011CE90 GetPos44__6Pickup
 0x0011CE98 GetPos50__6Pickup
 0x0011CEA0 IsState4__6Pickup
 0x0011CEB0 OnCollected__6PickupP6Player
 0x0011CF08 SetFields68_6C__6Pickupii
+0x0011D110 OnCollected__9KeyPickupP6Player
+0x0011D130 __12HealthPickupP15PickupSpawnInfo
 0x0011D190 OnCollected__12HealthPickupP6Player
+0x0011D1B8 __13ScooterPickupP15PickupSpawnInfo
 0x0011D220 OnCollected__13ScooterPickupP6Player
+0x0011D248 __9BGMPickupP15PickupSpawnInfo
 0x0011D2B0 OnCollected__9BGMPickupP6Player
+0x0011D2D8 __17TransmitterPickupP15PickupSpawnInfo
 0x0011D338 OnCollected__17TransmitterPickupP6Player
+0x0011D340 __11SpeedPickupP15PickupSpawnInfo
 0x0011D3A0 OnCollected__11SpeedPickupP6Player
+0x0011D3C8 __10SpinPickupP15PickupSpawnInfo
 0x0011D428 OnCollected__10SpinPickupP6Player
+0x0011D450 __10JumpPickupP15PickupSpawnInfo
 0x0011D4B0 OnCollected__10JumpPickupP6Player
+0x0011D4D8 __13BalancePickupP15PickupSpawnInfo
 0x0011D538 OnCollected__13BalancePickupP6Player
+0x0011D560 __11TimerPickupP15PickupSpawnInfo
 0x0011D5C0 OnCollected__11TimerPickupP6Player
+0x00126518 FindPickupDef__FPCc
 0x001B1CD0 HashStringCRC32__FPCc
 0x001266D0 SendScriptEvent__FUiiPv

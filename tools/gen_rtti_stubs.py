@@ -18,7 +18,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import extract_rtti as e
 
 ROOT = Path(__file__).resolve().parent.parent
-HAND_WRITTEN = {'CollFilt', 'IVP_Collision_Filter', 'AI_AttackType', 'IVP_Actuator', 'IVP_U_Active_Value'}
+HAND_WRITTEN = {'CollFilt', 'IVP_Collision_Filter', 'AI_AttackType', 'IVP_Actuator', 'IVP_U_Active_Value', 'Pickup'}
 
 
 def main():

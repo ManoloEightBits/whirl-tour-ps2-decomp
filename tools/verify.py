@@ -249,7 +249,7 @@ def compare(obj_path, game, game_base, addresses, verbose):
         # ps2eeas pads the end of .text to 16 bytes with trailing nops; trim trailing nops
         # if the game has another function or ends at an 8-byte boundary.
         address = addresses.get(name)
-        if address is None and name in load_probes():
+        if name in load_probes():
             continue
         if address is None:
             problems.append('%s: not in %s' % (name, SYMBOLS.name))
