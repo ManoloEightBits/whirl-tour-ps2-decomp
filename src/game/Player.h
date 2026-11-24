@@ -4,6 +4,9 @@
 #include "common/types.h"
 #include "game/Scooter.h"
 
+struct IVP_Real_Object_Stub;
+struct DD_ActorInfo;
+
 // Passed to Player::func_001237E8. Its +0x18 is compared with Player+0xB8 to pick one of two position
 // pairs; "checkpoint" is a guess.
 struct UnkCheckpoint
@@ -17,7 +20,8 @@ struct UnkCheckpoint
 };
 
 // Whirl Tour: the object a pickup is handed when collected. The class name is ours (hypothesis);
-// offsets and method shapes are proven by 0x00123438..0x001238B8 and the Pickup subclasses.
+// offsets and method shapes are proven by 0x00123438..0x001238B8, the player_* collision callbacks
+// that follow them (0x001238C0..0x00123AE8) and the Pickup subclasses.
 class Player
 {
 public:
@@ -42,7 +46,7 @@ public:
     void SetBoostField62C(f32 val);              // 0x001236B8
     void SetBoostField630(f32 val);              // 0x001236D8
     void ApplySpecialAction(int mode);           // 0x001236F8
-    void Action1722B0();                         // 0x00123718
+    void Action1722B0(Vec3f *pos, f32 amount);   // 0x00123718
     void Action1723F0();                         // 0x00123738
     f32 GetMaxConstant1000();                    // 0x00123758
     int HasAdrenaline();                         // 0x00123768
@@ -55,16 +59,20 @@ public:
 
     char field_0x00[0x2C];
     Scooter *mScooter;      // 0x2C
-    char field_0x30[0x10];
+    char field_0x30[8];
+    Player *mOtherPlayer38;              // 0x38: set by player_enter_player, cleared on leaving
+    IVP_Real_Object_Stub *mVehicle3C;    // 0x3C: set by player_enter_vehicle, cleared on leaving
     char mBlock40[0x18];    // 0x40
-    char mBlock58[0x4C];    // 0x58
+    char mBlock58[0x48];    // 0x58
+    DD_ActorInfo *mAmbientAreaA0;        // 0xA0: actor of the ambient area the player is in
     int mKeys;              // 0xA4
     int mNumBGMs;           // 0xA8
     int mBGMs[3];           // 0xAC (0xB8 onwards is read by 0x001237E8 as separate fields)
     int mFieldB8;           // 0xB8
     int mFieldBC;           // 0xBC
     Vec3f mVecC0;           // 0xC0..0xCB
-    char field_0xCC[7];     // 0xCC..0xD2
+    char field_0xCC[6];     // 0xCC..0xD1
+    u8 mAmbientStateD2;     // 0xD2: 9 on entering an ambient area, 10 on leaving; 0x10 = entered again
     u8 mFieldD3;            // 0xD3
 };
 
