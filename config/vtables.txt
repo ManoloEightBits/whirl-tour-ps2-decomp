@@ -15,3 +15,5 @@
 0x00284540 TimerPickup game/Pickup.h
 0x002A4270 FEScreen game/FEScreen.h
 0x00283E78 FEQuitScreen game/FEScreen.h
+0x002A42D0 FEStartScreen game/FEScreen.h
+0x002A4330 FETrickScreen game/FEScreen.h

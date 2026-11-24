@@ -13,8 +13,6 @@ _$_11IVP_Synapse
 _$_12IVP_Material
 _$_13AI_Pedestrian
 _$_13FELevelScreen
-_$_13FEStartScreen
-_$_13FETrickScreen
 _$_13IVP_3D_Solver
 _$_13IVP_Collision
 _$_14AI_AttackQuake
@@ -103,8 +101,6 @@ __12IVP_Material
 __13AI_AttackType
 __13AI_Pedestrian
 __13FELevelScreen
-__13FEStartScreen
-__13FETrickScreen
 __13IVP_3D_Solver
 __13IVP_Collision
 __14AI_AttackQuake

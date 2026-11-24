@@ -476,7 +476,7 @@
 0x0016B9C8 Action16B9C8__6FEMenu
 0x00198F38 Release198F38__FPv
 0x0016E450 VirtSlot4__8FEScreen
-0x0016DF98 VirtSlot2__8FEScreen
+0x0016DF98 VirtSlot2__8FEScreenf
 0x0016E180 VirtSlot3__8FEScreen
 0x0016E458 __8FEScreeniiPv
 0x0016E5B0 _$_8FEScreen
@@ -495,13 +495,40 @@
 0x0016E890 AddItem48__8FEScreeni
 
 # FEQuitScreen (src/game/FEQuitScreen.cpp)
+0x00259EF0 gDialogData259EF0
+0x00262250 gGameCtx262250
+0x002659B0 gFEPad2659B0
+0x002659B4 gFEPad2659B4
 0x00114F10 DrawDialog114F10__FPvT0ff
+0x001264A8 FindFont1264A8__FPCc
+0x00130760 UpdateDialog130760__FPvP5FEPadi
+0x00130960 CreateDialog130960__FiiiPvi
 0x001309E0 CleanupDialog1309E0__FPv
+0x00141520 PlaySoundCRC141520__FUi
+0x00198E48 CreateTextObj198E48__FPvifff
 0x0019A640 DrawBegin19A640__Fv
 0x0019A6B0 DrawEnd19A6B0__Fv
 0x001150B8 __12FEQuitScreenPv
 0x00115148 _$_12FEQuitScreen
-0x001151A0 VirtSlot2__12FEQuitScreen
+0x001151A0 VirtSlot2__12FEQuitScreenf
 0x00115260 VirtSlot3__12FEQuitScreen
 0x001152B8 VirtSlot7__12FEQuitScreen
 0x001152C0 VirtSlot8__12FEQuitScreen
+
+# FEStartScreen & FETrickScreen (src/game/FEStartTrickScreen.cpp)
+0x00188088 __13FETrickSub164iPiPP5FEPadi
+0x00188390 Update188390__13FETrickSub164f
+0x00188930 Draw188930__13FETrickSub164
+0x00188FC0 _$_13FETrickSub164
+0x00189090 GetStatus189090__13FETrickSub164
+0x0016E9D8 VirtSlot3__13FEStartScreen
+0x0016EC80 __13FEStartScreenPv
+0x0016ECD0 _$_13FEStartScreen
+0x0016ECF8 VirtSlot2__13FEStartScreenf
+0x0016ED88 VirtSlot7__13FEStartScreen
+0x0016ED90 VirtSlot8__13FEStartScreen
+0x0016EDE8 __13FETrickScreenPv
+0x0016EE78 _$_13FETrickScreen
+0x0016EED0 VirtSlot2__13FETrickScreenf
+0x0016EF10 VirtSlot3__13FETrickScreen
+0x0016EF40 VirtSlot7__13FETrickScreen
