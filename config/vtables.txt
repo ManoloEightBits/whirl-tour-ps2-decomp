@@ -22,3 +22,4 @@
 0x002ABA20 IVP_Listener_Collision game/CollisionListeners.h
 0x002A3970 MBCL game/CollisionListeners.h
 0x002A4860 ScootCL game/CollisionListeners.h
+0x00289680 MarActCL game/CollisionListeners.h

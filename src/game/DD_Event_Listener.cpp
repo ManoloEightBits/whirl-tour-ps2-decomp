@@ -1,3 +1,5 @@
+// Also holds the IVP library's out-of-line IVP_Listener_Collision constructor.
+#define IVP_LISTENER_COLLISION_OUT_OF_LINE
 #include "game/CollisionListeners.h"
 
 void DD_Event_Listener::event_object_revived(IVP_Event_Object *ev)

@@ -1,5 +1,6 @@
 # Functions the compiler emits for tools/gen_rtti_stubs.py probes. They are not game code
 # and verify.py skips them.
+Update__6Pickupf
 _$_10AI_Vehicle
 _$_10FEMcScreen
 _$_10IP_PosCtrl
@@ -79,7 +80,6 @@ _$_7AI_Race
 _$_8AI_Agent
 _$_8IVP_Ball
 _$_8LunActCL
-_$_8MarActCL
 _$_9IVP_VHash
 _$_9ScootCtrl
 __10AI_Vehicle
@@ -113,7 +113,6 @@ __15FEOptionsScreen
 __15FEScooterScreen
 __16FEPlaylistScreen
 __16IVP_Mindist_Base
-__17DD_Event_Listener
 __17FECharacterScreen
 __17FELoadStateScreen
 __17IVP_Event_Manager
@@ -125,7 +124,6 @@ __18IVP_SurfaceManager
 __19IVP_3D_Solver_PK_KK
 __19IVP_Actuator_Spring
 __19IVP_Anomaly_Manager
-__19IVP_Listener_Object
 __19IVP_Listener_Spring
 __20IVP_3D_Solver_PF_NPF
 __20IVP_3D_Solver_S_VALS
@@ -140,7 +138,6 @@ __21IVP_3D_Solver_PF_COLL
 __21IVP_3D_Solver_PK_COLL
 __21IVP_Anchor_Check_Dist
 __21IVP_Controller_Motion
-__22IVP_Listener_Collision
 __22IVP_PerformanceCounter
 __23Global_Phantom_Listener
 __23IVP_Collision_Delegator
@@ -159,15 +156,11 @@ __27IVP_U_Active_Float_Listener
 __31IVP_3D_Solver_VEC_PARALLEL_AREA
 __36IVP_3D_Solver_DISTANCE_OF_TWO_POINTS
 __36IVP_Collision_Delegator_Root_Mindist
-__4MBCL
 __6MBCtrl
 __7AI_Boss
 __7AI_Race
-__7ScootCL
 __8AI_Agent
 __8IVP_Ball
 __8LunActCL
-__8MarActCL
 __9IVP_VHash
 __9ScootCtrl
-Update__6Pickupf

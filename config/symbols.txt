@@ -555,3 +555,9 @@
 0x001F73E0 event_post_collision__22IVP_Listener_CollisionP19IVP_Event_Collision
 0x001F73E8 event_collision_object_deleted__22IVP_Listener_CollisionPv
 0x001F73F0 event_friction_created__22IVP_Listener_CollisionP17IVP_Friction_Info
+
+# MarActCL (src/game/MarActCL.cpp)
+0x0014B968 _$_8MarActCL
+0x0014BC00 __8MarActCLP6MarAct
+0x0014BC20 event_pre_collision__8MarActCLP19IVP_Event_Collision
+0x0014CB80 func_0014CB80__7UnkBody

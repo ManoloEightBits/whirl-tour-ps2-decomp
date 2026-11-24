@@ -55,5 +55,12 @@ file with `diff_func.py <file.cpp> <symbol> --variants <json>`. That command onl
   store it cannot prove is independent. See `mine`/`other` in `ScootCL::event_collision_object_deleted`.
 - **`asm("");` as a scheduling barrier.** It stops GCC from mixing a flag update into a block of float
   copies (`MBCL::event_pre_collision`, `ScootCL::event_pre_collision`). It emits no instruction.
+- **An inline function that also exists out of line.** Game code inlines `IVP_Listener_Collision(int)`
+  (`MBCL` passes 3, `ScootCL` 7, `MarActCL` 1), but the IVP library also has an out-of-line copy at
+  `0x001F6F10`. The header defines the constructor inline, except when `IVP_LISTENER_COLLISION_OUT_OF_LINE`
+  is defined. `DD_Event_Listener.cpp` defines that macro and emits the copy.
+- **`base ... with only non-default constructor in class without a constructor`.** GCC 2.95 gives this
+  error when a derived class declares no constructor at all. Declare the real one, even if its body is
+  not decompiled yet (see `MBCL` and `ScootCL`).
 - **Data members declared before the first virtual function** go before `_vptr`. `IVP_Listener_Collision`
   has `int` at `+0x00`, so its `_vptr` is at `+0x04` (`sw $v0, 0x4($a0)` in the constructor).

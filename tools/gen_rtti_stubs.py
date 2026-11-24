@@ -18,7 +18,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import extract_rtti as e
 
 ROOT = Path(__file__).resolve().parent.parent
-HAND_WRITTEN = {'CollFilt', 'IVP_Collision_Filter', 'AI_AttackType', 'IVP_Actuator', 'IVP_U_Active_Value', 'Pickup', 'FEScreen', 'FEQuitScreen', 'FEStartScreen', 'FETrickScreen', 'IVP_Listener_Object', 'DD_Event_Listener', 'IVP_Listener_Collision', 'MBCL', 'ScootCL'}
+HAND_WRITTEN = {'CollFilt', 'IVP_Collision_Filter', 'AI_AttackType', 'IVP_Actuator', 'IVP_U_Active_Value', 'Pickup', 'FEScreen', 'FEQuitScreen', 'FEStartScreen', 'FETrickScreen', 'IVP_Listener_Object', 'DD_Event_Listener', 'IVP_Listener_Collision', 'MBCL', 'ScootCL', 'MarActCL'}
+
+# Entries of config/probes.txt that do not come from a generated stub. The file is rewritten from
+# scratch on every run, so anything verify.py must ignore for another reason has to be listed here.
+MANUAL_PROBES = {
+    '__13AI_AttackType': 'probe constructor in src/game/AI_AttackType.cpp',
+    'Update__6Pickupf': 'placeholder in src/game/KeyPickup.cpp until Pickup::Update (0x0011B3D8) is decompiled',
+}
 
 
 def main():
@@ -32,7 +39,7 @@ def main():
     vts = e.find_vtables(ro, {t['tf_addr']: t for t in tfs})
     out = ROOT / 'src' / 'rtti'
     out.mkdir(parents=True, exist_ok=True)
-    probes, done = ['__13AI_AttackType'], set()  # probe ctor of src/game/AI_AttackType.cpp
+    probes, done = list(MANUAL_PROBES), set()
     for v in sorted(vts, key=lambda v: v['vtable_addr']):
         name = v['class_name']
         if name in done or name in HAND_WRITTEN or not re.fullmatch(r'[A-Za-z]\w*', name) or re.match(r't\d', name) or len(v['bases']) > 1:

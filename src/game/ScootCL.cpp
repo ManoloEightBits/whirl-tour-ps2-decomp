@@ -22,7 +22,7 @@ void ScootCL::event_collision_object_deleted(void *arg)
     IVP_Contact_Situation *c = ev->mContact04;
     // Both pointers are read before the vector copies: the game loads them first.
     void *mine = mObj08;
-    void *other = c->mObj30;
+    void *other = c->mObjects30[0];
     mFricPos34.set_elems(c->msurf20.k[0], c->msurf20.k[1], c->msurf20.k[2]);
     mFricDir40.set_elems(c->mNormal00.k[0], c->mNormal00.k[1], c->mNormal00.k[2]);
     if (mine == other)

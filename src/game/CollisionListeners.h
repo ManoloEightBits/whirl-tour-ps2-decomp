@@ -3,7 +3,7 @@
 
 #include "common/types.h"
 
-// Whirl Tour: IVP_Listener_Object, IVP_Listener_Collision, DD_Event_Listener, MBCL, ScootCL
+// Whirl Tour: IVP_Listener_Object, IVP_Listener_Collision, DD_Event_Listener, MBCL, ScootCL, MarActCL
 // (all RTTI class names recovered from SLUS_204.89).
 
 struct DD_ActorInfo
@@ -35,7 +35,9 @@ struct DD_ActorInfo
 
 struct IVP_Real_Object_Stub
 {
-    char field_0x00[0xA8];
+    char field_0x00[0x88];
+    u32 mFlags88;           // 0x88: MarActCL tests 0x800 and 0x400
+    char field_0x8C[0x1C];
     DD_ActorInfo *mActorA8; // 0xA8
 };
 
@@ -91,7 +93,7 @@ struct IVP_Contact_Situation
     char field_0x1C[4];
     IVP_U_Float_Point msurf20;   // 0x20
     char field_0x2C[4];
-    void *mObj30;                // 0x30
+    IVP_Real_Object_Stub *mObjects30[2]; // 0x30: the two colliding objects
 };
 
 struct IVP_Friction_Info
@@ -113,8 +115,13 @@ public:
     int mEnableBits00; // 0x00 (before _vptr at +0x04!)
 
     int get_enabled_callbacks(); // 0x001F6F08
-    IVP_Listener_Collision();
-    IVP_Listener_Collision(int enable_bits); // 0x001F6F10
+#ifdef IVP_LISTENER_COLLISION_OUT_OF_LINE
+    // The IVP library has an out-of-line copy of the constructor (0x001F6F10, emitted by
+    // DD_Event_Listener.cpp), while game code inlines it (MBCL passes 3, ScootCL 7, MarActCL 1).
+    IVP_Listener_Collision(int enable_bits);
+#else
+    IVP_Listener_Collision(int enable_bits) { mEnableBits00 = enable_bits; }
+#endif
 
     virtual void event_pre_collision(IVP_Event_Collision *);              // slot 1: 0x001F73D8
     virtual void event_post_collision(IVP_Event_Collision *);             // slot 2: 0x001F73E0
@@ -126,6 +133,7 @@ public:
 class MBCL : public IVP_Listener_Collision
 {
 public:
+    MBCL(void *owner); // inlined at 0x0015F7AC (enable bits 3); not decompiled yet
     virtual void event_pre_collision(IVP_Event_Collision *);  // slot 1: 0x001616A0
     virtual void event_post_collision(IVP_Event_Collision *); // slot 2: 0x001616D0
 
@@ -137,6 +145,7 @@ public:
 class ScootCL : public IVP_Listener_Collision
 {
 public:
+    ScootCL(void *obj); // inlined at 0x00171534 (enable bits 7); not decompiled yet
     virtual void event_pre_collision(IVP_Event_Collision *);     // slot 1: 0x0017DFC8
     virtual void event_post_collision(IVP_Event_Collision *);    // slot 2: 0x0017E0A8
     virtual void event_collision_object_deleted(void *);         // slot 3: 0x0017E028
@@ -149,6 +158,29 @@ public:
     IVP_U_Float_Point mNormal28;  // 0x28
     IVP_U_Float_Point mFricPos34; // 0x34
     IVP_U_Float_Point mFricDir40; // 0x40
+};
+
+// Class of the getters at 0x0014CAE8..0x0014CB80; no RTTI, name unknown.
+struct UnkBody
+{
+    IVP_Real_Object_Stub *func_0014CB80(); // returns field 0x70
+};
+
+// Owner of a MarActCL (name inferred from the listener's RTTI name; no RTTI of its own).
+struct MarAct
+{
+    int field_0x00;
+    u32 mFlags04;      // 0x04: MarActCL sets bit 0 or bit 1
+    UnkBody *mBody08;  // 0x08
+};
+
+class MarActCL : public IVP_Listener_Collision
+{
+public:
+    MarActCL(MarAct *owner);                                 // 0x0014BC00
+    virtual void event_pre_collision(IVP_Event_Collision *); // slot 1: 0x0014BC20
+
+    MarAct *mOwner08; // 0x08
 };
 
 #endif
