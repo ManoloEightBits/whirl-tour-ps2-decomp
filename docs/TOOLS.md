@@ -48,7 +48,7 @@ Python prints a `sys.prefix` warning. Every tool finds the game files through `W
 | Tool | What it does |
 | :--- | :--- |
 | `tools/check_all.py [--no-rebuild]` | Runs `verify -q`, `verify_vtables -q`, `rebuild -q --allow-kept` and `check_repo`; one summary line each. |
-| `tools/verify.py [-q\|-v] [file.cpp ...]` | Builds `src/` with the game's compiler and compares every function with `SLUS_204.89`. `-v` lists each match with address and size. |
+| `tools/verify.py [-q\|-v] [file.cpp ...]` | Builds `src/` with the game's compiler and compares every function with `SLUS_204.89`. `-v` lists each match with address and size. Its `assemble()` (also used by `verify_vtables`, `rebuild` and `scratch_cc`) adds the retail assembler's `mtc1` pair nops first (see [MATCHING.md](MATCHING.md)). |
 | `tools/verify_vtables.py [-q\|-v]` | Compares each vtable declared in `config/vtables.txt` slot by slot. Destructor and pure-virtual slots are not counted. |
 | `tools/progress.py [--write] [--no-rebuild]` | Computes the README progress table (bytes per binary-map region included) and writes it between the `progress:begin/end` markers. It refuses to write while a check fails. |
 | `rebuild/rebuild.py -q --allow-kept` | Relinks the compiled functions into the split assembly and checks the SHA-1 of the result. |

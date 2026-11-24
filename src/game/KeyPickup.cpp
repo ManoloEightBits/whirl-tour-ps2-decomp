@@ -79,8 +79,6 @@ void Pickup::Update(f32)
 {
 }
 
-#ifdef NON_MATCHING
-// 45 of 46 words match; 1 extra nop after li.s $f3, 0.5f in retail assembler:
 void KeyPickup::Update(f32 dt)
 {
     Pickup::Update(dt);
@@ -100,7 +98,6 @@ void KeyPickup::Update(f32 dt)
         }
     }
 }
-#endif
 
 void KeyPickup::OnCollected(Player *player)
 {

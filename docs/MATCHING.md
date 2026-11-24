@@ -3,6 +3,21 @@
 Source patterns that ee-gcc 2.95.3 (`-O2 -G0 -fno-exceptions`) needs before the output matches the game.
 Each one is used by a function that matches in `src/`.
 
+## Assembler
+
+The retail assembler is not among the available packages. All three `ps2eeas.exe` builds (2.95.2-273a,
+2.95.3-114, 2.95.3-136) give the same results; the three `as.exe` builds break three functions. The
+retail one differs from them in one known way: the `nop` it inserts after `mtc1` (and after the
+`li.s` macro, which ends in `mtc1`). It checks the even/odd FP register *pair*, like classic GNU as
+does, and not only the register itself. After `mtc1 $at,$f3`, a `mul.s $f0,$f0,$f2` gets a `nop`
+because `$f2` is `$f3`'s partner. In game and IVP code this rule explains 246 of the 247 such nops
+before an instruction that does not read the written register.
+
+`verify.assemble()` reproduces it with `mtc1_pair_nops()`: it writes `<file>.as.s` with an explicit
+`nop` for the partner case (the exact-register case stays with ps2eeas), skipping `.set noreorder`
+regions, and assembles that. This is what moved `KeyPickup::Update` out of `NON_MATCHING`. If a
+function differs from the game only by a `nop` right after an `mtc1`, look here first.
+
 ## Register allocation
 
 When the instructions are right but the register numbers differ, the cause is usually the order in

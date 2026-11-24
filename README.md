@@ -11,12 +11,12 @@ A hobby reverse-engineering project for the US PS2 release of *Whirl Tour* (`SLU
 <!-- progress:begin -->
 | Metric | Matched / Confirmed | Total in `.text` | Share | Progress |
 | :--- | ---: | ---: | ---: | :--- |
-| **Total `.text` bytes** | **17,748 B** | 1,401,448 B | **1.266%** | `█░░░░░░░░░░░░░░░░░░░` |
-| **Game logic bytes** (`0x100000..0x1C62CF`) | **13,668 B** | 811,728 B | **1.684%** | `█░░░░░░░░░░░░░░░░░░░` |
-| **Matched functions (`verify.py`)** | **250** | ~7,125 | **3.509%** | `█░░░░░░░░░░░░░░░░░░░` |
+| **Total `.text` bytes** | **18,380 B** | 1,401,448 B | **1.312%** | `█░░░░░░░░░░░░░░░░░░░` |
+| **Game logic bytes** (`0x100000..0x1C62CF`) | **14,300 B** | 811,728 B | **1.762%** | `█░░░░░░░░░░░░░░░░░░░` |
+| **Matched functions (`verify.py`)** | **253** | ~7,125 | **3.551%** | `█░░░░░░░░░░░░░░░░░░░` |
 | **Confirmed vtable slots (`verify_vtables.py`)** | **80** | ~820 | **9.756%** | `██░░░░░░░░░░░░░░░░░░` |
 | **Confirmed RTTI classes (`vtables.txt`)** | **24** | 182 | **13.187%** | `███░░░░░░░░░░░░░░░░░` |
-| **Full binary relink (`rebuild.py`)** | **231 linked** | `02f39f20...0744` | **SHA-1 MATCH** | `████████████████████` |
+| **Full binary relink (`rebuild.py`)** | **234 linked** | `02f39f20...0744` | **SHA-1 MATCH** | `████████████████████` |
 <!-- progress:end -->
 
 ### Binary `.text` Map (`0x00100000..0x00256268`)
@@ -32,7 +32,7 @@ A hobby reverse-engineering project for the US PS2 release of *Whirl Tour* (`SLU
 | Subsystem / Translation Unit | Classes | Matched Functions | Vtable Slots | Status |
 | :--- | :--- | ---: | ---: | :--- |
 | **Collision Filter (`CollFilt`)** | `CollFilt`, `IVP_Collision_Filter` | 7 / 7 | 2 / 2 | `██████████` **100%** |
-| **Pickups (`Pickup`, `KeyPickup`, +9)** | `EnvObj`, `Pickup` + 10 subclasses | 47 / 55 | 22 / 22 | `█████████░` **85%** (9 subclasses 100%, all vtables confirmed) |
+| **Pickups (`Pickup`, `KeyPickup`, +9)** | `EnvObj`, `Pickup` + 10 subclasses | 49 / 59 | 22 / 22 | `████████░░` **83%** (9 subclasses 100%, all vtables confirmed; 10 functions left in the TU) |
 | **Front-End UI (`FEScreen` hierarchy)** | `FEScreen`, `FEQuitScreen`, `FEStartScreen`, `FETrickScreen` (+10 pending) | 31 / ~160 | 28 / 112 | `███░░░░░░░` **25%** (`FEQuitScreen` & `FETrickScreen` 100%) |
 | **Player & Scooter (`Player`, `ScootCtrl`)** | `Player`, `ScootCtrl` | 46 / ~90 | 0 / 7 | `█████░░░░░` **51%** (stat/boost/adrenaline/health methods matched) |
 | **Motion & Interpolation Controllers** | `MotionCtrl`, `IP_PosCtrl`, `IP_RotCtrl`, `IP_AnimCtrl`, `MBCtrl` | 4 / ~45 | 0 / 35 | `█░░░░░░░░░` **9%** (RTTI `__tf` matched) |
@@ -45,7 +45,7 @@ A hobby reverse-engineering project for the US PS2 release of *Whirl Tour* (`SLU
 ## Technical Findings
 
 - **Target binary:** ELF32 MIPS R5900 (`SLUS_204.89`, entry `0x00100008`), stripped of symbol tables, but compiled **with C++ RTTI enabled**: 199 `__tf*` RTTI functions and 182 virtual function tables (8-byte slots: `{s16 delta, s16 index, void *func}`) are present in `.text` and `.rodata` (`tools/extract_rtti.py`).
-- **Compiler & flags:** SN Systems ProDG `ee-gcc 2.95.3 build 1.14` (`ee-gcc2.95.3-114`) with `-O2 -G0 -fno-exceptions` (RTTI enabled), assembled with `ps2eeas.exe` from the `ee-gcc 2.95.2-273a` package (which inserts a `nop` after `mtc1` before a dependent FP instruction and does not pad short backward loops).
+- **Compiler & flags:** SN Systems ProDG `ee-gcc 2.95.3 build 1.14` (`ee-gcc2.95.3-114`) with `-O2 -G0 -fno-exceptions` (RTTI enabled), assembled with `ps2eeas.exe` from the `ee-gcc 2.95.2-273a` package (which inserts a `nop` after `mtc1` before a dependent FP instruction and does not pad short backward loops). The retail assembler, which none of the available packages reproduces, also inserts that `nop` when the next instruction reads the *partner* register of the even/odd FP pair. `tools/verify.py` adds those nops to GCC's output before assembling (see `docs/MATCHING.md`).
 - **Register saving convention:** Game and physics code (`0x00100000..0x00228F2F`) saves 128-bit registers (`sq`/`lq`) in function prologues; static runtime libraries (`0x00228F30..0x00256268`) save 64-bit registers (`sd`/`ld`).
 
 ---

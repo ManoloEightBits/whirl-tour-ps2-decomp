@@ -46,7 +46,7 @@ CPPFLAGS = ['-lang-c++', '-nostdinc', '-Iinclude', '-Isrc']
 CFLAGS = ['-quiet', '-O2', '-G0', '-fno-exceptions']
 ASFLAGS = ['-G0']
 
-BUILD_KEY = CPPFLAGS + CFLAGS + [ASSEMBLER_COMPILER, ASSEMBLER] + ASFLAGS
+BUILD_KEY = CPPFLAGS + CFLAGS + [ASSEMBLER_COMPILER, ASSEMBLER] + ASFLAGS + ['mtc1-pair-nops']
 TOOL_TIMEOUT = 120
 JOBS = min(8, os.cpu_count() or 1)
 INCLUDE = re.compile(r'^\s*#\s*include\s+"([^"]+)"', re.M)
@@ -201,11 +201,53 @@ def source_key(source, flags):
     return digest.hexdigest()
 
 
+# The retail assembler checks the mtc1 delay on even/odd FP register pairs, like classic GNU as:
+# after "mtc1 rt,$fN" (also the end of "li.s $fN,...") it puts a nop before an instruction that
+# reads $fN or its partner $fN^1. ps2eeas only checks $fN itself, so mtc1_pair_nops() writes the
+# nop for the partner case. In SLUS_204.89 this rule explains 246 of the 247 nops after mtc1 that
+# precede an instruction not reading $fN (the exceptions are in the runtime libraries).
+MTC1_TARGET = re.compile(r'(?:mtc1\s+\$\w+,\s*|li\.s\s+)\$f(\d+)\b')
+FP_READS_ALL = re.compile(r'(?:c\.\w+\.s|s\.s|swc1|mfc1|(?:add|sub|mul|madd|msub)a\.s)$')
+
+
+def fp_sources(line):
+    """FP registers an assembly instruction reads (destination first in all other forms)."""
+    mnemonic, operands = (line.split(None, 1) + [''])[:2]
+    regs = [int(n) for n in re.findall(r'\$f(\d+)', operands)]
+    return set(regs if FP_READS_ALL.match(mnemonic) else regs[1:])
+
+
+def mtc1_pair_nops(text):
+    """Add the nops the retail assembler puts between mtc1 and a reader of the partner register."""
+    out, pending, noreorder = [], None, False
+    for line in text.splitlines(keepends=True):
+        s = line.strip()
+        if not s or s.startswith('#'):
+            out.append(line)
+            continue
+        if s.startswith('.') or s.endswith(':'):
+            if s.startswith('.set'):
+                noreorder = 'noreorder' in s or (noreorder and 'reorder' not in s)
+            pending = None
+        elif pending is not None:
+            reads = fp_sources(s)
+            if pending not in reads and pending ^ 1 in reads:
+                out.append('\tnop\t\t\t# mtc1 pair delay (verify.mtc1_pair_nops)\n')
+            pending = None
+        m = MTC1_TARGET.match(s)
+        if m and not noreorder:
+            pending = int(m.group(1))
+        out.append(line)
+    return ''.join(out)
+
+
 def assemble(compilers_dir, asm, obj):
-    """Assemble compiler output with SN's ps2eeas.exe."""
+    """Assemble compiler output with SN's ps2eeas.exe, after mtc1_pair_nops()."""
     asm_dir, asm_exe = resolve_assembler(compilers_dir)
     r = lambda p: p.relative_to(ROOT).as_posix()
-    run_tool(asm_dir, asm_exe, ASFLAGS + ['-o', r(obj), r(asm)])
+    fixed = asm.with_name(asm.stem + '.as.s')
+    fixed.write_text(mtc1_pair_nops(asm.read_text(encoding='latin-1')), encoding='latin-1')
+    run_tool(asm_dir, asm_exe, ASFLAGS + ['-o', r(obj), r(fixed)])
 
 
 def build(compilers_dir, source, defines):
