@@ -59,6 +59,7 @@ A hobby reverse-engineering project for the US PS2 release of *Whirl Tour* (`SLU
 - `tools/` — Verification and analysis scripts (`verify.py`, `verify_vtables.py`, `check_all.py`, `extract_rtti.py`, `check_repo.py`).
 - `rebuild/` — Full ELF/binary relinker (`rebuild.py`) that splices compiled C++ functions into the split assembly and verifies the final SHA-1.
 - `docs/STANDARDS.md` — Coding, verification, and repository cleanliness rules.
+- `docs/MATCHING.md` — Compiler quirks and source patterns needed to match ee-gcc 2.95.3 output (register allocation, scheduling, layout).
 
 ---
 
