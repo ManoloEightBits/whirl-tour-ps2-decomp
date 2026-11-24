@@ -568,3 +568,8 @@
 0x00117718 event_post_collision__21DD_Collision_ListenerP19IVP_Event_Collision
 0x00116B00 func_00116B00__FP20IVP_Real_Object_StubT0P19IVP_Event_Collision
 0x00126708 func_00126708__FPvi
+
+# LunActCL (src/game/LunActCL.cpp)
+0x001463A8 event_pre_collision__8LunActCLP19IVP_Event_Collision
+0x00148DE0 _$_8LunActCL
+0x00208178 func_00208178__17IVP_U_Float_Point

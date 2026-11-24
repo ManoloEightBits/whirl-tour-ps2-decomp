@@ -78,7 +78,6 @@ _$_7AI_Boss
 _$_7AI_Race
 _$_8AI_Agent
 _$_8IVP_Ball
-_$_8LunActCL
 _$_9IVP_VHash
 _$_9ScootCtrl
 __10AI_Vehicle
@@ -159,6 +158,5 @@ __7AI_Boss
 __7AI_Race
 __8AI_Agent
 __8IVP_Ball
-__8LunActCL
 __9IVP_VHash
 __9ScootCtrl

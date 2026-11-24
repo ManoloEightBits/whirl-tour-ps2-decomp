@@ -4,7 +4,7 @@
 #include "common/types.h"
 
 // Whirl Tour: IVP_Listener_Object, IVP_Listener_Collision, DD_Event_Listener, DD_Collision_Listener,
-// MBCL, ScootCL, MarActCL
+// MBCL, ScootCL, LunActCL, MarActCL
 // (all RTTI class names recovered from SLUS_204.89).
 
 struct IVP_Real_Object_Stub;
@@ -30,11 +30,18 @@ struct DD_ActorData
     DD_CollisionEntry mEntries88[1];  // 0x88: mNumEntries6D entries
 };
 
+struct UnkActorRef
+{
+    char field_0x00[0x10];
+    int field_0x10; // copied to LunAct::field_0x3C
+};
+
 struct DD_ActorInfo
 {
     int mField00;
     u32 mFlags04;           // 0x04
     DD_ActorData *mData08;  // 0x08
+    UnkActorRef *field_0x0C;
 
     // The do { } while (0) wrapper (probably a macro in the original source) is required:
     // without it GCC keeps the actor in $v1 instead of $a0 and drops the nop before the
@@ -95,6 +102,8 @@ public:
 struct IVP_U_Float_Point
 {
     f32 k[3];
+
+    f32 func_00208178(); // 0x00208178 (IVP code; LunActCL clamps it to 1, probably the length)
 
     inline void set_negative(const IVP_U_Float_Point *p)
     {
@@ -208,6 +217,28 @@ struct MarAct
     int field_0x00;
     u32 mFlags04;      // 0x04: MarActCL sets bit 0 or bit 1
     UnkBody *mBody08;  // 0x08
+};
+
+// Owner of a LunActCL (name inferred from the listener's RTTI name; no RTTI of its own).
+struct LunAct
+{
+    int field_0x00;
+    u32 mFlags04;      // 0x04: LunActCL sets bit 0 or bit 1
+    UnkBody *mBody08;  // 0x08
+    char pad_0x0C[0x14];
+    f32 field_0x20;    // kept in 0..1 by LunActCL
+    char pad_0x24[0x18];
+    int field_0x3C;
+    char pad_0x40[0x8C];
+    f32 field_0xCC;    // LunActCL sets 2.0
+};
+
+class LunActCL : public IVP_Listener_Collision
+{
+public:
+    virtual void event_pre_collision(IVP_Event_Collision *); // slot 1: 0x001463A8
+
+    LunAct *mOwner08; // 0x08
 };
 
 class MarActCL : public IVP_Listener_Collision

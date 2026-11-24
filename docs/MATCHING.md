@@ -59,6 +59,17 @@ file with `diff_func.py <file.cpp> <symbol> --variants <json>`. That command onl
   (`MBCL` passes 3, `ScootCL` 7, `MarActCL` 1), but the IVP library also has an out-of-line copy at
   `0x001F6F10`. The header defines the constructor inline, except when `IVP_LISTENER_COLLISION_OUT_OF_LINE`
   is defined. `IVP_Listener_Collision.cpp` defines that macro and emits the copy.
+- **`min.s` / `max.s` come from the GNU g++ operators `<?` and `>?`.** GCC 2.95 never turns
+  `a < b ? a : b` on floats into MIN (IEEE rules forbid it), so a clamp that compiles to `min.s`/`max.s`
+  was written as `(x + t <? 1.0f) >? 0.0f`. A `?:` macro around a function call instead compiles to a
+  branch that calls the function twice: `LunActCL` has `MIN(len(), 1.0f)` as `((a) <= (b) ? (a) : (b))`
+  (`c.le.s`; with `<` it would be `c.lt.s`). See `LunActCL::event_pre_collision`.
+- **Inline members are emitted in the key-function TU.** The TU that defines a class's first non-inline
+  virtual function (and so emits its vtable) also emits out-of-line copies of the class's inline member
+  functions. If the game has no such copy, the original did not have the inline member: for example,
+  `DD_Collision_Listener` uses its implicit constructor, which needs the base's `int enable_bits = 1` default.
+  If two classes' key functions share our file but not the game's TU, GCC may also inline one class's
+  `__tf` into the other's: keep separate game TUs in separate files (`IVP_Listener_Collision.cpp`).
 - **`base ... with only non-default constructor in class without a constructor`.** GCC 2.95 gives this
   error when a derived class declares no constructor at all. Declare the real one, even if its body is
   not decompiled yet (see `MBCL` and `ScootCL`).
