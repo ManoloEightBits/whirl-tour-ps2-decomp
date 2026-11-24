@@ -32,4 +32,4 @@ segments:
     subsegments:
       - [0x80, asm, text]
   - [0x1562E8, bin, after_text]
-  - [0x1B1BF4]
+  - [0x1B1BE4]

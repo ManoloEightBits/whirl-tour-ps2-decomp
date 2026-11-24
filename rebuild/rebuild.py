@@ -27,6 +27,10 @@ UNLINKED = '__unlinked'
 SHT_PROGBITS, STT_OBJECT, STT_SECTION = 1, 1, 3
 R_MIPS_NONE, R_MIPS_HI16, R_MIPS_LO16 = 0, 5, 6
 BINUTILS_TIMEOUT = 600
+# splat writes registers 8-15 with their o32 names ($t0-$t7); under -mabi=eabi registers 8-11
+# are $a4-$a7 and 12-15 are $t0-$t3, and the assembler has no $t4-$t7.
+O32_TEMPS = re.compile(r'\$t([0-7])\b')
+EABI_NAME = {'0': 'a4', '1': 'a5', '2': 'a6', '3': 'a7', '4': 't0', '5': 't1', '6': 't2', '7': 't3'}
 INSTRUCTION = re.compile(r'\s+/\* [0-9A-F]+ ([0-9A-F]{8}) ([0-9A-F]{8}) \*/')
 
 
@@ -154,9 +158,10 @@ def classify(obj, addresses):
             inside = obj.sections[target_section]['name'] if 0 < target_section < len(obj.sections) else ''
             if target_kind == STT_SECTION and inside.startswith('.text.'):
                 calls.setdefault(name, set()).add(inside[len('.text.'):])
-            elif target_section and target_kind != verify.STT_FUNC:
+            elif 0 < target_section < len(obj.sections) and target_kind != verify.STT_FUNC:
                 reason = "uses data from its own object file that the game's copy doesn't confirm"
-            elif not target_section and target not in addresses:
+            elif not 0 < target_section < len(obj.sections) and target not in addresses:
+                # undefined, or a common symbol such as a type_info node: the game's address is needed
                 reason = 'refers to %s, which has no address in config/symbols.txt' % target
         if reason:
             kept[name] = reason
@@ -214,6 +219,7 @@ def cut_assembly(source, dest, ranges):
                     open_label = None
 
         for line in fin:
+            line = O32_TEMPS.sub(lambda m: '$' + EABI_NAME[m.group(1)], line)
             instruction = INSTRUCTION.match(line)
             if not instruction:
                 if not line.startswith(('.align', '.section')):
@@ -314,20 +320,37 @@ def main():
                 functions.update((name, obj) for name in linked)
                 sizes.update(linked)
                 kept_all.update(kept)
+            for name in verify.load_probes():
+                kept_all.pop(name, None)  # helpers of the generated probes: not game code
             print('linking %d C++ functions (%d bytes); %d kept as assembly'
                   % (len(functions), sum(sizes.values()), len(kept_all)))
             for name, reason in sorted(kept_all.items()):
                 print('  kept: %s %s' % (name, reason))
 
-        ranges = sorted((addresses[n], addresses[n] + sizes[n]) for n in functions)
-        cut, text_obj, script, elf, binary = (WORK / n for n in
-                                              ('text.s', 'text.o', 'link.ld', 'out.elf', 'text.bin'))
-        chunks = cut_assembly(split / 'asm' / 'text.s', cut, ranges)
-        binutils('as', '-EL', '-march=r5900', '-mabi=eabi', '-G0', '-I', split / 'include', '-o', text_obj, cut)
-        write_linker_script(script, text_obj, chunks, functions, addresses, text['addr'])
-        binutils('ld', '-EL', '--no-check-sections', '-T', script, '-T', split / 'undefined_syms_auto.txt',
-                 '-T', split / 'undefined_funcs_auto.txt', '-o', elf, text_obj, *objects)
-        binutils('objcopy', '-O', 'binary', '-j', '.text', elf, binary)
+        # Link, then check each C++ function against the game. A function whose bytes differ (an
+        # address in config/symbols.txt that holds for one translation unit but not another, such
+        # as a type_info node the game has in two places) goes back to assembly and we link again.
+        while True:
+            ranges = sorted((addresses[n], addresses[n] + sizes[n]) for n in functions)
+            cut, text_obj, script, elf, binary = (WORK / n for n in
+                                                  ('text.s', 'text.o', 'link.ld', 'out.elf', 'text.bin'))
+            chunks = cut_assembly(split / 'asm' / 'text.s', cut, ranges)
+            binutils('as', '-EL', '-march=r5900', '-mabi=eabi', '-G0', '-I', split / 'include', '-o', text_obj, cut)
+            write_linker_script(script, text_obj, chunks, functions, addresses, text['addr'])
+            binutils('ld', '-EL', '--no-check-sections', '-T', script, '-T', split / 'undefined_syms_auto.txt',
+                     '-T', split / 'undefined_funcs_auto.txt', '-o', elf, text_obj, *objects)
+            binutils('objcopy', '-O', 'binary', '-j', '.text', elf, binary)
+            built, original = binary.read_bytes(), slus.contents(text)
+            wrong = [n for n in functions
+                     if built[addresses[n] - text['addr']:addresses[n] - text['addr'] + sizes[n]]
+                     != original[addresses[n] - text['addr']:addresses[n] - text['addr'] + sizes[n]]]
+            if not wrong:
+                break
+            for n in wrong:
+                kept_all[n] = 'links to the wrong address for a symbol shared between translation units'
+                del functions[n]
+                del sizes[n]
+            print('%d linked functions differ from the game; keeping them as assembly' % len(wrong))
 
         rebuilt = ((split / 'assets' / 'header.bin').read_bytes() + binary.read_bytes()[:text['size']]
                    + (split / 'assets' / 'after_text.bin').read_bytes())
