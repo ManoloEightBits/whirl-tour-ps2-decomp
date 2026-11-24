@@ -600,3 +600,8 @@
 0x0014FB08 func_0014FB08__FP6EnvObjP9UnkObjDefi
 0x001262E0 func_001262E0__Fi
 0x0012EE48 func_0012EE48__FP6Pickup
+
+# AI_PedestrianCL (src/game/AI_PedestrianCL.cpp)
+0x001067A0 _$_15AI_PedestrianCL
+0x00106820 event_pre_collision__15AI_PedestrianCLP19IVP_Event_Collision
+0x001068E0 event_post_collision__15AI_PedestrianCLP19IVP_Event_Collision

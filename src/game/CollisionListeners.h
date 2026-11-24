@@ -4,7 +4,7 @@
 #include "common/types.h"
 
 // Whirl Tour: IVP_Listener_Object, IVP_Listener_Collision, DD_Event_Listener, DD_Collision_Listener,
-// MBCL, ScootCL, LunActCL, MarActCL
+// AI_PedestrianCL, MBCL, ScootCL, LunActCL, MarActCL
 // (all RTTI class names recovered from SLUS_204.89).
 
 struct IVP_Real_Object_Stub;
@@ -173,6 +173,18 @@ public:
     // would be emitted in this class's key-function TU, and the game has no such copy.
     virtual void event_pre_collision(IVP_Event_Collision *);  // slot 1: 0x00116C80
     virtual void event_post_collision(IVP_Event_Collision *); // slot 2: 0x00117718
+};
+
+class AI_PedestrianCL : public IVP_Listener_Collision
+{
+public:
+    AI_PedestrianCL(IVP_Real_Object_Stub *obj); // inlined at 0x00103930 (enable bits 3); not decompiled yet
+    virtual void event_pre_collision(IVP_Event_Collision *);  // slot 1: 0x00106820
+    virtual void event_post_collision(IVP_Event_Collision *); // slot 2: 0x001068E0
+
+    IVP_Real_Object_Stub *mObj08; // 0x08: the pedestrian's own object
+    IVP_U_Float_Point mNormal0C;  // 0x0C: contact normal pointing away from the other object
+    DD_ActorData *mData18;        // 0x18: actor data of the object it touched
 };
 
 class MBCL : public IVP_Listener_Collision

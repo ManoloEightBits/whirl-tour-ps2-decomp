@@ -93,6 +93,13 @@ file with `diff_func.py <file.cpp> <symbol> --variants <json>`. That command onl
   after the copy of the new object into `$a0`, so it gets `$v0` instead of the game's `$v1`. The same
   code in a `static inline` function taking the pickup matches (`SpawnCollectEffect`). A `static inline`
   free function leaves no out-of-line copy, unlike an inline member.
+- **A value that the game reloads, but ours keeps in a register, means GCC knew less.** In
+  `AI_PedestrianCL::event_pre_collision` the game reloads `n->k[1]` after the stores to a local `up`
+  vector, because CSE could not rule out that they alias. Written in place, CSE keeps the value; moved
+  into a `static inline` helper that receives `n` as a parameter (`FixNormal`), the reload appears.
+- **Which FP register a temporary gets depends on what is live at the time.** In the same function,
+  `up.k[0]` lands in `$f1` only if it is read *before* the `if` that uses it, so that its life overlaps
+  the compared value in `$f0`. The delay-slot filler then moves the load to the same place either way.
 - **`base ... with only non-default constructor in class without a constructor`.** GCC 2.95 gives this
   error when a derived class declares no constructor at all. Declare the real one, even if its body is
   not decompiled yet (see `MBCL` and `ScootCL`).
