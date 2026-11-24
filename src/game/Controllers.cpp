@@ -8,6 +8,23 @@ void IP_PosCtrl::core_is_going_to_be_deleted_event(void *)
     delete this;
 }
 
+void IP_PosCtrl::do_simulation_controller(void *, void *)
+{
+    Vec4f a;
+    Vec4f b;
+    func_001F3F30(mObj04, &a, &b); // results unused
+    Vec3f *pos = &mPos0C;
+    f32 x = pos->x;
+    mCore08->field_0xB0.x = x;
+    f32 y = pos->y;
+    mCore08->field_0xB0.y = y;
+    f32 z = pos->z;
+    mCore08->field_0xB0.z = z;
+    mCore08->field_0x90.x = 0.0f;
+    mCore08->field_0x90.y = 0.0f;
+    mCore08->field_0x90.z = 0.0f;
+}
+
 int IP_PosCtrl::get_controller_priority()
 {
     return 500;

@@ -25,6 +25,17 @@ public:
     inline virtual ~IVP_Controller_Independent() {}                    // slot 7: 0x001F7058
 };
 
+// Core data written by the controllers (an IVP core; layout from IP_PosCtrl).
+struct UnkCore
+{
+    char pad_0x00[0x90];
+    Vec3f field_0x90; // zeroed by IP_PosCtrl
+    char pad_0x9C[0x14];
+    Vec3f field_0xB0; // set to IP_PosCtrl::mPos0C
+};
+
+void func_001F3F30(void *obj, void *a, void *b); // 0x001F3F30 (IVP code)
+
 // Removes a controller from a core (IVP code; called by every game controller's destructor).
 void func_001FA170(IVP_Controller *controller, void *core);            // 0x001FA170
 
@@ -42,8 +53,9 @@ class IP_PosCtrl : public IVP_Controller_Independent
 public:
     WHIRL_CONTROLLER_SLOTS(IP_PosCtrl) // 0x00116A10, 0x00116968, 0x00116960, 0x00116AA0
 
-    int field_0x04;
-    void *mCore08; // 0x08
+    void *mObj04;     // 0x04
+    UnkCore *mCore08; // 0x08
+    Vec3f mPos0C;     // 0x0C
 };
 
 class MotionCtrl : public IVP_Controller_Independent

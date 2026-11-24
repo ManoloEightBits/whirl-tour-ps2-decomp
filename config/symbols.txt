@@ -639,3 +639,4 @@
 0x00180560 do_simulation_controller__9ScootCtrlPvT1
 0x00180690 get_controller_priority__9ScootCtrl
 0x00180820 _$_9ScootCtrl
+0x001F3F30 func_001F3F30__FPvN20
