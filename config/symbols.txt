@@ -365,7 +365,12 @@
 0x001DDC68 __tft23IVP_Listener_Set_Active1Z8IVP_Core
 0x00100C08 __builtin_delete
 
-# ScootCtrl (src/game/ScootCtrl.cpp)
+# Scooter (src/game/Scooter.cpp)
+0x0011A590 func_0011A590__FPv
+0x0017E900 GetPtr194__7Scooter
+0x0017E908 SetVec194__7ScooterP5Vec3f
+0x0017E928 GetField500__7Scooter
+0x0017E930 SetActorAndClear1D8__7ScooterPv
 0x0017E958 GetStatFactor__7Scooter
 0x0017EA08 IsBoostInactive__7Scooter
 0x0017EA18 IsBoostUnavailable__7Scooter
@@ -392,9 +397,22 @@
 0x0017EC70 GetField1A0__7Scooter
 0x0017EC78 IsGrounded__7Scooter
 0x0017ECA0 HasAdrenaline__7Scooter
+0x0017ECC8 func_0017ECC8__7ScooterPv
 0x0017ED28 ConsumeAdrenaline__7Scooterf
+0x0017ED58 func_0017ED58__7Scooteri
+0x0017ED78 func_0017ED78__7ScooterPCi
+0x0017EDD0 func_0017EDD0__7Scooter
+0x0017EDF0 func_0017EDF0__7Scooteri
+0x0017EE28 func_0017EE28__7Scooteri
 
 # Player (src/game/Player.cpp)
+0x0017F328 func_0017F328__FP7Scooter
+0x0017F500 func_0017F500__FP7Scooter
+0x00174198 func_00174198__FP7ScooterPv
+0x00123438 Action17F328__6Player
+0x00123458 Action17F500__6Player
+0x00123478 GetPtr40__6Player
+0x00123480 GetPtr58__6Player
 0x00123548 AddKey__6Player
 0x00123558 GetKeys__6Player
 0x00123560 AddSpeedBoost__6Playerff
@@ -417,6 +435,11 @@
 0x00123758 GetMaxConstant1000__6Player
 0x00123768 HasAdrenaline__6Player
 0x00123788 ConsumeAdrenaline__6Playerf
+0x001237A8 Action17ECC8__6PlayerPv
+0x001237C8 Action174198__6PlayerPv
+0x001237E8 func_001237E8__6PlayerP13UnkCheckpoint
+0x00123890 EnableFieldD3__6Player
+0x001238A0 GetScooterField500__6Player
 0x00153C10 UnlockScooterGlobal__Fi
 0x001722B0 SubComponentAction1__FP7Scooter
 0x001723F0 SubComponentAction2__FP7Scooter

@@ -11,6 +11,10 @@
 class Scooter
 {
 public:
+    Vec3f *GetPtr194();                      // 0x0017E900
+    void SetVec194(Vec3f *v);                // 0x0017E908
+    int GetField500();                       // 0x0017E928
+    void SetActorAndClear1D8(void *actor);   // 0x0017E930
     f32 GetStatFactor();                     // 0x0017E958
     int IsBoostInactive();                   // 0x0017EA08
     int IsBoostUnavailable();                // 0x0017EA18
@@ -34,10 +38,16 @@ public:
     void DisableField170();                  // 0x0017EC50
     void SetVec174(f32 x, f32 y, f32 z);     // 0x0017EC58
     void *GetPtr78();                        // 0x0017EC68
-    int GetField1A0();                       // 0x0017EC70
+    void *GetField1A0();                     // 0x0017EC70
     int IsGrounded();                        // 0x0017EC78
     int HasAdrenaline();                     // 0x0017ECA0
+    void func_0017ECC8(void *arg);           // 0x0017ECC8
     f32 ConsumeAdrenaline(f32 amount);       // 0x0017ED28
+    void func_0017ED58(int arg);              // 0x0017ED58
+    void func_0017ED78(const int *list);  // 0x0017ED78
+    void func_0017EDD0();                     // 0x0017EDD0
+    void func_0017EDF0(int flag);             // 0x0017EDF0
+    void func_0017EE28(int flag);             // 0x0017EE28
 
     char field_0x000[0x18];
     u32 mFlags18;              // 0x018
@@ -59,12 +69,17 @@ public:
     f32 mVec174Y;              // 0x178
     f32 mVec174Z;              // 0x17C
     f32 mField180;             // 0x180
-    char field_0x184[0x1C];
-    int mField1A0;             // 0x1A0
+    char field_0x184[0x10];
+    Vec3f mVec194;             // 0x194
+    void *mField1A0;           // 0x1A0
     char field_0x1A4[0x28];
     int mField1CC;             // 0x1CC
     int mField1D0;             // 0x1D0
-    char field_0x1D4[0x454];
+    int mField1D4;             // 0x1D4
+    struct IVP_Real_Object_Stub *mPhysObj1D8; // 0x1D8
+    char field_0x1DC[0x324];
+    int mField500;             // 0x500
+    char field_0x504[0x124];
     int mBoostState;           // 0x628
     f32 mField62C;             // 0x62C
     f32 mField630;             // 0x630

@@ -1,4 +1,33 @@
 #include "game/Scooter.h"
+#include "game/CollisionListeners.h"
+
+void PhysicsClear1F34B0(void *obj, int flag); // 0x001F34B0
+void func_0011A3E0(void *obj, int id);        // 0x0011A3E0
+void func_0011A590(void *obj);                // 0x0011A590
+
+Vec3f *Scooter::GetPtr194()
+{
+    return &mVec194;
+}
+
+void Scooter::SetVec194(Vec3f *v)
+{
+    Vec3f *d = &mVec194; // the local pointer is what keeps the addiu (direct member stores fold it)
+    d->x = v->x;
+    d->y = v->y;
+    d->z = v->z;
+}
+
+int Scooter::GetField500()
+{
+    return mField500;
+}
+
+void Scooter::SetActorAndClear1D8(void *actor)
+{
+    mPhysObj1D8->mActorA8 = (DD_ActorInfo *)actor;
+    PhysicsClear1F34B0(mPhysObj1D8, 1);
+}
 
 int Scooter::IsBoostInactive()
 {
@@ -113,7 +142,7 @@ void *Scooter::GetPtr78()
     return mBlock78;
 }
 
-int Scooter::GetField1A0()
+void *Scooter::GetField1A0()
 {
     return mField1A0;
 }
@@ -128,6 +157,35 @@ int Scooter::HasAdrenaline()
 int Scooter::IsGrounded()
 {
     return (mFlags18 & 4) || mGround68 != 0;
+}
+
+void Scooter::func_0017ED58(int arg)
+{
+    func_0011A3E0(mField1A0, arg);
+}
+
+void Scooter::func_0017ED78(const int *list)
+{
+    while (*list != 0)
+    {
+        func_0011A3E0(mField1A0, *list);
+        list++;
+    }
+}
+
+void Scooter::func_0017EDD0()
+{
+    func_0011A590(mField1A0);
+}
+
+void Scooter::func_0017EDF0(int flag)
+{
+    func_0011A3E0(mField1A0, !flag ? 0x11128 : 0x10128);
+}
+
+void Scooter::func_0017EE28(int flag)
+{
+    func_0011A3E0(mField1A0, !flag ? 0x110AD : 0x100AD);
 }
 
 #ifdef NON_MATCHING

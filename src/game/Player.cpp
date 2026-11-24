@@ -1,8 +1,31 @@
 #include "game/Player.h"
 
 void UnlockScooterGlobal(int scooterId);  // 0x00153C10
-void SubComponentAction1(Scooter *);    // 0x001722B0
-void SubComponentAction2(Scooter *);    // 0x001723F0
+void SubComponentAction1(Scooter *);      // 0x001722B0
+void SubComponentAction2(Scooter *);      // 0x001723F0
+void func_0017F328(Scooter *);            // 0x0017F328
+void func_0017F500(Scooter *);            // 0x0017F500
+void func_00174198(Scooter *, void *);    // 0x00174198
+
+void Player::Action17F328()
+{
+    func_0017F328(mScooter);
+}
+
+void Player::Action17F500()
+{
+    func_0017F500(mScooter);
+}
+
+void *Player::GetPtr40()
+{
+    return mBlock40;
+}
+
+void *Player::GetPtr58()
+{
+    return mBlock58;
+}
 
 void Player::AddKey()
 {
@@ -113,4 +136,49 @@ int Player::HasAdrenaline()
 f32 Player::ConsumeAdrenaline(f32 amount)
 {
     return mScooter->ConsumeAdrenaline(amount);
+}
+
+void Player::Action17ECC8(void *arg)
+{
+    mScooter->func_0017ECC8(arg);
+}
+
+void Player::Action174198(void *arg)
+{
+    func_00174198(mScooter, arg);
+}
+
+void Player::func_001237E8(UnkCheckpoint *cp)
+{
+    if (cp->mOrder18 > mFieldB8)
+    {
+        mScooter->SetVec194(&cp->mVec34);
+        Vec3f *d = &mVecC0;
+        Vec3f *v = &cp->mVec1C;
+        d->x = v->x;
+        d->y = v->y;
+        d->z = v->z;
+        mFieldBC = 1;
+    }
+    else
+    {
+        mScooter->SetVec194(&cp->mVec40);
+        Vec3f *d = &mVecC0;
+        Vec3f *v = &cp->mVec28;
+        d->x = v->x;
+        d->y = v->y;
+        d->z = v->z;
+        mFieldBC = 0;
+    }
+    mFieldB8 = cp->mOrder18;
+}
+
+void Player::EnableFieldD3()
+{
+    mFieldD3 = 1;
+}
+
+int Player::GetScooterField500()
+{
+    return mScooter->GetField500();
 }
