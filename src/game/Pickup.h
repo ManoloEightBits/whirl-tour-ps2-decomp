@@ -102,7 +102,28 @@ public:
     int IsState4();                   // 0x0011CEA0
     void SetCallback68(void (*callback)(int), int arg); // 0x0011CF08
     void func_0011B7B8();             // 0x0011B7B8
-    void func_0011CC90(int enable);   // 0x0011CC90: starts or stops the mArray3C nodes
+    // 0x0011CC90: starts or stops the mArray3C nodes. Inline, like func_0011CD80 (KeyPickup's
+    // constructor has it inlined).
+    void func_0011CC90(int enable)
+    {
+        for (int i = 0; i < mCount34; i++)
+        {
+            if (enable)
+            {
+                if (mArray3C[i] == 0)
+                    mArray3C[i] = func_00194DE0(mDef70->field_0x64[i]);
+                if (mArray3C[i] != 0)
+                {
+                    func_00194F40(mArray3C[i]);
+                    mArray3C[i]->field_0x70 = mArray3C[i]->field_0x10->field_0x4C;
+                }
+            }
+            else if (mArray3C[i] != 0)
+            {
+                func_00194F90(mArray3C[i]);
+            }
+        }
+    }
     // 0x0011CD80: same for the mArray40 nodes. Inline: func_0011B7B8 has it inlined, and the
     // out-of-line copy comes from this class's key-function TU.
     void func_0011CD80(int enable)

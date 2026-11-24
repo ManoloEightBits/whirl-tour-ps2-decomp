@@ -586,3 +586,4 @@
 0x00194F90 func_00194F90__FP7UnkNode
 0x001418E0 __9UnkEffectiPC5Vec3fifff
 0x001419A0 func_001419A0__9UnkEffecti
+0x0011B900 __9KeyPickupPC5Vec3f

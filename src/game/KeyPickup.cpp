@@ -235,27 +235,6 @@ void func_0011CEB8(IVP_Real_Object_Stub *self, IVP_Real_Object_Stub *other, u32,
     }
 }
 
-void Pickup::func_0011CC90(int enable)
-{
-    for (int i = 0; i < mCount34; i++)
-    {
-        if (enable)
-        {
-            if (mArray3C[i] == 0)
-                mArray3C[i] = func_00194DE0(mDef70->field_0x64[i]);
-            if (mArray3C[i] != 0)
-            {
-                func_00194F40(mArray3C[i]);
-                mArray3C[i]->field_0x70 = mArray3C[i]->field_0x10->field_0x4C;
-            }
-        }
-        else if (mArray3C[i] != 0)
-        {
-            func_00194F90(mArray3C[i]);
-        }
-    }
-}
-
 // Has to be a separate inline function taking the pickup: written in place, GCC schedules the
 // mDef70 reload after the constructor's this, and the registers differ from the game.
 static inline void SpawnCollectEffect(Pickup *p)
@@ -274,4 +253,15 @@ void Pickup::func_0011B7B8()
     mField64 = 0;
     func_0011CD80(1);
     SpawnCollectEffect(this);
+}
+
+KeyPickup::KeyPickup(const Vec3f *pos)
+    : Pickup(pos, (int)FindPickupDef("objkey"), FindPickupDef("keypickup"))
+{
+    mState60 = 0;
+    func_0011CC90(1);
+    mVel80 = 7.0f;
+    mFloor84 = 1.0f;
+    mHeightOffset74 = 1.0f;
+    mBounce88 = 1;
 }
