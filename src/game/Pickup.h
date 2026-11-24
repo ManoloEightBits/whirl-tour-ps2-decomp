@@ -30,6 +30,20 @@ struct UnkNode
     f32 field_0x70;
 };
 
+UnkNode *func_00194DE0(int id);  // 0x00194DE0
+void func_00194F40(UnkNode *);   // 0x00194F40
+void func_00194F90(UnkNode *);   // 0x00194F90
+
+// 0x30-byte object spawned at a position (constructor 0x001418E0); also used by func_00116B00.
+class UnkEffect
+{
+public:
+    UnkEffect(int id, const Vec3f *pos, int, f32, f32, f32); // 0x001418E0
+    void func_001419A0(int);                                 // 0x001419A0
+
+    char pad_0x00[0x30];
+};
+
 // Definition data of a pickup type (name from FindPickupDef, 0x00126518).
 struct PickupDef
 {
@@ -45,7 +59,7 @@ struct PickupDef
     f32 field_0x90;       // second OnCollected parameter (HealthPickup: health)
     int field_0x94;
     int field_0x98;
-    int field_0x9C;
+    int field_0x9C;       // id of the UnkEffect spawned when collected (0 = none)
 
     void func_0011CAD0(const char *name); // resets the definition and sets its name
 };
@@ -66,8 +80,8 @@ public:
     int mField5C;            // 0x5C
     int mState60;            // 0x60
     int mField64;            // 0x64
-    int mField68;            // 0x68
-    int mField6C;            // 0x6C
+    void (*mCallback68)(int); // 0x68: called with mCallbackArg6C when the pickup is collected
+    int mCallbackArg6C;       // 0x6C
     PickupDef *mDef70;       // 0x70
     f32 mHeightOffset74;     // 0x74
     int mField78;            // 0x78
@@ -86,10 +100,31 @@ public:
     Vec3f *GetPos44();                // 0x0011CE90
     Vec3f *GetPos50();                // 0x0011CE98
     int IsState4();                   // 0x0011CEA0
-    void SetFields68_6C(int a, int b); // 0x0011CF08
+    void SetCallback68(void (*callback)(int), int arg); // 0x0011CF08
     void func_0011B7B8();             // 0x0011B7B8
     void func_0011CC90(int enable);   // 0x0011CC90: starts or stops the mArray3C nodes
-    void func_0011CD80(int enable);   // 0x0011CD80: same for the mArray40 nodes
+    // 0x0011CD80: same for the mArray40 nodes. Inline: func_0011B7B8 has it inlined, and the
+    // out-of-line copy comes from this class's key-function TU.
+    void func_0011CD80(int enable)
+    {
+        for (int i = 0; i < mCount38; i++)
+        {
+            if (enable)
+            {
+                if (mArray40[i] == 0)
+                    mArray40[i] = func_00194DE0(mDef70->field_0x78[i]);
+                if (mArray40[i] != 0)
+                {
+                    func_00194F40(mArray40[i]);
+                    mArray40[i]->field_0x70 = mArray40[i]->field_0x10->field_0x4C;
+                }
+            }
+            else if (mArray40[i] != 0)
+            {
+                func_00194F90(mArray40[i]);
+            }
+        }
+    }
 };
 
 class KeyPickup : public Pickup

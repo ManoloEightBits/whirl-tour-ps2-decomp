@@ -11,9 +11,6 @@ void PhysicsDestroy1F21A8(void *);                       // 0x001F21A8
 void PhysicsClear1F34B0(void *, int);                    // 0x001F34B0
 void PhysicsRelease1F3A70(void *);                       // 0x001F3A70
 void CleanupNode194EC0(void *);                          // 0x00194EC0
-UnkNode *func_00194DE0(int id);                          // 0x00194DE0
-void func_00194F40(UnkNode *);                           // 0x00194F40
-void func_00194F90(UnkNode *);                           // 0x00194F90
 void EnvObjCleanup14FB70(EnvObj *);                      // 0x0014FB70
 
 static inline f32 AbsF(f32 x)
@@ -45,10 +42,10 @@ void Pickup::OnCollected(Player *)
 {
 }
 
-void Pickup::SetFields68_6C(int a, int b)
+void Pickup::SetCallback68(void (*callback)(int), int arg)
 {
-    mField68 = a;
-    mField6C = b;
+    mCallback68 = callback;
+    mCallbackArg6C = arg;
 }
 
 inline Pickup::~Pickup()
@@ -259,23 +256,22 @@ void Pickup::func_0011CC90(int enable)
     }
 }
 
-void Pickup::func_0011CD80(int enable)
+// Has to be a separate inline function taking the pickup: written in place, GCC schedules the
+// mDef70 reload after the constructor's this, and the registers differ from the game.
+static inline void SpawnCollectEffect(Pickup *p)
 {
-    for (int i = 0; i < mCount38; i++)
-    {
-        if (enable)
-        {
-            if (mArray40[i] == 0)
-                mArray40[i] = func_00194DE0(mDef70->field_0x78[i]);
-            if (mArray40[i] != 0)
-            {
-                func_00194F40(mArray40[i]);
-                mArray40[i]->field_0x70 = mArray40[i]->field_0x10->field_0x4C;
-            }
-        }
-        else if (mArray40[i] != 0)
-        {
-            func_00194F90(mArray40[i]);
-        }
-    }
+    if (p->mDef70->field_0x9C != 0)
+        (new UnkEffect(p->mDef70->field_0x9C, &p->mPos44, 0, 20.0f, 1.0f, 1.0f))->func_001419A0(1);
+}
+
+void Pickup::func_0011B7B8()
+{
+    if (mState60 == 4 || mState60 == 2)
+        return;
+    if (mCallback68 != 0)
+        mCallback68(mCallbackArg6C);
+    mState60 = 2;
+    mField64 = 0;
+    func_0011CD80(1);
+    SpawnCollectEffect(this);
 }

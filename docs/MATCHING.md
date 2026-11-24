@@ -85,6 +85,14 @@ file with `diff_func.py <file.cpp> <symbol> --variants <json>`. That command onl
   `DD_Collision_Listener` uses its implicit constructor, which needs the base's `int enable_bits = 1` default.
   If two classes' key functions share our file but not the game's TU, GCC may also inline one class's
   `__tf` into the other's: keep separate game TUs in separate files (`IVP_Listener_Collision.cpp`).
+- **A function that is both inlined and present out of line is an inline member.** `Pickup::func_0011B7B8`
+  contains the whole body of `Pickup::func_0011CD80(1)`, which also exists on its own at `0x0011CD80`:
+  defining it inline in the class gives both (the out-of-line copy comes from the key-function TU).
+- **An inline helper can change the schedule of a call's arguments.** In `Pickup::func_0011B7B8`,
+  `new UnkEffect(mDef70->field_0x9C, &mPos44, ...)` written in place lets GCC move the `mDef70` reload
+  after the copy of the new object into `$a0`, so it gets `$v0` instead of the game's `$v1`. The same
+  code in a `static inline` function taking the pickup matches (`SpawnCollectEffect`). A `static inline`
+  free function leaves no out-of-line copy, unlike an inline member.
 - **`base ... with only non-default constructor in class without a constructor`.** GCC 2.95 gives this
   error when a derived class declares no constructor at all. Declare the real one, even if its body is
   not decompiled yet (see `MBCL` and `ScootCL`).
