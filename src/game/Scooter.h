@@ -21,6 +21,7 @@ public:
     void SetBoostField62C(f32 val);          // 0x0017EA28
     void SetBoostField630(f32 val);          // 0x0017EA30
     void ApplySpecialAction(int mode);       // 0x0017EA38
+    void func_0017EAA0(f32 amount);          // 0x0017EAA0 (boss attacks pass the attack's +0x10)
     void AddHealth(f32 percent);             // 0x0017EB90
     void AddSpeedBoost(f32 amount, f32 dur); // 0x0017EBC0
     void AddSpinBoost(f32 amount, f32 dur);  // 0x0017EBD0

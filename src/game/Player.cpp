@@ -1,4 +1,5 @@
 #include "game/Player.h"
+#include "game/CollisionListeners.h"
 
 void UnlockScooterGlobal(int scooterId);  // 0x00153C10
 void SubComponentAction1(Scooter *);      // 0x001722B0
@@ -181,4 +182,28 @@ void Player::EnableFieldD3()
 int Player::GetScooterField500()
 {
     return mScooter->GetField500();
+}
+
+// Collision callbacks (DD_CollisionCallback) from the table at 0x00281070, which pairs each with a
+// key string: 0x001238C0 is "player_hit_bossattack", 0x001238E8 "player_hit_bossattackthrow". Both
+// pass a float at +0x10 of one actor to the other actor's Scooter; the first takes the Scooter from
+// `other`, the second from `self`.
+struct UnkAttackActor
+{
+    char field_0x00[0x10];
+    f32 mField10; // 0x10
+};
+
+void func_001238C0(IVP_Real_Object_Stub *self, IVP_Real_Object_Stub *other, u32, IVP_Event_Collision *)
+{
+    UnkAttackActor *attack = (UnkAttackActor *)self->mActorA8;
+    Player *player = (Player *)other->mActorA8;
+    player->mScooter->func_0017EAA0(attack->mField10);
+}
+
+void func_001238E8(IVP_Real_Object_Stub *self, IVP_Real_Object_Stub *other, u32, IVP_Event_Collision *)
+{
+    Player *player = (Player *)self->mActorA8;
+    UnkAttackActor *attack = (UnkAttackActor *)other->mActorA8;
+    player->mScooter->func_0017EAA0(attack->mField10);
 }
