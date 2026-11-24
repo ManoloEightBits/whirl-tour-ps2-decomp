@@ -138,3 +138,34 @@ file with `diff_func.py <file.cpp> <symbol> --variants <json>`. That command onl
   not decompiled yet (see `MBCL` and `ScootCL`).
 - **Data members declared before the first virtual function** go before `_vptr`. `IVP_Listener_Collision`
   has `int` at `+0x00`, so its `_vptr` is at `+0x04` (`sw $v0, 0x4($a0)` in the constructor).
+- **`splat` / `inspect_tu` false split after `beql` / `bnel`.** When a function uses a branch-likely
+  instruction to jump over an early `jr $ra` (for example, `FEChooseScreen::VirtSlot5` at `0x001131F0` and
+  `FECharacterScreen::VirtSlot5` at `0x0016A060`), `splat` and `inspect_tu` treat the `jr $ra` inside the
+  taken path as the end of the function and list the fall-through target (`0x00113214` / `0x0016A084`) as a
+  separate function whose m2c output reads from an "unset register `$v1`". They are a single function:
+  `if (mClosing != 0) return mCloseTimer-- <= 0; if (mState38 == 3) { mClosing = 1; mCloseTimer = 5; } return 0;`.
+- **Two `lui 0x26` base registers for the same global pointer in a loop.** When a loop accesses two fields
+  of the same global struct (`gGameCtx262250`) and the game keeps two separate `lui 0x26` upper-address
+  registers live across the loop (`FEPlaylistScreen::InitTracks112A78`), reading `gGameCtx262250` through
+  an inline static getter (`GameCtxFE::Get()->...`) causes GCC to allocate the second base register instead
+  of CSE-merging both accesses into one.
+- **Unsigned loop counter (`u32 i`) for pointer-comparison loops (`sltu` + `bnel`).** When a loop over an
+  array of structs increments a pointer by the element size and compares it against the end address with
+  `sltu` and `bnel` (storing into `0x0($v1)` in the branch delay slot, as in `FELoadStateScreen::FELoadStateScreen`),
+  writing the loop counter as `for (u32 i = 0; i < 8; i++)` produces that exact pointer-comparison loop,
+  whereas `int i` produces a countdown counter (`addiu $v1, $v1, -1; bgez`).
+- **Contiguous `case 0: .. case 5: break;` before the active `case 6:` in a `switch`.** When the game tests
+  `val < 0`, then `val < 6`, then `val == 6` before running a single case body (`FELoadStateScreen::VirtSlot3`),
+  the `switch` had empty `case 0:` through `case 5: break;` labels before `case 6:`.
+- **Same function called with and without an optional argument across TUs.** `FEMenu::Action16B9C8` and
+  `Action16B980` are called with no argument in `FEScreen::MenuAction16B9C8/16B980` (`nop` in the `jal`
+  delay slot, not setting `$a1`) and with an item index `int idx` in `FEMonsterScreen` and `FELevelScreen`.
+  A default argument `int idx = 0` breaks `FEScreen` because it emits `daddu $a1, $zero, $zero`. Declaring
+  both `void Action16B9C8();` and `void Action16B9C8(int idx);` and mapping both mangled names to the same
+  address in `config/symbols.txt` matches both callers.
+- **Bitmask test on `int` vs `u32` hoists `lui` into the preceding `beqz` delay slot.** Testing high-bit
+  button masks such as `btns & (int)0xA0000000` with `int btns` (`FEPlaylistScreen::VirtSlot2`) lets GCC
+  hoist `lui $v0, 0xA000` into the delay slot of the preceding `else if` branch.
+- **Reusing the same `int i;` declaration across two loops in one function** (`FECharacterScreen::~FECharacterScreen`)
+  swaps the saved registers assigned to the loop counter (`$s0`) and array pointer (`$s1`) compared to
+  declaring `for (int i = ...)` in each loop separately.
