@@ -125,19 +125,17 @@ int ScootCtrl::HasAdrenaline()
     return 0;
 }
 
-#ifdef NON_MATCHING
-// Minor register/branch-folding difference in ee-gcc 2.95.3:
 int ScootCtrl::IsGrounded()
 {
-    int res = 0;
-    if (!(mFlags18 & 4))
-    {
-        if (mField68 != 0)
-            res = 1;
-    }
-    return res;
+    return (mFlags18 & 4) || mGround68 != 0;
 }
 
+#ifdef NON_MATCHING
+// 5 of 12 instructions match. The logic is right; the FP registers are not: here `cur` gets $f0
+// (it is returned) before the 0.0f constant, which sched1 hoists above the subtraction so that it
+// lives longer and loses priority. In the game 0.0f gets $f0, next $f1 and cur $f2, and the
+// zero store moves into a bc1tl delay slot. Result variables, do/while(0) and reordered
+// conditions did not change it.
 f32 ScootCtrl::ConsumeAdrenaline(f32 amount)
 {
     f32 cur = mAdrenaline;

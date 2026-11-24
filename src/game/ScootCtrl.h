@@ -40,7 +40,7 @@ public:
     char field_0x000[0x18];
     u32 mFlags18;              // 0x018
     char field_0x01C[0x4C];
-    f32 mField68;              // 0x068
+    void *mGround68;           // 0x068: non-null while touching the ground (IsGrounded)
     int mField6C;              // 0x06C
     f32 mHealth;               // 0x070 (capped at 100.0f in AddHealth)
     f32 mAdrenaline;           // 0x074

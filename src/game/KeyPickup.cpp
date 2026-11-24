@@ -215,7 +215,7 @@ void TimerPickup::OnCollected(Player *)
 }
 
 #ifdef NON_MATCHING
-// 122 of 144 instructions match. Solved: register allocation (pos needs the do/while(0) around
+// 123 of 144 instructions match. Solved: register allocation (pos needs the do/while(0) around
 // the copy to outrank the loop counter, see docs/MATCHING.md) and the order of the node fields.
 // Left: the scheduler puts `i = 0` (daddu $s5) in the prologue instead of the first jal's delay
 // slot, which shifts the prologue and the rot stores, and the copy into mPos50 gets $f1/$f2
@@ -225,9 +225,9 @@ static inline void CopyVec3(Vec3f *dst, const Vec3f *src)
     f32 x = src->x;
     f32 y = src->y;
     f32 z = src->z;
-    dst->x = x;
-    dst->y = y;
     dst->z = z;
+    dst->y = y;
+    dst->x = x;
 }
 
 Pickup::Pickup(const Vec3f *pos, UnkObjDef *objDef, PickupDef *def)
