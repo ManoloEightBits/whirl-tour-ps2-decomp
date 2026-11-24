@@ -34,7 +34,7 @@ A hobby reverse-engineering project for the US PS2 release of *Whirl Tour* (`SLU
 | **Collision Filter (`CollFilt`)** | `CollFilt`, `IVP_Collision_Filter` | 7 / 7 | 2 / 2 | `██████████` **100%** |
 | **Pickups (`Pickup`, `KeyPickup`, +9)** | `EnvObj`, `Pickup` + 10 subclasses | 56 / 59 | 22 / 22 | `█████████░` **95%** (`KeyPickup` and 9 subclasses 100%, all vtables confirmed; 3 functions left in the TU) |
 | **Front-End UI (`FEScreen` hierarchy)** | `FEScreen`, `FEQuitScreen`, `FEStartScreen`, `FETrickScreen` (+10 pending) | 31 / ~160 | 28 / 112 | `███░░░░░░░` **25%** (`FEQuitScreen` & `FETrickScreen` 100%) |
-| **Player & Scooter (`Player`, `ScootCtrl`)** | `Player`, `ScootCtrl` | 46 / ~90 | 0 / 7 | `█████░░░░░` **51%** (stat/boost/adrenaline/health methods matched) |
+| **Player & Scooter (`Player`, `ScootCtrl`)** | `Player`, `ScootCtrl` | 47 / ~90 | 0 / 7 | `█████░░░░░` **52%** (stat/boost/adrenaline/health methods and `IsGrounded` matched) |
 | **Motion & Interpolation Controllers** | `MotionCtrl`, `IP_PosCtrl`, `IP_RotCtrl`, `IP_AnimCtrl`, `MBCtrl` | 4 / ~45 | 0 / 35 | `█░░░░░░░░░` **9%** (RTTI `__tf` matched) |
 | **Collision & Event Listeners** | `DD_Event_Listener`, `DD_Collision_Listener`, `ScootCL`, `MBCL`, `LunActCL`, `MarActCL`, `AI_PedestrianCL` | 31 / ~59 | 28 / 37 | `█████░░░░░` **53%** (`DD_Event_Listener`, `DD_Collision_Listener`, `MBCL`, `ScootCL`, `LunActCL`, `MarActCL` & `AI_PedestrianCL` 100%; IVP base classes `IVP_Listener_Object` & `IVP_Listener_Collision` also 100%) |
 | **AI & Boss Attacks** | `AI_Agent`, `AI_Pedestrian`, `AI_Race`, `AI_Vehicle`, `AI_Boss`, `AI_Attack*` | 9 / ~340 | 0 / 73 | `░░░░░░░░░░` **3%** (RTTI `__tf` matched) |
