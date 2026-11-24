@@ -11,6 +11,9 @@ void PhysicsDestroy1F21A8(void *);                       // 0x001F21A8
 void PhysicsClear1F34B0(void *, int);                    // 0x001F34B0
 void PhysicsRelease1F3A70(void *);                       // 0x001F3A70
 void CleanupNode194EC0(void *);                          // 0x00194EC0
+UnkNode *func_00194DE0(int id);                          // 0x00194DE0
+void func_00194F40(UnkNode *);                           // 0x00194F40
+void func_00194F90(UnkNode *);                           // 0x00194F90
 void EnvObjCleanup14FB70(EnvObj *);                      // 0x0014FB70
 
 static inline f32 AbsF(f32 x)
@@ -114,7 +117,7 @@ HealthPickup::HealthPickup(PickupSpawnInfo *info)
 
 void HealthPickup::OnCollected(Player *player)
 {
-    player->AddHealth(*(f32 *)(mPickupData70 + 0x90));
+    player->AddHealth(mDef70->field_0x90);
 }
 
 ScooterPickup::ScooterPickup(PickupSpawnInfo *info)
@@ -155,8 +158,8 @@ SpeedPickup::SpeedPickup(PickupSpawnInfo *info)
 
 void SpeedPickup::OnCollected(Player *player)
 {
-    u8 *data = mPickupData70;
-    player->AddSpeedBoost(*(f32 *)(data + 0x8C), *(f32 *)(data + 0x90));
+    PickupDef *def = mDef70;
+    player->AddSpeedBoost(def->field_0x8C, def->field_0x90);
 }
 
 SpinPickup::SpinPickup(PickupSpawnInfo *info)
@@ -166,8 +169,8 @@ SpinPickup::SpinPickup(PickupSpawnInfo *info)
 
 void SpinPickup::OnCollected(Player *player)
 {
-    u8 *data = mPickupData70;
-    player->AddSpinBoost(*(f32 *)(data + 0x8C), *(f32 *)(data + 0x90));
+    PickupDef *def = mDef70;
+    player->AddSpinBoost(def->field_0x8C, def->field_0x90);
 }
 
 JumpPickup::JumpPickup(PickupSpawnInfo *info)
@@ -177,8 +180,8 @@ JumpPickup::JumpPickup(PickupSpawnInfo *info)
 
 void JumpPickup::OnCollected(Player *player)
 {
-    u8 *data = mPickupData70;
-    player->AddJumpBoost(*(f32 *)(data + 0x8C), *(f32 *)(data + 0x90));
+    PickupDef *def = mDef70;
+    player->AddJumpBoost(def->field_0x8C, def->field_0x90);
 }
 
 BalancePickup::BalancePickup(PickupSpawnInfo *info)
@@ -188,8 +191,8 @@ BalancePickup::BalancePickup(PickupSpawnInfo *info)
 
 void BalancePickup::OnCollected(Player *player)
 {
-    u8 *data = mPickupData70;
-    player->AddBalanceBoost(*(f32 *)(data + 0x8C), *(f32 *)(data + 0x90));
+    PickupDef *def = mDef70;
+    player->AddBalanceBoost(def->field_0x8C, def->field_0x90);
 }
 
 TimerPickup::TimerPickup(PickupSpawnInfo *info)
@@ -199,7 +202,7 @@ TimerPickup::TimerPickup(PickupSpawnInfo *info)
 
 void TimerPickup::OnCollected(Player *)
 {
-    SendScriptEvent(HashStringCRC32("add_time"), 0, mPickupData70 + 0x8C);
+    SendScriptEvent(HashStringCRC32("add_time"), 0, &mDef70->field_0x8C);
 }
 
 void PickupDef::func_0011CAD0(const char *name)
@@ -217,7 +220,7 @@ void PickupDef::func_0011CAD0(const char *name)
         field_0x44[j] = 0;
     field_0x9C = 0;
     field_0x58 = 0;
-    field_0x90 = 0;
+    field_0x90 = 0.0f;
     field_0x94 = 0;
     field_0x98 = 0;
     field_0x8C = 10.0f;
@@ -232,5 +235,47 @@ void func_0011CEB8(IVP_Real_Object_Stub *self, IVP_Real_Object_Stub *other, u32,
     {
         pickup->OnCollected(player);
         pickup->func_0011B7B8();
+    }
+}
+
+void Pickup::func_0011CC90(int enable)
+{
+    for (int i = 0; i < mCount34; i++)
+    {
+        if (enable)
+        {
+            if (mArray3C[i] == 0)
+                mArray3C[i] = func_00194DE0(mDef70->field_0x64[i]);
+            if (mArray3C[i] != 0)
+            {
+                func_00194F40(mArray3C[i]);
+                mArray3C[i]->field_0x70 = mArray3C[i]->field_0x10->field_0x4C;
+            }
+        }
+        else if (mArray3C[i] != 0)
+        {
+            func_00194F90(mArray3C[i]);
+        }
+    }
+}
+
+void Pickup::func_0011CD80(int enable)
+{
+    for (int i = 0; i < mCount38; i++)
+    {
+        if (enable)
+        {
+            if (mArray40[i] == 0)
+                mArray40[i] = func_00194DE0(mDef70->field_0x78[i]);
+            if (mArray40[i] != 0)
+            {
+                func_00194F40(mArray40[i]);
+                mArray40[i]->field_0x70 = mArray40[i]->field_0x10->field_0x4C;
+            }
+        }
+        else if (mArray40[i] != 0)
+        {
+            func_00194F90(mArray40[i]);
+        }
     }
 }

@@ -15,6 +15,21 @@ struct PickupSpawnInfo
     Vec3f mPos18;     // 0x18
 };
 
+struct UnkNodeDesc
+{
+    char pad_0x00[0x4C];
+    f32 field_0x4C;
+};
+
+// Objects a pickup creates from its definition's ids (functions at 0x00194DE0..0x00194F90).
+struct UnkNode
+{
+    char pad_0x00[0x10];
+    UnkNodeDesc *field_0x10;
+    char pad_0x14[0x5C];
+    f32 field_0x70;
+};
+
 // Definition data of a pickup type (name from FindPickupDef, 0x00126518).
 struct PickupDef
 {
@@ -24,10 +39,10 @@ struct PickupDef
     int field_0x58;
     int field_0x5C;
     int field_0x60;
-    int field_0x64[5];    // 0x64
-    int field_0x78[5];    // 0x78
-    f32 field_0x8C;       // 10.0 by default
-    int field_0x90;
+    int field_0x64[5];    // 0x64: ids of the EnvObj::mArray3C nodes
+    int field_0x78[5];    // 0x78: ids of the EnvObj::mArray40 nodes
+    f32 field_0x8C;       // 10.0 by default; first OnCollected parameter (TimerPickup: time to add)
+    f32 field_0x90;       // second OnCollected parameter (HealthPickup: health)
     int field_0x94;
     int field_0x98;
     int field_0x9C;
@@ -44,8 +59,8 @@ public:
     char field_0x1C[0x18];
     int mCount34;            // 0x34
     int mCount38;            // 0x38
-    void **mArray3C;         // 0x3C
-    void **mArray40;         // 0x40
+    UnkNode **mArray3C;      // 0x3C: mCount34 entries
+    UnkNode **mArray40;      // 0x40: mCount38 entries
     Vec3f mPos44;            // 0x44
     Vec3f mPos50;            // 0x50
     int mField5C;            // 0x5C
@@ -53,7 +68,7 @@ public:
     int mField64;            // 0x64
     int mField68;            // 0x68
     int mField6C;            // 0x6C
-    u8 *mPickupData70;       // 0x70
+    PickupDef *mDef70;       // 0x70
     f32 mHeightOffset74;     // 0x74
     int mField78;            // 0x78
 };
@@ -73,6 +88,8 @@ public:
     int IsState4();                   // 0x0011CEA0
     void SetFields68_6C(int a, int b); // 0x0011CF08
     void func_0011B7B8();             // 0x0011B7B8
+    void func_0011CC90(int enable);   // 0x0011CC90: starts or stops the mArray3C nodes
+    void func_0011CD80(int enable);   // 0x0011CD80: same for the mArray40 nodes
 };
 
 class KeyPickup : public Pickup
