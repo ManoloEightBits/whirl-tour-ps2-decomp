@@ -15,12 +15,12 @@ local-alloc and usually take `$v0`. Ties go to the lower pseudo number. A pseudo
 shorter range wins, so a pointer that is null-checked, loaded through and stored through (4 refs) usually
 beats a value that is loaded, tested and used once (3 refs).
 
-To see the real numbers, use `scratch_cc.py --regs` (see [TOOLS.md](TOOLS.md)). It compiles with
+To see the real numbers, use `tools/analysis/scratch_cc.py --regs` (see [TOOLS.md](TOOLS.md)). It compiles with
 `-dl -dg` and prints, for each pseudo-register, the weighted refs, live length, priority, allocation
 order and final hard register, from GCC's own dumps:
 
 ```
-$ venv/bin/python3 scratch_cc.py t.cpp --func looped --regs
+$ python3 tools/analysis/scratch_cc.py t.cpp --func looped --regs
   pseudo  refs  live  alloc   priority  order hard    notes
   118        6     7  global     1.714  2     $a0     user var, pointer
   120        6     4  global     3.000  1     $v1

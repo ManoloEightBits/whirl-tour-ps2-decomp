@@ -58,10 +58,11 @@ A hobby reverse-engineering project for the US PS2 release of *Whirl Tour* (`SLU
 - `config/symbols.txt` — Function and data symbol addresses in `SLUS_204.89`.
 - `config/vtables.txt` — Virtual function table addresses and declaring headers.
 - `config/splat/` — Configuration for splitting `SLUS_204.89` with `splat`.
-- `tools/` — Verification and analysis scripts (`verify.py`, `verify_vtables.py`, `check_all.py`, `progress.py`, `extract_rtti.py`, `check_repo.py`).
+- `tools/` — Verification scripts, standard library only (`verify.py`, `verify_vtables.py`, `check_all.py`, `progress.py`, `extract_rtti.py`, `check_repo.py`).
+- `tools/analysis/` — Analysis tools that need a venv (`requirements.txt`): `inspect_tu.py`, `scan_candidates.py`, `map_tus.py`, `diff_func.py`, `scratch_cc.py`, `find_pattern.py`.
 - `rebuild/` — Full ELF/binary relinker (`rebuild.py`) that splices compiled C++ functions into the split assembly and verifies the final SHA-1.
 - `docs/STANDARDS.md` — Coding, verification, and repository cleanliness rules.
-- `docs/TOOLS.md` — Every tool (repository and local analysis) and the step-by-step loop for matching a function.
+- `docs/TOOLS.md` — Setup and usage of every tool and the step-by-step loop for matching a function.
 - `docs/MATCHING.md` — Compiler quirks and source patterns needed to match ee-gcc 2.95.3 output (register allocation, scheduling, layout).
 
 ---

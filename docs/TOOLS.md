@@ -1,15 +1,29 @@
 # Tools and workflow
 
-There are two groups of tools:
+There are two groups of tools, both in this repository:
 
-- **Repository tools** (`tools/`, `rebuild/`). They use the Python standard library only, run with
-  `python3` and are versioned. They decide whether the work is correct.
-- **Analysis tools** in the work directory (`../whirl-tour-work/`). They need the venv with
-  `rabbitizer`, `splat64` and `m2c`, run with `venv/bin/python3`, and are **not** versioned: their
-  paths are hard-coded to this machine. They help find and match functions.
+- **Verification tools** (`tools/`, `rebuild/`). They use the Python standard library only and run with
+  plain `python3`. They decide whether the work is correct. Nothing third-party runs in the same
+  process as the proprietary compiler.
+- **Analysis tools** (`tools/analysis/`). They help find and match functions, and need `rabbitizer`,
+  `m2c` and `splat64` (pinned in `tools/analysis/requirements.txt`). They read the game from your
+  local files at run time and never store any of it in the repository.
 
 All of them keep their output short. They print summaries by default, and the full detail only with a
 flag. Use them instead of reading raw disassembly or large dumps.
+
+## Setup
+
+```bash
+python3 -m venv ../whirl-tour-work/venv
+../whirl-tour-work/venv/bin/pip install -r tools/analysis/requirements.txt
+source ../whirl-tour-work/venv/bin/activate     # then: python3 tools/analysis/<tool>.py ...
+```
+
+Call the venv's Python through the activated venv or an absolute path. With a path like `../...`,
+Python prints a `sys.prefix` warning. Every tool finds the game files through `WHIRL_COMPILERS`,
+`WHIRL_SLUS` and `WHIRL_SPLIT`, which default to `../whirl-tour-work/{compilers,SLUS_204.89,split}`
+(the same defaults as `check_all.py`, set in `tools/analysis/whirl_paths.py`).
 
 ## Loop for one function
 
@@ -23,13 +37,13 @@ flag. Use them instead of reading raw disassembly or large dumps.
 4. **If it is stuck on details** (registers, scheduling, a stray `nop`):
    - `scratch_cc.py snippet.cpp --vs <addr>` tries a loose idea without touching `src/`.
    - `scratch_cc.py ... --regs` explains register choices (see [MATCHING.md](MATCHING.md)).
-   - `find_pattern.py "<insns>"` checks whether the game has the same idiom elsewhere.
+   - `find_pattern.py '<insns>'` checks whether the game has the same idiom elsewhere.
    - If it still does not match, keep it under `#ifdef NON_MATCHING`.
 5. **Check everything:** `python3 tools/check_all.py` (4 lines; `--no-rebuild` while iterating).
 6. **Update the numbers:** `python3 tools/progress.py --write` rewrites the README progress table. Also
    update the README subsystem table and `TODO.md` by hand, then commit.
 
-## Repository tools
+## Verification tools (`python3`)
 
 | Tool | What it does |
 | :--- | :--- |
@@ -41,10 +55,10 @@ flag. Use them instead of reading raw disassembly or large dumps.
 | `tools/check_repo.py` | Rejects game data, binaries and build output (also the pre-commit hook). |
 | `tools/extract_rtti.py`, `tools/gen_rtti_stubs.py` | Extract RTTI and vtables from the binary, and generate the `src/rtti/` probe stubs. |
 
-`WHIRL_COMPILERS`, `WHIRL_SLUS` and `WHIRL_SPLIT` default to `../whirl-tour-work` in `check_all.py` and
-`progress.py`. Set them yourself to run the other tools directly.
+`check_all.py` and `progress.py` default the `WHIRL_*` variables themselves. Set them yourself to run
+the other tools directly.
 
-## Analysis tools (`../whirl-tour-work/`, `venv/bin/python3`)
+## Analysis tools (`tools/analysis/`, venv `python3`)
 
 | Tool | What it does |
 | :--- | :--- |
@@ -53,15 +67,14 @@ flag. Use them instead of reading raw disassembly or large dumps.
 | `map_tus.py [--filter S] [--class C]` | Groups the 182 vtables into probable translation units and infers `_vptr` offsets and fields. |
 | `diff_func.py file.cpp <mangled> [--all] [-D X] [--variants v.json]` | Side-by-side R5900 diff of one repository function, or a batch of source variants (`{"target": "...", "candidates": [...]}`). |
 | `scratch_cc.py snippet.cpp\|- [--func S] [--vs ADDR] [--asm] [--regs] [-D X]` | Compiles a loose snippet in `build/scratch/` with the exact flags of `verify.py` (it can include repository headers). Shows its disassembly with relocations, or a side-by-side diff against any game address (`--vs`), GCC's `.s` (`--asm`), and the register-allocation table (`--regs`). |
-| `find_pattern.py "<re1>; <re2>; ..." [--range A B] [--context N] [--count]` | Searches `.text` for a sequence of instructions (one regex per instruction, `*` matches any). Each hit is labelled with the nearest known symbol. About 0.5 s for the whole binary. |
+| `find_pattern.py '<re1>; <re2>; ...' [--range A B] [--context N] [--count]` | Searches `.text` for a sequence of instructions (one regex per instruction, `*` matches any). Each hit is labelled with the nearest known symbol. About 0.5 s for the whole binary. Put the pattern in single quotes so the shell keeps `\$`. |
 
-Examples:
+Examples (venv active, from the repository root):
 
 ```bash
-cd ../whirl-tour-work
-venv/bin/python3 scratch_cc.py idea.cpp --func revived --vs 117340      # does this idea match?
-venv/bin/python3 scratch_cc.py idea.cpp --func revived --regs           # why these registers?
-printf 'struct S { int x; void f(); };\nvoid S::f() { x = 3; }\n' | venv/bin/python3 scratch_cc.py - --asm
-venv/bin/python3 find_pattern.py 'b\S*; *; sw; nop; jr \$ra; nop'       # same idiom elsewhere?
-venv/bin/python3 find_pattern.py 'jr \$ra; *' --count                   # 7069 returns
+python3 tools/analysis/scratch_cc.py idea.cpp --func revived --vs 117340   # does this idea match?
+python3 tools/analysis/scratch_cc.py idea.cpp --func revived --regs        # why these registers?
+printf 'struct S { int x; void f(); };\nvoid S::f() { x = 3; }\n' | python3 tools/analysis/scratch_cc.py - --asm
+python3 tools/analysis/find_pattern.py 'b\S*; *; sw; nop; jr \$ra; nop'    # same idiom elsewhere?
+python3 tools/analysis/find_pattern.py 'jr \$ra; *' --count                # 7069 returns
 ```
