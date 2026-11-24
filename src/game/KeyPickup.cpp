@@ -2,6 +2,8 @@
 #include "game/CollisionListeners.h"
 
 extern "C" char *func_00231F08(char *dst, const char *src, u32 n); // 0x00231F08 (runtime library; probably strncpy)
+extern "C" int func_002317B4(const char *a, const char *b);        // 0x002317B4 (runtime library; probably strcmp)
+extern UnkKeyword data_0025A230[]; // keywords of a pickups file: "pickups", "pickup", "mesh", ... "/pickup"
 
 u32 HashStringCRC32(const char *str);                    // 0x001B1CD0
 int SendScriptEvent(u32 eventCrc, int arg1, void *arg2); // 0x001266D0
@@ -126,7 +128,7 @@ HealthPickup::HealthPickup(PickupSpawnInfo *info)
 
 void HealthPickup::OnCollected(Player *player)
 {
-    player->AddHealth(mDef70->field_0x90);
+    player->AddHealth(mDef70->mParam1_90);
 }
 
 ScooterPickup::ScooterPickup(PickupSpawnInfo *info)
@@ -168,7 +170,7 @@ SpeedPickup::SpeedPickup(PickupSpawnInfo *info)
 void SpeedPickup::OnCollected(Player *player)
 {
     PickupDef *def = mDef70;
-    player->AddSpeedBoost(def->field_0x8C, def->field_0x90);
+    player->AddSpeedBoost(def->mTimeLimit8C, def->mParam1_90);
 }
 
 SpinPickup::SpinPickup(PickupSpawnInfo *info)
@@ -179,7 +181,7 @@ SpinPickup::SpinPickup(PickupSpawnInfo *info)
 void SpinPickup::OnCollected(Player *player)
 {
     PickupDef *def = mDef70;
-    player->AddSpinBoost(def->field_0x8C, def->field_0x90);
+    player->AddSpinBoost(def->mTimeLimit8C, def->mParam1_90);
 }
 
 JumpPickup::JumpPickup(PickupSpawnInfo *info)
@@ -190,7 +192,7 @@ JumpPickup::JumpPickup(PickupSpawnInfo *info)
 void JumpPickup::OnCollected(Player *player)
 {
     PickupDef *def = mDef70;
-    player->AddJumpBoost(def->field_0x8C, def->field_0x90);
+    player->AddJumpBoost(def->mTimeLimit8C, def->mParam1_90);
 }
 
 BalancePickup::BalancePickup(PickupSpawnInfo *info)
@@ -201,7 +203,7 @@ BalancePickup::BalancePickup(PickupSpawnInfo *info)
 void BalancePickup::OnCollected(Player *player)
 {
     PickupDef *def = mDef70;
-    player->AddBalanceBoost(def->field_0x8C, def->field_0x90);
+    player->AddBalanceBoost(def->mTimeLimit8C, def->mParam1_90);
 }
 
 TimerPickup::TimerPickup(PickupSpawnInfo *info)
@@ -211,7 +213,104 @@ TimerPickup::TimerPickup(PickupSpawnInfo *info)
 
 void TimerPickup::OnCollected(Player *)
 {
-    SendScriptEvent(HashStringCRC32("add_time"), 0, &mDef70->field_0x8C);
+    SendScriptEvent(HashStringCRC32("add_time"), 0, &mDef70->mTimeLimit8C);
+}
+
+void PickupDef::func_0011AD28(char *name, UnkParser *p)
+{
+    p->func_001C2C78("name", name);
+    func_00231F08(mName00, name, 0x3F);
+    mNumCreation5C = 0;
+    mNumDestruction60 = 0;
+    for (int i = 0; i < 5; i++)
+    {
+        mCreation64[i] = 0;
+        mDestruction78[i] = 0;
+    }
+    mNumMeshes40 = 0;
+    for (int j = 0; j < 5; j++)
+        mMeshes44[j] = 0;
+    mIcs58 = 0;
+    mTimeLimit8C = 10.0f;
+    mParam1_90 = 0.0f;
+    mRegenerate94 = 0.0f;
+    mRegenDelta98 = 0.0f;
+    mSound9C = 0;
+    int creation = 0;
+    int destruction = 0;
+    int n = 0;
+    int done = 0;
+    char buf[128];
+    while (p->mEof102C == 0 && !done)
+    {
+        p->func_001C1D28(data_0025A230);
+        switch (p->mToken14)
+        {
+        case 2: // mesh
+            p->func_001C2C78("name", buf);
+            if (mNumMeshes40 < 5)
+                mMeshes44[mNumMeshes40++] = HashStringCRC32(buf);
+            break;
+        case 3: // ics
+            p->func_001C2C78("name", buf);
+            mIcs58 = HashStringCRC32(buf);
+            break;
+        case 4: // fountains
+            p->func_001C2C78("type", buf);
+            if (func_002317B4(buf, "creation") == 0)
+            {
+                creation = 1;
+                n = 0;
+            }
+            else if (func_002317B4(buf, "destruction") == 0)
+            {
+                destruction = 1;
+                n = 0;
+            }
+            break;
+        case 6: // /fountains
+            if (creation)
+            {
+                creation = 0;
+                mNumCreation5C = n;
+            }
+            else if (destruction)
+            {
+                destruction = 0;
+                mNumDestruction60 = n;
+            }
+            break;
+        case 5: // fountain
+        {
+            p->func_001C2C78("name", buf);
+            PickupDef *def = FindPickupDef(buf);
+            if (def != 0)
+            {
+                if (creation)
+                    mCreation64[n++] = (int)def;
+                else if (destruction)
+                    mDestruction78[n++] = (int)def;
+            }
+            break;
+        }
+        case 7: // settings
+            p->func_001C3270("timelimit", &mTimeLimit8C);
+            p->func_001C3270("param1", &mParam1_90);
+            p->func_001C3270("regenerate", &mRegenerate94);
+            p->func_001C3270("regendelta", &mRegenDelta98);
+            break;
+        case 8: // sound
+            p->func_001C2C78("name", buf);
+            mSound9C = HashStringCRC32(buf);
+            break;
+        case 9: // /pickup
+            done = 1;
+            break;
+        default:
+            p->func_001C2C10();
+            break;
+        }
+    }
 }
 
 #ifdef NON_MATCHING
@@ -237,22 +336,22 @@ Pickup::Pickup(const Vec3f *pos, UnkObjDef *objDef, PickupDef *def)
     rot.y = 0.0f;
     rot.z = 0.0f;
     rot.w = 1.0f;
-    mPhysicsObj18 = func_00116560(objDef, pos, &rot, func_001262B0(def->field_0x58));
+    mPhysicsObj18 = func_00116560(objDef, pos, &rot, func_001262B0(def->mIcs58));
     func_0014FB08(this, objDef, 0);
     ((IVP_Real_Object_Stub *)mPhysicsObj18)->mActorA8 = (DD_ActorInfo *)this;
     mCount1C = 0;
-    for (int i = 0; i < def->field_0x40; i++)
+    for (int i = 0; i < def->mNumMeshes40; i++)
     {
-        mArray20[mCount1C] = func_001262E0(def->field_0x44[i]);
+        mArray20[mCount1C] = func_001262E0(def->mMeshes44[i]);
         if (mArray20[mCount1C] != 0)
             mCount1C++;
     }
     mField64 = 0;
     mState60 = 1;
     mHeightOffset74 = 0.0f;
-    mField78 = def->field_0x94;
-    mCount34 = def->field_0x5C;
-    mCount38 = def->field_0x60;
+    mField78 = def->mRegenerate94;
+    mCount34 = def->mNumCreation5C;
+    mCount38 = def->mNumDestruction60;
     mArray3C = 0;
     mArray40 = 0;
     do
@@ -267,15 +366,15 @@ Pickup::Pickup(const Vec3f *pos, UnkObjDef *objDef, PickupDef *def)
     {
         if (mCount34 > 0)
         {
-            mArray3C = new UnkNode *[def->field_0x5C];
-            for (int j = 0; j < def->field_0x5C; j++)
+            mArray3C = new UnkNode *[def->mNumCreation5C];
+            for (int j = 0; j < def->mNumCreation5C; j++)
                 mArray3C[j] = 0;
             func_0011CC90(0);
         }
         if (mCount38 > 0)
         {
-            mArray40 = new UnkNode *[def->field_0x60];
-            for (int k = 0; k < def->field_0x60; k++)
+            mArray40 = new UnkNode *[def->mNumDestruction60];
+            for (int k = 0; k < def->mNumDestruction60; k++)
                 mArray40[k] = 0;
             func_0011CD80(0);
         }
@@ -293,7 +392,7 @@ inline void Pickup::func_0011CC90(int enable)
         if (enable)
         {
             if (mArray3C[i] == 0)
-                mArray3C[i] = func_00194DE0(mDef70->field_0x64[i]);
+                mArray3C[i] = func_00194DE0(mDef70->mCreation64[i]);
             if (mArray3C[i] != 0)
             {
                 func_00194F40(mArray3C[i]);
@@ -314,7 +413,7 @@ inline void Pickup::func_0011CD80(int enable)
         if (enable)
         {
             if (mArray40[i] == 0)
-                mArray40[i] = func_00194DE0(mDef70->field_0x78[i]);
+                mArray40[i] = func_00194DE0(mDef70->mDestruction78[i]);
             if (mArray40[i] != 0)
             {
                 func_00194F40(mArray40[i]);
@@ -331,22 +430,22 @@ inline void Pickup::func_0011CD80(int enable)
 void PickupDef::func_0011CAD0(const char *name)
 {
     func_00231F08(mName00, name, 0x3F);
-    field_0x5C = 0;
-    field_0x60 = 0;
+    mNumCreation5C = 0;
+    mNumDestruction60 = 0;
     for (int i = 0; i < 5; i++)
     {
-        field_0x64[i] = 0;
-        field_0x78[i] = 0;
+        mCreation64[i] = 0;
+        mDestruction78[i] = 0;
     }
-    field_0x40 = 0;
-    for (int j = 4; j >= 0; j--)
-        field_0x44[j] = 0;
-    field_0x9C = 0;
-    field_0x58 = 0;
-    field_0x90 = 0.0f;
-    field_0x94 = 0;
-    field_0x98 = 0;
-    field_0x8C = 10.0f;
+    mNumMeshes40 = 0;
+    for (int j = 0; j < 5; j++)
+        mMeshes44[j] = 0;
+    mSound9C = 0;
+    mIcs58 = 0;
+    mParam1_90 = 0.0f;
+    mRegenerate94 = 0;
+    mRegenDelta98 = 0;
+    mTimeLimit8C = 10.0f;
 }
 
 // Collision callback of pickups (DD_CollisionCallback; its address sits in a data table).
@@ -365,8 +464,8 @@ void func_0011CEB8(IVP_Real_Object_Stub *self, IVP_Real_Object_Stub *other, u32,
 // mDef70 reload after the constructor's this, and the registers differ from the game.
 static inline void SpawnCollectEffect(Pickup *p)
 {
-    if (p->mDef70->field_0x9C != 0)
-        (new UnkEffect(p->mDef70->field_0x9C, &p->mPos44, 0, 20.0f, 1.0f, 1.0f))->func_001419A0(1);
+    if (p->mDef70->mSound9C != 0)
+        (new UnkEffect(p->mDef70->mSound9C, &p->mPos44, 0, 20.0f, 1.0f, 1.0f))->func_001419A0(1);
 }
 
 void Pickup::func_0011B7B8()

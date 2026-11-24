@@ -3,7 +3,8 @@
 
 #include "common/types.h"
 
-// 0x30-byte object spawned at a position (constructor 0x001418E0); also used by func_00116B00.
+// 0x30-byte object spawned at a position (constructor 0x001418E0). Probably a positional sound:
+// Pickup passes the CRC32 of its "sound" name as the id. Also used by func_00116B00.
 class UnkEffect
 {
 public:

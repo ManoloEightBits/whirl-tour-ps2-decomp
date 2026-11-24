@@ -42,23 +42,48 @@ UnkNode *func_00194DE0(int id);  // 0x00194DE0
 void func_00194F40(UnkNode *);   // 0x00194F40
 void func_00194F90(UnkNode *);   // 0x00194F90
 
+// A keyword of UnkParser::func_001C1D28's table; the parser sets mToken14 to the matching mId00.
+struct UnkKeyword
+{
+    int mId00;
+    const char *mName04;
+};
+
+// Script parser used by many loaders (no RTTI; name unknown).
+struct UnkParser
+{
+    char field_0x0000[0x14];
+    int mToken14;               // 0x14: id of the last keyword read
+    char field_0x0018[0x1014];
+    int mEof102C;               // 0x102C: nonzero at the end of the input
+
+    void func_001C1D28(const UnkKeyword *keywords); // 0x001C1D28: reads the next keyword
+    void func_001C2C10();                           // 0x001C2C10: skips an unknown keyword
+    // 0x001C2C78: reads a string value. It returns something: with void, PickupDef::func_0011AD28
+    // gets $v0 instead of $v1 for a value it loads right after the call.
+    int func_001C2C78(const char *key, char *out);
+    void func_001C3270(const char *key, f32 *out);  // 0x001C3270: reads a float value
+};
+
 // Definition data of a pickup type (name from FindPickupDef, 0x00126518).
 struct PickupDef
 {
-    char mName00[0x40];   // 0x00: at most 63 characters are copied
-    int field_0x40;       // number of models
-    int field_0x44[5];    // 0x44: model ids
-    int field_0x58;       // passed to func_001262B0
-    int field_0x5C;       // number of mArray3C nodes
-    int field_0x60;       // number of mArray40 nodes
-    int field_0x64[5];    // 0x64: ids of the EnvObj::mArray3C nodes
-    int field_0x78[5];    // 0x78: ids of the EnvObj::mArray40 nodes
-    f32 field_0x8C;       // 10.0 by default; first OnCollected parameter (TimerPickup: time to add)
-    f32 field_0x90;       // second OnCollected parameter (HealthPickup: health)
-    f32 field_0x94;       // copied to EnvObj::mField78
-    int field_0x98;
-    int field_0x9C;       // id of the UnkEffect spawned when collected (0 = none)
+    // Field names are the keys of a "pickup" block (see func_0011AD28).
+    char mName00[0x40];          // 0x00: at most 63 characters are copied
+    int mNumMeshes40;            // 0x40
+    u32 mMeshes44[5];            // 0x44: CRC32s of the "mesh" names (models)
+    u32 mIcs58;                  // 0x58: CRC32 of the "ics" name; passed to func_001262B0
+    int mNumCreation5C;          // 0x5C: number of mCreation64 entries (EnvObj::mArray3C nodes)
+    int mNumDestruction60;       // 0x60: number of mDestruction78 entries (EnvObj::mArray40 nodes)
+    int mCreation64[5];          // 0x64: "fountain"s of the "fountains type creation" block
+    int mDestruction78[5];       // 0x78: "fountain"s of the "fountains type destruction" block
+    f32 mTimeLimit8C;            // 0x8C: "timelimit" (10.0 by default); first OnCollected parameter
+    f32 mParam1_90;              // 0x90: "param1"; second OnCollected parameter (HealthPickup: health)
+    f32 mRegenerate94;           // 0x94: "regenerate"; copied to EnvObj::mField78
+    f32 mRegenDelta98;           // 0x98: "regendelta"
+    u32 mSound9C;                // 0x9C: CRC32 of the "sound" name, played when collected (0 = none)
 
+    void func_0011AD28(char *name, UnkParser *p); // reads a "pickup" block (name: buffer for the name)
     void func_0011CAD0(const char *name); // resets the definition and sets its name
 };
 

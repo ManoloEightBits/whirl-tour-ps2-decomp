@@ -585,6 +585,13 @@
 
 # Pickup TU additions (src/game/KeyPickup.cpp)
 0x0011CAD0 func_0011CAD0__9PickupDefPCc
+0x0011AD28 func_0011AD28__9PickupDefPcP9UnkParser
+0x001C1D28 func_001C1D28__9UnkParserPC10UnkKeyword
+0x001C2C10 func_001C2C10__9UnkParser
+0x001C2C78 func_001C2C78__9UnkParserPCcPc
+0x001C3270 func_001C3270__9UnkParserPCcPf
+0x002317B4 func_002317B4
+0x0025A230 data_0025A230
 0x0011CEB8 func_0011CEB8__FP20IVP_Real_Object_StubT0UiP19IVP_Event_Collision
 0x0011B7B8 func_0011B7B8__6Pickup
 0x00231F08 func_00231F08

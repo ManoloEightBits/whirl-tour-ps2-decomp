@@ -112,6 +112,17 @@ file with `diff_func.py <file.cpp> <symbol> --variants <json>`. That command onl
   (`0x0018CB38`). Declared as static members of `DD_Collision_Listener` in the header and defined with
   `inline` in the `.cpp` (before their callers), GCC inlines them in this TU and also emits the copies,
   because the class's key function is here. Other TUs, which see only the declaration, call the copies.
+- **`switch` case bodies come out in source order.** The jump table gives each case's address, so their
+  order in the game is the order of the `case` labels in the original source. In
+  `PickupDef::func_0011AD28` the `/fountains` case (token 6) comes before `fountain` (token 5).
+- **An unused return value can decide a register.** In the same function, a value loaded right after a
+  call to `UnkParser::func_001C2C78` gets `$v1` in the game and `$v0` in ours while the function is
+  declared `void`. Declared as returning `int` (the result is still ignored), the call sets `$v0`, the
+  load gets `$v1`, and a scheduling tie in the prologue also goes the game's way.
+- **Zeroing loops: write them the natural way first.** `for (j = 0; j < 5; j++) a[j] = 0;` compiles to
+  a counter going down from 4 (`bgez`) and a pointer going *down* from `&a[4]`, because GCC reverses the
+  loop. A hand-reversed `for (j = 4; j >= 0; j--)` gives the same loop but places the counter's
+  initialization differently (one swapped pair in `func_0011AD28`).
 - **`base ... with only non-default constructor in class without a constructor`.** GCC 2.95 gives this
   error when a derived class declares no constructor at all. Declare the real one, even if its body is
   not decompiled yet (see `MBCL` and `ScootCL`).
