@@ -31,6 +31,7 @@ SRC = ROOT / 'src'
 INC = ROOT / 'include'
 BUILD = ROOT / 'build'
 SYMBOLS = ROOT / 'config' / 'symbols.txt'
+PROBES = ROOT / 'config' / 'probes.txt'
 TARGET_SHA1 = ROOT / 'pkg' / 'target.sha1'
 
 COMPILER = 'ee-gcc2.95.3-114'
@@ -151,6 +152,13 @@ def load_symbols():
     return out
 
 
+def load_probes():
+    """config/probes.txt -> set of compiler-emitted helper names that verify.py ignores."""
+    if not PROBES.is_file():
+        return set()
+    return {l.split('#')[0].strip() for l in PROBES.read_text().splitlines() if l.split('#')[0].strip()}
+
+
 def resolve_assembler(compilers_dir):
     asm_dir = Path(compilers_dir).resolve() / ASSEMBLER_COMPILER / ASSEMBLER_TOOL_DIR
     if (asm_dir / ASSEMBLER).is_file():
@@ -241,6 +249,8 @@ def compare(obj_path, game, game_base, addresses, verbose):
         # ps2eeas pads the end of .text to 16 bytes with trailing nops; trim trailing nops
         # if the game has another function or ends at an 8-byte boundary.
         address = addresses.get(name)
+        if address is None and name in load_probes():
+            continue
         if address is None:
             problems.append('%s: not in %s' % (name, SYMBOLS.name))
             continue
