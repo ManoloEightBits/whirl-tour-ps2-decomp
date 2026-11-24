@@ -306,6 +306,7 @@ def main():
     ap.add_argument('-D', dest='defines', action='append', default=[], metavar='NAME',
                     help='preprocessor define, e.g. NON_MATCHING')
     ap.add_argument('-v', '--verbose', action='store_true', help='list every matching function')
+    ap.add_argument('-q', '--quiet', action='store_true', help='only print files with failures and the final summary')
     ap.add_argument('sources', nargs='*', type=Path, help='default: every .cpp under src/')
     args = ap.parse_args()
     try:
@@ -324,11 +325,14 @@ def main():
         total, count, failed = 0, 0, 0
         objects = build_all(lambda source: build(args.compilers, source, args.defines), sources)
         for source, obj in zip(sources, objects):
-            print(source.relative_to(ROOT).as_posix())
+            if not args.quiet:
+                print(source.relative_to(ROOT).as_posix())
             matched, functions, problems = compare(obj, game, game_base, addresses, args.verbose)
             total += matched
             count += functions
             failed += len(problems)
+            if args.quiet and problems:
+                print(source.relative_to(ROOT).as_posix())
             for p in problems:
                 print('  FAIL ' + p)
         print('%d functions match: %d bytes, %.3f%% of the game code; %d problems'

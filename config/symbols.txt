@@ -465,3 +465,43 @@
 0x00126518 FindPickupDef__FPCc
 0x001B1CD0 HashStringCRC32__FPCc
 0x001266D0 SendScriptEvent__FUiiPv
+
+# FEScreen (src/game/FEScreen.cpp)
+0x00100BE8 __builtin_new
+0x001305E0 _$_7FESub08
+0x0016B768 __6FEMenuPPCciPv
+0x0016B810 __6FEMenuPCiiPv
+0x0016B8D0 _$_6FEMenu
+0x0016B980 Action16B980__6FEMenu
+0x0016B9C8 Action16B9C8__6FEMenu
+0x00198F38 Release198F38__FPv
+0x0016E450 VirtSlot4__8FEScreen
+0x0016DF98 VirtSlot2__8FEScreen
+0x0016E180 VirtSlot3__8FEScreen
+0x0016E458 __8FEScreeniiPv
+0x0016E5B0 _$_8FEScreen
+0x0016E628 CreateMenuA__8FEScreenPCii
+0x0016E690 CreateMenuB__8FEScreenPPCci
+0x0016E6F8 DestroyMenu__8FEScreen
+0x0016E730 GetMenuSelection__8FEScreen
+0x0016E7B8 MenuAction16B9C8__8FEScreen
+0x0016E7E0 MenuAction16B980__8FEScreen
+0x0016E808 IsSlot5AndState3__8FEScreen
+0x0016E860 VirtSlot5__8FEScreen
+0x0016E868 SetField3C_1__8FEScreen
+0x0016E878 VirtSlot6__8FEScreen
+0x0016E880 VirtSlot7__8FEScreen
+0x0016E888 VirtSlot8__8FEScreen
+0x0016E890 AddItem48__8FEScreeni
+
+# FEQuitScreen (src/game/FEQuitScreen.cpp)
+0x00114F10 DrawDialog114F10__FPvT0ff
+0x001309E0 CleanupDialog1309E0__FPv
+0x0019A640 DrawBegin19A640__Fv
+0x0019A6B0 DrawEnd19A6B0__Fv
+0x001150B8 __12FEQuitScreenPv
+0x00115148 _$_12FEQuitScreen
+0x001151A0 VirtSlot2__12FEQuitScreen
+0x00115260 VirtSlot3__12FEQuitScreen
+0x001152B8 VirtSlot7__12FEQuitScreen
+0x001152C0 VirtSlot8__12FEQuitScreen

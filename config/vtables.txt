@@ -13,3 +13,5 @@
 0x00284590 JumpPickup game/Pickup.h
 0x00284568 BalancePickup game/Pickup.h
 0x00284540 TimerPickup game/Pickup.h
+0x002A4270 FEScreen game/FEScreen.h
+0x00283E78 FEQuitScreen game/FEScreen.h

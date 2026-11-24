@@ -297,6 +297,7 @@ def main():
     ap.add_argument('--asm-only', action='store_true', help='link no C++, to test the split by itself')
     ap.add_argument('--allow-kept', action='store_true',
                     help='succeed even when some functions had to stay as assembly')
+    ap.add_argument('-q', '--quiet', action='store_true', help='only print the final MATCH/NO MATCH summary line')
     args = ap.parse_args()
     try:
         if not args.split or not args.slus or not (args.asm_only or args.compilers):
@@ -326,10 +327,11 @@ def main():
                 kept_all.update(kept)
             for name in verify.load_probes():
                 kept_all.pop(name, None)  # helpers of the generated probes: not game code
-            print('linking %d C++ functions (%d bytes); %d kept as assembly'
-                  % (len(functions), sum(sizes.values()), len(kept_all)))
-            for name, reason in sorted(kept_all.items()):
-                print('  kept: %s %s' % (name, reason))
+            if not args.quiet:
+                print('linking %d C++ functions (%d bytes); %d kept as assembly'
+                      % (len(functions), sum(sizes.values()), len(kept_all)))
+                for name, reason in sorted(kept_all.items()):
+                    print('  kept: %s %s' % (name, reason))
 
         # Link, then check each C++ function against the game. A function whose bytes differ (an
         # address in config/symbols.txt that holds for one translation unit but not another, such
@@ -354,13 +356,15 @@ def main():
                 kept_all[n] = 'links to the wrong address for a symbol shared between translation units'
                 del functions[n]
                 del sizes[n]
-            print('%d linked functions differ from the game; keeping them as assembly' % len(wrong))
+            if not args.quiet:
+                print('%d linked functions differ from the game; keeping them as assembly' % len(wrong))
 
         rebuilt = ((split / 'assets' / 'header.bin').read_bytes() + binary.read_bytes()[:text['size']]
                    + (split / 'assets' / 'after_text.bin').read_bytes())
         want = verify.TARGET_SHA1.read_text().split()[0]
         got = hashlib.sha1(rebuilt).hexdigest()
-        print('sha1 rebuilt  %s\nsha1 expected %s' % (got, want))
+        if not args.quiet:
+            print('sha1 rebuilt  %s\nsha1 expected %s' % (got, want))
         if got == want:
             print('MATCH: rebuilt file is byte-identical, %d assembly pieces and %d C++ functions'
                   % (len(chunks), len(functions)))

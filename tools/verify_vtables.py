@@ -122,6 +122,7 @@ def main():
     ap.add_argument('--compilers', default=os.environ.get('WHIRL_COMPILERS'))
     ap.add_argument('--slus', default=os.environ.get('WHIRL_SLUS'))
     ap.add_argument('-v', '--verbose', action='store_true', help='list slots that could not be checked')
+    ap.add_argument('-q', '--quiet', action='store_true', help='only print classes with failures and the final summary')
     args = ap.parse_args()
     try:
         if not args.compilers or not args.slus:
@@ -135,7 +136,8 @@ def main():
         total = unknown = failed = 0
         for (address, name, _), obj in zip(tables, objects):
             checked, unchecked, problems = check(address, name, probe_table(obj), slus, addresses, args.verbose)
-            print('%-28s %3d slots confirmed, %3d unchecked, %d wrong' % (name, checked, unchecked, len(problems)))
+            if not args.quiet or problems:
+                print('%-28s %3d slots confirmed, %3d unchecked, %d wrong' % (name, checked, unchecked, len(problems)))
             for p in problems:
                 print('  FAIL ' + p)
             total += checked

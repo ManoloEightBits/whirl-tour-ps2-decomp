@@ -10,7 +10,6 @@ _$_11FEMovScreen
 _$_11IP_AnimCtrl
 _$_11IVP_Polygon
 _$_11IVP_Synapse
-_$_12FEQuitScreen
 _$_12IVP_Material
 _$_13AI_Pedestrian
 _$_13FELevelScreen
@@ -85,7 +84,6 @@ _$_7AI_Boss
 _$_7AI_Race
 _$_7ScootCL
 _$_8AI_Agent
-_$_8FEScreen
 _$_8IVP_Ball
 _$_8LunActCL
 _$_8MarActCL
@@ -101,7 +99,6 @@ __11FEMovScreen
 __11IP_AnimCtrl
 __11IVP_Polygon
 __11IVP_Synapse
-__12FEQuitScreen
 __12IVP_Material
 __13AI_AttackType
 __13AI_Pedestrian
@@ -177,7 +174,6 @@ __7AI_Boss
 __7AI_Race
 __7ScootCL
 __8AI_Agent
-__8FEScreen
 __8IVP_Ball
 __8LunActCL
 __8MarActCL
