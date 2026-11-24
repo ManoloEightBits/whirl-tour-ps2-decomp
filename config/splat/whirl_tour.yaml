@@ -1,0 +1,35 @@
+# Splits SLUS_204.89 (Whirl Tour US PS2) for a full rebuild.
+# Run from a work folder outside the repo (/home/usuario/Documentos/whirl-tour-work/split),
+# because the output is the game's code in text form and must never be committed.
+# First pass: .text as assembly, everything else as raw binary.
+name: SLUS_204.89
+sha1: 02f39f201a161f61331003ec61c79eef09a40744
+options:
+  basename: SLUS_204.89
+  base_path: .
+  target_path: SLUS_204.89
+  platform: ps2
+  compiler: EEGCC
+  gp_value: 0x002B8E70
+  asm_path: asm
+  asset_path: assets
+  src_path: src
+  build_path: build
+  symbol_addrs_path: symbol_addrs.txt
+  undefined_funcs_auto_path: undefined_funcs_auto.txt
+  undefined_syms_auto_path: undefined_syms_auto.txt
+  use_legacy_include_asm: False
+  create_undefined_funcs_auto: True
+  create_undefined_syms_auto: True
+segments:
+  - name: header
+    type: bin
+    start: 0x0
+  - name: main
+    type: code
+    start: 0x80
+    vram: 0x00100000
+    subsegments:
+      - [0x80, asm, text]
+  - [0x1562E8, bin, after_text]
+  - [0x1B1BF4]

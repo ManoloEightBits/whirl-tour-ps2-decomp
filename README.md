@@ -1,0 +1,25 @@
+# Whirl Tour (PS2) decompilation
+
+Hobby reverse-engineering project for the US PS2 build of *Whirl Tour* (Papaya Studio / Crave, 2002),
+executable `SLUS_204.89`. Goal: C++ that rebuilds the original binary byte for byte.
+
+**This repo contains no game data.** Bring your own disc image. `pkg/target.sha1` holds the checksum of the expected executable.
+
+## Findings so far
+- ELF32 R5900, entry `0x100008`, stripped, but built **with C++ RTTI**: 199 `__tf*` functions and 182 vtables are recoverable (`tools/extract_rtti.py`).
+- Engine: Papaya's own (`RI_CLASS_*`, `.ddf` scripts) + Havok 1 / Ipion (`IVP_*`); Sony EE SDK 2.3.0.
+- Compiler: SN Systems ee-gcc 2.95.3 build 1.14, `-O2 -G0 -fno-exceptions` (RTTI on), assembled with the ProDG `ps2eeas.exe` from the 2.95.2-273a package (nop after `mtc1`, no short-loop padding).
+- `__tf13AI_AttackType` (`0x00101C78`) already matches byte for byte with `tools/verify.py`.
+
+## Layout
+`src/` C++ · `include/` shared types · `config/symbols.txt`, `config/vtables.txt` addresses · `config/splat/` splat config · `tools/` verify/extract/check · `rebuild/` full relink (needs a splat split and mips binutils) · `docs/STANDARDS.md` rules.
+
+## Usage
+```bash
+git config core.hooksPath .githooks
+export WHIRL_COMPILERS=<dir with ee-gcc2.95.3-114 and ee-gcc2.95.2-273a> WHIRL_SLUS=<path to SLUS_204.89>
+python3 tools/verify.py -v
+```
+Compilers, ISO and extracted files live outside the repo (here: `../whirl-tour-work`). Run the compilers only under Wine with no network (verify.py does this itself).
+
+Whirl Tour is a trademark of its owners; this project is not affiliated with them. Tools and docs: MIT.
