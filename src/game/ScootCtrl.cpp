@@ -149,3 +149,18 @@ f32 ScootCtrl::ConsumeAdrenaline(f32 amount)
     return amount;
 }
 #endif
+
+void ScootCtrl::core_is_going_to_be_deleted_event(void *)
+{
+    delete this;
+}
+
+int ScootCtrl::get_controller_priority()
+{
+    return 500;
+}
+
+ScootCtrl::~ScootCtrl()
+{
+    func_001FA170(this, mCore24);
+}

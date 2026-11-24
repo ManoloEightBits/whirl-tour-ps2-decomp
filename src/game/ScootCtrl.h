@@ -2,13 +2,16 @@
 #define GAME_SCOOTCTRL_H
 
 #include "common/types.h"
+#include "game/Controllers.h"
 
 // Whirl Tour: ScootCtrl (RTTI name), pointed to by Player at +0x2C.
 // Method and field names are ours (hypotheses from usage in Player and Pickup subclasses);
 // offsets and instruction shapes are proven by the binary.
-class ScootCtrl
+class ScootCtrl : public IVP_Controller_Independent
 {
 public:
+    WHIRL_CONTROLLER_SLOTS(ScootCtrl) // 0x00180780, 0x00180560, 0x00180690, 0x00180820
+
     f32 GetStatFactor();                     // 0x0017E958
     int IsBoostInactive();                   // 0x0017EA08
     int IsBoostUnavailable();                // 0x0017EA18
@@ -37,9 +40,11 @@ public:
     int HasAdrenaline();                     // 0x0017ECA0
     f32 ConsumeAdrenaline(f32 amount);       // 0x0017ED28
 
-    char field_0x000[0x18];
+    char field_0x004[0x14];
     u32 mFlags18;              // 0x018
-    char field_0x01C[0x4C];
+    char field_0x01C[0x8];
+    void *mCore24;             // 0x024
+    char field_0x028[0x40];
     void *mGround68;           // 0x068: non-null while touching the ground (IsGrounded)
     int mField6C;              // 0x06C
     f32 mHealth;               // 0x070 (capped at 100.0f in AddHealth)

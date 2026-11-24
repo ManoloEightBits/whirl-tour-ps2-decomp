@@ -18,7 +18,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import extract_rtti as e
 
 ROOT = Path(__file__).resolve().parent.parent
-HAND_WRITTEN = {'CollFilt', 'IVP_Collision_Filter', 'AI_AttackType', 'IVP_Actuator', 'IVP_U_Active_Value', 'Pickup', 'FEScreen', 'FEQuitScreen', 'FEStartScreen', 'FETrickScreen', 'IVP_Listener_Object', 'DD_Event_Listener', 'IVP_Listener_Collision', 'MBCL', 'ScootCL', 'MarActCL', 'DD_Collision_Listener', 'LunActCL', 'AI_PedestrianCL'}
+HAND_WRITTEN = {'CollFilt', 'IVP_Collision_Filter', 'AI_AttackType', 'IVP_Actuator', 'IVP_U_Active_Value', 'Pickup', 'FEScreen', 'FEQuitScreen', 'FEStartScreen', 'FETrickScreen', 'IVP_Listener_Object', 'DD_Event_Listener', 'IVP_Listener_Collision', 'MBCL', 'ScootCL', 'MarActCL', 'DD_Collision_Listener', 'LunActCL', 'AI_PedestrianCL', 'IVP_Controller', 'IVP_Controller_Independent', 'IP_PosCtrl', 'MotionCtrl', 'IP_RotCtrl', 'IP_AnimCtrl', 'MBCtrl', 'ScootCtrl'}
 
 # Entries of config/probes.txt that do not come from a generated stub. The file is rewritten from
 # scratch on every run, so anything verify.py must ignore for another reason has to be listed here.
