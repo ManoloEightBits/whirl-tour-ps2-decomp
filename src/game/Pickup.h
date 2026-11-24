@@ -70,7 +70,8 @@ public:
     void *mField00;          // 0x00
     char field_0x04[0x14];
     void *mPhysicsObj18;     // 0x18
-    char field_0x1C[0x18];
+    int mCount1C;            // 0x1C: models drawn by PickupHelper11B2A0
+    void *mArray20[5];       // 0x20
     int mCount34;            // 0x34
     int mCount38;            // 0x38
     UnkNode **mArray3C;      // 0x3C: mCount34 entries

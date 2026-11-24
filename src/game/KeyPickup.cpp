@@ -12,6 +12,13 @@ void PhysicsClear1F34B0(void *, int);                    // 0x001F34B0
 void PhysicsRelease1F3A70(void *);                       // 0x001F3A70
 void CleanupNode194EC0(void *);                          // 0x00194EC0
 void EnvObjCleanup14FB70(EnvObj *);                      // 0x0014FB70
+void func_00193100(UnkNode *);                           // 0x00193100
+void func_001A3738();                                    // 0x001A3738
+void func_001A3A00(f32 x, f32 y, f32 z);                 // 0x001A3A00
+void *func_0012ECC0();                                   // 0x0012ECC0
+void func_001A3AB0(void *);                              // 0x001A3AB0
+void func_00196110(void *model);                         // 0x00196110
+void func_001A3808();                                    // 0x001A3808
 
 static inline f32 AbsF(f32 x)
 {
@@ -264,4 +271,32 @@ KeyPickup::KeyPickup(const Vec3f *pos)
     mFloor84 = 1.0f;
     mHeightOffset74 = 1.0f;
     mBounce88 = 1;
+}
+
+// The position must come in through a pointer parameter: x is then addressed from the pickup and
+// y/z through the pointer, as in the game.
+static inline void TranslateTo(const Vec3f *pos, Pickup *p)
+{
+    func_001A3A00(pos->x, pos->y + p->mHeightOffset74, pos->z);
+}
+
+void PickupHelper11B2A0(Pickup *p)
+{
+    for (int i = 0; i < p->mCount34; i++)
+        if (p->mArray3C[i] != 0)
+            func_00193100(p->mArray3C[i]);
+    for (int j = 0; j < p->mCount38; j++)
+        if (p->mArray40[j] != 0)
+            func_00193100(p->mArray40[j]);
+    if ((u32)p->mState60 < 2)
+    {
+        for (int k = 0; k < p->mCount1C; k++)
+        {
+            func_001A3738();
+            TranslateTo(&p->mPos44, p);
+            func_001A3AB0(func_0012ECC0());
+            func_00196110(p->mArray20[k]);
+            func_001A3808();
+        }
+    }
 }
