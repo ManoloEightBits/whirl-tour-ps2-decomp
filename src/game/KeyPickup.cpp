@@ -1,4 +1,7 @@
 #include "game/Pickup.h"
+#include "game/CollisionListeners.h"
+
+extern "C" char *func_00231F08(char *dst, const char *src, u32 n); // 0x00231F08 (runtime library; probably strncpy)
 
 u32 HashStringCRC32(const char *str);                    // 0x001B1CD0
 int SendScriptEvent(u32 eventCrc, int arg1, void *arg2); // 0x001266D0
@@ -197,4 +200,37 @@ TimerPickup::TimerPickup(PickupSpawnInfo *info)
 void TimerPickup::OnCollected(Player *)
 {
     SendScriptEvent(HashStringCRC32("add_time"), 0, mPickupData70 + 0x8C);
+}
+
+void PickupDef::func_0011CAD0(const char *name)
+{
+    func_00231F08(mName00, name, 0x3F);
+    field_0x5C = 0;
+    field_0x60 = 0;
+    for (int i = 0; i < 5; i++)
+    {
+        field_0x64[i] = 0;
+        field_0x78[i] = 0;
+    }
+    field_0x40 = 0;
+    for (int j = 4; j >= 0; j--)
+        field_0x44[j] = 0;
+    field_0x9C = 0;
+    field_0x58 = 0;
+    field_0x90 = 0;
+    field_0x94 = 0;
+    field_0x98 = 0;
+    field_0x8C = 10.0f;
+}
+
+// Collision callback of pickups (DD_CollisionCallback; its address sits in a data table).
+void func_0011CEB8(IVP_Real_Object_Stub *self, IVP_Real_Object_Stub *other, u32, IVP_Event_Collision *)
+{
+    Pickup *pickup = (Pickup *)self->mActorA8;
+    Player *player = (Player *)other->mActorA8;
+    if ((u32)pickup->mState60 < 2)
+    {
+        pickup->OnCollected(player);
+        pickup->func_0011B7B8();
+    }
 }

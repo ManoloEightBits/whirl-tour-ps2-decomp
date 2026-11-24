@@ -15,6 +15,26 @@ struct PickupSpawnInfo
     Vec3f mPos18;     // 0x18
 };
 
+// Definition data of a pickup type (name from FindPickupDef, 0x00126518).
+struct PickupDef
+{
+    char mName00[0x40];   // 0x00: at most 63 characters are copied
+    int field_0x40;
+    int field_0x44[5];    // 0x44
+    int field_0x58;
+    int field_0x5C;
+    int field_0x60;
+    int field_0x64[5];    // 0x64
+    int field_0x78[5];    // 0x78
+    f32 field_0x8C;       // 10.0 by default
+    int field_0x90;
+    int field_0x94;
+    int field_0x98;
+    int field_0x9C;
+
+    void func_0011CAD0(const char *name); // resets the definition and sets its name
+};
+
 class EnvObj
 {
 public:
@@ -52,6 +72,7 @@ public:
     Vec3f *GetPos50();                // 0x0011CE98
     int IsState4();                   // 0x0011CEA0
     void SetFields68_6C(int a, int b); // 0x0011CF08
+    void func_0011B7B8();             // 0x0011B7B8
 };
 
 class KeyPickup : public Pickup

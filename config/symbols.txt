@@ -573,3 +573,9 @@
 0x001463A8 event_pre_collision__8LunActCLP19IVP_Event_Collision
 0x00148DE0 _$_8LunActCL
 0x00208178 func_00208178__17IVP_U_Float_Point
+
+# Pickup TU additions (src/game/KeyPickup.cpp)
+0x0011CAD0 func_0011CAD0__9PickupDefPCc
+0x0011CEB8 func_0011CEB8__FP20IVP_Real_Object_StubT0UiP19IVP_Event_Collision
+0x0011B7B8 func_0011B7B8__6Pickup
+0x00231F08 func_00231F08
