@@ -1,32 +1,82 @@
-// Whirl Tour: KeyPickup (RTTI name). Slot 3 of its vtable at 0x002846A8, which overrides Pickup's
-// empty slot 3 (0x0011CEB0). Names of the virtuals are ours; only the shapes are proven.
-class EnvObj
-{
-public:
-    virtual ~EnvObj();
-};
+#include "game/Pickup.h"
 
-#include "game/Player.h"
+u32 HashStringCRC32(const char *str);                    // 0x001B1CD0
+int SendScriptEvent(u32 eventCrc, int arg1, void *arg2); // 0x001266D0
 
-class Pickup : public EnvObj
+Vec3f *Pickup::GetPos44()
 {
-public:
-    Pickup();
-    virtual void Reset(void *);          // slot 1, 0x0011CB58 (overridden by KeyPickup)
-    virtual void Update(float dt);       // slot 2, 0x0011B3D8
-    virtual void OnCollected(Player *);  // slot 3, empty in Pickup
-};
+    return &mPos44;
+}
 
-class KeyPickup : public Pickup
+Vec3f *Pickup::GetPos50()
 {
-public:
-    KeyPickup();
-    virtual void Reset(void *);
-    virtual void Update(float dt);
-    virtual void OnCollected(Player *);
-};
+    return &mPos50;
+}
+
+int Pickup::IsState4()
+{
+    return mState60 == 4;
+}
+
+void Pickup::OnCollected(Player *)
+{
+}
+
+void Pickup::SetFields68_6C(int a, int b)
+{
+    mField68 = a;
+    mField6C = b;
+}
 
 void KeyPickup::OnCollected(Player *player)
 {
     player->AddKey();
+}
+
+void HealthPickup::OnCollected(Player *player)
+{
+    player->AddHealth(*(f32 *)(mPickupData70 + 0x90));
+}
+
+void ScooterPickup::OnCollected(Player *player)
+{
+    player->AddScooter(mScooterId);
+}
+
+void BGMPickup::OnCollected(Player *player)
+{
+    player->AddBGM(mBGMId);
+}
+
+void TransmitterPickup::OnCollected(Player *)
+{
+}
+
+void SpeedPickup::OnCollected(Player *player)
+{
+    u8 *data = mPickupData70;
+    player->AddSpeedBoost(*(f32 *)(data + 0x8C), *(f32 *)(data + 0x90));
+}
+
+void SpinPickup::OnCollected(Player *player)
+{
+    u8 *data = mPickupData70;
+    player->AddSpinBoost(*(f32 *)(data + 0x8C), *(f32 *)(data + 0x90));
+}
+
+void JumpPickup::OnCollected(Player *player)
+{
+    u8 *data = mPickupData70;
+    player->AddJumpBoost(*(f32 *)(data + 0x8C), *(f32 *)(data + 0x90));
+}
+
+void BalancePickup::OnCollected(Player *player)
+{
+    u8 *data = mPickupData70;
+    player->AddBalanceBoost(*(f32 *)(data + 0x8C), *(f32 *)(data + 0x90));
+}
+
+void TimerPickup::OnCollected(Player *)
+{
+    SendScriptEvent(HashStringCRC32("add_time"), 0, mPickupData70 + 0x8C);
 }

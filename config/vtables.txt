@@ -2,3 +2,14 @@
 # tools/extract_rtti.py from RTTI; headers are added as classes get decompiled).
 
 0x00283FD0 CollFilt game/CollFilt.h
+0x002846D0 Pickup game/Pickup.h
+0x002846A8 KeyPickup game/Pickup.h
+0x00284680 HealthPickup game/Pickup.h
+0x00284658 ScooterPickup game/Pickup.h
+0x00284630 BGMPickup game/Pickup.h
+0x00284608 TransmitterPickup game/Pickup.h
+0x002845E0 SpeedPickup game/Pickup.h
+0x002845B8 SpinPickup game/Pickup.h
+0x00284590 JumpPickup game/Pickup.h
+0x00284568 BalancePickup game/Pickup.h
+0x00284540 TimerPickup game/Pickup.h
