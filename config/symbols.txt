@@ -359,4 +359,4 @@
 0x001DDC68 __tft23IVP_Listener_Set_Active1Z8IVP_Core
 0x00100C08 __builtin_delete
 0x0011D110 OnCollected__9KeyPickupP6Player
-0x00123548 GiveKey__FP6Player
+0x00123548 AddKey__6Player

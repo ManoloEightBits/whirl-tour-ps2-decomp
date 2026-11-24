@@ -6,7 +6,7 @@ public:
     virtual ~EnvObj();
 };
 
-class Player;  // name is ours: the object a pickup is handed when it is collected
+#include "game/Player.h"
 
 class Pickup : public EnvObj
 {
@@ -26,9 +26,7 @@ public:
     virtual void OnCollected(Player *);
 };
 
-void GiveKey(Player *player);  // 0x00123548, not yet decompiled
-
 void KeyPickup::OnCollected(Player *player)
 {
-    GiveKey(player);
+    player->AddKey();
 }
