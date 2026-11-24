@@ -5,7 +5,7 @@ extern "C" char *func_00231F08(char *dst, const char *src, u32 n); // 0x00231F08
 
 u32 HashStringCRC32(const char *str);                    // 0x001B1CD0
 int SendScriptEvent(u32 eventCrc, int arg1, void *arg2); // 0x001266D0
-void *FindPickupDef(const char *name);                   // 0x00126518
+PickupDef *FindPickupDef(const char *name);              // 0x00126518
 void PickupHelper11B2A0(Pickup *);                       // 0x0011B2A0
 void PhysicsDestroy1F21A8(void *);                       // 0x001F21A8
 void PhysicsClear1F34B0(void *, int);                    // 0x001F34B0
@@ -19,6 +19,11 @@ void *func_0012ECC0();                                   // 0x0012ECC0
 void func_001A3AB0(void *);                              // 0x001A3AB0
 void func_00196110(void *model);                         // 0x00196110
 void func_001A3808();                                    // 0x001A3808
+int func_001262B0(int id);                               // 0x001262B0
+void *func_00116560(UnkObjDef *, const Vec3f *pos, const Vec4f *rot, int); // 0x00116560: creates the physics object
+void func_0014FB08(EnvObj *, UnkObjDef *, int);          // 0x0014FB08
+void *func_001262E0(int id);                             // 0x001262E0: model by id
+void func_0012EE48(Pickup *);                            // 0x0012EE48
 
 static inline f32 AbsF(f32 x)
 {
@@ -115,7 +120,7 @@ void KeyPickup::OnCollected(Player *player)
 }
 
 HealthPickup::HealthPickup(PickupSpawnInfo *info)
-    : Pickup(&info->mPos18, info->mType14, FindPickupDef("healthpickup"))
+    : Pickup(&info->mPos18, info->mObjDef14, FindPickupDef("healthpickup"))
 {
 }
 
@@ -125,7 +130,7 @@ void HealthPickup::OnCollected(Player *player)
 }
 
 ScooterPickup::ScooterPickup(PickupSpawnInfo *info)
-    : Pickup(&info->mPos18, info->mType14, FindPickupDef("scooterpickup"))
+    : Pickup(&info->mPos18, info->mObjDef14, FindPickupDef("scooterpickup"))
 {
     mScooterId = info->mParam10;
 }
@@ -136,7 +141,7 @@ void ScooterPickup::OnCollected(Player *player)
 }
 
 BGMPickup::BGMPickup(PickupSpawnInfo *info)
-    : Pickup(&info->mPos18, info->mType14, FindPickupDef("bgmpickup"))
+    : Pickup(&info->mPos18, info->mObjDef14, FindPickupDef("bgmpickup"))
 {
     mBGMId = info->mParam10;
 }
@@ -147,7 +152,7 @@ void BGMPickup::OnCollected(Player *player)
 }
 
 TransmitterPickup::TransmitterPickup(PickupSpawnInfo *info)
-    : Pickup(&info->mPos18, info->mType14, FindPickupDef("transmitterpickup"))
+    : Pickup(&info->mPos18, info->mObjDef14, FindPickupDef("transmitterpickup"))
 {
 }
 
@@ -156,7 +161,7 @@ void TransmitterPickup::OnCollected(Player *)
 }
 
 SpeedPickup::SpeedPickup(PickupSpawnInfo *info)
-    : Pickup(&info->mPos18, info->mType14, FindPickupDef("speedpickup"))
+    : Pickup(&info->mPos18, info->mObjDef14, FindPickupDef("speedpickup"))
 {
 }
 
@@ -167,7 +172,7 @@ void SpeedPickup::OnCollected(Player *player)
 }
 
 SpinPickup::SpinPickup(PickupSpawnInfo *info)
-    : Pickup(&info->mPos18, info->mType14, FindPickupDef("spinpickup"))
+    : Pickup(&info->mPos18, info->mObjDef14, FindPickupDef("spinpickup"))
 {
 }
 
@@ -178,7 +183,7 @@ void SpinPickup::OnCollected(Player *player)
 }
 
 JumpPickup::JumpPickup(PickupSpawnInfo *info)
-    : Pickup(&info->mPos18, info->mType14, FindPickupDef("jumppickup"))
+    : Pickup(&info->mPos18, info->mObjDef14, FindPickupDef("jumppickup"))
 {
 }
 
@@ -189,7 +194,7 @@ void JumpPickup::OnCollected(Player *player)
 }
 
 BalancePickup::BalancePickup(PickupSpawnInfo *info)
-    : Pickup(&info->mPos18, info->mType14, FindPickupDef("balancepickup"))
+    : Pickup(&info->mPos18, info->mObjDef14, FindPickupDef("balancepickup"))
 {
 }
 
@@ -200,13 +205,127 @@ void BalancePickup::OnCollected(Player *player)
 }
 
 TimerPickup::TimerPickup(PickupSpawnInfo *info)
-    : Pickup(&info->mPos18, info->mType14, FindPickupDef("timerpickup"))
+    : Pickup(&info->mPos18, info->mObjDef14, FindPickupDef("timerpickup"))
 {
 }
 
 void TimerPickup::OnCollected(Player *)
 {
     SendScriptEvent(HashStringCRC32("add_time"), 0, &mDef70->field_0x8C);
+}
+
+#ifdef NON_MATCHING
+// 122 of 144 instructions match. Solved: register allocation (pos needs the do/while(0) around
+// the copy to outrank the loop counter, see docs/MATCHING.md) and the order of the node fields.
+// Left: the scheduler puts `i = 0` (daddu $s5) in the prologue instead of the first jal's delay
+// slot, which shifts the prologue and the rot stores, and the copy into mPos50 gets $f1/$f2
+// swapped for y/z. Placing the counter's initialization elsewhere does not change it.
+static inline void CopyVec3(Vec3f *dst, const Vec3f *src)
+{
+    f32 x = src->x;
+    f32 y = src->y;
+    f32 z = src->z;
+    dst->x = x;
+    dst->y = y;
+    dst->z = z;
+}
+
+Pickup::Pickup(const Vec3f *pos, UnkObjDef *objDef, PickupDef *def)
+{
+    Vec4f rot;
+    rot.x = 0.0f;
+    rot.y = 0.0f;
+    rot.z = 0.0f;
+    rot.w = 1.0f;
+    mPhysicsObj18 = func_00116560(objDef, pos, &rot, func_001262B0(def->field_0x58));
+    func_0014FB08(this, objDef, 0);
+    ((IVP_Real_Object_Stub *)mPhysicsObj18)->mActorA8 = (DD_ActorInfo *)this;
+    mCount1C = 0;
+    for (int i = 0; i < def->field_0x40; i++)
+    {
+        mArray20[mCount1C] = func_001262E0(def->field_0x44[i]);
+        if (mArray20[mCount1C] != 0)
+            mCount1C++;
+    }
+    mField64 = 0;
+    mState60 = 1;
+    mHeightOffset74 = 0.0f;
+    mField78 = def->field_0x94;
+    mCount34 = def->field_0x5C;
+    mCount38 = def->field_0x60;
+    mArray3C = 0;
+    mArray40 = 0;
+    do
+    {
+        CopyVec3(&mPos50, pos);
+    } while (0);
+    mField5C = objDef->field_0x3C;
+    mCallback68 = 0;
+    mCallbackArg6C = 0;
+    mDef70 = def;
+    if (def != 0)
+    {
+        if (mCount34 > 0)
+        {
+            mArray3C = new UnkNode *[def->field_0x5C];
+            for (int j = 0; j < def->field_0x5C; j++)
+                mArray3C[j] = 0;
+            func_0011CC90(0);
+        }
+        if (mCount38 > 0)
+        {
+            mArray40 = new UnkNode *[def->field_0x60];
+            for (int k = 0; k < def->field_0x60; k++)
+                mArray40[k] = 0;
+            func_0011CD80(0);
+        }
+    }
+    func_0012EE48(this);
+}
+#endif
+
+// Defined after the constructor: GCC 2.95 cannot inline them there (it calls the out-of-line
+// copies, as the game does) but inlines them in func_0011B7B8 and KeyPickup's constructor.
+inline void Pickup::func_0011CC90(int enable)
+{
+    for (int i = 0; i < mCount34; i++)
+    {
+        if (enable)
+        {
+            if (mArray3C[i] == 0)
+                mArray3C[i] = func_00194DE0(mDef70->field_0x64[i]);
+            if (mArray3C[i] != 0)
+            {
+                func_00194F40(mArray3C[i]);
+                mArray3C[i]->field_0x70 = mArray3C[i]->field_0x10->field_0x4C;
+            }
+        }
+        else if (mArray3C[i] != 0)
+        {
+            func_00194F90(mArray3C[i]);
+        }
+    }
+}
+
+inline void Pickup::func_0011CD80(int enable)
+{
+    for (int i = 0; i < mCount38; i++)
+    {
+        if (enable)
+        {
+            if (mArray40[i] == 0)
+                mArray40[i] = func_00194DE0(mDef70->field_0x78[i]);
+            if (mArray40[i] != 0)
+            {
+                func_00194F40(mArray40[i]);
+                mArray40[i]->field_0x70 = mArray40[i]->field_0x10->field_0x4C;
+            }
+        }
+        else if (mArray40[i] != 0)
+        {
+            func_00194F90(mArray40[i]);
+        }
+    }
 }
 
 void PickupDef::func_0011CAD0(const char *name)
@@ -263,7 +382,7 @@ void Pickup::func_0011B7B8()
 }
 
 KeyPickup::KeyPickup(const Vec3f *pos)
-    : Pickup(pos, (int)FindPickupDef("objkey"), FindPickupDef("keypickup"))
+    : Pickup(pos, (UnkObjDef *)FindPickupDef("objkey"), FindPickupDef("keypickup"))
 {
     mState60 = 0;
     func_0011CC90(1);

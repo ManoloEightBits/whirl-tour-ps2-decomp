@@ -7,11 +7,18 @@
 // Whirl Tour: EnvObj, Pickup and its 10 subclasses (all RTTI class names).
 // Note: in EnvObj, the vtable pointer is at offset +0x7C (after 0x7C bytes of non-polymorphic
 // base data), as proven by every Pickup constructor and destructor storing the vtable at 0x7C($this).
+// Object definition passed to Pickup's constructor (a pickup type's own one, or FindPickupDef("objkey")).
+struct UnkObjDef
+{
+    char pad_0x00[0x3C];
+    f32 field_0x3C; // copied to EnvObj::mField5C
+};
+
 struct PickupSpawnInfo
 {
     char field_0x00[0x10];
     int mParam10;     // 0x10 (used by ScooterPickup and BGMPickup for mScooterId / mBGMId)
-    int mType14;      // 0x14
+    UnkObjDef *mObjDef14; // 0x14
     Vec3f mPos18;     // 0x18
 };
 
@@ -48,16 +55,16 @@ public:
 struct PickupDef
 {
     char mName00[0x40];   // 0x00: at most 63 characters are copied
-    int field_0x40;
-    int field_0x44[5];    // 0x44
-    int field_0x58;
-    int field_0x5C;
-    int field_0x60;
+    int field_0x40;       // number of models
+    int field_0x44[5];    // 0x44: model ids
+    int field_0x58;       // passed to func_001262B0
+    int field_0x5C;       // number of mArray3C nodes
+    int field_0x60;       // number of mArray40 nodes
     int field_0x64[5];    // 0x64: ids of the EnvObj::mArray3C nodes
     int field_0x78[5];    // 0x78: ids of the EnvObj::mArray40 nodes
     f32 field_0x8C;       // 10.0 by default; first OnCollected parameter (TimerPickup: time to add)
     f32 field_0x90;       // second OnCollected parameter (HealthPickup: health)
-    int field_0x94;
+    f32 field_0x94;       // copied to EnvObj::mField78
     int field_0x98;
     int field_0x9C;       // id of the UnkEffect spawned when collected (0 = none)
 
@@ -78,21 +85,21 @@ public:
     UnkNode **mArray40;      // 0x40: mCount38 entries
     Vec3f mPos44;            // 0x44
     Vec3f mPos50;            // 0x50
-    int mField5C;            // 0x5C
+    f32 mField5C;            // 0x5C
     int mState60;            // 0x60
     int mField64;            // 0x64
     void (*mCallback68)(int); // 0x68: called with mCallbackArg6C when the pickup is collected
     int mCallbackArg6C;       // 0x6C
     PickupDef *mDef70;       // 0x70
     f32 mHeightOffset74;     // 0x74
-    int mField78;            // 0x78
+    f32 mField78;            // 0x78
 };
 
 class Pickup : public EnvObj
 {
 public:
     Pickup();
-    Pickup(const Vec3f *pos, int type, void *def);   // 0x0011B060
+    Pickup(const Vec3f *pos, UnkObjDef *objDef, PickupDef *def); // 0x0011B060
     inline virtual ~Pickup();                        // 0x0011CB58
     virtual void Update(f32 dt);                     // 0x0011B3D8
     inline virtual void OnCollected(Player *player); // 0x0011CEB0
@@ -103,50 +110,8 @@ public:
     int IsState4();                   // 0x0011CEA0
     void SetCallback68(void (*callback)(int), int arg); // 0x0011CF08
     void func_0011B7B8();             // 0x0011B7B8
-    // 0x0011CC90: starts or stops the mArray3C nodes. Inline, like func_0011CD80 (KeyPickup's
-    // constructor has it inlined).
-    void func_0011CC90(int enable)
-    {
-        for (int i = 0; i < mCount34; i++)
-        {
-            if (enable)
-            {
-                if (mArray3C[i] == 0)
-                    mArray3C[i] = func_00194DE0(mDef70->field_0x64[i]);
-                if (mArray3C[i] != 0)
-                {
-                    func_00194F40(mArray3C[i]);
-                    mArray3C[i]->field_0x70 = mArray3C[i]->field_0x10->field_0x4C;
-                }
-            }
-            else if (mArray3C[i] != 0)
-            {
-                func_00194F90(mArray3C[i]);
-            }
-        }
-    }
-    // 0x0011CD80: same for the mArray40 nodes. Inline: func_0011B7B8 has it inlined, and the
-    // out-of-line copy comes from this class's key-function TU.
-    void func_0011CD80(int enable)
-    {
-        for (int i = 0; i < mCount38; i++)
-        {
-            if (enable)
-            {
-                if (mArray40[i] == 0)
-                    mArray40[i] = func_00194DE0(mDef70->field_0x78[i]);
-                if (mArray40[i] != 0)
-                {
-                    func_00194F40(mArray40[i]);
-                    mArray40[i]->field_0x70 = mArray40[i]->field_0x10->field_0x4C;
-                }
-            }
-            else if (mArray40[i] != 0)
-            {
-                func_00194F90(mArray40[i]);
-            }
-        }
-    }
+    inline void func_0011CC90(int enable); // 0x0011CC90: starts or stops the mArray3C nodes (defined in KeyPickup.cpp after the constructor)
+    inline void func_0011CD80(int enable); // 0x0011CD80: same for the mArray40 nodes (defined in KeyPickup.cpp after the constructor)
 };
 
 class KeyPickup : public Pickup

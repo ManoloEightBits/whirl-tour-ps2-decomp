@@ -108,7 +108,7 @@ def show_regs(lreg, greg, wanted):
         if m:
             order = [int(x) for x in m.group(1).split()]
         hard = {}
-        m = re.search(r'^;; Register dispositions:\n(.*)$', gtext, re.M)
+        m = re.search(r'^;; Register dispositions:\n(.*?)\n\s*\n', gtext, re.M | re.S)
         if m:
             for pseudo, h in re.findall(r'(\d+) in (-?\d+)', m.group(1)):
                 hard[int(pseudo)] = int(h)
