@@ -533,7 +533,7 @@
 0x0016EF10 VirtSlot3__13FETrickScreen
 0x0016EF40 VirtSlot7__13FETrickScreen
 
-# Collision & Event Listeners (src/game/DD_Event_Listener.cpp, MBCL.cpp, ScootCL.cpp)
+# Collision & Event Listeners (src/game/DD_Event_Listener.cpp, IVP_Listener_Collision.cpp, MBCL.cpp, ScootCL.cpp)
 0x001171F0 _$_17DD_Event_Listener
 0x00117340 event_object_revived__17DD_Event_ListenerP16IVP_Event_Object
 0x00117370 event_object_frozen__17DD_Event_ListenerP16IVP_Event_Object
@@ -561,3 +561,10 @@
 0x0014BC00 __8MarActCLP6MarAct
 0x0014BC20 event_pre_collision__8MarActCLP19IVP_Event_Collision
 0x0014CB80 func_0014CB80__7UnkBody
+
+# DD_Collision_Listener (src/game/DD_Event_Listener.cpp)
+0x00116C80 event_pre_collision__21DD_Collision_ListenerP19IVP_Event_Collision
+0x00117270 _$_21DD_Collision_Listener
+0x00117718 event_post_collision__21DD_Collision_ListenerP19IVP_Event_Collision
+0x00116B00 func_00116B00__FP20IVP_Real_Object_StubT0P19IVP_Event_Collision
+0x00126708 func_00126708__FPvi

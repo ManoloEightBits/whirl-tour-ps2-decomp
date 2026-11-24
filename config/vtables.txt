@@ -23,3 +23,4 @@
 0x002A3970 MBCL game/CollisionListeners.h
 0x002A4860 ScootCL game/CollisionListeners.h
 0x00289680 MarActCL game/CollisionListeners.h
+0x002840B8 DD_Collision_Listener game/CollisionListeners.h

@@ -50,7 +50,6 @@ _$_20IVP_Listener_Phantom
 _$_20IVP_Material_Manager
 _$_20IVP_Ray_Hit_Listener
 _$_20IVP_Universe_Manager
-_$_21DD_Collision_Listener
 _$_21IVP_3D_Solver_KK_COLL
 _$_21IVP_3D_Solver_PF_COLL
 _$_21IVP_3D_Solver_PK_COLL
@@ -132,7 +131,6 @@ __20IVP_Listener_Phantom
 __20IVP_Material_Manager
 __20IVP_Ray_Hit_Listener
 __20IVP_Universe_Manager
-__21DD_Collision_Listener
 __21IVP_3D_Solver_KK_COLL
 __21IVP_3D_Solver_PF_COLL
 __21IVP_3D_Solver_PK_COLL

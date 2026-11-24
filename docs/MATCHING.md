@@ -58,7 +58,7 @@ file with `diff_func.py <file.cpp> <symbol> --variants <json>`. That command onl
 - **An inline function that also exists out of line.** Game code inlines `IVP_Listener_Collision(int)`
   (`MBCL` passes 3, `ScootCL` 7, `MarActCL` 1), but the IVP library also has an out-of-line copy at
   `0x001F6F10`. The header defines the constructor inline, except when `IVP_LISTENER_COLLISION_OUT_OF_LINE`
-  is defined. `DD_Event_Listener.cpp` defines that macro and emits the copy.
+  is defined. `IVP_Listener_Collision.cpp` defines that macro and emits the copy.
 - **`base ... with only non-default constructor in class without a constructor`.** GCC 2.95 gives this
   error when a derived class declares no constructor at all. Declare the real one, even if its body is
   not decompiled yet (see `MBCL` and `ScootCL`).

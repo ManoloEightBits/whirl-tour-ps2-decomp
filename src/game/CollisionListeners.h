@@ -3,13 +3,38 @@
 
 #include "common/types.h"
 
-// Whirl Tour: IVP_Listener_Object, IVP_Listener_Collision, DD_Event_Listener, MBCL, ScootCL, MarActCL
+// Whirl Tour: IVP_Listener_Object, IVP_Listener_Collision, DD_Event_Listener, DD_Collision_Listener,
+// MBCL, ScootCL, MarActCL
 // (all RTTI class names recovered from SLUS_204.89).
+
+struct IVP_Real_Object_Stub;
+struct IVP_Event_Collision;
+
+typedef void (*DD_CollisionCallback)(IVP_Real_Object_Stub *self, IVP_Real_Object_Stub *other, u32 mask,
+                                     IVP_Event_Collision *ev);
+
+// One collision reaction of an actor (0x10 bytes), run by DD_Collision_Listener.
+struct DD_CollisionEntry
+{
+    u32 mMask00;                     // 0x00: matched against the collision mask
+    DD_CollisionCallback mCallback04; // 0x04
+    int field_0x08;
+    void *mObj0C;                    // 0x0C: passed to func_00126708(obj, 0)
+};
+
+struct DD_ActorData
+{
+    char field_0x00[0x6D];
+    u8 mNumEntries6D;                 // 0x6D
+    char field_0x6E[0x1A];
+    DD_CollisionEntry mEntries88[1];  // 0x88: mNumEntries6D entries
+};
 
 struct DD_ActorInfo
 {
     int mField00;
-    u32 mFlags04; // 0x04
+    u32 mFlags04;           // 0x04
+    DD_ActorData *mData08;  // 0x08
 
     // The do { } while (0) wrapper (probably a macro in the original source) is required:
     // without it GCC keeps the actor in $v1 instead of $a0 and drops the nop before the
@@ -36,8 +61,9 @@ struct DD_ActorInfo
 struct IVP_Real_Object_Stub
 {
     char field_0x00[0x88];
-    u32 mFlags88;           // 0x88: MarActCL tests 0x800 and 0x400
-    char field_0x8C[0x1C];
+    u32 mFlags88;           // 0x88: collision type bits (MarActCL tests 0x800 and 0x400)
+    u32 mMask8C;            // 0x8C: types this object reacts to (DD_Collision_Listener)
+    char field_0x90[0x18];
     DD_ActorInfo *mActorA8; // 0xA8
 };
 
@@ -117,10 +143,11 @@ public:
     int get_enabled_callbacks(); // 0x001F6F08
 #ifdef IVP_LISTENER_COLLISION_OUT_OF_LINE
     // The IVP library has an out-of-line copy of the constructor (0x001F6F10, emitted by
-    // DD_Event_Listener.cpp), while game code inlines it (MBCL passes 3, ScootCL 7, MarActCL 1).
-    IVP_Listener_Collision(int enable_bits);
+    // IVP_Listener_Collision.cpp), while game code inlines it (MBCL passes 3, ScootCL 7, MarActCL and
+    // DD_Collision_Listener the default 1).
+    IVP_Listener_Collision(int enable_bits = 1);
 #else
-    IVP_Listener_Collision(int enable_bits) { mEnableBits00 = enable_bits; }
+    IVP_Listener_Collision(int enable_bits = 1) { mEnableBits00 = enable_bits; }
 #endif
 
     virtual void event_pre_collision(IVP_Event_Collision *);              // slot 1: 0x001F73D8
@@ -128,6 +155,15 @@ public:
     virtual void event_collision_object_deleted(void *);                  // slot 3: 0x001F73E8
     virtual void event_friction_created(IVP_Friction_Info *);             // slot 4: 0x001F73F0
     inline virtual ~IVP_Listener_Collision() {}                           // slot 5: 0x001F6F28
+};
+
+class DD_Collision_Listener : public IVP_Listener_Collision
+{
+public:
+    // No constructor of its own: the implicit one is inlined at 0x00115AB0. An explicit inline one
+    // would be emitted in this class's key-function TU, and the game has no such copy.
+    virtual void event_pre_collision(IVP_Event_Collision *);  // slot 1: 0x00116C80
+    virtual void event_post_collision(IVP_Event_Collision *); // slot 2: 0x00117718
 };
 
 class MBCL : public IVP_Listener_Collision
