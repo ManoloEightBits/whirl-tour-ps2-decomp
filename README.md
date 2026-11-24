@@ -82,7 +82,7 @@ python3 tools/check_all.py
 python3 tools/progress.py --write
 ```
 
-Compilers (from [decompme/compilers](https://github.com/decompme/compilers)), disc images, and extracted binaries must live outside this repository (e.g. `../whirl-tour-work`). `tools/verify.py` automatically runs the Windows compiler binaries under Wine inside an isolated, networkless Linux namespace (`unshare -rn`).
+Compilers (from [decompme/compilers](https://github.com/decompme/compilers)), disc images, and extracted binaries must live outside this repository (e.g. `../whirl-tour-work`). `tools/verify.py` automatically runs the Windows compiler binaries under Wine inside an isolated, networkless Linux namespace (`bwrap --unshare-net`, or `unshare -rn` where `bwrap` is missing; with neither, the tools stop).
 
 ---
 

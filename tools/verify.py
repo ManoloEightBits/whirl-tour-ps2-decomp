@@ -125,17 +125,20 @@ def enter_sandbox():
         return
     if os.environ.get(SANDBOX_MARK):
         raise VerifyError('still see network interfaces %s inside the namespace' % sorted(interfaces))
-    try:
-        usable = subprocess.run(['unshare', '-rn', 'true'], capture_output=True).returncode == 0
-    except OSError:
-        usable = False
-    if not usable:
-        # Some systems refuse unprivileged user namespaces (AppArmor's restrict_unprivileged_userns,
-        # for example). Say so instead of running the compiler with network access silently.
-        print('warning: unshare -rn failed, so the compiler runs WITH network access', file=sys.stderr)
-        return
-    os.environ[SANDBOX_MARK] = '1'
-    os.execvp('unshare', ['unshare', '-rn', sys.executable, *sys.argv])
+    # bwrap first: where unprivileged user namespaces are restricted (Ubuntu's
+    # apparmor_restrict_unprivileged_userns), the distribution's bwrap profile still allows it,
+    # while unshare -rn is refused.
+    launchers = (['bwrap', '--unshare-net', '--dev-bind', '/', '/', '--chdir', os.getcwd(), '--die-with-parent'],
+                 ['unshare', '-rn'])
+    for launcher in launchers:
+        try:
+            usable = subprocess.run(launcher + ['true'], capture_output=True).returncode == 0
+        except OSError:
+            usable = False
+        if usable:
+            os.environ[SANDBOX_MARK] = '1'
+            os.execvp(launcher[0], launcher + [sys.executable, *sys.argv])
+    raise VerifyError('cannot run without network: neither bwrap (package bubblewrap) nor unshare -rn works here')
 
 
 def check_target(slus):

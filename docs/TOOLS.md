@@ -4,7 +4,11 @@ There are two groups of tools, both in this repository:
 
 - **Verification tools** (`tools/`, `rebuild/`). They use the Python standard library only and run with
   plain `python3`. They decide whether the work is correct. Nothing third-party runs in the same
-  process as the proprietary compiler.
+  process as the proprietary compiler, and the compiler never gets network access: before it runs,
+  `verify.enter_sandbox()` re-executes the tool inside a network namespace with only `lo`
+  (`bwrap --unshare-net`, or `unshare -rn` where `bwrap` is missing). If neither works, the tool
+  stops. On Ubuntu with `apparmor_restrict_unprivileged_userns=1`, `unshare -rn` is refused but
+  `bwrap` works through the distribution's own AppArmor profile, so no system change is needed.
 - **Analysis tools** (`tools/analysis/`). They help find and match functions, and need `rabbitizer`,
   `m2c` and `splat64` (pinned in `tools/analysis/requirements.txt`). They read the game from your
   local files at run time and never store any of it in the repository.
@@ -13,6 +17,9 @@ All of them keep their output short. They print summaries by default, and the fu
 flag. Use them instead of reading raw disassembly or large dumps.
 
 ## Setup
+
+System packages: `wine` (runs the compiler), `bubblewrap` (network sandbox) and
+`binutils-mips-linux-gnu` (used by `rebuild.py`).
 
 ```bash
 python3 -m venv ../whirl-tour-work/venv
