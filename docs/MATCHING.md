@@ -15,31 +15,34 @@ local-alloc and usually take `$v0`. Ties go to the lower pseudo number. A pseudo
 shorter range wins, so a pointer that is null-checked, loaded through and stored through (4 refs) usually
 beats a value that is loaded, tested and used once (3 refs).
 
-To see the real numbers, compile a small standalone file under `build/scratch/` (git-ignored) with the
-`.lreg`/`.greg` dumps enabled:
+To see the real numbers, use `scratch_cc.py --regs` (see [TOOLS.md](TOOLS.md)). It compiles with
+`-dl -dg` and prints, for each pseudo-register, the weighted refs, live length, priority, allocation
+order and final hard register, from GCC's own dumps:
 
-```bash
-T="$WHIRL_COMPILERS/ee-gcc2.95.3-114/lib/gcc-lib/ee/2.95.3"
-export WINEPREFIX=~/.wine-ps2 WINEDEBUG=-all WINEARCH=win32
-wine "$T/cpp.exe" -lang-c++ -nostdinc -Iinclude -Isrc build/scratch/t.cpp build/scratch/t.ii
-wine "$T/cc1plus.exe" -quiet -O2 -G0 -fno-exceptions -dl -dg build/scratch/t.ii -o build/scratch/t.s
-grep "Register .* used" build/scratch/t.ii.lreg
-# -> Register 118 used 4 times across 7 insns; ... user var; ... pointer.
+```
+$ venv/bin/python3 scratch_cc.py t.cpp --func looped --regs
+  pseudo  refs  live  alloc   priority  order hard    notes
+  118        6     7  global     1.714  2     $a0     user var, pointer
+  120        6     4  global     3.000  1     $v1
 ```
 
-Then try variants on the real file with `diff_func.py <file.cpp> <symbol> --variants <json>` from the
-work directory. It only replaces text in the `.cpp`, so to try different inline helpers, put them in the
-replaced text instead of the header.
+Compare the result with the game using `scratch_cc.py --vs <addr>`. Then try variants in the real
+file with `diff_func.py <file.cpp> <symbol> --variants <json>`. That command only replaces text in the
+`.cpp`, so to try different inline helpers, put them in the replaced text instead of the header.
 
 ## Patterns
 
 - **`do { } while (0)` around a body.** Refs inside a loop count double, which reorders priorities. In
   `DD_Event_Listener::event_object_revived` the flags value goes from 3 refs over 4 insns (priority 0.75)
-  to 6 refs over 4 insns (3.0). That beats the actor pointer's 7 refs over 7 insns (2.0), so the flags get
-  `$v1` and the actor gets `$a0`, as in the game. The loop also emits a lone `nop` before `jr $ra`. That
-  `sw; nop; jr $ra; nop` sequence occurs once among the binary's 7,069 returns, so it identifies this pattern
-  (probably a macro in the original). `while (p) { ...; break; }` gives the same code. See `DD_ActorInfo` in
-  `src/game/CollisionListeners.h`.
+  to 6 refs over 4 insns (3.0). The actor pointer goes from 4 refs over 7 insns (1.143) to 6 refs over
+  7 insns (1.714). The flags now win, so they get `$v1` and the actor gets `$a0`, as in the game. The loop
+  also emits a lone `nop` before `jr $ra`. This is probably a macro in the original.
+  `while (p) { ...; break; }` gives the same code. See `DD_ActorInfo` in `src/game/CollisionListeners.h`.
+  Outside function boundaries, `find_pattern.py '(?!jr)\S+.*; sw; nop; jr \$ra; nop'` finds this
+  `sw; nop; jr $ra; nop` sequence 4 times: `0x00117360` (this function), `0x001AFD28`, `0x001BD2F8` and
+  `0x001C43A0`. The last one ends a jump-table `switch`. The other three are candidates for the same kind
+  of construct. Without the `(?!jr)` element there are 11 hits; the extra 7 are a `sw` in the previous
+  function's delay slot, followed by an alignment `nop`.
 - **Splitting `p->x |= k` into `u32 f = p->x; ... f |= k; p->x = f;`** raises the priority of `f`, but the
   `ori` then writes back into the same register as `f`. Use this only when the game's code does the same.
 - **IVP `IVP_U_Float_Point` inlines are element-wise.** For example, `k[0] = -p->k[0]; k[1] = -p->k[1]; ...`,

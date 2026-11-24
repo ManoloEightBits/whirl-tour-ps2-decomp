@@ -8,6 +8,7 @@ A hobby reverse-engineering project for the US PS2 release of *Whirl Tour* (`SLU
 
 ## Decompilation Progress
 
+<!-- progress:begin -->
 | Metric | Matched / Confirmed | Total in `.text` | Share | Progress |
 | :--- | ---: | ---: | ---: | :--- |
 | **Total `.text` bytes** | **16,540 B** | 1,401,448 B | **1.180%** | `█░░░░░░░░░░░░░░░░░░░` |
@@ -16,6 +17,7 @@ A hobby reverse-engineering project for the US PS2 release of *Whirl Tour* (`SLU
 | **Confirmed vtable slots (`verify_vtables.py`)** | **68** | ~820 | **8.293%** | `██░░░░░░░░░░░░░░░░░░` |
 | **Confirmed RTTI classes (`vtables.txt`)** | **21** | 182 | **11.538%** | `███░░░░░░░░░░░░░░░░░` |
 | **Full binary relink (`rebuild.py`)** | **226 linked** | `02f39f20...0744` | **SHA-1 MATCH** | `████████████████████` |
+<!-- progress:end -->
 
 ### Binary `.text` Map (`0x00100000..0x00256268`)
 
@@ -56,9 +58,10 @@ A hobby reverse-engineering project for the US PS2 release of *Whirl Tour* (`SLU
 - `config/symbols.txt` — Function and data symbol addresses in `SLUS_204.89`.
 - `config/vtables.txt` — Virtual function table addresses and declaring headers.
 - `config/splat/` — Configuration for splitting `SLUS_204.89` with `splat`.
-- `tools/` — Verification and analysis scripts (`verify.py`, `verify_vtables.py`, `check_all.py`, `extract_rtti.py`, `check_repo.py`).
+- `tools/` — Verification and analysis scripts (`verify.py`, `verify_vtables.py`, `check_all.py`, `progress.py`, `extract_rtti.py`, `check_repo.py`).
 - `rebuild/` — Full ELF/binary relinker (`rebuild.py`) that splices compiled C++ functions into the split assembly and verifies the final SHA-1.
 - `docs/STANDARDS.md` — Coding, verification, and repository cleanliness rules.
+- `docs/TOOLS.md` — Every tool (repository and local analysis) and the step-by-step loop for matching a function.
 - `docs/MATCHING.md` — Compiler quirks and source patterns needed to match ee-gcc 2.95.3 output (register allocation, scheduling, layout).
 
 ---
@@ -73,6 +76,9 @@ export WHIRL_SPLIT=<path to splat output dir>
 
 # Run all checks (byte-level function match, vtable slot verification, full binary rebuild, repo hygiene):
 python3 tools/check_all.py
+
+# Recompute the progress table above and write it into this README:
+python3 tools/progress.py --write
 ```
 
 Compilers (from [decompme/compilers](https://github.com/decompme/compilers)), disc images, and extracted binaries must live outside this repository (e.g. `../whirl-tour-work`). `tools/verify.py` automatically runs the Windows compiler binaries under Wine inside an isolated, networkless Linux namespace (`unshare -rn`).

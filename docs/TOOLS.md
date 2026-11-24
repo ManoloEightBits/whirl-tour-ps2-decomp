@@ -1,0 +1,67 @@
+# Tools and workflow
+
+There are two groups of tools:
+
+- **Repository tools** (`tools/`, `rebuild/`). They use the Python standard library only, run with
+  `python3` and are versioned. They decide whether the work is correct.
+- **Analysis tools** in the work directory (`../whirl-tour-work/`). They need the venv with
+  `rabbitizer`, `splat64` and `m2c`, run with `venv/bin/python3`, and are **not** versioned: their
+  paths are hard-coded to this machine. They help find and match functions.
+
+All of them keep their output short. They print summaries by default, and the full detail only with a
+flag. Use them instead of reading raw disassembly or large dumps.
+
+## Loop for one function
+
+1. **Pick a target:** run `scan_candidates.py --level 1|2|3`, `map_tus.py --class X` or
+   `inspect_tu.py --class X` / `--range A B` (that one includes m2c drafts).
+2. **Write the C++** in `src/game/`, and add the address to `config/symbols.txt`. For a class with a
+   vtable, also add a line to `config/vtables.txt`, and add the class to `HAND_WRITTEN` in
+   `tools/gen_rtti_stubs.py`.
+3. **Diff:** run `diff_func.py src/game/X.cpp <mangled>`. To try several rewrites in one run, use
+   `--variants file.json`.
+4. **If it is stuck on details** (registers, scheduling, a stray `nop`):
+   - `scratch_cc.py snippet.cpp --vs <addr>` tries a loose idea without touching `src/`.
+   - `scratch_cc.py ... --regs` explains register choices (see [MATCHING.md](MATCHING.md)).
+   - `find_pattern.py "<insns>"` checks whether the game has the same idiom elsewhere.
+   - If it still does not match, keep it under `#ifdef NON_MATCHING`.
+5. **Check everything:** `python3 tools/check_all.py` (4 lines; `--no-rebuild` while iterating).
+6. **Update the numbers:** `python3 tools/progress.py --write` rewrites the README progress table. Also
+   update the README subsystem table and `TODO.md` by hand, then commit.
+
+## Repository tools
+
+| Tool | What it does |
+| :--- | :--- |
+| `tools/check_all.py [--no-rebuild]` | Runs `verify -q`, `verify_vtables -q`, `rebuild -q --allow-kept` and `check_repo`; one summary line each. |
+| `tools/verify.py [-q\|-v] [file.cpp ...]` | Builds `src/` with the game's compiler and compares every function with `SLUS_204.89`. `-v` lists each match with address and size. |
+| `tools/verify_vtables.py [-q\|-v]` | Compares each vtable declared in `config/vtables.txt` slot by slot. Destructor and pure-virtual slots are not counted. |
+| `tools/progress.py [--write] [--no-rebuild]` | Computes the README progress table (bytes per binary-map region included) and writes it between the `progress:begin/end` markers. It refuses to write while a check fails. |
+| `rebuild/rebuild.py -q --allow-kept` | Relinks the compiled functions into the split assembly and checks the SHA-1 of the result. |
+| `tools/check_repo.py` | Rejects game data, binaries and build output (also the pre-commit hook). |
+| `tools/extract_rtti.py`, `tools/gen_rtti_stubs.py` | Extract RTTI and vtables from the binary, and generate the `src/rtti/` probe stubs. |
+
+`WHIRL_COMPILERS`, `WHIRL_SLUS` and `WHIRL_SPLIT` default to `../whirl-tour-work` in `check_all.py` and
+`progress.py`. Set them yourself to run the other tools directly.
+
+## Analysis tools (`../whirl-tour-work/`, `venv/bin/python3`)
+
+| Tool | What it does |
+| :--- | :--- |
+| `inspect_tu.py --class C \| --range A B \| --func A [--m2c] [--dis]` | Functions of a class or range: size, match status, calls, strings, floats, `$a0` field accesses, C++ drafts for trivial functions, m2c output. |
+| `scan_candidates.py --level {1,2,3} [--limit N] [--class S]` | Unmatched candidates: leaf getters/setters, one-call wrappers, or vtable methods sorted by size. |
+| `map_tus.py [--filter S] [--class C]` | Groups the 182 vtables into probable translation units and infers `_vptr` offsets and fields. |
+| `diff_func.py file.cpp <mangled> [--all] [-D X] [--variants v.json]` | Side-by-side R5900 diff of one repository function, or a batch of source variants (`{"target": "...", "candidates": [...]}`). |
+| `scratch_cc.py snippet.cpp\|- [--func S] [--vs ADDR] [--asm] [--regs] [-D X]` | Compiles a loose snippet in `build/scratch/` with the exact flags of `verify.py` (it can include repository headers). Shows its disassembly with relocations, or a side-by-side diff against any game address (`--vs`), GCC's `.s` (`--asm`), and the register-allocation table (`--regs`). |
+| `find_pattern.py "<re1>; <re2>; ..." [--range A B] [--context N] [--count]` | Searches `.text` for a sequence of instructions (one regex per instruction, `*` matches any). Each hit is labelled with the nearest known symbol. About 0.5 s for the whole binary. |
+
+Examples:
+
+```bash
+cd ../whirl-tour-work
+venv/bin/python3 scratch_cc.py idea.cpp --func revived --vs 117340      # does this idea match?
+venv/bin/python3 scratch_cc.py idea.cpp --func revived --regs           # why these registers?
+printf 'struct S { int x; void f(); };\nvoid S::f() { x = 3; }\n' | venv/bin/python3 scratch_cc.py - --asm
+venv/bin/python3 find_pattern.py 'b\S*; *; sw; nop; jr \$ra; nop'       # same idiom elsewhere?
+venv/bin/python3 find_pattern.py 'jr \$ra; *' --count                   # 7069 returns
+```

@@ -233,8 +233,10 @@ def build_all(function, sources):
         return list(pool.map(function, sources))
 
 
-def compare(obj_path, game, game_base, addresses, verbose):
-    """Compare each function in the object with the game. Returns (bytes, functions, problems)."""
+def compare(obj_path, game, game_base, addresses, verbose, found=None):
+    """Compare each function in the object with the game. Returns (bytes, functions, problems).
+
+    If `found` is a list, (address, size, name) is appended to it for every matching function."""
     obj = Elf32(obj_path)
     text_index, text = obj.section('.text')
     code = obj.contents(text)
@@ -292,6 +294,8 @@ def compare(obj_path, game, game_base, addresses, verbose):
         else:
             matched += end - start
             count += 1
+            if found is not None:
+                found.append((address, end - start, name))
             if verbose:
                 print('  match 0x%08X %4d bytes  %s%s' % (address, end - start, name, note))
     return matched, count, problems
