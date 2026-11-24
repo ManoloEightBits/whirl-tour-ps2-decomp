@@ -17,3 +17,8 @@
 0x00283E78 FEQuitScreen game/FEScreen.h
 0x002A42D0 FEStartScreen game/FEScreen.h
 0x002A4330 FETrickScreen game/FEScreen.h
+0x002ABA58 IVP_Listener_Object game/CollisionListeners.h
+0x002840F0 DD_Event_Listener game/CollisionListeners.h
+0x002ABA20 IVP_Listener_Collision game/CollisionListeners.h
+0x002A3970 MBCL game/CollisionListeners.h
+0x002A4860 ScootCL game/CollisionListeners.h

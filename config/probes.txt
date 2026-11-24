@@ -30,7 +30,6 @@ _$_15FEOptionsScreen
 _$_15FEScooterScreen
 _$_16FEPlaylistScreen
 _$_16IVP_Mindist_Base
-_$_17DD_Event_Listener
 _$_17FECharacterScreen
 _$_17FELoadStateScreen
 _$_17IVP_Event_Manager
@@ -42,7 +41,6 @@ _$_18IVP_SurfaceManager
 _$_19IVP_3D_Solver_PK_KK
 _$_19IVP_Actuator_Spring
 _$_19IVP_Anomaly_Manager
-_$_19IVP_Listener_Object
 _$_19IVP_Listener_Spring
 _$_20IVP_3D_Solver_PF_NPF
 _$_20IVP_3D_Solver_S_VALS
@@ -57,7 +55,6 @@ _$_21IVP_3D_Solver_PF_COLL
 _$_21IVP_3D_Solver_PK_COLL
 _$_21IVP_Anchor_Check_Dist
 _$_21IVP_Controller_Motion
-_$_22IVP_Listener_Collision
 _$_22IVP_PerformanceCounter
 _$_23Global_Phantom_Listener
 _$_23IVP_Collision_Delegator
@@ -76,11 +73,9 @@ _$_27IVP_U_Active_Float_Listener
 _$_31IVP_3D_Solver_VEC_PARALLEL_AREA
 _$_36IVP_3D_Solver_DISTANCE_OF_TWO_POINTS
 _$_36IVP_Collision_Delegator_Root_Mindist
-_$_4MBCL
 _$_6MBCtrl
 _$_7AI_Boss
 _$_7AI_Race
-_$_7ScootCL
 _$_8AI_Agent
 _$_8IVP_Ball
 _$_8LunActCL
