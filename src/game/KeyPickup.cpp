@@ -18,6 +18,11 @@ void func_00193100(UnkNode *);                           // 0x00193100
 void func_001A3738();                                    // 0x001A3738
 void func_001A3A00(f32 x, f32 y, f32 z);                 // 0x001A3A00
 void *func_0012ECC0();                                   // 0x0012ECC0
+void func_001F3F30(void *obj, void *a, void *b);                   // 0x001F3F30
+void func_001B40A0(Mat4x4f *m, f32 angle);                         // 0x001B40A0: rotation matrix
+void func_001B3EC8(Mat4x4f *out, const Mat4x4f *a, const Mat4x4f *b); // 0x001B3EC8: product
+void func_001B3900(Mat4x4f *dst, const Mat4x4f *src);              // 0x001B3900: copy
+void func_00192820(UnkNode *node, f32 dt);                         // 0x00192820: updates a node
 void func_001A3AB0(void *);                              // 0x001A3AB0
 void func_00196110(void *model);                         // 0x00196110
 void func_001A3808();                                    // 0x001A3808
@@ -90,11 +95,6 @@ inline Pickup::~Pickup()
     EnvObjCleanup14FB70(this);
 }
 
-// Stub key method to trigger Pickup vtable and RTTI emission before subclasses;
-// ignored in config/probes.txt until Pickup::Update (0x0011B3D8) is decompiled.
-void Pickup::Update(f32)
-{
-}
 
 void KeyPickup::Update(f32 dt)
 {
@@ -423,6 +423,85 @@ inline void Pickup::func_0011CD80(int enable)
         else if (mArray40[i] != 0)
         {
             func_00194F90(mArray40[i]);
+        }
+    }
+}
+
+// After func_0011CC90 and func_0011CD80, which it inlines.
+void Pickup::Update(f32 dt)
+{
+    int i = 0;
+    Vec4f pos;
+    Vec4f rot;
+    func_001F3F30(mPhysicsObj18, &rot, &pos);
+    Vec3f *p = &mPos44;
+    p->x = pos.x;
+    p->y = pos.y;
+    p->z = pos.z;
+    Mat4x4f turn;
+    func_001B40A0(&turn, -1.5707964f);
+    Mat4x4f m;
+    func_001B3EC8(&m, &turn, (Mat4x4f *)func_0012ECC0());
+    m.row[3].x += p->x;
+    m.row[3].y += p->y + mHeightOffset74;
+    m.row[3].z += p->z;
+    for (i = 0; i < mCount34; i++)
+    {
+        if (mArray3C[i] != 0)
+        {
+            func_001B3900(&mArray3C[i]->mMatrix30, &m);
+            func_00192820(mArray3C[i], dt);
+            if (mArray3C[i]->mFlags1C & 1)
+            {
+                CleanupNode194EC0(mArray3C[i]);
+                mArray3C[i] = 0;
+            }
+        }
+    }
+    for (i = 0; i < mCount38; i++)
+    {
+        if (mArray40[i] != 0)
+        {
+            func_001B3900(&mArray40[i]->mMatrix30, &m);
+            func_00192820(mArray40[i], dt);
+            if (mArray40[i]->mFlags1C & 1)
+            {
+                CleanupNode194EC0(mArray40[i]);
+                mArray40[i] = 0;
+            }
+        }
+    }
+    mField64 += dt;
+    if (mState60 == 0)
+    {
+        if (mField64 > 1.0f)
+        {
+            mState60 = 1;
+            func_0011CC90(0);
+        }
+    }
+    else if (mState60 == 2)
+    {
+        if (mField64 > 1.0f)
+        {
+            if (mField78 > 0.0f)
+            {
+                mField64 = 0.0f;
+                mState60 = 3;
+            }
+            else
+                mState60 = 4;
+            func_0011CD80(0);
+        }
+    }
+    else if (mState60 == 3)
+    {
+        if (mField78 < mField64)
+        {
+            mState60 = 0;
+            mField64 = 0.0f;
+            mField78 += mDef70->mRegenDelta98;
+            func_0011CC90(1);
         }
     }
 }

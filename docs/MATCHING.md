@@ -123,6 +123,16 @@ file with `diff_func.py <file.cpp> <symbol> --variants <json>`. That command onl
   a counter going down from 4 (`bgez`) and a pointer going *down* from `&a[4]`, because GCC reverses the
   loop. A hand-reversed `for (j = 4; j >= 0; j--)` gives the same loop but places the counter's
   initialization differently (one swapped pair in `func_0011AD28`).
+- **A chain of compares in source order is an `if`/`else if` chain, not a `switch`.** `Pickup::Update`
+  tests its state against 0, then 2, then 3. A `switch` with those cases compiles to a decision tree
+  (`== 2`, then `< 3`, ...); `if (s == 0) ... else if (s == 2) ... else if (s == 3)` gives the game's code.
+- **A member's address kept in a saved register means a pointer variable.** In `Pickup::Update` the game
+  keeps `&mPos44` in `$s1` across three calls and reads `y`/`z` through it (`x` through `this`).
+  `Vec3f *p = &mPos44;` used for both the copy into it and the later reads gives that; accessing
+  `mPos44` directly folds every address into `this` and frees the register.
+- **One store after an `if`/`else` can come from two assignments.** Where the game sets `$v0` to 3 or 4
+  and stores it once, `if (c) { ...; mState60 = 3; } else mState60 = 4;` matches; a temporary
+  (`int state = 3; ... mState60 = state;`) gets `$v1` and a different schedule.
 - **`base ... with only non-default constructor in class without a constructor`.** GCC 2.95 gives this
   error when a derived class declares no constructor at all. Declare the real one, even if its body is
   not decompiled yet (see `MBCL` and `ScootCL`).

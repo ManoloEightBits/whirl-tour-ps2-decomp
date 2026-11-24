@@ -33,7 +33,9 @@ Python prints a `sys.prefix` warning. Every tool finds the game files through `W
    vtable, also add a line to `config/vtables.txt`, and add the class to `HAND_WRITTEN` in
    `tools/gen_rtti_stubs.py`.
 3. **Diff:** run `diff_func.py src/game/X.cpp <mangled>`. To try several rewrites in one run, use
-   `--variants file.json`.
+   `--variants file.json`. Write a first draft from the m2c output and let the diff show what is
+   left, instead of reading the whole disassembly (`--dis` prints every instruction). For tables in
+   data (vtables, jump tables, keyword tables), use `dump_data.py`, not a hex dump.
 4. **If it is stuck on details** (registers, scheduling, a stray `nop`):
    - `scratch_cc.py snippet.cpp --vs <addr>` tries a loose idea without touching `src/`.
    - `scratch_cc.py ... --regs` explains register choices (see [MATCHING.md](MATCHING.md)).
@@ -67,6 +69,7 @@ the other tools directly.
 | `map_tus.py [--filter S] [--class C]` | Groups the 182 vtables into probable translation units and infers `_vptr` offsets and fields. |
 | `diff_func.py file.cpp <mangled> [--all] [-D X] [--variants v.json]` | Side-by-side R5900 diff of one repository function, or a batch of source variants (`{"target": "...", "candidates": [...]}`). |
 | `scratch_cc.py snippet.cpp\|- [--func S] [--vs ADDR] [--asm] [--regs] [-D X]` | Compiles a loose snippet in `build/scratch/` with the exact flags of `verify.py` (it can include repository headers). Shows its disassembly with relocations, or a side-by-side diff against any game address (`--vs`), GCC's `.s` (`--asm`), and the register-allocation table (`--regs`). |
+| `dump_data.py ADDR [-n N] [--vtable] [--string]` | Words at a data address with what each points to: a symbol (and whether it matches), a string, the function and offset of a jump-table target, or a float. `--vtable` lists a vtable's slots. |
 | `find_pattern.py '<re1>; <re2>; ...' [--range A B] [--context N] [--count]` | Searches `.text` for a sequence of instructions (one regex per instruction, `*` matches any). Each hit is labelled with the nearest known symbol. About 0.5 s for the whole binary. Put the pattern in single quotes so the shell keeps `\$`. |
 
 A function counts as matched when it is in `build/matched.txt`. `config/symbols.txt` is not enough: it
@@ -82,4 +85,6 @@ python3 tools/analysis/scratch_cc.py idea.cpp --func revived --regs        # why
 printf 'struct S { int x; void f(); };\nvoid S::f() { x = 3; }\n' | python3 tools/analysis/scratch_cc.py - --asm
 python3 tools/analysis/find_pattern.py 'b\S*; *; sw; nop; jr \$ra; nop'    # same idiom elsewhere?
 python3 tools/analysis/find_pattern.py 'jr \$ra; *' --count                # 7069 returns
+python3 tools/analysis/dump_data.py 284090 --vtable                        # a vtable's slots
+python3 tools/analysis/dump_data.py 284460 -n 8                            # a switch's jump table
 ```

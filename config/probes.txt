@@ -1,6 +1,5 @@
 # Functions the compiler emits for tools/gen_rtti_stubs.py probes. They are not game code
 # and verify.py skips them.
-Update__6Pickupf
 _$_10AI_Vehicle
 _$_10FEMcScreen
 _$_10IVP_Object

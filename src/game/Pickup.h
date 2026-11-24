@@ -34,7 +34,10 @@ struct UnkNode
 {
     char pad_0x00[0x10];
     UnkNodeDesc *field_0x10;
-    char pad_0x14[0x5C];
+    char pad_0x14[8];
+    u16 mFlags1C;            // 0x1C: bit 0 set when the node has finished (Pickup::Update deletes it)
+    char pad_0x1E[0x12];
+    Mat4x4f mMatrix30;       // 0x30: set every frame by Pickup::Update
     f32 field_0x70;
 };
 
@@ -103,7 +106,7 @@ public:
     Vec3f mPos50;            // 0x50
     f32 mField5C;            // 0x5C
     int mState60;            // 0x60
-    int mField64;            // 0x64
+    f32 mField64;            // 0x64: time in the current mState60
     void (*mCallback68)(int); // 0x68: called with mCallbackArg6C when the pickup is collected
     int mCallbackArg6C;       // 0x6C
     PickupDef *mDef70;       // 0x70

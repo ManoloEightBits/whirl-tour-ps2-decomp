@@ -24,7 +24,6 @@ HAND_WRITTEN = {'CollFilt', 'IVP_Collision_Filter', 'AI_AttackType', 'IVP_Actuat
 # scratch on every run, so anything verify.py must ignore for another reason has to be listed here.
 MANUAL_PROBES = {
     '__13AI_AttackType': 'probe constructor in src/game/AI_AttackType.cpp',
-    'Update__6Pickupf': 'placeholder in src/game/KeyPickup.cpp until Pickup::Update (0x0011B3D8) is decompiled',
 }
 
 

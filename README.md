@@ -11,12 +11,12 @@ A hobby reverse-engineering project for the US PS2 release of *Whirl Tour* (`SLU
 <!-- progress:begin -->
 | Metric | Matched / Confirmed | Total in `.text` | Share | Progress |
 | :--- | ---: | ---: | ---: | :--- |
-| **Total `.text` bytes** | **25,024 B** | 1,401,448 B | **1.786%** | `█░░░░░░░░░░░░░░░░░░░` |
-| **Game logic bytes** (`0x100000..0x1C62CF`) | **20,684 B** | 811,728 B | **2.548%** | `█░░░░░░░░░░░░░░░░░░░` |
-| **Matched functions (`verify.py`)** | **301** | ~7,125 | **4.225%** | `█░░░░░░░░░░░░░░░░░░░` |
+| **Total `.text` bytes** | **26,016 B** | 1,401,448 B | **1.856%** | `█░░░░░░░░░░░░░░░░░░░` |
+| **Game logic bytes** (`0x100000..0x1C62CF`) | **21,676 B** | 811,728 B | **2.670%** | `█░░░░░░░░░░░░░░░░░░░` |
+| **Matched functions (`verify.py`)** | **302** | ~7,125 | **4.239%** | `█░░░░░░░░░░░░░░░░░░░` |
 | **Confirmed vtable slots (`verify_vtables.py`)** | **130** | ~820 | **15.854%** | `████░░░░░░░░░░░░░░░░` |
 | **Confirmed RTTI classes (`vtables.txt`)** | **35** | 182 | **19.231%** | `████░░░░░░░░░░░░░░░░` |
-| **Full binary relink (`rebuild.py`)** | **274 linked** | `02f39f20...0744` | **SHA-1 MATCH** | `████████████████████` |
+| **Full binary relink (`rebuild.py`)** | **275 linked** | `02f39f20...0744` | **SHA-1 MATCH** | `████████████████████` |
 <!-- progress:end -->
 
 ### Binary `.text` Map (`0x00100000..0x00256268`)
@@ -32,7 +32,7 @@ A hobby reverse-engineering project for the US PS2 release of *Whirl Tour* (`SLU
 | Subsystem / Translation Unit | Classes | Matched Functions | Vtable Slots | Status |
 | :--- | :--- | ---: | ---: | :--- |
 | **Collision Filter (`CollFilt`)** | `CollFilt`, `IVP_Collision_Filter` | 7 / 7 | 2 / 2 | `██████████` **100%** |
-| **Pickups (`Pickup`, `KeyPickup`, +9)** | `EnvObj`, `Pickup`, `PickupDef` + 10 subclasses | 57 / 59 | 22 / 22 | `█████████░` **97%** (`KeyPickup` and 9 subclasses 100%, all vtables confirmed, `PickupDef` parser matched; 2 functions left in the TU) |
+| **Pickups (`Pickup`, `KeyPickup`, +9)** | `EnvObj`, `Pickup`, `PickupDef` + 10 subclasses | 58 / 59 | 22 / 22 | `█████████░` **98%** (`KeyPickup` and 9 subclasses 100%, all vtables confirmed, `Pickup::Update` and the `PickupDef` parser matched; only `Pickup::Pickup` left, in `NON_MATCHING`) |
 | **Front-End UI (`FEScreen` hierarchy)** | `FEScreen`, `FEQuitScreen`, `FEStartScreen`, `FETrickScreen` (+10 pending) | 31 / ~160 | 28 / 112 | `███░░░░░░░` **25%** (`FEQuitScreen` & `FETrickScreen` 100%) |
 | **Player & Scooter (`Player`, `Scooter`)** | `Player`, `Scooter` (no RTTI; name is ours) | 47 / ~83 | — | `██████░░░░` **57%** (stat/boost/adrenaline/health methods and `IsGrounded` matched) |
 | **Motion & Interpolation Controllers** | `MotionCtrl`, `IP_PosCtrl`, `IP_RotCtrl`, `IP_AnimCtrl`, `MBCtrl`, `ScootCtrl` (+ IVP bases `IVP_Controller`, `IVP_Controller_Independent`) | 27 / ~52 | 36 / 42 | `█████░░░░░` **52%** (all vtables confirmed; `IP_PosCtrl`, `MBCtrl` and `ScootCtrl` complete; the simulation step of `MotionCtrl`, `IP_RotCtrl` and `IP_AnimCtrl` left) |
