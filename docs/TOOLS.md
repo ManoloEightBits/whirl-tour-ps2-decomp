@@ -49,12 +49,12 @@ Python prints a `sys.prefix` warning. Every tool finds the game files through `W
 
 | Tool | What it does |
 | :--- | :--- |
-| `tools/check_all.py [--no-rebuild]` | Runs `verify -q`, `verify_vtables -q`, `rebuild -q --allow-kept` and `check_repo`; one summary line each. |
-| `tools/verify.py [-q\|-v] [file.cpp ...]` | Builds `src/` with the game's compiler and compares every function with `SLUS_204.89`. `-v` lists each match with address and size. A full run (no files, no `-D`) also writes the list of matches to `build/matched.txt`, which the analysis tools read. Its `assemble()` (also used by `verify_vtables`, `rebuild` and `scratch_cc`) adds the retail assembler's `mtc1` pair nops first (see [MATCHING.md](MATCHING.md)). |
+| `tools/check_all.py [--no-rebuild]` | Runs `verify -q`, `verify_vtables -q`, `rebuild -q` (requiring 0 kept/unlinked functions) and `check_repo`; one summary line each. |
+| `tools/verify.py [-q\|-v] [file.cpp ...]` | Builds `src/` with the game's compiler and compares every function with `SLUS_204.89` (verifying `R_MIPS_26`, `R_MIPS_HI16` and `R_MIPS_LO16` relocations whose target is in `config/symbols.txt`, and reporting the remaining local `.rodata` relocations deferred to `rebuild.py`). `-v` lists each match with address and size. A full run (no files, no `-D`) also writes the list of matches to `build/matched.txt`, which the analysis tools read. Its `assemble()` (also used by `verify_vtables`, `rebuild` and `scratch_cc`) adds the retail assembler's `mtc1` pair nops first (see [MATCHING.md](MATCHING.md)). |
 | `tools/verify_vtables.py [-q\|-v]` | Compares each vtable declared in `config/vtables.txt` slot by slot. Destructor and pure-virtual slots are not counted. |
-| `tools/progress.py [--write] [--no-rebuild]` | Computes the README progress table (bytes per binary-map region included) and writes it between the `progress:begin/end` markers. It refuses to write while a check fails. |
-| `rebuild/rebuild.py -q --allow-kept` | Relinks the compiled functions into the split assembly and checks the SHA-1 of the result. |
-| `tools/check_repo.py` | Rejects game data, binaries and build output (also the pre-commit hook). |
+| `tools/progress.py [--write] [--no-rebuild]` | Computes the README progress table (bytes per binary-map region included, deriving RTTI class and vtable slot denominators from the binary) and writes it between the `progress:begin/end` markers. It refuses to write while a check fails. |
+| `rebuild/rebuild.py [-q]` | Relinks all compiled C++ functions into the split assembly and checks the SHA-1 of the result. |
+| `tools/check_repo.py [--staged\|--self-test]` | Rejects game data, target SHA-1 matches, pasted splat disassembly, binaries and build output (also the pre-commit hook). Runs a built-in negative-control self-test on every invocation. |
 | `tools/extract_rtti.py`, `tools/gen_rtti_stubs.py` | Extract RTTI and vtables from the binary, and generate the `src/rtti/` probe stubs. |
 
 `check_all.py` and `progress.py` default the `WHIRL_*` variables themselves. Set them yourself to run
@@ -65,8 +65,8 @@ the other tools directly.
 | Tool | What it does |
 | :--- | :--- |
 | `inspect_tu.py --class C \| --range A B \| --func A [--m2c] [--dis]` | Functions of a class or range: size, match status, calls, strings, floats, `$a0` field accesses, C++ drafts for trivial functions, m2c output. |
-| `scan_candidates.py --level {1,2,3} [--limit N] [--class S]` | Unmatched candidates: leaf getters/setters, one-call wrappers, or vtable methods sorted by size. |
-| `map_tus.py [--filter S] [--class C]` | Groups the 182 vtables into probable translation units and infers `_vptr` offsets and fields. |
+| `scan_candidates.py [--level {1,2,3} \| --twins] [--limit N] [--class S]` | Unmatched candidates: leaf getters/setters (`--level 1`), one-call wrappers (`--level 2`), vtable methods sorted by size (`--level 3`), or structural twin families grouped by normalized instruction skeleton (`--twins`). |
+| `map_tus.py [--filter S] [--class C]` | Groups the RTTI vtables (193) into probable translation units and infers `_vptr` offsets and fields. |
 | `diff_func.py file.cpp <mangled> [--all] [-D X] [--variants v.json]` | Side-by-side R5900 diff of one repository function, or a batch of source variants (`{"target": "...", "candidates": [...]}`). |
 | `scratch_cc.py snippet.cpp\|- [--func S] [--vs ADDR] [--asm] [--regs] [-D X]` | Compiles a loose snippet in `build/scratch/` with the exact flags of `verify.py` (it can include repository headers). Shows its disassembly with relocations, or a side-by-side diff against any game address (`--vs`), GCC's `.s` (`--asm`), and the register-allocation table (`--regs`). |
 | `dump_data.py ADDR [-n N] [--vtable] [--string]` | Words at a data address with what each points to: a symbol (and whether it matches), a string, the function and offset of a jump-table target, or a float. `--vtable` lists a vtable's slots. |

@@ -38,8 +38,22 @@ def load_binary():
     return data, text, rodata
 
 
+def is_forward_branch(w, pc):
+    """If instruction w at pc is a forward PC-relative branch, return its target VRAM; else 0."""
+    op = w >> 26
+    if (op in (4, 5, 6, 7, 20, 21, 22, 23)
+            or (op == 1 and ((w >> 16) & 0x1F) in (0, 1, 2, 3, 16, 17, 18, 19))
+            or (op == 17 and ((w >> 21) & 0x1F) == 8)):
+        simm = (w & 0xFFFF) - 0x10000 if (w & 0x8000) else (w & 0xFFFF)
+        t = pc + 4 + (simm << 2)
+        if pc < t < pc + 0x4000:
+            return t
+    return 0
+
+
 def parse_func_boundaries(text):
-    """Return sorted list of function start addresses from splat's text.s (or prologue scan)."""
+    """Return sorted list of function start addresses from splat's text.s (or prologue scan),
+    filtering out false splits where a forward branch (e.g. beql/bnel) jumps over an early jr $ra."""
     starts = set()
     if SPLIT_TEXT.is_file():
         glabel_re = re.compile(r'^glabel\s+(?:func_([0-9A-Fa-f]{8})|([A-Za-z0-9_$]+))')
@@ -52,20 +66,35 @@ def parse_func_boundaries(text):
                         starts.add(int(m.group(1), 16))
                     elif m and m.group(2) in sym_to_addr:
                         starts.add(sym_to_addr[m.group(2)])
-    for addr in verify.load_symbols().values():
-        if e.TEXT_BASE <= addr < e.TEXT_BASE + e.TEXT_SIZE:
-            starts.add(addr)
-    # Also scan for jr $ra + delay slot followed by non-nop instruction
+    known = {addr for addr in verify.load_symbols().values()
+             if e.TEXT_BASE <= addr < e.TEXT_BASE + e.TEXT_SIZE}
+    starts |= known
+    # Scan for jr $ra + delay slot followed by non-nop instruction, and track forward branches
+    # so we remove splat false splits after an early jr $ra inside a branch-likely or if-return.
     words = struct.unpack_from('<%dI' % (len(text) // 4), text)
     starts.add(e.TEXT_BASE)
+    max_branch = 0
     for i in range(len(words) - 2):
-        if words[i] == 0x03E00008:  # jr $ra
+        w = words[i]
+        pc = e.TEXT_BASE + i * 4
+        if (w >> 26) == 3:  # jal target is always a real function entry
+            t = (pc & 0xF0000000) | ((w & 0x03FFFFFF) << 2)
+            if e.TEXT_BASE <= t < e.TEXT_BASE + e.TEXT_SIZE:
+                known.add(t)
+                starts.add(t)
+        bt = is_forward_branch(w, pc)
+        if bt > max_branch:
+            max_branch = bt
+        if w == 0x03E00008:  # jr $ra
             k = i + 2
             while k < len(words) and words[k] == 0:
                 k += 1
             if k < len(words):
-                # Only treat as function boundary if no branch inside the current function jumps past i+1
-                starts.add(e.TEXT_BASE + k * 4)
+                cand = e.TEXT_BASE + k * 4
+                if cand > max_branch:
+                    starts.add(cand)
+                elif cand not in known:
+                    starts.discard(cand)
     return sorted(starts)
 
 

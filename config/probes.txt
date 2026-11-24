@@ -50,6 +50,7 @@ _$_26IVP_SurfaceManager_Polygon
 _$_26IVP_U_Active_Float_Delayed
 _$_26IVP_U_Active_Value_Manager
 _$_27IVP_U_Active_Float_Listener
+_$_29IVP_Listener_Check_Dist_Event
 _$_31IVP_3D_Solver_VEC_PARALLEL_AREA
 _$_36IVP_3D_Solver_DISTANCE_OF_TWO_POINTS
 _$_36IVP_Collision_Delegator_Root_Mindist
@@ -109,6 +110,7 @@ __26IVP_SurfaceManager_Polygon
 __26IVP_U_Active_Float_Delayed
 __26IVP_U_Active_Value_Manager
 __27IVP_U_Active_Float_Listener
+__29IVP_Listener_Check_Dist_Event
 __31IVP_3D_Solver_VEC_PARALLEL_AREA
 __36IVP_3D_Solver_DISTANCE_OF_TWO_POINTS
 __36IVP_Collision_Delegator_Root_Mindist

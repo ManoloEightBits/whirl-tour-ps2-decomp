@@ -16,8 +16,6 @@ Needs `binutils-mips-linux-gnu`, splat 0.50 and the compilers (see README.md).
 
 Notes
 - splat writes registers 8-15 with o32 names; the build uses `-mabi=eabi`, so `rebuild.py` renames them.
-- After linking, each C++ function is compared with the game. One that differs goes back to assembly
-  and the link is redone. Today 14 RTTI functions end that way: the game holds two copies of some
-  base classes' `__ti` node (small ones in .sbss from the IVP library, bigger ones in .bss from the
-  game code), which one name-to-address table can't express.
+- After linking, each C++ function is compared with the game. Every matched function in `src/` links
+  cleanly (0 kept as assembly).
 - Functions the compiler adds for the generated probes (`config/probes.txt`) are ignored.

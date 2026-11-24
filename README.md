@@ -11,12 +11,12 @@ A hobby reverse-engineering project for the US PS2 release of *Whirl Tour* (`SLU
 <!-- progress:begin -->
 | Metric | Matched / Confirmed | Total in `.text` | Share | Progress |
 | :--- | ---: | ---: | ---: | :--- |
-| **Total `.text` bytes** | **31,432 B** | 1,401,448 B | **2.243%** | `█░░░░░░░░░░░░░░░░░░░` |
+| **Total `.text` bytes** | **31,496 B** | 1,401,448 B | **2.247%** | `█░░░░░░░░░░░░░░░░░░░` |
 | **Game logic bytes** (`0x100000..0x1C62CF`) | **27,092 B** | 811,728 B | **3.338%** | `█░░░░░░░░░░░░░░░░░░░` |
-| **Matched functions (`verify.py`)** | **350** | ~7,125 | **4.912%** | `█░░░░░░░░░░░░░░░░░░░` |
-| **Confirmed vtable slots (`verify_vtables.py`)** | **207** | ~820 | **25.244%** | `██████░░░░░░░░░░░░░░` |
-| **Confirmed RTTI classes (`vtables.txt`)** | **46** | 182 | **25.275%** | `██████░░░░░░░░░░░░░░` |
-| **Full binary relink (`rebuild.py`)** | **323 linked** | `02f39f20...0744` | **SHA-1 MATCH** | `████████████████████` |
+| **Matched functions (`verify.py`)** | **351** | ~7,125 | **4.926%** | `█░░░░░░░░░░░░░░░░░░░` |
+| **Confirmed vtable slots (`verify_vtables.py`)** | **207** | ~889 | **23.285%** | `█████░░░░░░░░░░░░░░░` |
+| **Confirmed RTTI classes (`vtables.txt`)** | **46** | 193 | **23.834%** | `█████░░░░░░░░░░░░░░░` |
+| **Full binary relink (`rebuild.py`)** | **351 linked** | `02f39f20...0744` | **SHA-1 MATCH** | `████████████████████` |
 <!-- progress:end -->
 
 ### Binary `.text` Map (`0x00100000..0x00256268`)
@@ -38,13 +38,13 @@ A hobby reverse-engineering project for the US PS2 release of *Whirl Tour* (`SLU
 | **Motion & Interpolation Controllers** | `MotionCtrl`, `IP_PosCtrl`, `IP_RotCtrl`, `IP_AnimCtrl`, `MBCtrl`, `ScootCtrl` (+ IVP bases `IVP_Controller`, `IVP_Controller_Independent`) | 27 / ~52 | 36 / 42 | `█████░░░░░` **52%** (all vtables confirmed; `IP_PosCtrl`, `MBCtrl` and `ScootCtrl` complete; the simulation step of `MotionCtrl`, `IP_RotCtrl` and `IP_AnimCtrl` left) |
 | **Collision & Event Listeners** | `DD_Event_Listener`, `DD_Collision_Listener`, `Global_Phantom_Listener`, `ScootCL`, `MBCL`, `LunActCL`, `MarActCL`, `AI_PedestrianCL` | 39 / ~67 | 31 / 40 | `█████░░░░░` **58%** (all 8 listeners 100%, and the whole `DD_Event_Listener` TU `0x00116B00..0x00117727`; IVP base classes `IVP_Listener_Object`, `IVP_Listener_Collision` & `IVP_Listener_Phantom` also 100%) |
 | **AI & Boss Attacks** | `AI_Agent`, `AI_Pedestrian`, `AI_Race`, `AI_Vehicle`, `AI_Boss`, `AI_Attack*` | 9 / ~340 | 0 / 73 | `░░░░░░░░░░` **3%** (RTTI `__tf` matched) |
-| **Single-inheritance RTTI (`src/rtti/`)** | 76 polymorphic classes | 76 / 76 | — | `██████████` **100%** (probe-generated `__tf*` functions) |
+| **Single-inheritance RTTI (`src/rtti/`)** | 77 polymorphic classes | 77 / 77 | — | `██████████` **100%** (probe-generated `__tf*` functions) |
 
 ---
 
 ## Technical Findings
 
-- **Target binary:** ELF32 MIPS R5900 (`SLUS_204.89`, entry `0x00100008`), stripped of symbol tables, but compiled **with C++ RTTI enabled**: 199 `__tf*` RTTI functions and 182 virtual function tables (8-byte slots: `{s16 delta, s16 index, void *func}`) are present in `.text` and `.rodata` (`tools/extract_rtti.py`).
+- **Target binary:** ELF32 MIPS R5900 (`SLUS_204.89`, entry `0x00100008`), stripped of symbol tables, but compiled **with C++ RTTI enabled**: 212 `__tf*` RTTI functions and 193 virtual function tables (8-byte slots: `{s16 delta, s16 index, void *func}`) are present in `.text` and `.rodata` (`tools/extract_rtti.py`).
 - **Compiler & flags:** SN Systems ProDG `ee-gcc 2.95.3 build 1.14` (`ee-gcc2.95.3-114`) with `-O2 -G0 -fno-exceptions` (RTTI enabled), assembled with `ps2eeas.exe` from the `ee-gcc 2.95.2-273a` package (which inserts a `nop` after `mtc1` before a dependent FP instruction and does not pad short backward loops). The retail assembler, which none of the available packages reproduces, also inserts that `nop` when the next instruction reads the *partner* register of the even/odd FP pair. `tools/verify.py` adds those nops to GCC's output before assembling (see `docs/MATCHING.md`).
 - **Register saving convention:** Game and physics code (`0x00100000..0x00228F2F`) saves 128-bit registers (`sq`/`lq`) in function prologues; static runtime libraries (`0x00228F30..0x00256268`) save 64-bit registers (`sd`/`ld`).
 

@@ -22,6 +22,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import extract_rtti  # noqa: E402
 import verify  # noqa: E402
 import verify_vtables  # noqa: E402
 
@@ -31,10 +32,20 @@ BEGIN, END = '<!-- progress:begin -->', '<!-- progress:end -->'
 REGIONS = [('Game code', 0x00100000, 0x001C62D0),
            ('Physics engine (IVP_*)', 0x001C62D0, 0x00228F30),
            ('Runtime & system libraries', 0x00228F30, None)]
-# Denominators estimated in the README: functions in .text, vtable slots, RTTI classes with vtables.
+# Total functions in .text (splat split); RTTI classes and checkable vtable slots are derived from the binary.
 TOTAL_FUNCTIONS = 7125
-TOTAL_SLOTS = 820
-TOTAL_CLASSES = 182
+
+
+def derive_rtti_denominators(slus_path):
+    """Derive (total_classes, total_checkable_vtable_slots) directly from SLUS_204.89."""
+    data = Path(slus_path).read_bytes()
+    text = data[extract_rtti.TEXT_OFFSET:extract_rtti.TEXT_OFFSET + extract_rtti.TEXT_SIZE]
+    rodata = data[extract_rtti.RODATA_OFFSET:extract_rtti.RODATA_OFFSET + extract_rtti.RODATA_SIZE]
+    tfs = extract_rtti.find_tf_functions(text, extract_rtti.find_rtti_strings(rodata))
+    vtables = extract_rtti.find_vtables(rodata, tfs)
+    # Approximate total virtual method slots across all RTTI vtables (excluding only pure-base slot-1 destructors)
+    slots = sum(len(vt['slots']) - (0 if vt['bases'] else 1) for vt in vtables)
+    return len(vtables), slots
 
 
 def bar(percent):
@@ -66,7 +77,7 @@ def run_vtables(compilers, slus, addresses):
 
 
 def run_rebuild(env):
-    p = subprocess.run([sys.executable, 'rebuild/rebuild.py', '-q', '--allow-kept'], cwd=verify.ROOT, env=env,
+    p = subprocess.run([sys.executable, 'rebuild/rebuild.py', '-q'], cwd=verify.ROOT, env=env,
                        text=True, capture_output=True)
     m = re.search(r'^MATCH:.*?(\d+) C\+\+ functions', p.stdout, re.M)
     if p.returncode != 0 or not m:
@@ -96,6 +107,7 @@ def main():
         verify.check_target(slus_path)
         slus, base, text_size, addresses, found, bad_functions = run_verify(compilers, slus_path)
         slots, classes, unchecked, bad_slots = run_vtables(compilers, slus, addresses)
+        total_classes, total_slots = derive_rtti_denominators(slus_path)
         readme, block = current_block()
     except verify.VerifyError as e:
         print('progress: ' + str(e), file=sys.stderr)
@@ -133,9 +145,9 @@ def main():
             '{:,} B'.format(game_hi - game_lo), game_bytes, game_hi - game_lo),
         row('**Matched functions (`verify.py`)**', str(len(found)), '~{:,}'.format(TOTAL_FUNCTIONS),
             len(found), TOTAL_FUNCTIONS),
-        row('**Confirmed vtable slots (`verify_vtables.py`)**', str(slots), '~{:,}'.format(TOTAL_SLOTS),
-            slots, TOTAL_SLOTS),
-        row('**Confirmed RTTI classes (`vtables.txt`)**', str(classes), str(TOTAL_CLASSES), classes, TOTAL_CLASSES),
+        row('**Confirmed vtable slots (`verify_vtables.py`)**', str(slots), '~{:,}'.format(total_slots),
+            slots, total_slots),
+        row('**Confirmed RTTI classes (`vtables.txt`)**', str(classes), str(total_classes), classes, total_classes),
         relink,
     ]
     table = '\n'.join(rows)

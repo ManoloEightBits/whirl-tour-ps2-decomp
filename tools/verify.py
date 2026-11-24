@@ -55,7 +55,7 @@ SANDBOX_MARK = 'WHIRL_SANDBOXED'
 
 SHT_SYMTAB, SHT_RELA, SHT_REL = 2, 4, 9
 STT_FUNC = 2
-R_MIPS_32, R_MIPS_26 = 2, 4
+R_MIPS_32, R_MIPS_26, R_MIPS_HI16, R_MIPS_LO16 = 2, 4, 5, 6
 RELOC_MASK = {R_MIPS_32: 0xFFFFFFFF, R_MIPS_26: 0x03FFFFFF}
 RELOC_MASK_DEFAULT = 0x0000FFFF
 
@@ -125,6 +125,15 @@ def enter_sandbox():
         return
     if os.environ.get(SANDBOX_MARK):
         raise VerifyError('still see network interfaces %s inside the namespace' % sorted(interfaces))
+    try:
+        usable = subprocess.run(['unshare', '-rn', 'true'], capture_output=True).returncode == 0
+    except OSError:
+        usable = False
+    if not usable:
+        # Some systems refuse unprivileged user namespaces (AppArmor's restrict_unprivileged_userns,
+        # for example). Say so instead of running the compiler with network access silently.
+        print('warning: unshare -rn failed, so the compiler runs WITH network access', file=sys.stderr)
+        return
     os.environ[SANDBOX_MARK] = '1'
     os.execvp('unshare', ['unshare', '-rn', sys.executable, *sys.argv])
 
@@ -276,7 +285,7 @@ def build_all(function, sources):
 
 
 def compare(obj_path, game, game_base, addresses, verbose, found=None):
-    """Compare each function in the object with the game. Returns (bytes, functions, problems).
+    """Compare each function in the object with the game. Returns (bytes, functions, problems, unchecked_total).
 
     If `found` is a list, (address, size, name) is appended to it for every matching function."""
     obj = Elf32(obj_path)
@@ -287,7 +296,7 @@ def compare(obj_path, game, game_base, addresses, verbose, found=None):
     funcs = sorted((value, size, name) for name, value, size, kind, shndx in symbols
                    if shndx == text_index and kind == STT_FUNC)
     starts = [value for value, _, _ in funcs] + [len(code)]
-    matched, count, problems = 0, 0, []
+    matched, count, problems, unchecked_total = 0, 0, [], 0
     for i, (start, size, name) in enumerate(funcs):
         end = start + size if size else starts[i + 1]
         # ps2eeas pads the end of .text to 16 bytes with trailing nops; trim trailing nops
@@ -320,6 +329,10 @@ def compare(obj_path, game, game_base, addresses, verbose, found=None):
                 target = addresses.get(symbols[sym][0])
                 if kind == R_MIPS_26 and target is not None:
                     ours, mask = (ours & ~mask) | (target >> 2 & mask), 0
+                elif kind == R_MIPS_HI16 and target is not None and (ours & 0xFFFF) == 0:
+                    ours, mask = (ours & ~mask) | (((target + 0x8000) >> 16) & mask), 0
+                elif kind == R_MIPS_LO16 and target is not None and (ours & 0xFFFF) == 0:
+                    ours, mask = (ours & ~mask) | (target & mask), 0
                 else:
                     unchecked += 1
             if (ours ^ theirs) & ~mask & 0xFFFFFFFF:
@@ -336,11 +349,12 @@ def compare(obj_path, game, game_base, addresses, verbose, found=None):
         else:
             matched += end - start
             count += 1
+            unchecked_total += unchecked
             if found is not None:
                 found.append((address, end - start, name))
             if verbose:
                 print('  match 0x%08X %4d bytes  %s%s' % (address, end - start, name, note))
-    return matched, count, problems
+    return matched, count, problems, unchecked_total
 
 
 def main():
@@ -368,22 +382,23 @@ def main():
         game, game_base = slus.contents(text), text['addr']
         addresses = load_symbols()
         sources = [p.resolve() for p in args.sources] or sorted(SRC.rglob('*.cpp'))
-        total, count, failed = 0, 0, 0
+        total, count, failed, unchecked = 0, 0, 0, 0
         found = []
         objects = build_all(lambda source: build(args.compilers, source, args.defines), sources)
         for source, obj in zip(sources, objects):
             if not args.quiet:
                 print(source.relative_to(ROOT).as_posix())
-            matched, functions, problems = compare(obj, game, game_base, addresses, args.verbose, found)
+            matched, functions, problems, u = compare(obj, game, game_base, addresses, args.verbose, found)
             total += matched
             count += functions
             failed += len(problems)
+            unchecked += u
             if args.quiet and problems:
                 print(source.relative_to(ROOT).as_posix())
             for p in problems:
                 print('  FAIL ' + p)
-        print('%d functions match: %d bytes, %.3f%% of the game code; %d problems'
-              % (count, total, 100.0 * total / len(game), failed))
+        print('%d functions match: %d bytes, %.3f%% of the game code (%d local relocs deferred to rebuild.py); %d problems'
+              % (count, total, 100.0 * total / len(game), unchecked, failed))
         if not args.sources and not args.defines:
             # The analysis tools read this list to tell matched functions from ones that only have a name.
             lines = ['0x%08X %d %s' % f for f in sorted(set(found))]

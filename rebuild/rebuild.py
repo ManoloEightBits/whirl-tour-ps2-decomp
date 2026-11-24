@@ -81,10 +81,19 @@ def same_data(obj, ro_bytes, ro_relocs, symbols, ours, slus, theirs, text_index,
                 return False
             ours, theirs = ours + 4, theirs + 4
         return True
-    end = ro_bytes.find(b'\0', ours)
-    if ours < 0 or end < 0:
+    if ours < 0 or ours >= len(ro_bytes):
         return False
-    return game_bytes(slus, theirs, end + 1 - ours) == ro_bytes[ours:end + 1]
+    # Try null-terminated string match first, then 8-byte / 4-byte numeric literal (.rodata float/double)
+    end = ro_bytes.find(b'\0', ours)
+    if end >= 0 and game_bytes(slus, theirs, end + 1 - ours) == ro_bytes[ours:end + 1]:
+        return True
+    text = ro_bytes[ours:end] if end >= 0 else b''
+    if text and all(0x20 <= c < 0x7F or c in (9, 10, 13) for c in text):
+        return False  # a string that differs from the game's; its first 4 or 8 bytes must not be enough
+    for width in (8, 4):
+        if ours + width <= len(ro_bytes) and game_bytes(slus, theirs, width) == ro_bytes[ours:ours + width]:
+            return True
+    return False
 
 
 def resolve_local_data(source, dest, addresses, slus):
@@ -163,7 +172,9 @@ def classify(obj, addresses):
             if target_kind == STT_SECTION and inside.startswith('.text.'):
                 calls.setdefault(name, set()).add(inside[len('.text.'):])
             elif 0 < target_section < len(obj.sections) and target_kind != verify.STT_FUNC:
-                reason = "uses data from its own object file that the game's copy doesn't confirm"
+                # A vtable with a game address is fine: verify_vtables.py checks its slots.
+                if not (target.startswith('_vt$') and target in addresses):
+                    reason = "uses data from its own object file that the game's copy doesn't confirm"
             elif not 0 < target_section < len(obj.sections) and target not in addresses:
                 # undefined, or a common symbol such as a type_info node: the game's address is needed
                 reason = 'refers to %s, which has no address in config/symbols.txt' % target
@@ -353,7 +364,10 @@ def main():
             if not wrong:
                 break
             for n in wrong:
-                kept_all[n] = 'links to the wrong address for a symbol shared between translation units'
+                reason = 'links to the wrong address for a symbol shared between translation units'
+                kept_all[n] = reason
+                if not args.quiet:
+                    print('  kept: %s %s' % (n, reason))
                 del functions[n]
                 del sizes[n]
             if not args.quiet:

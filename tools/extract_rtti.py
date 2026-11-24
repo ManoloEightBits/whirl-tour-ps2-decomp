@@ -40,8 +40,10 @@ def demangle_simple(mangled):
 
 def find_rtti_strings(rodata):
     out = {}
-    pattern = re.compile(rb'(?:^|(?<=\x00))([0-9]{1,2}[A-Z_][A-Za-z0-9_]{2,60}|t[0-9]{1,2}[A-Z_][A-Za-z0-9_]{2,70})\x00')
+    pattern = re.compile(rb'([0-9]{1,2}[A-Z_][A-Za-z0-9_]{2,60}|t[0-9]{1,2}[A-Z_][A-Za-z0-9_]{2,70})\x00')
     for m in pattern.finditer(rodata):
+        if m.start() > 0 and rodata[m.start() - 1] != 0 and (m.start() & 7) != 0:
+            continue
         addr = RODATA_BASE + m.start()
         s = m.group(1).decode('ascii')
         if s[0].isdigit():
@@ -63,27 +65,29 @@ def find_tf_functions(text, rtti_strings):
             f_addr = TEXT_BASE + i * 4
             hi_a1 = None
             lo_a1 = None
-            hi_v1 = None
-            lo_s0 = None
+            hi_reg = None
+            hi_val = None
+            ti_addr = 0
             jals = []
-            for k in range(i, min(i + 36, len(twords))):
+            for k in range(i + 1, min(i + 60, len(twords))):
                 wk = twords[k]
-                if (wk >> 16) == 0x3C03 and hi_v1 is None:  # lui $v1, hi(__ti)
-                    hi_v1 = wk & 0xFFFF
-                elif (wk >> 16) == 0x2470 and hi_v1 is not None and lo_s0 is None:  # addiu $s0, $v1, lo(__ti)
-                    lo_s0 = struct.unpack('<h', struct.pack('<H', wk & 0xFFFF))[0]
-                elif (wk >> 16) == 0x3C05:  # lui $a1, hi(name)
+                op, rs, rt = wk >> 26, (wk >> 21) & 0x1F, (wk >> 16) & 0x1F
+                if op == 0x0F and hi_reg is None:  # first lui loads high half of own __ti node
+                    hi_reg, hi_val = rt, wk & 0xFFFF
+                elif op == 0x23 and rs == hi_reg and not ti_addr:  # first lw from that lui tests own __ti
+                    ti_addr = (hi_val << 16) + struct.unpack('<h', struct.pack('<H', wk & 0xFFFF))[0]
+                elif (wk >> 16) == 0x3C05:  # last lui $a1, hi(name) in the function is the class's own name
                     hi_a1 = wk & 0xFFFF
-                elif (wk >> 16) == 0x24A5 and hi_a1 is not None:  # addiu $a1, $a1, lo(name)
+                    lo_a1 = None
+                elif (wk >> 16) == 0x24A5 and hi_a1 is not None and lo_a1 is None:  # addiu $a1, $a1, lo(name)
                     lo_a1 = struct.unpack('<h', struct.pack('<H', wk & 0xFFFF))[0]
-                elif (wk >> 26) == 3:  # jal
+                elif op == 3:  # jal
                     jals.append((wk & 0x03FFFFFF) << 2)
                 elif wk == 0x03E00008:  # jr $ra
                     break
             if hi_a1 is not None and lo_a1 is not None:
                 str_addr = (hi_a1 << 16) + lo_a1
                 if str_addr in rtti_strings:
-                    ti_addr = ((hi_v1 << 16) + lo_s0) if (hi_v1 is not None and lo_s0 is not None) else 0
                     mangled = rtti_strings[str_addr]
                     tf_funcs[f_addr] = {
                         'tf_addr': f_addr,

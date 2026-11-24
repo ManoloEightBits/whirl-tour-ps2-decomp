@@ -1,4 +1,4 @@
-# Game data: never commit (see HANDOFF.md)
+# Game data: never commit (see docs/STANDARDS.md, "What never goes in the repo")
 *.iso
 *.ISO
 SLUS_*
@@ -15,12 +15,12 @@ SLPM_*
 *.vag
 *.irx
 *.ps2
-/extracted/
-/assets/
+/extracted/*
+/assets/*
 
-# Generated from the game, so rebuild locally
-/asm/
-/build/
+# Generated from the game, so rebuild locally (by-contents form allows explicit ! exceptions if ever needed)
+/asm/*
+/build/*
 *.o
 *.s
 *.ii
@@ -31,7 +31,7 @@ undefined_syms_auto.txt
 ghidra_functions.csv
 
 # Proprietary toolchains
-/compilers/
+/compilers/*
 *.exe
 *.dll
 

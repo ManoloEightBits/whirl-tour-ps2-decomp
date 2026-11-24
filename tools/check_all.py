@@ -31,7 +31,7 @@ def main():
         [sys.executable, 'tools/verify_vtables.py', '-q'],
     ]
     if not args.no_rebuild:
-        steps.append([sys.executable, 'rebuild/rebuild.py', '-q', '--allow-kept'])
+        steps.append([sys.executable, 'rebuild/rebuild.py', '-q'])
     steps.append([sys.executable, 'tools/check_repo.py'])
 
     for cmd in steps:
