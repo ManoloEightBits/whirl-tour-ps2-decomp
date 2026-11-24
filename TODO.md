@@ -1,5 +1,8 @@
 # TODO
 
+- **Review project setup against BFM-decomp's guide.** Analyze our repository and workflow taking into account
+  the recommendations in <https://github.com/Druthulu/BFM-decomp/wiki/Start-a-new-decomp-project> (TU splitting,
+  build/link pipeline, symbol/relocation handling, tooling, and project structure).
 - **IVP / Havok reference (undecided).** Many classes are Ipion Virtual Physics (`IVP_*`). Valve may have
   published an IVP source release; not checked. Before using it: find the exact repo and version, read its
   license, and decide whether to only consult it or copy from it. Until then nothing from it is in this repo.
