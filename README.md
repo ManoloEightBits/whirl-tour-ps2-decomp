@@ -11,12 +11,12 @@ A hobby reverse-engineering project for the US PS2 release of *Whirl Tour* (`SLU
 <!-- progress:begin -->
 | Metric | Matched / Confirmed | Total in `.text` | Share | Progress |
 | :--- | ---: | ---: | ---: | :--- |
-| **Total `.text` bytes** | **43,912 B** | 1,401,448 B | **3.133%** | `█░░░░░░░░░░░░░░░░░░░` |
-| **Game logic bytes** (`0x100000..0x1C62CF`) | **39,508 B** | 811,728 B | **4.867%** | `█░░░░░░░░░░░░░░░░░░░` |
-| **Matched functions (`verify.py`)** | **829** | ~7,125 | **11.635%** | `███░░░░░░░░░░░░░░░░░` |
+| **Total `.text` bytes** | **45,180 B** | 1,401,448 B | **3.224%** | `█░░░░░░░░░░░░░░░░░░░` |
+| **Game logic bytes** (`0x100000..0x1C62CF`) | **40,776 B** | 811,728 B | **5.023%** | `██░░░░░░░░░░░░░░░░░░` |
+| **Matched functions (`verify.py`)** | **876** | ~7,125 | **12.295%** | `███░░░░░░░░░░░░░░░░░` |
 | **Confirmed vtable slots (`verify_vtables.py`)** | **207** | ~889 | **23.285%** | `█████░░░░░░░░░░░░░░░` |
 | **Confirmed RTTI classes (`vtables.txt`)** | **46** | 193 | **23.834%** | `█████░░░░░░░░░░░░░░░` |
-| **Full binary relink (`rebuild.py`)** | **829 linked** | `02f39f20...0744` | **SHA-1 MATCH** | `████████████████████` |
+| **Full binary relink (`rebuild.py`)** | **876 linked** | `02f39f20...0744` | **SHA-1 MATCH** | `████████████████████` |
 <!-- progress:end -->
 
 ### Binary `.text` Map (`0x00100000..0x00256268`)
@@ -35,7 +35,7 @@ A hobby reverse-engineering project for the US PS2 release of *Whirl Tour* (`SLU
 | **Pickups (`Pickup`, `KeyPickup`, +9)** | `EnvObj`, `Pickup`, `PickupDef` + 10 subclasses | 58 / 59 | 22 / 22 | `█████████░` **98%** (`KeyPickup` and 9 subclasses 100%, all vtables confirmed, `Pickup::Update` and the `PickupDef` parser matched; only `Pickup::Pickup` left, in `NON_MATCHING`) |
 | **Front-End UI (`FEScreen` hierarchy)** | `FEScreen` + all 14 `FE*Screen` subclasses | 83 / ~160 | 105 / 112 | `███████░░░` **66%** (`FEMcScreen`, `FEQuitScreen` & `FETrickScreen` 100%; all 15 vtables confirmed) |
 | **Player & Scooter (`Player`, `Scooter`)** | `Player`, `Scooter`, `UnkObj11F` (no RTTI; names are ours) | 181 / 182 | — | `█████████░` **99%** (Player `0x00122D08..0x00123CCF`, 94 functions including 49 wrappers/getters and the 13 `player_*` collision callbacks, `UnkObj11F` `0x0011F8E8..0x0011FA40`, 13 functions, and Scooter `0x0017E0E0..0x0017F8E8`, 74 functions; only `Scooter::ConsumeAdrenaline` is left, in `NON_MATCHING`) |
-| **Animated Model & Clip Helpers (`AnimModel`)** | `UnkActor11A`, `UnkTable11A8`, `UnkDef11AB`, `UnkClip1B7`, `UnkAnim1B8` (no RTTI) | 93 / ~115 | — | `████████░░` **81%** (`0x0011A198..0x0011AC98`, `0x001B7D18..0x001B7F90`, `0x001B8748..0x001B8A30`) |
+| **Animated Model & Clip Helpers (`AnimModel`)** | `UnkActor11A`, `UnkTable11A8`, `UnkDef11AB`, `UnkSkel1B6`, `UnkKey1B76`, `UnkModel1B7`, `UnkClip1B7`, `UnkAnim1B8`, `UnkScene1B9`, `UnkTex1BA` (no RTTI) | 140 / ~165 | — | `████████░░` **85%** (`0x0011A198..0x0011AC98`, `0x001B6950..0x001BAA90`) |
 | **Tricks System (`Tricks`)** | `UnkTrickScores`, `UnkTrickDef`, `UnkTrickSeq`, `UnkTrickState`, `UnkObj125F` (no RTTI) | 35 / 59 | — | `██████░░░░` **59%** (`0x001255C8..0x00125F70`: score table getters, trick lookup by name, 12 trick definition getters, sequence & state accessors; `tricklist` parser in `NON_MATCHING`) |
 | **Motion & Interpolation Controllers** | `MotionCtrl`, `IP_PosCtrl`, `IP_RotCtrl`, `IP_AnimCtrl`, `MBCtrl`, `ScootCtrl` (+ IVP bases `IVP_Controller`, `IVP_Controller_Independent`) | 52 / ~65 | 36 / 42 | `████████░░` **80%** (all vtables confirmed; `IP_PosCtrl`, `MBCtrl` and `ScootCtrl` 100% including constructors and accessors; the simulation step of `MotionCtrl`, `IP_RotCtrl` and `IP_AnimCtrl` left) |
 | **Collision & Event Listeners** | `DD_Event_Listener`, `DD_Collision_Listener`, `Global_Phantom_Listener`, `ScootCL`, `MBCL`, `LunActCL`, `MarActCL`, `AI_PedestrianCL` | 57 / ~67 | 31 / 40 | `█████████░` **85%** (all 8 listeners 100%, `LunActCL`/`MarActCL` constructors and `LunAct`/`MarAct`/`UnkBody` accessors matched, and the whole `DD_Event_Listener` TU `0x00116B00..0x00117727`; IVP base classes `IVP_Listener_Object`, `IVP_Listener_Collision` & `IVP_Listener_Phantom` also 100%) |

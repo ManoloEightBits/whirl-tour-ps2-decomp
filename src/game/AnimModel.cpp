@@ -36,14 +36,19 @@ struct UnkClip1B7
 };
 
 void func_001BD978(void *);       // 0x001BD978
-void func_001B6950(void *);       // 0x001B6950
+int func_001B6950(void *);        // 0x001B6950
 int func_001B6958(void *, int);   // 0x001B6958
+int func_001B6960(void *, int);   // 0x001B6960
 int func_001B6970(void *);        // 0x001B6970
 int func_001B6978(void *, int);   // 0x001B6978
+int func_001B6998(void *);        // 0x001B6998
 void func_001B88B0(void *);       // 0x001B88B0
 void func_001B8840(void *, int, int, int, f32, f32, f32); // 0x001B8840
 void func_001B8A38(void *, void *); // 0x001B8A38
 void *func_00126280(int id);      // 0x00126280
+int func_001BEE68(int, int, int); // 0x001BEE68
+int func_001BEEE0(int, int, int, int); // 0x001BEEE0
+extern int data_0027B488[];       // 0x0027B488
 
 UnkClip1B7 *UnkClip1B7::GetSelf()
 {
@@ -739,4 +744,432 @@ void UnkDef11AB::ResolveEntries11AC98()
         mArr98[i].mPtr04 = func_00126280(mArr98[i].mId00);
     for (i = 0; i < (u32)mCountC8; i++)
         mArrCC[i].mPtr04 = func_00126280(mArrCC[i].mId00);
+}
+
+// 0x001B6950..0x001B6998: Skeleton header (0x10 bytes + 0x20-byte joints)
+struct UnkSkel1B6
+{
+    u16 mCount00;  // 0x00
+    u16 mCount02;  // 0x02
+    u8 mCount04;   // 0x04
+    u8 mCount05;   // 0x05
+    u16 mField06;  // 0x06
+    int mField08;  // 0x08
+    int mField0C;  // 0x0C
+};
+
+int func_001B6950(void *p)
+{
+    return ((UnkSkel1B6 *)p)->mField0C;
+}
+
+int func_001B6958(void *p, int)
+{
+    return ((UnkSkel1B6 *)p)->mCount02;
+}
+
+int func_001B6960(void *p, int idx)
+{
+    int off = (idx << 5) + 0x10;
+    return (int)p + off;
+}
+
+int func_001B6970(void *p)
+{
+    return ((UnkSkel1B6 *)p)->mCount05;
+}
+
+int func_001B6978(void *p, int idx)
+{
+    UnkSkel1B6 *s = (UnkSkel1B6 *)p;
+    int off = (s->mCount00 << 5) + 0x10;
+    return (int)s + off + (idx << 5);
+}
+
+int func_001B6998(void *p)
+{
+    UnkSkel1B6 *s = (UnkSkel1B6 *)p;
+    int c0 = s->mCount00 - 1;
+    int a = (s->mCount04 << 5) + 0x30;
+    return (c0 << 5) + a;
+}
+
+// 0x001B7638..0x001B76F8: Keyframe helper structs
+struct UnkBlock16
+{
+    u8 b[16];
+};
+
+struct UnkBlock20
+{
+    u8 b[16];
+    int c;
+};
+
+struct UnkKey1B76
+{
+    Vec3f mVec00; // 0x00
+    u16 mField0C; // 0x0C
+    u8 mField0E;  // 0x0E
+    u8 mField0F;  // 0x0F
+    f32 mField10; // 0x10
+
+    void Init1B7638(u8 e, u16 c, const Vec3f *v);         // 0x001B7638
+    void Copy1B7660(const void *src);                     // 0x001B7660
+    void Init1B7688(u8 e, u16 c, const Vec3f *v, f32 f);  // 0x001B7688
+    void Copy1B76B8(const void *src);                     // 0x001B76B8
+    void SetHalfs1B76E8(u16 a, u16 b);                    // 0x001B76E8
+    void Set1B76F8(u8 e, u16 c, const Vec3f *v);          // 0x001B76F8
+};
+
+void UnkKey1B76::Init1B7638(u8 e, u16 c, const Vec3f *v)
+{
+    mField0E = e;
+    mField0C = c;
+    mField0F = 0;
+    mVec00.x = v->x;
+    mVec00.y = v->y;
+    mVec00.z = v->z;
+}
+
+void UnkKey1B76::Copy1B7660(const void *src)
+{
+    *(UnkBlock16 *)this = *(const UnkBlock16 *)src;
+}
+
+void UnkKey1B76::Init1B7688(u8 e, u16 c, const Vec3f *v, f32 f)
+{
+    mField0E = e;
+    mField0C = c;
+    mField0F = 0;
+    mVec00.x = v->x;
+    mVec00.y = v->y;
+    mVec00.z = v->z;
+    mField10 = f;
+}
+
+void UnkKey1B76::Copy1B76B8(const void *src)
+{
+    *(UnkBlock20 *)this = *(const UnkBlock20 *)src;
+}
+
+void UnkKey1B76::SetHalfs1B76E8(u16 a, u16 b)
+{
+    ((u16 *)this)[0] = a;
+    ((u16 *)this)[1] = b;
+}
+
+void UnkKey1B76::Set1B76F8(u8 e, u16 c, const Vec3f *v)
+{
+    mField0E = e;
+    mField0C = c;
+    mVec00.x = v->x;
+    mVec00.y = v->y;
+    mVec00.z = v->z;
+}
+
+// 0x001B7AE8..0x001B7C08: UnkModel1B7
+struct UnkModel1B7
+{
+    char field_0x00[0x40];
+    u16 mCount40; // 0x40
+    u16 mCount42; // 0x42
+    int mPtr44;   // 0x44
+    u16 mCount48; // 0x48
+    u16 mCount4A; // 0x4A
+    int mPtr4C;   // 0x4C
+    u16 mCount50; // 0x50
+    u16 mCount52; // 0x52
+    int mPtr54;   // 0x54
+    u16 mCount58; // 0x58
+    u16 mCount5A; // 0x5A
+    int mPtr5C;   // 0x5C
+    u16 mCount60; // 0x60
+    u16 mCount62; // 0x62
+    int mPtr64;   // 0x64
+    int mField68; // 0x68
+    int mField6C; // 0x6C
+
+    void Destroy1B7AE8();              // 0x001B7AE8
+    void InitPtrs1B7B08();             // 0x001B7B08
+    u16 GetCount42();                  // 0x001B7B58
+    u16 GetCount4A();                  // 0x001B7B60
+    u16 GetCount52();                  // 0x001B7B68
+    u16 GetCount5A();                  // 0x001B7B70
+    u16 GetCount62();                  // 0x001B7B78
+    u16 GetCount60();                  // 0x001B7B80
+    UnkModel1B7 *GetSelf();            // 0x001B7B88
+    int GetEntry44(int idx);           // 0x001B7B90
+    int GetEntry4C(int idx);           // 0x001B7BA0
+    int GetEntry54(int idx);           // 0x001B7BB8
+    int GetEntry5C(int idx);           // 0x001B7BC8
+    int GetEntry64(int idx);           // 0x001B7BD8
+    int GetField64();                  // 0x001B7BE8
+    void Copy4_1B7BF0(const void *s);  // 0x001B7BF0
+    void Copy16_1B7C08(const void *s); // 0x001B7C08
+};
+
+struct UnkBlock4
+{
+    u8 b[4];
+};
+
+void UnkModel1B7::Destroy1B7AE8()
+{
+    func_001BD978(this);
+}
+
+void UnkModel1B7::InitPtrs1B7B08()
+{
+    mPtr64 = (int)this + 0x70;
+    mPtr44 = mPtr64 + (mCount62 << 5);
+    mPtr4C = mPtr44 + (mCount40 << 4);
+    mPtr54 = mPtr4C + mCount48 * 0x14;
+    mPtr5C = mPtr54 + (mCount50 << 2);
+}
+
+u16 UnkModel1B7::GetCount42()
+{
+    return mCount42;
+}
+
+u16 UnkModel1B7::GetCount4A()
+{
+    return mCount4A;
+}
+
+u16 UnkModel1B7::GetCount52()
+{
+    return mCount52;
+}
+
+u16 UnkModel1B7::GetCount5A()
+{
+    return mCount5A;
+}
+
+u16 UnkModel1B7::GetCount62()
+{
+    return mCount62;
+}
+
+u16 UnkModel1B7::GetCount60()
+{
+    return mCount60;
+}
+
+UnkModel1B7 *UnkModel1B7::GetSelf()
+{
+    return this;
+}
+
+int UnkModel1B7::GetEntry44(int idx)
+{
+    return mPtr44 + (idx << 4);
+}
+
+int UnkModel1B7::GetEntry4C(int idx)
+{
+    return mPtr4C + idx * 0x14;
+}
+
+int UnkModel1B7::GetEntry54(int idx)
+{
+    return mPtr54 + (idx << 2);
+}
+
+int UnkModel1B7::GetEntry5C(int idx)
+{
+    return mPtr5C + (idx << 4);
+}
+
+int UnkModel1B7::GetEntry64(int idx)
+{
+    return mPtr64 + (idx << 5);
+}
+
+int UnkModel1B7::GetField64()
+{
+    return mPtr64;
+}
+
+void UnkModel1B7::Copy4_1B7BF0(const void *s)
+{
+    *(UnkBlock4 *)this = *(const UnkBlock4 *)s;
+}
+
+void UnkModel1B7::Copy16_1B7C08(const void *s)
+{
+    *(UnkBlock16 *)this = *(const UnkBlock16 *)s;
+}
+
+// 0x001B9730..0x001B9950: UnkScene1B9
+int func_001B9730(int idx)
+{
+    return data_0027B488[idx];
+}
+
+struct UnkScene1B9
+{
+    int mField00;     // 0x00
+    int mField04;     // 0x04
+    int mField08;     // 0x08
+    int mArr0C[14];   // 0x0C..0x44 (0x0C, 0x10, 0x14, 0x18, 0x1C, 0x20, 0x24, 0x28, 0x2C, 0x30, 0x34, 0x38, 0x3C, 0x40)
+    int mField44;     // 0x44
+    int mField48;     // 0x48
+    int mField4C;     // 0x4C
+
+    int LookupArr0C(int idx, int a);             // 0x001B9748
+    int LookupArr0CEx(int idx, int a, int b, int c); // 0x001B9780
+    int Lookup0C(int a);                         // 0x001B97C0
+    int Lookup30(int a);                         // 0x001B97E8
+    int Lookup2C(int a);                         // 0x001B9810
+    int Lookup20(int a);                         // 0x001B9838
+    int Lookup28(int a);                         // 0x001B9860
+    int Lookup18(int a);                         // 0x001B9888
+    int Lookup34(int a);                         // 0x001B98B0
+    int Lookup4C(int a);                         // 0x001B98D8
+    int Lookup3C(int a);                         // 0x001B9900
+    int Lookup38(int a);                         // 0x001B9928
+    int Lookup40(int a);                         // 0x001B9950
+};
+
+int UnkScene1B9::LookupArr0C(int idx, int a)
+{
+    int r = 0;
+    if (mArr0C[idx] != 0)
+        r = func_001BEE68(mArr0C[idx], a, 0);
+    return r;
+}
+
+int UnkScene1B9::LookupArr0CEx(int idx, int a, int b, int c)
+{
+    int r = 0;
+    if (mArr0C[idx] != 0)
+        r = func_001BEEE0(mArr0C[idx], a, b, c);
+    return r;
+}
+
+int UnkScene1B9::Lookup0C(int a)
+{
+    int r = 0;
+    if (mArr0C[0] != 0)
+        r = func_001BEE68(mArr0C[0], a, 0);
+    return r;
+}
+
+int UnkScene1B9::Lookup30(int a)
+{
+    int r = 0;
+    if (mArr0C[9] != 0)
+        r = func_001BEE68(mArr0C[9], a, 0);
+    return r;
+}
+
+int UnkScene1B9::Lookup2C(int a)
+{
+    int r = 0;
+    if (mArr0C[8] != 0)
+        r = func_001BEE68(mArr0C[8], a, 0);
+    return r;
+}
+
+int UnkScene1B9::Lookup20(int a)
+{
+    int r = 0;
+    if (mArr0C[5] != 0)
+        r = func_001BEE68(mArr0C[5], a, 0);
+    return r;
+}
+
+int UnkScene1B9::Lookup28(int a)
+{
+    int r = 0;
+    if (mArr0C[7] != 0)
+        r = func_001BEE68(mArr0C[7], a, 0);
+    return r;
+}
+
+int UnkScene1B9::Lookup18(int a)
+{
+    int r = 0;
+    if (mArr0C[3] != 0)
+        r = func_001BEE68(mArr0C[3], a, 0);
+    return r;
+}
+
+int UnkScene1B9::Lookup34(int a)
+{
+    int r = 0;
+    if (mArr0C[10] != 0)
+        r = func_001BEE68(mArr0C[10], a, 0);
+    return r;
+}
+
+int UnkScene1B9::Lookup4C(int a)
+{
+    int r = 0;
+    if (mField4C != 0)
+        r = func_001BEE68(mField4C, a, 0);
+    return r;
+}
+
+int UnkScene1B9::Lookup3C(int a)
+{
+    int r = 0;
+    if (mArr0C[12] != 0)
+        r = func_001BEE68(mArr0C[12], a, 0);
+    return r;
+}
+
+int UnkScene1B9::Lookup38(int a)
+{
+    int r = 0;
+    if (mArr0C[11] != 0)
+        r = func_001BEE68(mArr0C[11], a, 0);
+    return r;
+}
+
+int UnkScene1B9::Lookup40(int a)
+{
+    int r = 0;
+    if (mArr0C[13] != 0)
+        r = func_001BEE68(mArr0C[13], a, 0);
+    return r;
+}
+
+// 0x001BAA50..0x001BAA90: UnkTex1BA
+struct UnkTex1BA
+{
+    char field_0x00[0x14];
+    int mField14; // 0x14
+    int mField18; // 0x18
+    int mField1C; // 0x1C
+    int mField20; // 0x20
+    int mPtr24;   // 0x24
+
+    void Destroy1BAA50();        // 0x001BAA50
+    int GetEntry24(u8 idx);      // 0x001BAA70
+    int GetField14();            // 0x001BAA88
+    int GetField18();            // 0x001BAA90
+};
+
+void UnkTex1BA::Destroy1BAA50()
+{
+    func_001BD978(this);
+}
+
+int UnkTex1BA::GetEntry24(u8 idx)
+{
+    return mPtr24 + idx * 0x30;
+}
+
+int UnkTex1BA::GetField14()
+{
+    return mField14;
+}
+
+int UnkTex1BA::GetField18()
+{
+    return mField18;
 }
