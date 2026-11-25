@@ -13,7 +13,7 @@ void DrawEnd19A6B0();                                        // 0x0019A6B0
 
 extern int gDialogData259EF0[]; // 0x00259EF0
 
-FEQuitScreen::FEQuitScreen(void *owner)
+FEQuitScreen::FEQuitScreen(FEOwner *owner)
     : FEScreen(0x13, 1, owner)
 {
     mField164 = 0;

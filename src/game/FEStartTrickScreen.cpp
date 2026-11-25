@@ -2,7 +2,7 @@
 
 extern FEPad *gGameCtx262250; // 0x00262250
 
-FEStartScreen::FEStartScreen(void *owner)
+FEStartScreen::FEStartScreen(FEOwner *owner)
     : FEScreen(2, 3, owner)
 {
     mField164 = 0;
@@ -39,7 +39,7 @@ int FEStartScreen::VirtSlot8()
     return mField168;
 }
 
-FETrickScreen::FETrickScreen(void *owner)
+FETrickScreen::FETrickScreen(FEOwner *owner)
     : FEScreen(0x5A, 2, owner)
 {
     mField168 = 0;

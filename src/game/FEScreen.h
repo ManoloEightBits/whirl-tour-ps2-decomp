@@ -15,7 +15,7 @@ struct TextObj
     u32 mColor28;          // 0x28
     void *mFont2C;         // 0x2C
     const char *mString30; // 0x30
-    f32 mField34;          // 0x34: read back after drawing (FEMenu::Draw)
+    f32 mWidth34;          // 0x34: set by MeasureText19B138 (and DrawText19B758)
     int mField38;          // 0x38
 
     void SetColor(f32 r, f32 g, f32 b)
@@ -24,7 +24,17 @@ struct TextObj
     }
 };
 
+// How the screens set a TextObj's position, scale and colour. The game's code for them is what these
+// macros give (do { } while (0) changes how GCC schedules the stores; the colour reads the text pointer
+// once, before its arguments), so the original most likely used macros like them.
+#define TEXT_SET_POS(t, x, y, z) do { (t)->mPos04.Set(x, y, z); } while (0)
+#define TEXT_SET_SCALE(t, x, y, z) do { (t)->mScale1C.Set(x, y, z); } while (0)
+#define TEXT_SET_COLOR(t, r, g, b) do { TextObj *text_ = (t); text_->SetColor(r, g, b); } while (0)
+#define TEXT_SET_RGBA(t, c) do { TextObj *text_ = (t); text_->mColor28 = (c); } while (0)
+#define TEXT_SET_STRING(t, s) do { (t)->mString30 = (s); } while (0)
+
 TextObj *CreateTextObj198E48(void *font, int, f32, f32, f32); // 0x00198E48
+void MeasureText19B138(TextObj *text);                       // 0x0019B138
 void DrawText19B758(TextObj *text);                          // 0x0019B758
 
 // The object a screen's mSub08 and each menu item's mSub110 point to (0xB0 bytes). It is built from an
@@ -49,6 +59,8 @@ struct FESub08
     f32 Method1304E8(int);                  // 0x001304E8
     void Method1306B0();                    // 0x001306B0
     void Update130348(f32 dt);              // 0x00130348
+
+    Vec3f *GetPosition() { return (Vec3f *)&mMatrix40.row[3]; }
     void Method130720(f32);                 // 0x00130720
 };
 
@@ -63,9 +75,21 @@ struct FEOwnerEntry
     int mField0C; // 0x0C
 };
 
+// 12-byte records at FEOwner+0x118; FEScreen::AddOwnerRecords lists the ones whose first word is set.
+struct FEOwnerRec
+{
+    s16 mField00; // 0x00
+    s16 mField02; // 0x02
+    int mField04; // 0x04
+    int mField08; // 0x08
+};
+
 struct FEOwner
 {
-    char field_0x00[0x3C];
+    char field_0x00[0x28];
+    f32 mTitleScale28;           // 0x28: FEScreen::VirtSlot3 draws the screen's title text
+    f32 mTitleScale2C;           // 0x2C
+    Vec3f mTitleColour30;        // 0x30
     int mField3C;                // 0x3C
     int mField40;                // 0x40
     int mCount44;                // 0x44
@@ -75,6 +99,9 @@ struct FEOwner
     Vec3f mColourF0;             // 0xF0: normal
     Vec3f mColourFC;             // 0xFC: selected
     Vec3f mColour108;            // 0x108: disabled
+    s16 mCount114;               // 0x114
+    s16 mField116;               // 0x116
+    FEOwnerRec mRecs118[1];      // 0x118, mCount114 of them
 };
 
 // One line of a menu (0x118 bytes): its text, whether it can be selected, its models (drawn with
@@ -87,7 +114,7 @@ struct FEMenuItem
     void *mModel108;     // 0x108
     void *mModel10C;     // 0x10C
     FESub08 *mSub110;    // 0x110
-    f32 mField114;       // 0x114: the text's mField34 after drawing
+    f32 mTextWidth114;   // 0x114: the text's width when last drawn (100.0f before)
 };
 
 // A screen's menu (0x3C bytes, no RTTI): FEScreen::CreateMenuA/B build it from string ids or strings.
@@ -112,8 +139,8 @@ struct FEMenu
     void Init();                                            // 0x0016AFB8
     void Update(int allPads, int active, f32 dt);           // 0x0016B1E8
     void Draw();                                            // 0x0016B4A8
-    FEMenu(const char **strings, int count, void *owner);   // 0x0016B768
-    FEMenu(const int *ids, int count, void *owner);         // 0x0016B810
+    FEMenu(const char **strings, int count, FEOwner *owner); // 0x0016B768
+    FEMenu(const int *ids, int count, FEOwner *owner);    // 0x0016B810
     ~FEMenu();                                              // 0x0016B8D0
     void DisableItem(int idx);                              // 0x0016B980
     void EnableItem(int idx);                               // 0x0016B9C8
@@ -121,7 +148,7 @@ struct FEMenu
     void SkipDisabledBackward();                            // 0x0016BA58
     void Action16BAD8();                                    // 0x0016BAD8
     Mat4x4f *GetItemMatrix(int idx);                        // 0x0016BB50
-    f32 GetItemField114(int idx);                           // 0x0016BB70
+    f32 GetItemTextWidth(int idx);                          // 0x0016BB70
     void SetTextIds(const int *ids);                        // 0x0016BB88
     void SetTexts(const char **strings);                    // 0x0016BC18
 };
@@ -142,7 +169,7 @@ class FEScreen
 {
 public:
     FEScreen();
-    FEScreen(int a, int b, void *c); // 0x0016E458
+    FEScreen(int a, int b, FEOwner *owner); // 0x0016E458
     virtual ~FEScreen();             // slot 1: 0x0016E5B0
     virtual void VirtSlot2(f32 dt);  // slot 2: 0x0016DF98
     virtual void VirtSlot3();        // slot 3: 0x0016E180
@@ -160,32 +187,38 @@ public:
     void DisableMenuItem(int idx);                     // 0x0016E7E0
     int IsSlot5AndState3();                            // 0x0016E808
     void SetField3C_1();                               // 0x0016E868
-    void AddItem48(int item);                          // 0x0016E890
+    void AddItem48(FEOwnerRec *item);                  // 0x0016E890
+    void AddOwnerRecords();                            // 0x0016E8B8
     int GetCount44();                                  // 0x0016E9A8
     void ClearCount44();                               // 0x0016E9B0
-    int GetItem48(int idx);                            // 0x0016E9B8
+    FEOwnerRec *GetItem48(int idx);                    // 0x0016E9B8
     int GetMenuField20();                              // 0x0016E9C8
 
-    void *mField00;        // 0x00
-    int mField04;          // 0x04
+    FEOwner *mOwner00;     // 0x00
+    void *mModel04;        // 0x04: func_001262E0(mOwner00->mField3C)
     FESub08 *mSub08;       // 0x08
     FEMenu *mMenu0C;       // 0x0C
-    int mField10;          // 0x10
-    void *mObj14;          // 0x14
-    char field_0x18[0x10];
+    FEPad *mPad10;         // 0x10
+    TextObj *mText14;      // 0x14: "font_header"
+    int mField18;          // 0x18
+    int mField1C;          // 0x1C
+    int mField20;          // 0x20
+    int mField24;          // 0x24
     int mField28;          // 0x28
-    char field_0x2C[0x0C];
+    f32 mField2C;          // 0x2C
+    int mField30;          // 0x30
+    int mField34;          // 0x34
     int mState38;          // 0x38
     int mField3C;          // 0x3C
     int mField40;          // 0x40
     int mCount44;          // 0x44
-    int mItems48[0x46];    // 0x48..0x15F (70 * 4 = 0x118 bytes -> ends at 0x160!)
+    FEOwnerRec *mItems48[0x46]; // 0x48..0x15F
 };
 
 class FEQuitScreen : public FEScreen
 {
 public:
-    FEQuitScreen(void *owner);      // 0x001150B8
+    FEQuitScreen(FEOwner *owner);      // 0x001150B8
     virtual ~FEQuitScreen();        // 0x00115148
     virtual void VirtSlot2(f32 dt); // 0x001151A0
     virtual void VirtSlot3();       // 0x00115260
@@ -201,7 +234,7 @@ public:
 class FEStartScreen : public FEScreen
 {
 public:
-    FEStartScreen(void *owner);     // 0x0016EC80
+    FEStartScreen(FEOwner *owner);     // 0x0016EC80
     virtual ~FEStartScreen();       // 0x0016ECD0
     virtual void VirtSlot2(f32 dt); // 0x0016ECF8
     virtual void VirtSlot3();       // 0x0016E9D8
@@ -226,7 +259,7 @@ struct FETrickSub164
 class FETrickScreen : public FEScreen
 {
 public:
-    FETrickScreen(void *owner);     // 0x0016EDE8
+    FETrickScreen(FEOwner *owner);     // 0x0016EDE8
     virtual ~FETrickScreen();       // 0x0016EE78
     virtual void VirtSlot2(f32 dt); // 0x0016EED0
     virtual void VirtSlot3();       // 0x0016EF10
@@ -242,7 +275,7 @@ public:
 class FEPlaylistScreen : public FEScreen
 {
 public:
-    FEPlaylistScreen(void *owner, int arg2); // 0x001121C8
+    FEPlaylistScreen(FEOwner *owner, int arg2); // 0x001121C8
     virtual ~FEPlaylistScreen();             // 0x001129F0
     virtual void VirtSlot2(f32 dt);          // 0x001122F0
     virtual void VirtSlot3();                // 0x00112578
@@ -269,7 +302,7 @@ public:
 class FEChooseScreen : public FEScreen
 {
 public:
-    FEChooseScreen(void *owner);    // 0x00112B08
+    FEChooseScreen(FEOwner *owner);    // 0x00112B08
     virtual ~FEChooseScreen();      // 0x00113078
     virtual void VirtSlot2(f32 dt); // 0x00113110
     virtual void VirtSlot3();       // 0x00112D30
@@ -287,7 +320,7 @@ public:
 class FEMcScreen : public FEScreen
 {
 public:
-    FEMcScreen(void *owner, int mode, void *mc); // 0x00113D90
+    FEMcScreen(FEOwner *owner, int mode, void *mc); // 0x00113D90
     virtual ~FEMcScreen();                       // 0x00113E18
     virtual void VirtSlot2(f32 dt);              // 0x00113E50
     virtual void VirtSlot3();                    // 0x00113F28
@@ -316,7 +349,7 @@ struct FEMovSub198
 class FEMovScreen : public FEScreen
 {
 public:
-    FEMovScreen(void *owner, int a2, int a3, int a4); // 0x00114CF8
+    FEMovScreen(FEOwner *owner, int a2, int a3, int a4); // 0x00114CF8
     virtual ~FEMovScreen();                           // 0x00114E20
     virtual void VirtSlot2(f32 dt);                   // 0x001145F8
     virtual void VirtSlot3();                         // 0x00114A18
@@ -341,7 +374,7 @@ public:
 class FEMonsterScreen : public FEScreen
 {
 public:
-    FEMonsterScreen(void *owner);   // 0x00115628
+    FEMonsterScreen(FEOwner *owner);   // 0x00115628
     virtual ~FEMonsterScreen();     // 0x001156B0
     virtual void VirtSlot2(f32 dt); // 0x001152C8
     virtual void VirtSlot3();       // 0x001153B8
@@ -352,7 +385,7 @@ public:
 class FECharacterScreen : public FEScreen
 {
 public:
-    FECharacterScreen(void *owner); // 0x00168F98
+    FECharacterScreen(FEOwner *owner); // 0x00168F98
     virtual ~FECharacterScreen();   // 0x00169E30
     virtual void VirtSlot2(f32 dt); // 0x00169670
     virtual void VirtSlot3();       // 0x00169348
@@ -387,7 +420,7 @@ public:
 class FELevelScreen : public FEScreen
 {
 public:
-    FELevelScreen(void *owner);     // 0x0016A820
+    FELevelScreen(FEOwner *owner);     // 0x0016A820
     virtual ~FELevelScreen();       // 0x0016A8D0
     virtual void VirtSlot2(f32 dt); // 0x0016A450
     virtual void VirtSlot3();       // 0x0016A188
@@ -411,7 +444,7 @@ struct FELoadSlot
 class FELoadStateScreen : public FEScreen
 {
 public:
-    FELoadStateScreen(void *owner, void *mc, int mode); // 0x0016ADE0
+    FELoadStateScreen(FEOwner *owner, void *mc, int mode); // 0x0016ADE0
     virtual ~FELoadStateScreen();                       // 0x0016AEB8
     virtual void VirtSlot2(f32 dt);                     // 0x0016A9E8
     virtual void VirtSlot3();                           // 0x0016AF18
@@ -433,7 +466,7 @@ public:
 class FENameSelectScreen : public FEScreen
 {
 public:
-    FENameSelectScreen(void *owner, int arg2); // 0x0016C530
+    FENameSelectScreen(FEOwner *owner, int arg2); // 0x0016C530
     virtual ~FENameSelectScreen();             // 0x0016C678
     virtual void VirtSlot2(f32 dt);            // 0x0016BC90
     virtual void VirtSlot3();                  // 0x0016C0D8
@@ -453,7 +486,7 @@ public:
 class FEOptionsScreen : public FEScreen
 {
 public:
-    FEOptionsScreen(void *owner, int a2, int a3); // 0x0016D210
+    FEOptionsScreen(FEOwner *owner, int a2, int a3); // 0x0016D210
     virtual ~FEOptionsScreen();                   // 0x0016D2E0
     virtual void VirtSlot2(f32 dt);               // 0x0016C900
     virtual void VirtSlot3();                     // 0x0016CED0
@@ -476,7 +509,7 @@ public:
 class FEScooterScreen : public FEScreen
 {
 public:
-    FEScooterScreen(void *owner);   // 0x0016D388
+    FEScooterScreen(FEOwner *owner);   // 0x0016D388
     virtual ~FEScooterScreen();     // 0x0016DE98
     virtual void VirtSlot2(f32 dt); // 0x0016DA30
     virtual void VirtSlot3();       // 0x0016D678

@@ -115,6 +115,14 @@ file with `diff_func.py <file.cpp> <symbol> --variants <json>`. That command onl
   `$a1`; without it GCC moves the argument to `$f13` at entry and hoists the constants, 27 of 42
   instructions off. `asm("");` barriers got to 3 but kept a store out of the `jal` delay slot, so
   try `do { } while (0)` before reaching for a barrier.
+- **Text set-up in the front-end screens goes through macros.** The game's code for setting a
+  `TextObj`'s position, scale, colour and string matches only when some of those statements are
+  wrapped in `do { } while (0)` (the loop notes stop the first scheduling pass from hoisting the
+  constants above earlier statements and calls) and the colour reads the text pointer once into a
+  local before its arguments. `FEScreen.h` has them as `TEXT_SET_POS`/`SCALE`/`COLOR`/`RGBA`/`STRING`;
+  which ones a function uses differs: `FEScreen::VirtSlot3` needs POS, SCALE and COLOR,
+  `FELevelScreen::VirtSlot3` RGBA and STRING with plain `Set` calls. Search the combinations with
+  `diff_func.py --bodies` (each statement plain or wrapped).
 - **Locals get stack slots in declaration order, from `$sp` upwards.** In `func_00116B00`, the game passes
   `sp+0x10` and `sp+0x00` to `func_001F3F30(obj, &rot, &pos)`. Declaring `pos` before `rot` gives that.
 - **Static helpers with an out-of-line copy that nothing in the TU calls are inline members.**

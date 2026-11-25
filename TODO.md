@@ -99,12 +99,12 @@ map of the binary, regenerated with `tools/analysis/coverage.py --map docs/MAP.m
    (`lqc2`/`vmulx`/`vadd`/`sqc2`) that GCC does not generate, so it needs inline `asm`. (The `MBCL` and
    `ScootCL` constructors are inlined at `0x0015F7AC` / `0x00171534` and have no out-of-line copy.)
 5. **Front end:** the remaining larger `VirtSlot2`/`VirtSlot3`/constructor functions of the 10
-   `FE*Screen` subclasses (about 30 functions, 20 KB). `FEMenu` is done (14 of 15; `Draw` in
-   NON_MATCHING): its items, the owner record it reads (`FEOwner`: model ids, text scale and colours),
-   `FESub08` (the object that places each item, with its matrix at +0x40), `TextObj::SetColor`, and the
-   GL calls `glRotatef`/`glMultMatrixf` are now typed and named. Next: `FEScreen`'s constructor
-   (`0x0016E458`, builds its `FESub08` the same way) and `VirtSlot3` (`0x0016E180`), then the screens'
-   draw functions, which use `TextObj` like `FELevelScreen::VirtSlot3`.
+   `FE*Screen` subclasses (about 27 functions, 18 KB). Done: `FEMenu` (14 of 15), `FEScreen::VirtSlot3`,
+   `AddOwnerRecords`, `FELevelScreen::VirtSlot3`; the owner record (`FEOwner`), `FESub08`, `TextObj`
+   (`SetColor`, `mWidth34` from `MeasureText19B138`) and the GL calls `glRotatef`/`glTranslatef`/
+   `glMultMatrixf` are typed and named, and the screens' constructors take an `FEOwner *`. The key to
+   the draw functions is the `TEXT_SET_*` macros (see docs/MATCHING.md): try each text statement plain
+   and wrapped. Next: the other screens' `VirtSlot3` (draw) functions, then the `VirtSlot2` updates.
 
 ## Naming (most matched code still has address names)
 
@@ -151,12 +151,10 @@ nothing about its field. Names have to come from evidence, roughly in this order
 - `Pickup::Pickup` `0x0011B060`, 123/144 (`KeyPickup.cpp`): the loop counter's `i = 0` and two FP registers.
 - `Scooter::ConsumeAdrenaline` `0x0017ED28`, 5/12 (`Scooter.cpp`): FP registers; `-ffast-math` did not help.
 - `FELevelScreen::VirtSlot4` `0x0016A9C8`, 1/8 (`FEScreens.cpp`).
-- `FEMenu::Draw` `0x0016B4A8`, 55/174 (`FEScreens.cpp`): register choice for the text pointer in three
-  statements and one nop; the rest of `FEMenu` matches.
-- `FELevelScreen::VirtSlot3` `0x0016A188`, 159/179 (`FEScreens.cpp`, draws the level info with `TextObj`):
-  one extra saved register because the first scheduling pass hoists the colour constant above two calls;
-  `do { } while (0)` around the third line fixes the frame (68-71 diffs) but not the first `sprintf`'s
-  argument order. A lead for the other screens' draw functions, which look the same.
+- `FEMenu::Draw` `0x0016B4A8`, 7/175 (`FEScreens.cpp`): the text pointer of two statements gets the
+  other register; the text macros of `FEScreen.h` fixed the rest.
+- `FEScreen::FEScreen` `0x0016E458`, 7/85 (`FEScreen.cpp`): the constants 1, 8 and 9 of `mField18..24`
+  get other registers; the member initializer list fixes the stores and the vtable pointer.
 - `func_001240F8` (`tricklist` parser), 93/97 (`Tricks.cpp`): one pointer in `$s0` instead of `$v0`.
 
 ## Unverified names

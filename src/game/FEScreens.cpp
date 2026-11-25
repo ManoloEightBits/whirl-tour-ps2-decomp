@@ -88,7 +88,7 @@ void func_00141950(void *, int);
 void func_00155ED0(int, int, int);
 
 // 1. FEMcScreen
-FEMcScreen::FEMcScreen(void *owner, int mode, void *mc)
+FEMcScreen::FEMcScreen(FEOwner *owner, int mode, void *mc)
     : FEScreen(0, 3, owner)
 {
     mMc16C = mc;
@@ -146,7 +146,7 @@ int FEMcScreen::VirtSlot7()
 }
 
 // 2. FEMonsterScreen
-FEMonsterScreen::FEMonsterScreen(void *owner)
+FEMonsterScreen::FEMonsterScreen(FEOwner *owner)
     : FEScreen(0x69, 2, owner)
 {
     CreateMenuA(gMonsterMenuIds259F10, 3);
@@ -182,7 +182,7 @@ void FEMonsterScreen::VirtSlot2(f32 dt)
 }
 
 // 3. FEPlaylistScreen
-FEPlaylistScreen::FEPlaylistScreen(void *owner, int arg2)
+FEPlaylistScreen::FEPlaylistScreen(FEOwner *owner, int arg2)
     : FEScreen(0x67, 1, owner)
 {
     mField180 = arg2;
@@ -357,7 +357,7 @@ inline void FEMovSub198::Destroy114C88()
     MemFree1BD978(this);
 }
 
-FEMovScreen::FEMovScreen(void *owner, int a2, int a3, int a4)
+FEMovScreen::FEMovScreen(FEOwner *owner, int a2, int a3, int a4)
     : FEScreen(0, 3, owner)
 {
     mField164 = 0;
@@ -407,7 +407,7 @@ int FEMovScreen::VirtSlot7()
 }
 
 // 6. FELoadStateScreen
-FELoadStateScreen::FELoadStateScreen(void *owner, void *mc, int mode)
+FELoadStateScreen::FELoadStateScreen(FEOwner *owner, void *mc, int mode)
     : FEScreen(0x20, 1, owner)
 {
     mText168 = CreateTextObj198E48(FindFont1264A8("font_body"), 0, 0.0f, 0.0f, 0.0f);
@@ -470,15 +470,6 @@ void FELoadStateScreen::VirtSlot4()
 // 7. FELevelScreen
 // Draws the selected level's information: three lines printed with the format strings 0x42, 0x43 and
 // 0x44, and two button icons when mArr174[1] / mArr174[2] are set and the level allows them.
-#ifdef NON_MATCHING
-// 159 of 179 instructions differ, all from one extra saved register: the first scheduling pass moves
-// the colour constant 0x80808080 (shared by the last two colour stores) above the sprintf and
-// func_00156118 calls, so it needs $s1 and everything shifts; the game loads it right before its
-// store, into $s0. Without -fno-schedule-insns the frame matches. do { } while (0) around the third
-// line's position/scale/colour/string/draw also gives the game's frame (71 diffs, 68 with the second
-// line wrapped too), but the first sprintf then sets $a0 = $sp before $a1/$a2 where the game sets it
-// last (in the delay slot). Tried: SetColor helpers, the colour as int, the format and value in
-// locals, &line[0]; all 64 do-while groupings of the six text blocks.
 void FELevelScreen::VirtSlot3()
 {
     char line[0x40];
@@ -491,27 +482,27 @@ void FELevelScreen::VirtSlot3()
         sprintf(line, func_00151D40(0x42), func_001550D8(mMenu0C->mSelected0C));
         mText164->mPos04.Set(570.0f, 710.0f, 0.0f);
         mText164->mScale1C.Set(0.6f, 0.6f, 1.0f);
-        mText164->mColor28 = 0x80808080;
-        mText164->mString30 = line;
+        TEXT_SET_RGBA(mText164, 0x80808080);
+        TEXT_SET_STRING(mText164, line);
         DrawText19B758(mText164);
         int count = func_00155130();
         if (count > 0)
         {
             sprintf(line, func_00151D40(0x43), count);
             mText164->mPos04.Set(570.0f, 290.0f, 0.0f);
-            mText164->mString30 = line;
+            TEXT_SET_STRING(mText164, line);
             DrawText19B758(mText164);
         }
     }
     sprintf(line2, func_00151D40(0x44), func_00156118(mMenu0C->mSelected0C));
     mText164->mPos04.Set(570.0f, 660.0f, 0.0f);
     mText164->mScale1C.Set(0.6f, 0.6f, 1.0f);
-    mText164->mColor28 = 0x80808080;
-    mText164->mString30 = line2;
+    TEXT_SET_RGBA(mText164, 0x80808080);
+    TEXT_SET_STRING(mText164, line2);
     DrawText19B758(mText164);
     mText164->mScale1C.Set(1.0f, 1.0f, 1.0f);
-    mText164->mColor28 = 0x80808080;
-    mText164->mString30 = "\x80\x18";
+    TEXT_SET_RGBA(mText164, 0x80808080);
+    TEXT_SET_STRING(mText164, "\x80\x18");
     if (mArr174[1] != 0 && func_00155310(mMenu0C->mSelected0C) != 0)
     {
         mText164->mPos04.Set(700.0f, 400.0f, 0.0f);
@@ -524,9 +515,8 @@ void FELevelScreen::VirtSlot3()
     }
     DrawEnd19A6B0();
 }
-#endif
 
-FELevelScreen::FELevelScreen(void *owner)
+FELevelScreen::FELevelScreen(FEOwner *owner)
     : FEScreen(0x40, 2, owner)
 {
     CreateMenuA(func_00155228(), 8);
@@ -581,7 +571,7 @@ void FEMenu::Init()
         mItems08[i].mModel10C = 0;
         mItems08[i].mModel108 = 0;
         mItems08[i].mSub110 = 0;
-        mItems08[i].mField114 = 100.0f;
+        mItems08[i].mTextWidth114 = 100.0f;
         if (i < mOwner00->mCount44)
         {
             mItems08[i].mModel104 = func_001262E0(mOwner00->mEntries48[i].mField00);
@@ -675,11 +665,9 @@ void FEMenu::Update(int allPads, int active, f32 dt)
 // Draws each item's models at its FESub08's matrix, then its text (turned to face the camera) in the
 // owner's normal, selected or disabled colour.
 #ifdef NON_MATCHING
-// 55 of 174 instructions differ, all in the second loop: the text pointer of the scale, string and
-// flag statements gets $v0/$v1/$a0 where the game has $a0/$a0/$v1, and the game has a nop after the
-// last colour load before the join. The first loop and the colour code match (TextObj::SetColor's
-// operand order, and the "disabled" branch first). Writing the scale through a local Vec3f pointer
-// gets the registers (38 diffs) but loads mTextScaleEC after the first store.
+// 7 of 175 instructions differ: the text pointer of the string and flag statements gets $v1/$a0 where
+// the game has $a0/$v1. TEXT_SET_SCALE and TEXT_SET_COLOR (FEScreen.h) took it from 55 to 7; wrapping
+// the string or the flag, or reordering them, did not help.
 void FEMenu::Draw()
 {
     for (int i = 0; i < mCount04; i++)
@@ -708,40 +696,40 @@ void FEMenu::Draw()
             glMultMatrixf(&mItems08[i].mSub110->mMatrix40.row[0].x);
         glRotatef(-90.0f, 0.0f, 1.0f, 0.0f);
         glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
-        mText2C->mPos04.Set(0.0f, 0.0f, 0.0f);
-        mText2C->mScale1C.Set(mOwner00->mTextScaleE8, mOwner00->mTextScaleEC, 1.0f);
+        TEXT_SET_POS(mText2C, 0.0f, 0.0f, 0.0f);
+        TEXT_SET_SCALE(mText2C, mOwner00->mTextScaleE8, mOwner00->mTextScaleEC, 1.0f);
         mText2C->mString30 = mItems08[i].mText00;
         mText2C->mField00 |= 0x20;
         if (i == mSelected0C)
-            mText2C->SetColor(mOwner00->mColourFC.x, mOwner00->mColourFC.y, mOwner00->mColourFC.z);
+            TEXT_SET_COLOR(mText2C, mOwner00->mColourFC.x, mOwner00->mColourFC.y, mOwner00->mColourFC.z);
         else if (mItems08[i].mDisabled100 != 0)
-            mText2C->SetColor(mOwner00->mColour108.x, mOwner00->mColour108.y, mOwner00->mColour108.z);
+            TEXT_SET_COLOR(mText2C, mOwner00->mColour108.x, mOwner00->mColour108.y, mOwner00->mColour108.z);
         else
-            mText2C->SetColor(mOwner00->mColourF0.x, mOwner00->mColourF0.y, mOwner00->mColourF0.z);
+            TEXT_SET_COLOR(mText2C, mOwner00->mColourF0.x, mOwner00->mColourF0.y, mOwner00->mColourF0.z);
         DrawText19B758(mText2C);
-        mItems08[i].mField114 = mText2C->mField34;
+        mItems08[i].mTextWidth114 = mText2C->mWidth34;
         glPopMatrix();
     }
 }
 #endif
 
-FEMenu::FEMenu(const char **strings, int count, void *owner)
+FEMenu::FEMenu(const char **strings, int count, FEOwner *owner)
 {
     mCount04 = count;
     mItems08 = new FEMenuItem[count];
     for (int i = 0; i < mCount04; i++)
         strcpy(mItems08[i].mText00, strings[i]);
-    mOwner00 = (FEOwner *)owner;
+    mOwner00 = owner;
     Init();
 }
 
-FEMenu::FEMenu(const int *ids, int count, void *owner)
+FEMenu::FEMenu(const int *ids, int count, FEOwner *owner)
 {
     mCount04 = count;
     mItems08 = new FEMenuItem[count];
     for (int i = 0; i < mCount04; i++)
         strcpy(mItems08[i].mText00, func_00151D40(ids[i]));
-    mOwner00 = (FEOwner *)owner;
+    mOwner00 = owner;
     Init();
 }
 
@@ -823,9 +811,9 @@ Mat4x4f *FEMenu::GetItemMatrix(int idx)
     return &mItems08[idx].mSub110->mMatrix40;
 }
 
-f32 FEMenu::GetItemField114(int idx)
+f32 FEMenu::GetItemTextWidth(int idx)
 {
-    return mItems08[idx].mField114;
+    return mItems08[idx].mTextWidth114;
 }
 
 void FEMenu::SetTextIds(const int *ids)
@@ -857,7 +845,7 @@ int FENameSelectScreen::VirtSlot8()
 }
 
 // 9. FEOptionsScreen
-FEOptionsScreen::FEOptionsScreen(void *owner, int a2, int a3)
+FEOptionsScreen::FEOptionsScreen(FEOwner *owner, int a2, int a3)
     : FEScreen(0x29, 1, owner)
 {
     mField264 = 0;

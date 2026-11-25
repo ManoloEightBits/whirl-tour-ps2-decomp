@@ -16,7 +16,6 @@ void PhysicsRelease1F3A70(void *);                       // 0x001F3A70
 void CleanupNode194EC0(void *);                          // 0x00194EC0
 void EnvObjCleanup14FB70(EnvObj *);                      // 0x0014FB70
 void func_00193100(UnkNode *);                           // 0x00193100
-void func_001A3A00(f32 x, f32 y, f32 z);                 // 0x001A3A00
 Mat4x4f *func_0012ECC0();                                // 0x0012ECC0
 void func_001F3F30(void *obj, void *a, void *b);                   // 0x001F3F30
 void func_001B40A0(Mat4x4f *m, f32 angle);                         // 0x001B40A0: rotation matrix
@@ -572,7 +571,7 @@ KeyPickup::KeyPickup(const Vec3f *pos)
 // y/z through the pointer, as in the game.
 static inline void TranslateTo(const Vec3f *pos, Pickup *p)
 {
-    func_001A3A00(pos->x, pos->y + p->mHeightOffset74, pos->z);
+    glTranslatef(pos->x, pos->y + p->mHeightOffset74, pos->z);
 }
 
 void PickupHelper11B2A0(Pickup *p)
