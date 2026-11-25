@@ -608,7 +608,7 @@ void func_00123AC8(IVP_Real_Object_Stub *self, IVP_Real_Object_Stub *other, u32,
         player->mOtherPlayer38 = 0;
 }
 
-// With -ffast-math (verify.py) GCC turns this into a bare sqrt.s, as in the game.
+//With -ffast-math (verify.py) GCC turns this into a bare sqrt.s, as in the game.
 extern "C" float sqrtf(float);
 
 // "player_hit_boss": within 5 units, the player hits the boss when its boost state and the side
@@ -644,4 +644,129 @@ void func_00123AE8(IVP_Real_Object_Stub *self, IVP_Real_Object_Stub *other, u32,
     {
         player->Action1722B0(boss->VirtSlot5(), boss->mAttack1D8->mField10);
     }
+}
+
+void func_001416A0(void *); // 0x001416A0
+
+struct UnkSub11F_08
+{
+    char field_0x00[0x3C];
+    f32 mField3C; // 0x3C
+};
+
+struct UnkSub11F_50
+{
+    char field_0x00[0x10];
+    Vec3f mVec10; // 0x10
+};
+
+struct UnkSub11F_6C
+{
+    char field_0x000[0x158];
+    f32 mField158; // 0x158
+};
+
+struct UnkObj11F
+{
+    int mField00;
+    int mField04;
+    UnkSub11F_08 *mSub08; // 0x08
+    char field_0x0C[0x10];
+    int mField1C;         // 0x1C
+    int mField20;
+    int mField24;
+    f32 mField28;         // 0x28
+    f32 mField2C;         // 0x2C
+    char field_0x30[0x20];
+    UnkSub11F_50 *mSub50; // 0x50
+    char field_0x54[0x18];
+    UnkSub11F_6C *mSub6C; // 0x6C
+    int mField70;         // 0x70
+    int mField74;
+    int mField78;
+    int mField7C;         // 0x7C
+
+    f32 GetSub08Field3C();              // 0x0011F8E8
+    void GetSub50Vec10(Vec3f *out);     // 0x0011F978
+    void SetSub50Vec10(const Vec3f *v); // 0x0011F9A0
+    f32 GetSub6CField158();             // 0x0011F9C8
+    int GetField7C();                   // 0x0011F9D8
+    int GetField70();                   // 0x0011F9E0
+    int GetField1C();                   // 0x0011F9E8
+    f32 GetField28();                   // 0x0011FA28
+    void SetField28(f32 v);             // 0x0011FA30
+    f32 GetField2C();                   // 0x0011FA38
+    void SetField2C(f32 v);             // 0x0011FA40
+};
+
+f32 UnkObj11F::GetSub08Field3C()
+{
+    return mSub08->mField3C;
+}
+
+void UnkObj11F::GetSub50Vec10(Vec3f *out)
+{
+    Vec3f *s = &mSub50->mVec10;
+    out->x = s->x;
+    out->y = s->y;
+    out->z = s->z;
+}
+
+void UnkObj11F::SetSub50Vec10(const Vec3f *v)
+{
+    Vec3f *d = &mSub50->mVec10;
+    d->x = v->x;
+    d->y = v->y;
+    d->z = v->z;
+}
+
+f32 UnkObj11F::GetSub6CField158()
+{
+    return mSub6C->mField158;
+}
+
+int UnkObj11F::GetField7C()
+{
+    return mField7C;
+}
+
+int UnkObj11F::GetField70()
+{
+    return mField70;
+}
+
+int UnkObj11F::GetField1C()
+{
+    return mField1C;
+}
+
+void func_0011F9F0(IVP_Real_Object_Stub *self, IVP_Real_Object_Stub *other, u32, IVP_Event_Collision *)
+{
+    ((UnkObj11F *)other->mActorA8)->mField7C = 1;
+    func_001416A0(self->mActorA8);
+}
+
+void func_0011FA18(IVP_Real_Object_Stub *self, IVP_Real_Object_Stub *other, u32, IVP_Event_Collision *)
+{
+    ((UnkObj11F *)other->mActorA8)->mField7C = 0;
+}
+
+f32 UnkObj11F::GetField28()
+{
+    return mField28;
+}
+
+void UnkObj11F::SetField28(f32 v)
+{
+    mField28 = v;
+}
+
+f32 UnkObj11F::GetField2C()
+{
+    return mField2C;
+}
+
+void UnkObj11F::SetField2C(f32 v)
+{
+    mField2C = v;
 }

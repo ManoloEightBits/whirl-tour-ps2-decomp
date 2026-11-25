@@ -62,6 +62,10 @@ public:
     int IsSlot5AndState3();                            // 0x0016E808
     void SetField3C_1();                               // 0x0016E868
     void AddItem48(int item);                          // 0x0016E890
+    int GetCount44();                                  // 0x0016E9A8
+    void ClearCount44();                               // 0x0016E9B0
+    int GetItem48(int idx);                            // 0x0016E9B8
+    int GetMenuField20();                              // 0x0016E9C8
 
     void *mField00;        // 0x00
     int mField04;          // 0x04

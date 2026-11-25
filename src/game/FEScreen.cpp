@@ -105,3 +105,23 @@ void FEScreen::AddItem48(int item)
         mItems48[mCount44++] = item;
     }
 }
+
+int FEScreen::GetCount44()
+{
+    return mCount44;
+}
+
+void FEScreen::ClearCount44()
+{
+    mCount44 = 0;
+}
+
+int FEScreen::GetItem48(int idx)
+{
+    return mItems48[idx];
+}
+
+int FEScreen::GetMenuField20()
+{
+    return mMenu0C->mField20;
+}

@@ -17,11 +17,12 @@ map of the binary, regenerated with `tools/analysis/coverage.py --map docs/MAP.m
 
 ## Next, in order
 
-1. **Trivial batches with `tools/analysis/gen_accessors.py`.** About 550 leaf getters/setters are left
+1. **Trivial batches with `tools/analysis/gen_accessors.py`.** About 460 leaf getters/setters are left
    (`scan_candidates.py --level 1`). Take one class TU at a time (ranges in `docs/MAP.md`), review the
    draft (names with evidence, field types, the `+0x...` that are pointers), and leave the vtable slots
    for step 2. Done: `AI_Pedestrian`, `AI_Race`, `AI_Vehicle`, `AI_Boss`, `Player`, `Scooter`,
-   `LunAct`/`MarAct`/`UnkBody`, `IP_PosCtrl`/`MotionCtrl`/`IP_RotCtrl`/`IP_AnimCtrl`/`MBCtrl`/`ScootCtrl`.
+   `LunAct`/`MarAct`/`UnkBody`, `IP_PosCtrl`/`MotionCtrl`/`IP_RotCtrl`/`IP_AnimCtrl`/`MBCtrl`/`ScootCtrl`,
+   `FEScreen`, `UnkObj11F`, `UnkActor11A`/`UnkDef11AB`/`UnkClip1B7`/`UnkAnim1B8`.
 2. **AI vtables.** `AI_Race`, `AI_Vehicle`, `AI_Pedestrian` and `AI_Boss` derive from `AI_Agent` (`_vptr`
    at +0x9C). Slots 5, 6 and 7 return the position (matrix row 3, or `AI_Race::mPos128`), row 2 and the
    matrix (`AI_Vehicle` has its own at +0xA0, `AI_Race` uses its Player's); `AI_Boss` slot 8 returns
