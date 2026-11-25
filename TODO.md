@@ -1,5 +1,10 @@
 # TODO
 
+- **Where the remaining bytes are** (`tools/analysis/coverage.py`, see the README note under the subsystem
+  table). The levers, largest first: the IVP source question below (29% of `.text`); the runtime region
+  (13%: libgcc/libc might be built from their GPL/BSD sources with the same compiler, the Sony SDK libraries
+  stay assembly and could leave the denominator); then game code TU by TU in address order, using strings
+  and keyed tables for names (most of it has no vtable).
 - **IVP / Havok reference (undecided).** Many classes are Ipion Virtual Physics (`IVP_*`). Valve may have
   published an IVP source release; not checked. Before using it: find the exact repo and version, read its
   license, and decide whether to only consult it or copy from it. Until then nothing from it is in this repo.

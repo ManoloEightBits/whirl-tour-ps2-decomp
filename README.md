@@ -40,6 +40,19 @@ A hobby reverse-engineering project for the US PS2 release of *Whirl Tour* (`SLU
 | **AI & Boss Attacks** | `AI_Agent`, `AI_Pedestrian`, `AI_Race`, `AI_Vehicle`, `AI_Boss`, `AI_Attack*` | 52 / ~340 | 0 / 73 | `█░░░░░░░░░` **15%** (RTTI `__tf` matched; `AI_Pedestrian`'s 43 accessors `0x001065C8..0x0010679F`) |
 | **Single-inheritance RTTI (`src/rtti/`)** | 77 polymorphic classes | 77 / 77 | — | `██████████` **100%** (probe-generated `__tf*` functions) |
 
+This table only lists the classes work has started on: about 850 of the ~3,700 functions in game code.
+Its bars measure those classes, not the binary. `tools/analysis/coverage.py` shows what is left; on
+2026-11-24 it reported:
+
+| Region | Unmatched | In an RTTI vtable | Where the bytes are |
+| :--- | ---: | ---: | :--- |
+| Game code | 781 KB in 3,336 functions | 36 KB (76 functions) | 70% in functions of 257 B to 4 KB; spread evenly, mostly in code with no RTTI class nearby (`0x0011..0x0018`) |
+| Physics engine (`IVP_*`) | 400 KB in 2,018 functions | 54 KB (315 functions) | 62% in functions of 257 B to 4 KB |
+| Runtime & system libraries | 185 KB in 966 functions | 2 KB | libgcc/libc and Sony SDK libraries; no `.a` archives in the compiler packages |
+
+Functions of 64 B or less are about 1,470 of the game's unmatched functions but only 5.6% of its
+unmatched bytes, so getters and wrappers barely move the total.
+
 ---
 
 ## Technical Findings
