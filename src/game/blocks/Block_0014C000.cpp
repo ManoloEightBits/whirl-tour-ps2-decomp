@@ -198,3 +198,16 @@ void UnkObj14F5D8::Method14F5D8()
         func_001F48A0(mField18);
     }
 }
+
+// Matched from the second m2c sweep (globals, switch tables): strings and float constants are
+// literals, variables are data_<addr> in config/symbols.txt.
+
+int func_0014C900(int *arg0)
+{
+    return *arg0;
+}
+
+int func_0014C910(int *arg0, int *arg1)
+{
+    return *arg1 - *arg0;
+}

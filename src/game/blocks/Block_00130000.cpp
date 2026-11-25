@@ -73,3 +73,20 @@ void UnkObj130AC0::SetField1C(int v)
 {
     mField1C = v;
 }
+
+// Matched from the second m2c sweep (globals, switch tables): strings and float constants are
+// literals, variables are data_<addr> in config/symbols.txt.
+
+extern int data_0025E1A0;
+extern int data_0025E1A4;
+
+void func_00130008()
+{
+    data_0025E1A4 = 0;
+}
+
+void func_00130018()
+{
+    data_0025E1A4 = 0;
+    data_0025E1A0 = 0;
+}

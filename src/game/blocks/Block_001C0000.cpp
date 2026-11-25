@@ -1,4 +1,5 @@
 #include "common/types.h"
+#include "common/libc.h"
 
 // Functions of 0x001C0000..0x001C3FFF whose class and translation unit are not known yet.
 // Names are address based; move each function to its file once its TU is identified.
@@ -221,3 +222,13 @@ int UnkObj1C3BA8::Method1C3BE8()
 {
     return func_001C13A8(mFieldC) + 0x30;
 }
+
+// Matched from the second m2c sweep (globals, switch tables): strings and float constants are
+// literals, variables are data_<addr> in config/symbols.txt.
+
+int func_001C0E78(int *arg0)
+{
+    return *arg0;
+}
+
+

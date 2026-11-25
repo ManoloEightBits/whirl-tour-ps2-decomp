@@ -31,3 +31,23 @@ void func_001033C0(void *arg0)
 {
     MemFree1BD978(arg0);
 }
+
+// Matched from the second m2c sweep (globals, switch tables): strings and float constants are
+// literals, variables are data_<addr> in config/symbols.txt.
+
+void func_00103068(int, int); // 0x00103068
+void func_00103198(int);      // 0x00103198
+extern int data_00259540;
+
+void func_00103040(int arg0)
+{
+    func_00103068(data_00259540, arg0);
+}
+
+void func_00103170()
+{
+    if (data_00259540 != 0)
+    {
+        func_00103198(data_00259540);
+    }
+}

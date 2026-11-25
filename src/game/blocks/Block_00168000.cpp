@@ -61,3 +61,25 @@ void UnkObj168A20::Method168A40()
         glDisable(GL_BLEND);
     }
 }
+
+// Matched from the second m2c sweep (globals, switch tables): strings and float constants are
+// literals, variables are data_<addr> in config/symbols.txt.
+
+int ArrayCreate1BB0E0(int); // 0x001BB0E0
+
+int *func_00168BE0(int *arg0)
+{
+    *arg0 = ArrayCreate1BB0E0(4);
+    return arg0;
+}
+
+void func_001BB250(int, int *); // 0x001BB250
+extern int * data_002624B0;
+
+void func_00168DF0(int arg0)
+{
+    int sp0;
+
+    sp0 = arg0;
+    func_001BB250(*data_002624B0, &sp0);
+}

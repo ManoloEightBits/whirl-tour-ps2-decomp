@@ -210,3 +210,37 @@ void UnkObj1974D8::Method1974D8()
     }
     func_001975D0();
 }
+
+// Matched from the second m2c sweep (globals, switch tables): strings and float constants are
+// literals, variables are data_<addr> in config/symbols.txt.
+
+void func_001959B8(int, f32, f32, f32, f32); // 0x001959B8
+void func_001973A0(int, f32, f32, f32);      // 0x001973A0
+void func_00197468(int, int);                // 0x00197468
+int func_001BD558(int, int);                 // 0x001BD558
+int MemAlloc1BD958(int);                     // 0x001BD958
+
+int func_00195940(f32 fparg0, f32 fparg1, f32 fparg2, f32 fparg3)
+{
+    int temp_v0;
+
+    temp_v0 = MemAlloc1BD958(0x44);
+    if (temp_v0 != 0)
+    {
+        func_001959B8(temp_v0, fparg0, fparg1, fparg2, fparg3);
+    }
+    return temp_v0;
+}
+
+int func_00197318(int arg0, f32 fparg0, f32 fparg1, f32 fparg2)
+{
+    int temp_v0;
+
+    temp_v0 = func_001BD558(0xA0, 4);
+    if (temp_v0 != 0)
+    {
+        func_001973A0(temp_v0, fparg0, fparg1, fparg2);
+        func_00197468(temp_v0, arg0);
+    }
+    return temp_v0;
+}

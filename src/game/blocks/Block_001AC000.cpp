@@ -65,3 +65,11 @@ void UnkObj1AD5F8::Method1AD5F8()
     }
     MemFree1BD978(this);
 }
+
+// Matched from the second m2c sweep (globals, switch tables): strings and float constants are
+// literals, variables are data_<addr> in config/symbols.txt.
+
+int func_001AF590(f32 *arg0, f32 *arg1)
+{
+    return (int) (*arg0 - *arg1);
+}

@@ -176,3 +176,16 @@ int UnkObj183480::GetField8()
 {
     return mField8;
 }
+
+// Matched from the second m2c sweep (globals, switch tables): strings and float constants are
+// literals, variables are data_<addr> in config/symbols.txt.
+
+void func_001821A0(int *arg0, int arg1)
+{
+    *arg0 = arg1;
+}
+
+int func_001835D0(int *arg0)
+{
+    return *arg0;
+}

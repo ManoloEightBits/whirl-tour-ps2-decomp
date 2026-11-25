@@ -173,3 +173,43 @@ void UnkObj143870::Method143870()
     mField0 = 0.5f;
     mField4 = 0.01f;
 }
+
+// Matched from the second m2c sweep (globals, switch tables): strings and float constants are
+// literals, variables are data_<addr> in config/symbols.txt.
+
+struct EnvObj;
+void func_001424C8(int);      // 0x001424C8
+void func_00142568(int);      // 0x00142568
+void func_00142660(int, int); // 0x00142660
+extern int data_0025E5DC;
+
+int func_00141738(int **arg0)
+{
+    return (u32) (**arg0 - 2) < 3U;
+}
+
+void func_00142368()
+{
+    if (data_0025E5DC != 0)
+    {
+        func_00142660(data_0025E5DC, 3);
+        data_0025E5DC = 0;
+    }
+}
+
+void func_001424A0()
+{
+    func_001424C8(data_0025E5DC);
+}
+
+void func_00142540()
+{
+    func_00142568(data_0025E5DC);
+}
+
+void func_00143778(s8 *arg0)
+{
+    *arg0 = 0;
+}
+
+

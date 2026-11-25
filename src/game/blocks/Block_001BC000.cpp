@@ -365,3 +365,64 @@ void UnkObj1BFAF0::Method1BFB60(int arg1)
         mField0 = 3;
     }
 }
+
+// Matched from the second m2c sweep (globals, switch tables): strings and float constants are
+// literals, variables are data_<addr> in config/symbols.txt.
+
+s8 *MemAlloc1BD958(int);  // 0x001BD958
+extern int data_0027B6BC;
+extern int data_0027B6C4;
+
+s8 *func_001BC448()
+{
+    s8 *temp_v0;
+
+    temp_v0 = MemAlloc1BD958(0x101);
+    if (temp_v0 != NULL)
+    {
+        *temp_v0 = 0;
+        memset(temp_v0 + 1, 0, 0x100);
+    }
+    return temp_v0;
+}
+
+void func_001BC9A8()
+{
+    func_001BCEF8(data_0027B6BC);
+}
+
+void func_001BCF08(int *arg0, int arg1)
+{
+    *arg0 = arg1;
+}
+
+void func_001BD998(int arg0)
+{
+    data_0027B6C4 = arg0;
+}
+
+void func_001BDA08(int *arg0)
+{
+    int temp_v0;
+
+    temp_v0 = data_0027B6C4 + 0x24;
+    *arg0 = temp_v0;
+    malloc(temp_v0);
+}
+
+int func_001BFAA8(int *arg0)
+{
+    return *arg0;
+}
+
+int func_001BFAB0(int *arg0)
+{
+    return *arg0 == 2;
+}
+
+
+int func_001BCF00(int *arg0)
+{
+    return *arg0;
+}
+

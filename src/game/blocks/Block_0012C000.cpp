@@ -113,3 +113,22 @@ void UnkObj12F188::Method12F1A0(int arg1)
 {
     mField94 &= ~arg1;
 }
+
+// Matched from the second m2c sweep (globals, switch tables): strings and float constants are
+// literals, variables are data_<addr> in config/symbols.txt.
+
+void func_001BB250(int, int *); // 0x001BB250
+extern int data_0025E19C;
+
+int func_0012ECC0()
+{
+    return data_0025E19C + 0x10;
+}
+
+void func_0012EEB8(int *arg0, int arg1)
+{
+    int sp0;
+
+    sp0 = arg1;
+    func_001BB250(*arg0, &sp0);
+}

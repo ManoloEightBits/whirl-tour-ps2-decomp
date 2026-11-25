@@ -23,6 +23,20 @@ map of the binary, regenerated with `tools/analysis/coverage.py --map docs/MAP.m
    428 more score >= 0.9; 126 still do not compile and 8 fail in m2c (was 193 / 178 / 219 / 649 / 175).
    Most of the new matches use globals (data variables, strings, float constants): write strings and floats
    as literals (`rebuild.py` checks them against the game's bytes) and declare variables as typed symbols.
+   - **Phase 3 done:** 87 of those drafts that touch no struct fields are C++ at the end of their block file
+     (section "Matched from the second m2c sweep"): strings and floats as literals, variables as
+     `data_<addr>` in `config/symbols.txt`, callees declared with the signature of their symbol. Left out:
+     16 more at addresses 4 mod 8 (see Phase 1), 34 that do not compile as C++ as drafted (mostly an `int` parameter used as a pointer, or a string
+     passed to a callee whose symbol says `int`: fix the callee's signature first), 9 `__tf` copies
+     (`__rtti_user`), the `operator new`/`delete` helpers and their 2 callers, `glMatrixMode`
+     (`0x001A3638`, would go in a GL file) and its caller `0x00181800`, `0x0018D270`
+     (`AI_AttackQuake` slot 7), and 6 functions of the sound library (below). About 240 more drafts that
+     match read fields through pointers and need struct types.
+   - **Sound library, not game code:** `0x001A5998..~0x001AC000` is a sound library linked into the game
+     region (`SOUND_StartCommand`, "Set SOUND_DTS_ENABLE to 1 (in Sound.C)", DTS licensing messages; the IOP
+     modules `sdrdrv`/`libsd` are loaded at `0x001AD650`). Like the runtime, decide whether it belongs in
+     `src/` (see Open decisions). Earlier phases already put 5 small functions of it in
+     `Block_001A8000.cpp` (`0x001A9370`, `UnkObj1A9768`, `0x001AB370`, `0x001ABD60`, `0x001ABE88`).
    The first sweep (2026-11-25, 185 s) found 1119
    unmatched functions whose raw m2c draft already compiles to the game's bytes (618 game, 466 physics, 35
    runtime; 549 are <= 16 B) and 263 more that differ only in registers or immediates. Game code only for now.

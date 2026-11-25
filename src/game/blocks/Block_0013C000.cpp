@@ -1,4 +1,5 @@
 #include "common/types.h"
+#include "common/libc.h"
 #include "game/GL.h"
 
 // Functions of 0x0013C000..0x0013FFFF whose class and translation unit are not known yet.
@@ -55,3 +56,12 @@ void UnkObj13F690::Method13F6D8()
     glBindTexture(GL_TEXTURE_2D, mField1CC);
     func_001A3188(0xDE1, 0, 0, 0, 0, 0, 0x100, 0x100);
 }
+
+// Matched from the second m2c sweep (globals, switch tables): strings and float constants are
+// literals, variables are data_<addr> in config/symbols.txt.
+
+int func_0013F6C0(int *arg0)
+{
+    return *arg0 == 0;
+}
+

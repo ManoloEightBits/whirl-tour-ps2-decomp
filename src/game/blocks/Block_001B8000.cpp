@@ -131,3 +131,23 @@ void UnkObj1BB3E0::Method1BB3E0(int arg1)
         func_0022FCC8(mFieldC, tmp, mField0, arg1);
     }
 }
+
+// Matched from the second m2c sweep (globals, switch tables): strings and float constants are
+// literals, variables are data_<addr> in config/symbols.txt.
+
+int func_001B8E40(int *arg0)
+{
+    return *arg0 & 2;
+}
+
+int func_001B91E0(u16 *arg0)
+{
+    return ((*arg0 - 1) * 0x50) + 0x60;
+}
+
+int func_001BB0D8(int *arg0)
+{
+    return *arg0;
+}
+
+

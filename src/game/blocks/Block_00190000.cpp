@@ -1,4 +1,5 @@
 #include "common/types.h"
+#include "common/libc.h"
 
 // Functions of 0x00190000..0x00193FFF whose class and translation unit are not known yet.
 // Names are address based; move each function to its file once its TU is identified.
@@ -176,3 +177,33 @@ int UnkObj192470::GetField20()
 {
     return mField20;
 }
+
+// Matched from the second m2c sweep (globals, switch tables): strings and float constants are
+// literals, variables are data_<addr> in config/symbols.txt.
+
+void func_00191E60(int, f32, f32, f32); // 0x00191E60
+int MemAlloc1BD958(int);                // 0x001BD958
+
+int func_00190B80(int *arg0)
+{
+    return *arg0;
+}
+
+int func_00191560(int *arg0)
+{
+    return *arg0;
+}
+
+int func_00191DD8(f32 fparg0, f32 fparg1, f32 fparg2)
+{
+    int temp_v0;
+
+    temp_v0 = MemAlloc1BD958(0x3C);
+    if (temp_v0 != 0)
+    {
+        func_00191E60(temp_v0, fparg0, fparg1, fparg2);
+    }
+    return temp_v0;
+}
+
+

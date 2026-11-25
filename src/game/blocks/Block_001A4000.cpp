@@ -14,3 +14,25 @@ void func_001A4E98()
 void func_001A4EA0()
 {
 }
+
+// Matched from the second m2c sweep (globals, switch tables): strings and float constants are
+// literals, variables are data_<addr> in config/symbols.txt.
+
+void func_0019C2E8();     // 0x0019C2E8
+void func_001A1070();     // 0x001A1070
+extern int data_00265D3C;
+extern int data_0026770C;
+
+void func_001A4DA8()
+{
+    if (data_0026770C != 0)
+    {
+        func_0019C2E8();
+        func_001A1070();
+    }
+}
+
+void func_001A4E78(int arg0)
+{
+    data_00265D3C = (arg0 == 0) ? 0 : 3;
+}

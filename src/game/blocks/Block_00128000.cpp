@@ -96,3 +96,15 @@ void UnkObj129CD8::Method129CD8()
 {
     func_001BCAC0(mField18);
 }
+
+// Matched from the second m2c sweep (globals, switch tables): strings and float constants are
+// literals, variables are data_<addr> in config/symbols.txt.
+
+void func_00198210(int);  // 0x00198210
+extern int data_0025DE20;
+
+void func_00129D40()
+{
+    func_00198210(data_0025DE20);
+    data_0025DE20 = 0;
+}

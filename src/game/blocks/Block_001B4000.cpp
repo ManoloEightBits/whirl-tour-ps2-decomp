@@ -121,3 +121,36 @@ void UnkObj1B7010::Method1B7010()
     }
     MemFree1BD978(this);
 }
+
+// Matched from the second m2c sweep (globals, switch tables): strings and float constants are
+// literals, variables are data_<addr> in config/symbols.txt.
+
+int func_001B6410(int *arg0)
+{
+    return *arg0 & 0x80000000;
+}
+
+void func_001B6420(int *arg0)
+{
+    *arg0 |= 0x80000000;
+}
+
+void func_001B6438(int *arg0)
+{
+    *arg0 &= 0x7FFFFFFF;
+}
+
+int func_001B66F8(int *arg0)
+{
+    return *arg0;
+}
+
+void func_001B6700(int *arg0, int arg1)
+{
+    *arg0 |= arg1;
+}
+
+void func_001B6710(int *arg0, int arg1)
+{
+    *arg0 &= ~arg1;
+}

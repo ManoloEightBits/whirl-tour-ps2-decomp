@@ -212,3 +212,61 @@ void UnkObj199C88::Method199D60()
     }
     mField8 = (u32) mField0;
 }
+
+// Matched from the second m2c sweep (globals, switch tables): strings and float constants are
+// literals, variables are data_<addr> in config/symbols.txt.
+
+void func_001A24D0(int, int *); // 0x001A24D0
+extern f32 data_002659E0;
+extern f32 data_002659E4;
+extern int data_002659D0;
+extern int data_002B2528;
+
+int func_00198D28()
+{
+    return data_002659D0;
+}
+
+void func_00199458(f32 fparg0, f32 fparg1)
+{
+    data_002659E0 = fparg0;
+    data_002659E4 = fparg1;
+}
+
+void func_00199490(f32 fparg0)
+{
+    data_002659E0 = fparg0;
+}
+
+void func_001994A0(f32 fparg0)
+{
+    data_002659E4 = fparg0;
+}
+
+f32 func_001994B0()
+{
+    return data_002659E0;
+}
+
+f32 func_001994C0()
+{
+    return data_002659E4;
+}
+
+void func_001994D0(f32 fparg0, f32 fparg1, f32 fparg2, f32 fparg3)
+{
+    u32 temp_v0;
+
+    temp_v0 = ((int) (fparg3 * 128.0f) << 0x18) | ((int) (fparg2 * 128.0f) << 0x10) | ((int) (fparg1 * 128.0f) << 8) | (int) (fparg0 * 128.0f);
+    data_002B2528 = (((temp_v0 >> 0x18) - 1) << 0x19) | (((((temp_v0 >> 0x10) - 1) * 2) & 0xFF) << 0x10) | ((((temp_v0 >> 8) - 1) << 9) & 0xFE00) | (((temp_v0 - 1) * 2) & 0xFF);
+}
+
+void func_0019A618(int arg0)
+{
+    int sp0;
+
+    sp0 = arg0;
+    func_001A24D0(1, &sp0);
+}
+
+
