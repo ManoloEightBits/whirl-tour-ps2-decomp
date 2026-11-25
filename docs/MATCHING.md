@@ -104,6 +104,11 @@ file with `diff_func.py <file.cpp> <symbol> --variants <json>`. That command onl
   `Vec3f` field by field interleaves loads and stores, and moves the call's `$a0` setup out of the
   `bc1f` delay slot. Wrapped in `do { } while (0)` (as in `AI_PedestrianCL`), the three loads come before
   the three stores, as in the game. `diff_func.py --variants` found it among four candidates.
+- **And around two stores before a call.** In `Scooter::TakeDamage`, wrapping the two stores through
+  `mState208` keeps the float argument in `$f12` until the call (copied to `$f13` there) and `this` in
+  `$a1`; without it GCC moves the argument to `$f13` at entry and hoists the constants, 27 of 42
+  instructions off. `asm("");` barriers got to 3 but kept a store out of the `jal` delay slot, so
+  try `do { } while (0)` before reaching for a barrier.
 - **Locals get stack slots in declaration order, from `$sp` upwards.** In `func_00116B00`, the game passes
   `sp+0x10` and `sp+0x00` to `func_001F3F30(obj, &rot, &pos)`. Declaring `pos` before `rot` gives that.
 - **Static helpers with an out-of-line copy that nothing in the TU calls are inline members.**

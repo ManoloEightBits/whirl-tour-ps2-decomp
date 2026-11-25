@@ -51,6 +51,25 @@ void Scooter::SetBoostField630(f32 val)
     mField630 = val;
 }
 
+void Scooter::TakeDamage(f32 amount)
+{
+    UnkScooterState *state = mState208;
+    if (!(state->mFlags04 & 0x02400000) && state->mState00 != 6 && state->mState00 != 4)
+    {
+        if (!(mFlags18 & 8))
+            mHealth -= amount * 100.0f;
+        // The do { } while (0) (probably a macro) is required: without it GCC keeps amount in
+        // $f13 from the start and `this` in $a2, and schedules the argument setup differently.
+        do
+        {
+            mState208->mFlags04 |= 0x02000000;
+            mState208->mField24 = 0;
+        } while (0);
+        mField36C = 1;
+        func_001BC438(mField1A8, 0.1f, amount);
+    }
+}
+
 void Scooter::func_0017EB48()
 {
     func_0017ED58(0x11093);

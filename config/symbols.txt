@@ -377,7 +377,7 @@
 0x0017EA28 SetBoostField62C__7Scooterf
 0x0017EA30 SetBoostField630__7Scooterf
 0x0017EA38 ApplySpecialAction__7Scooteri
-0x0017EAA0 func_0017EAA0__7Scooterf
+0x0017EAA0 TakeDamage__7Scooterf
 0x0017EB48 func_0017EB48__7Scooter
 0x0017EB90 AddHealth__7Scooterf
 0x0017EBC0 AddSpeedBoost__7Scooterff

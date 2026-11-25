@@ -193,14 +193,14 @@ void func_001238C0(IVP_Real_Object_Stub *self, IVP_Real_Object_Stub *other, u32,
 {
     UnkAttackActor *attack = (UnkAttackActor *)self->mActorA8;
     Player *player = (Player *)other->mActorA8;
-    player->mScooter->func_0017EAA0(attack->mField10);
+    player->mScooter->TakeDamage(attack->mField10);
 }
 
 void func_001238E8(IVP_Real_Object_Stub *self, IVP_Real_Object_Stub *other, u32, IVP_Event_Collision *)
 {
     Player *player = (Player *)self->mActorA8;
     UnkAttackActor *attack = (UnkAttackActor *)other->mActorA8;
-    player->mScooter->func_0017EAA0(attack->mField10);
+    player->mScooter->TakeDamage(attack->mField10);
 }
 
 // "player_enter_vehicle"

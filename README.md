@@ -11,12 +11,12 @@ A hobby reverse-engineering project for the US PS2 release of *Whirl Tour* (`SLU
 <!-- progress:begin -->
 | Metric | Matched / Confirmed | Total in `.text` | Share | Progress |
 | :--- | ---: | ---: | ---: | :--- |
-| **Total `.text` bytes** | **32,860 B** | 1,401,448 B | **2.345%** | `█░░░░░░░░░░░░░░░░░░░` |
-| **Game logic bytes** (`0x100000..0x1C62CF`) | **28,456 B** | 811,728 B | **3.506%** | `█░░░░░░░░░░░░░░░░░░░` |
-| **Matched functions (`verify.py`)** | **383** | ~7,125 | **5.375%** | `██░░░░░░░░░░░░░░░░░░` |
+| **Total `.text` bytes** | **33,028 B** | 1,401,448 B | **2.357%** | `█░░░░░░░░░░░░░░░░░░░` |
+| **Game logic bytes** (`0x100000..0x1C62CF`) | **28,624 B** | 811,728 B | **3.526%** | `█░░░░░░░░░░░░░░░░░░░` |
+| **Matched functions (`verify.py`)** | **384** | ~7,125 | **5.389%** | `██░░░░░░░░░░░░░░░░░░` |
 | **Confirmed vtable slots (`verify_vtables.py`)** | **207** | ~889 | **23.285%** | `█████░░░░░░░░░░░░░░░` |
 | **Confirmed RTTI classes (`vtables.txt`)** | **46** | 193 | **23.834%** | `█████░░░░░░░░░░░░░░░` |
-| **Full binary relink (`rebuild.py`)** | **383 linked** | `02f39f20...0744` | **SHA-1 MATCH** | `████████████████████` |
+| **Full binary relink (`rebuild.py`)** | **384 linked** | `02f39f20...0744` | **SHA-1 MATCH** | `████████████████████` |
 <!-- progress:end -->
 
 ### Binary `.text` Map (`0x00100000..0x00256268`)
@@ -34,7 +34,7 @@ A hobby reverse-engineering project for the US PS2 release of *Whirl Tour* (`SLU
 | **Collision Filter (`CollFilt`)** | `CollFilt`, `IVP_Collision_Filter` | 7 / 7 | 2 / 2 | `██████████` **100%** |
 | **Pickups (`Pickup`, `KeyPickup`, +9)** | `EnvObj`, `Pickup`, `PickupDef` + 10 subclasses | 58 / 59 | 22 / 22 | `█████████░` **98%** (`KeyPickup` and 9 subclasses 100%, all vtables confirmed, `Pickup::Update` and the `PickupDef` parser matched; only `Pickup::Pickup` left, in `NON_MATCHING`) |
 | **Front-End UI (`FEScreen` hierarchy)** | `FEScreen` + all 14 `FE*Screen` subclasses | 79 / ~160 | 105 / 112 | `███████░░░` **65%** (`FEMcScreen`, `FEQuitScreen` & `FETrickScreen` 100%; all 15 vtables confirmed) |
-| **Player & Scooter (`Player`, `Scooter`)** | `Player`, `Scooter` (no RTTI; name is ours) | 78 / ~83 | — | `█████████░` **94%** (stat/boost/adrenaline/health methods, `IsGrounded`, the wrappers around `Scooter+0x1A0`, `Player::func_001237E8` and 12 of the 13 `player_*` collision callbacks matched; `player_hit_boss` in `NON_MATCHING`) |
+| **Player & Scooter (`Player`, `Scooter`)** | `Player`, `Scooter` (no RTTI; name is ours) | 79 / ~83 | — | `█████████░` **95%** (stat/boost/adrenaline/health methods, `IsGrounded`, the wrappers around `Scooter+0x1A0`, `Player::func_001237E8` and 12 of the 13 `player_*` collision callbacks matched; `player_hit_boss` in `NON_MATCHING`) |
 | **Motion & Interpolation Controllers** | `MotionCtrl`, `IP_PosCtrl`, `IP_RotCtrl`, `IP_AnimCtrl`, `MBCtrl`, `ScootCtrl` (+ IVP bases `IVP_Controller`, `IVP_Controller_Independent`) | 27 / ~52 | 36 / 42 | `█████░░░░░` **52%** (all vtables confirmed; `IP_PosCtrl`, `MBCtrl` and `ScootCtrl` complete; the simulation step of `MotionCtrl`, `IP_RotCtrl` and `IP_AnimCtrl` left) |
 | **Collision & Event Listeners** | `DD_Event_Listener`, `DD_Collision_Listener`, `Global_Phantom_Listener`, `ScootCL`, `MBCL`, `LunActCL`, `MarActCL`, `AI_PedestrianCL` | 39 / ~67 | 31 / 40 | `█████░░░░░` **58%** (all 8 listeners 100%, and the whole `DD_Event_Listener` TU `0x00116B00..0x00117727`; IVP base classes `IVP_Listener_Object`, `IVP_Listener_Collision` & `IVP_Listener_Phantom` also 100%) |
 | **AI & Boss Attacks** | `AI_Agent`, `AI_Pedestrian`, `AI_Race`, `AI_Vehicle`, `AI_Boss`, `AI_Attack*` | 9 / ~340 | 0 / 73 | `░░░░░░░░░░` **3%** (RTTI `__tf` matched) |

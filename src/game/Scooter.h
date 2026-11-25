@@ -8,6 +8,15 @@
 // small class (the scooter's IVP controller, see Controllers.h).
 // Method and field names are ours (hypotheses from usage in Player and Pickup subclasses);
 // offsets and instruction shapes are proven by the binary.
+// Pointed to by Scooter+0x208.
+struct UnkScooterState
+{
+    int mState00;  // 0x00: TakeDamage does nothing in states 4 and 6
+    u32 mFlags04;  // 0x04: TakeDamage does nothing with 0x02400000 set, and sets 0x02000000
+    char field_0x08[0x1C];
+    int mField24;  // 0x24: cleared by TakeDamage
+};
+
 class Scooter
 {
 public:
@@ -21,7 +30,7 @@ public:
     void SetBoostField62C(f32 val);          // 0x0017EA28
     void SetBoostField630(f32 val);          // 0x0017EA30
     void ApplySpecialAction(int mode);       // 0x0017EA38
-    void func_0017EAA0(f32 amount);          // 0x0017EAA0 (boss attacks pass the attack's +0x10)
+    void TakeDamage(f32 amount);             // 0x0017EAA0: mHealth -= amount * 100 (boss attacks pass the attack's +0x10)
     void func_0017EB48();                    // 0x0017EB48
     void AddHealth(f32 percent);             // 0x0017EB90
     void AddSpeedBoost(f32 amount, f32 dur); // 0x0017EBC0
@@ -81,7 +90,11 @@ public:
     int mField1D0;             // 0x1D0
     int mField1D4;             // 0x1D4
     struct IVP_Real_Object_Stub *mPhysObj1D8; // 0x1D8
-    char field_0x1DC[0x324];
+    char field_0x1DC[0x2C];
+    UnkScooterState *mState208; // 0x208
+    char field_0x20C[0x160];
+    int mField36C;             // 0x36C: set to 1 by TakeDamage
+    char field_0x370[0x190];
     int mField500;             // 0x500
     char field_0x504[0x124];
     int mBoostState;           // 0x628
