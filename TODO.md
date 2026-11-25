@@ -103,7 +103,8 @@ map of the binary, regenerated with `tools/analysis/coverage.py --map docs/MAP.m
 5. **Front end:** left: the `VirtSlot2` updates, the constructors of `FEChooseScreen`,
    `FECharacterScreen`, `FENameSelectScreen` and `FEScooterScreen`, and the draw functions of
    `FENameSelectScreen` (`0x0016C0D8`) and `FEPlaylistScreen` (`0x00112578`). Done: `FEMenu` (14 of 15),
-   `FEScreen::VirtSlot3`/`AddOwnerRecords`, and the draw functions (`VirtSlot3`) of `FELevelScreen`,
+   `FEScreen::VirtSlot3`/`AddOwnerRecords`, `FEOptionsScreen::InitMenu16C6D8` (the three option menus,
+   with `FESlider` for the volume bars), and the draw functions (`VirtSlot3`) of `FELevelScreen`,
    `FEChooseScreen`, `FECharacterScreen`, `FEMovScreen`, `FEStartScreen` and `FEScooterScreen`. The key
    to the draw functions is the `TEXT_SET_*` macros (docs/MATCHING.md): run each text statement plain and
    wrapped through `diff_func.py --bodies`. Typed on the way: `FEOwner` (model ids, text scale and

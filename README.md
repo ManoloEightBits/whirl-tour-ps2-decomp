@@ -11,12 +11,12 @@ A hobby reverse-engineering project for the US PS2 release of *Whirl Tour* (`SLU
 <!-- progress:begin -->
 | Metric | Matched / Confirmed | Total in `.text` | Share | Progress |
 | :--- | ---: | ---: | ---: | :--- |
-| **Total `.text` bytes** | **66,992 B** | 1,401,448 B | **4.780%** | `█░░░░░░░░░░░░░░░░░░░` |
-| **Game logic bytes** (`0x100000..0x1C62CF`) | **62,588 B** | 811,728 B | **7.710%** | `██░░░░░░░░░░░░░░░░░░` |
-| **Matched functions (`verify.py`)** | **1416** | ~7,125 | **19.874%** | `████░░░░░░░░░░░░░░░░` |
+| **Total `.text` bytes** | **67,544 B** | 1,401,448 B | **4.820%** | `█░░░░░░░░░░░░░░░░░░░` |
+| **Game logic bytes** (`0x100000..0x1C62CF`) | **63,140 B** | 811,728 B | **7.778%** | `██░░░░░░░░░░░░░░░░░░` |
+| **Matched functions (`verify.py`)** | **1417** | ~7,125 | **19.888%** | `████░░░░░░░░░░░░░░░░` |
 | **Confirmed vtable slots (`verify_vtables.py`)** | **246** | ~889 | **27.672%** | `██████░░░░░░░░░░░░░░` |
 | **Confirmed RTTI classes (`vtables.txt`)** | **51** | 193 | **26.425%** | `██████░░░░░░░░░░░░░░` |
-| **Full binary relink (`rebuild.py`)** | **1416 linked** | `02f39f20...0744` | **SHA-1 MATCH** | `████████████████████` |
+| **Full binary relink (`rebuild.py`)** | **1417 linked** | `02f39f20...0744` | **SHA-1 MATCH** | `████████████████████` |
 <!-- progress:end -->
 
 ### Binary `.text` Map (`0x00100000..0x00256268`)
@@ -33,7 +33,7 @@ A hobby reverse-engineering project for the US PS2 release of *Whirl Tour* (`SLU
 | :--- | :--- | ---: | ---: | :--- |
 | **Collision Filter (`CollFilt`)** | `CollFilt`, `IVP_Collision_Filter` | 7 / 7 | 2 / 2 | `██████████` **100%** |
 | **Pickups (`Pickup`, `KeyPickup`, +9)** | `EnvObj`, `Pickup`, `PickupDef` + 10 subclasses | 58 / 59 | 22 / 22 | `█████████░` **98%** (`KeyPickup` and 9 subclasses 100%, all vtables confirmed, `Pickup::Update` and the `PickupDef` parser matched; only `Pickup::Pickup` left, in `NON_MATCHING`) |
-| **Front-End UI (`FEScreen` hierarchy)** | `FEScreen` + all 14 `FE*Screen` subclasses, `FEMenu` | 105 / ~160 | 105 / 112 | `███████░░░` **66%** (`FEMcScreen`, `FEQuitScreen` & `FETrickScreen` 100%, `FEMenu` 14 of 15; all 15 vtables confirmed) |
+| **Front-End UI (`FEScreen` hierarchy)** | `FEScreen` + all 14 `FE*Screen` subclasses, `FEMenu` | 106 / ~160 | 105 / 112 | `███████░░░` **66%** (`FEMcScreen`, `FEQuitScreen` & `FETrickScreen` 100%, `FEMenu` 14 of 15; all 15 vtables confirmed) |
 | **Player & Scooter (`Player`, `Scooter`)** | `Player`, `Scooter`, `UnkObj11F` (no RTTI; names are ours) | 183 / 184 | — | `█████████░` **99%** (Player `0x00122D08..0x00123CCF`, 94 functions including 49 wrappers/getters and the 13 `player_*` collision callbacks, `UnkObj11F` `0x0011F8E8..0x0011FA40`, 13 functions, and Scooter `0x0017E0E0..0x0017F8E8`, 74 functions; only `Scooter::ConsumeAdrenaline` is left, in `NON_MATCHING`) |
 | **Animated Model & Clip Helpers (`AnimModel`)** | `UnkActor11A`, `UnkTable11A8`, `UnkDef11AB`, `UnkSkel1B6`, `UnkKey1B76`, `UnkModel1B7`, `UnkClip1B7`, `UnkAnim1B8`, `UnkScene1B9`, `UnkTex1BA` (no RTTI) | 142 / ~165 | — | `████████░░` **85%** (`0x0011A198..0x0011AC98`, `0x001B6950..0x001BAA90`) |
 | **Tricks System (`Tricks`)** | `UnkTrickScores`, `UnkTrickDef`, `UnkTrickSeq`, `UnkTrickState`, `UnkObj125F` (no RTTI) | 35 / 59 | — | `██████░░░░` **59%** (`0x001255C8..0x00125F70`: score table getters, trick lookup by name, 12 trick definition getters, sequence & state accessors; `tricklist` parser in `NON_MATCHING`) |

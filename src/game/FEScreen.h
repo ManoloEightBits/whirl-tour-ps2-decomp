@@ -510,6 +510,18 @@ public:
     int mField39C;      // 0x39C
 };
 
+// A bar of the options menus (0x18 bytes): Music volume, Fx volume. Its value (0..1) is at +0x10.
+struct FESlider
+{
+    char field_0x00[0x10];
+    f32 mValue10;          // 0x10
+    char field_0x14[0x4];
+
+    FESlider(f32, f32 w, f32 h, f32, f32, f32, f32, f32, f32, void *); // 0x00187D30
+    ~FESlider();                                                // 0x00187DD0
+    void Draw187AB8(f32 x, f32 y);                              // 0x00187AB8
+};
+
 class FEOptionsScreen : public FEScreen
 {
 public:
@@ -522,15 +534,16 @@ public:
 
     void InitMenu16C6D8(int mode);                // 0x0016C6D8
 
-    int mField164;       // 0x164
-    TextObj *mText168;   // 0x168
-    int mCount16C;       // 0x16C
-    int mArr170[20];     // 0x170..0x1BF
-    int mArr1C0[20];     // 0x1C0..0x20F
-    void *mArr210[20];   // 0x210..0x25F
-    int mField260;       // 0x260
-    int mField264;       // 0x264
-    int mField268;       // 0x268
+    int mMode164;              // 0x164: 0 options, 1 audio options, 2 2 player options
+    TextObj *mText168;         // 0x168
+    int mCount16C;             // 0x16C: items in the menu
+    int mKinds170[20];         // 0x170..0x1BF: 1 on/off, 2 bar, 3 time, 4 fixed string
+    int mValues1C0[20];        // 0x1C0..0x20F
+    FESlider *mSliders210[20]; // 0x210..0x25F: the bars (kind 2)
+    int mField260;             // 0x260
+    int mField264;             // 0x264
+    int mField268;             // 0x268
+    f32 mFxVolume26C;          // 0x26C: Fx volume when the audio menu opened
 };
 
 class FEScooterScreen : public FEScreen

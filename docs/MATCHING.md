@@ -123,6 +123,14 @@ file with `diff_func.py <file.cpp> <symbol> --variants <json>`. That command onl
   which ones a function uses differs: `FEScreen::VirtSlot3` needs POS, SCALE and COLOR,
   `FELevelScreen::VirtSlot3` RGBA and STRING with plain `Set` calls. Search the combinations with
   `diff_func.py --bodies` (each statement plain or wrapped).
+- **`case 0:` next to `default:` changes a small switch's comparisons.** With cases 1 and 2 and a
+  `default`, GCC tests `== 1` then `== 2`; the game's `FEOptionsScreen::InitMenu16C6D8` tests `== 1`,
+  `< 2`, `== 2`, which is what `case 0: default:` gives (a tree over 0..2). Look for it when a switch's
+  dispatch has a `slti` between the equality tests.
+- **Integer arguments after float ones still go in `$a1..`.** The EE ABI fills integer and float argument
+  registers separately, so a call whose `$a1` is set last (often in the delay slot), after all the float
+  registers, may have the integer as its last parameter: `FESlider(f32 x9, void *)` gets the game's
+  order, `FESlider(void *, f32 x9)` sets `$a1` first.
 - **Locals get stack slots in declaration order, from `$sp` upwards.** In `func_00116B00`, the game passes
   `sp+0x10` and `sp+0x00` to `func_001F3F30(obj, &rot, &pos)`. Declaring `pos` before `rot` gives that.
 - **Static helpers with an out-of-line copy that nothing in the TU calls are inline members.**

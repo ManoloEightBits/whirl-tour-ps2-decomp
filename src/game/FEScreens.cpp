@@ -48,6 +48,12 @@ struct GameCtxFE
     }
 };
 extern GameCtxFE *gGameCtx262250;
+extern const int gOptionsMenuIds2627A8[];
+extern const int gOptionsMenuKinds2627C8[];
+extern const int gAudioMenuIds2627E8[];
+extern const int gAudioMenuKinds262800[];
+extern const int gTwoPlayerMenuIds262818[];
+extern const int gTwoPlayerMenuKinds262828[];
 
 extern const int gMonsterMenuIds259F10[];
 extern int gMovCreditData282F68[];
@@ -93,7 +99,6 @@ const int *func_00155F30();
 int func_00155FC8(int);
 const int *func_001561C8();
 f32 GetVersusTime154EA8(int index);
-void func_00187AB8(void *control, f32 x, f32 y);
 void func_00196E38(void *movie);
 void func_00192350(void *credits);
 f32 Sin1B1910(f32 x);
@@ -108,7 +113,6 @@ int func_00155310(int level);
 int func_00156118(int level);
 void func_00158140(void *, void *, int, int, f32, f32);
 void func_00156200();
-void func_00187DD0(void *, int);
 void func_00155F40(int, int, int);
 void func_00141950(void *, int);
 void func_00155ED0(int, int, int);
@@ -1021,7 +1025,7 @@ int FENameSelectScreen::VirtSlot8()
 // 166 of 186 instructions differ: the game's frame has 0x100 bytes of locals (as here) but one more
 // saved register ($fp), so its register allocation differs throughout; the text macros did not help.
 // Draws each option's value right of its menu item: on/off (strings 0x27/0x28), a time as m:ss, a
-// fixed string, or the option's own control (func_00187AB8).
+// fixed string, or the option's bar (FESlider).
 void FEOptionsScreen::VirtSlot3()
 {
     char value[0x100];
@@ -1040,16 +1044,16 @@ void FEOptionsScreen::VirtSlot3()
         else
             mText168->SetColor(mOwner00->mColourF0.x, mOwner00->mColourF0.y, mOwner00->mColourF0.z);
         mText168->mPos04.Set(mMenu0C->GetItemTextWidth(i) + 0.1f, 0.0f, 0.0f);
-        switch (mArr170[i])
+        switch (mKinds170[i])
         {
         case 1:
-            sprintf(value, "%s", func_00151D40(mArr1C0[i] == 0 ? 0x28 : 0x27));
+            sprintf(value, "%s", func_00151D40(mValues1C0[i] == 0 ? 0x28 : 0x27));
             mText168->mString30 = value;
             DrawText19B758(mText168);
             break;
         case 3:
         {
-            int t = (int)GetVersusTime154EA8(mArr1C0[i]);
+            int t = (int)GetVersusTime154EA8(mValues1C0[i]);
             sprintf(value, "%d:%02d", t / 60, t % 60);
             mText168->mString30 = value;
             DrawText19B758(mText168);
@@ -1061,13 +1065,76 @@ void FEOptionsScreen::VirtSlot3()
             DrawText19B758(mText168);
             break;
         case 2:
-            func_00187AB8(mArr210[i], mMenu0C->GetItemTextWidth(i) + 0.1f, 0.1f);
+            mSliders210[i]->Draw187AB8(mMenu0C->GetItemTextWidth(i) + 0.1f, 0.1f);
             break;
         }
         glPopMatrix();
     }
 }
 #endif
+
+// Builds the options menu (mode 0), Audio options (1) or 2 player options (2): the items' string ids
+// and kinds come from tables, the bars are made anew, and the values are read from the game context.
+void FEOptionsScreen::InitMenu16C6D8(int mode)
+{
+    const int *kinds;
+    const int *ids;
+
+    mMode164 = mode;
+    switch (mode)
+    {
+    case 0:
+    default:
+        mCount16C = 8;
+        kinds = gOptionsMenuKinds2627C8;
+        ids = gOptionsMenuIds2627A8;
+        break;
+    case 1:
+        mCount16C = 5;
+        kinds = gAudioMenuKinds262800;
+        ids = gAudioMenuIds2627E8;
+        break;
+    case 2:
+        mCount16C = 4;
+        kinds = gTwoPlayerMenuKinds262828;
+        ids = gTwoPlayerMenuIds262818;
+        break;
+    }
+    CreateMenuA(ids, mCount16C);
+    mMenu0C->mSelectSound34 = 0;
+    mMenu0C->mCancelSound38 = 0;
+    for (int i = 0; i < mCount16C; i++)
+    {
+        mKinds170[i] = kinds[i];
+        mValues1C0[i] = 0;
+        if (mSliders210[i] != 0)
+        {
+            delete mSliders210[i];
+            mSliders210[i] = 0;
+        }
+        if (mKinds170[i] == 2)
+            mSliders210[i] = new FESlider(0.0f, 1.4f, 0.25f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0);
+    }
+    switch (mode)
+    {
+    case 0:
+    default:
+        mValues1C0[0] = gGameCtx262250->mActionCameras;
+        mValues1C0[1] = gGameCtx262250->mVibration;
+        mValues1C0[2] = gGameCtx262250->mBalanceMeter;
+        break;
+    case 1:
+        mValues1C0[0] = gGameCtx262250->mInGameMusic;
+        mSliders210[2]->mValue10 = gGameCtx262250->mFxVolume;
+        mSliders210[1]->mValue10 = gGameCtx262250->mMusicVolume;
+        mFxVolume26C = gGameCtx262250->mFxVolume;
+        break;
+    case 2:
+        mValues1C0[0] = gGameCtx262250->mVersusTime;
+        mValues1C0[1] = gGameCtx262250->mVersusDegradation;
+        break;
+    }
+}
 
 FEOptionsScreen::FEOptionsScreen(FEOwner *owner, int a2, int a3)
     : FEScreen(0x29, 1, owner)
@@ -1076,9 +1143,9 @@ FEOptionsScreen::FEOptionsScreen(FEOwner *owner, int a2, int a3)
     mField268 = 0;
     for (int i = 0; i < 20; i++)
     {
-        mArr170[i] = 0;
-        mArr1C0[i] = 0;
-        mArr210[i] = 0;
+        mKinds170[i] = 0;
+        mValues1C0[i] = 0;
+        mSliders210[i] = 0;
     }
     if (a3 != 0)
         func_00156200();
@@ -1092,8 +1159,8 @@ FEOptionsScreen::~FEOptionsScreen()
     Release198F38(mText168);
     for (int i = 0; i < mCount16C; i++)
     {
-        if (mArr210[i] != 0)
-            func_00187DD0(mArr210[i], 3);
+        if (mSliders210[i] != 0)
+            delete mSliders210[i];
     }
 }
 
