@@ -5,6 +5,15 @@
 #include "game/AI_Agent.h"
 
 // Pointed to by AI_Vehicle+0x11C (floats read by GetParam1C/GetParam6C).
+struct UnkNode;
+
+// Passed to AI_Vehicle::func_0010E558, which replaces its +0x58 with func_0012CCB0 of it.
+struct UnkObj58
+{
+    char field_0x00[0x58];
+    void *mField58; // 0x58
+};
+
 struct UnkVehicleParams
 {
     char field_0x00[0x1C];
@@ -40,6 +49,14 @@ public:
     f32 GetFieldFC();                 // 0x0010E360
     f32 GetField100();                // 0x0010E368
     f32 GetParam6C();                 // 0x0010E370
+    void func_0010D1A0();             // 0x0010D1A0
+    void Action10E468();              // 0x0010E448
+    void func_0010E468();             // 0x0010E468: passes mNode138 to func_00193100
+    void Action10D1A0();              // 0x0010E490
+    f32 func_0010E4B0(f32 v);         // 0x0010E4B0: mFieldF8 += v, capped at mParams11C->mField1C
+    f32 func_0010E508(f32 v);         // 0x0010E508: mFieldF8 -= v, floored at 0
+    void func_0010E558(UnkObj58 *obj); // 0x0010E558
+    void *func_0012CCB0(void *p);     // 0x0012CCB0 (called with this unchanged; may belong to a base)
 
     Mat4x4f mMatrixA0;             // 0xA0
     Vec3f mFieldE0;                // 0xE0
@@ -54,6 +71,8 @@ public:
     f32 mField10C;                 // 0x10C
     char field_0x110[0xC];
     UnkVehicleParams *mParams11C;  // 0x11C
+    char field_0x120[0x18];
+    UnkNode *mNode138;             // 0x138
 };
 
 #endif

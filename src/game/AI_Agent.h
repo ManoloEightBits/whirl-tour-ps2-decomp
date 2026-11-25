@@ -9,7 +9,9 @@
 class AI_Agent
 {
 public:
-    char field_0x00[0x9C];
+    char field_0x00[0x20];
+    u32 mFlags20;               // 0x20: AI_Race::func_0010BC20 tests 0x2000 and sets 8
+    char field_0x24[0x78];
 
     virtual void VirtSlot1();   // 0x00159B48
     virtual void VirtSlot2();   // 0x00159CB0
@@ -18,6 +20,8 @@ public:
     virtual Vec3f *VirtSlot5(); // 0x0015EBB0: a position (player_hit_boss)
     virtual void VirtSlot6();   // 0x0015EBF0
     virtual void VirtSlot7();   // 0x0015EC00
+    void func_0010B198();       // 0x0010B198 (non-virtual; AI_Race::Action10B198 calls it)
+
     virtual f32 VirtSlot8();    // 0x0015ECF0: player_hit_boss tests it for <= 0
 };
 

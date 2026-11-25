@@ -1,5 +1,8 @@
 #include "game/AI_Race.h"
 
+int func_001BB0D0(void *list);          // 0x001BB0D0: number of elements
+void *func_001BB098(void *list, int i); // 0x001BB098: element i
+
 int AI_Race::GetFieldA0()
 {
     return mFieldA0;
@@ -45,9 +48,9 @@ void AI_Race::SetFieldA8(f32 v)
     mFieldA8 = v;
 }
 
-int AI_Race::GetFieldC4()
+void *AI_Race::GetFieldC4()
 {
-    return mFieldC4;
+    return mListC4;
 }
 
 u8 AI_Race::GetStateC8()
@@ -216,4 +219,53 @@ void AI_Race::SetFieldD8(f32 v)
 void AI_Race::SubFieldD8(f32 v)
 {
     mFieldD8 -= v;
+}
+
+void AI_Race::Action122EC8()
+{
+    func_00122EC8(mPlayer110);
+}
+
+void AI_Race::Action10B198()
+{
+    func_0010B198();
+}
+
+void AI_Race::Action10BE90()
+{
+    func_0010BE90(mStateC8);
+}
+
+void AI_Race::Action10BF08()
+{
+    func_0010BF08(mStateCA);
+}
+
+void AI_Race::func_0010BC20()
+{
+    if (!(mFlags20 & 0x2000))
+    {
+        mFlags20 |= 8;
+        func_00122EA8(mPlayer110);
+        mFieldE0[1] = -1.0f;
+    }
+}
+
+void *AI_Race::func_0010BE90(int i)
+{
+    if (i >= func_001BB0D0(mListC4))
+        return 0;
+    return func_001BB098(mListC4, i);
+}
+
+void *AI_Race::func_0010BF08(int i)
+{
+    return func_0010BF50(i, (void **)func_0010BE90(mStateC8));
+}
+
+void *AI_Race::func_0010BF50(int i, void **list)
+{
+    if (i >= func_001BB0D0(*list))
+        return 0;
+    return *(void **)func_001BB098(*list, i);
 }

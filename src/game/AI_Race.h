@@ -19,7 +19,7 @@ public:
     f32 GetFieldA8();                 // 0x0010B9A0
     void AddFieldA8(f32 v);           // 0x0010B9A8
     void SetFieldA8(f32 v);           // 0x0010B9B8
-    int GetFieldC4();                 // 0x0010B9C0
+    void *GetFieldC4();                 // 0x0010B9C0
     u8 GetStateC8();                  // 0x0010B9C8
     void NextStateC8();               // 0x0010B9D0
     void SetStateC8(u8 s);            // 0x0010B9E8
@@ -53,6 +53,14 @@ public:
     f32 GetFieldD8();                 // 0x0010BB68
     void SetFieldD8(f32 v);           // 0x0010BB70
     void SubFieldD8(f32 v);           // 0x0010BB78
+    void Action122EC8();              // 0x0010BC70
+    void Action10B198();              // 0x0010BD40
+    void Action10BE90();              // 0x0010BE70
+    void Action10BF08();              // 0x0010BEE8
+    void func_0010BC20();             // 0x0010BC20
+    void *func_0010BE90(int i);       // 0x0010BE90: element i of mListC4, or 0 (passed mStateC8)
+    void *func_0010BF08(int i);       // 0x0010BF08: element i of the mStateC8 list (passed mStateCA)
+    void *func_0010BF50(int i, void **list); // 0x0010BF50: element i of *list, or 0
     int mFieldA0;              // 0xA0
     f32 mFieldA4;              // 0xA4
     f32 mFieldA8;              // 0xA8
@@ -61,7 +69,7 @@ public:
     f32 mFieldB4;              // 0xB4
     f32 mFieldB8;              // 0xB8
     char field_0xBC[8];
-    int mFieldC4;              // 0xC4
+    void *mListC4;             // 0xC4: a list of lists (func_001BB0D0 counts, func_001BB098 gets)
     u8 mStateC8;               // 0xC8
     u8 mPrevStateC9;           // 0xC9: mStateC8 before its last change
     u8 mStateCA;               // 0xCA

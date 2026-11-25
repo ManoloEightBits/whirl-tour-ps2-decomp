@@ -1,5 +1,7 @@
 #include "game/AI_Vehicle.h"
 
+void func_00193100(UnkNode *node); // 0x00193100
+
 f32 AI_Vehicle::GetFieldEC()
 {
     return mFieldEC;
@@ -103,4 +105,52 @@ f32 AI_Vehicle::GetField100()
 f32 AI_Vehicle::GetParam6C()
 {
     return mParams11C->mField6C;
+}
+
+void AI_Vehicle::Action10E468()
+{
+    func_0010E468();
+}
+
+void AI_Vehicle::func_0010E468()
+{
+    if (mNode138 != NULL)
+        func_00193100(mNode138);
+}
+
+void AI_Vehicle::Action10D1A0()
+{
+    func_0010D1A0();
+}
+
+f32 AI_Vehicle::func_0010E4B0(f32 v)
+{
+    mFlags20 &= ~0x10000;
+    f32 next = mFieldF8 + v;
+    if (next < mParams11C->mField1C)
+    {
+        mFieldF8 = next;
+        return next;
+    }
+    mFlags20 &= ~0x40000;
+    mFieldF8 = mParams11C->mField1C;
+    return mFieldF8;
+}
+
+f32 AI_Vehicle::func_0010E508(f32 v)
+{
+    f32 next = mFieldF8 - v;
+    if (0.0f < next)
+    {
+        mFieldF8 = next;
+        return next;
+    }
+    mFlags20 = (mFlags20 & ~0x20000) | 0x10000;
+    mFieldF8 = 0.0f;
+    return 0.0f;
+}
+
+void AI_Vehicle::func_0010E558(UnkObj58 *obj)
+{
+    obj->mField58 = func_0012CCB0(obj->mField58);
 }
