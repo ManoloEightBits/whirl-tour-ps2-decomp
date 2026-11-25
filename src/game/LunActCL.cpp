@@ -36,3 +36,43 @@ void LunActCL::event_pre_collision(IVP_Event_Collision *ev)
     if (t > 0.0f)
         mOwner08->field_0xCC = 2.0f;
 }
+
+void *LunAct::GetBodyPtr50()
+{
+    return mBody08->GetPtr50();
+}
+
+f32 LunAct::Action14CB50()
+{
+    return mBody08->func_0014CB50();
+}
+
+f32 LunAct::GetField20()
+{
+    return field_0x20;
+}
+
+int LunAct::GetField40()
+{
+    return mField40;
+}
+
+void LunAct::SetField44NonZero(int v)
+{
+    mField44 = v != 0 ? v : 1;
+}
+
+void LunAct::SetField18(int v)
+{
+    mField18 = v;
+}
+
+int LunAct::GetField1C()
+{
+    return mField1C;
+}
+
+LunActCL::LunActCL(LunAct *owner) : IVP_Listener_Collision(1)
+{
+    mOwner08 = owner;
+}

@@ -285,34 +285,70 @@ public:
 // Class of the getters at 0x0014CAE8..0x0014CB80; no RTTI, name unknown.
 struct UnkBody
 {
-    IVP_Real_Object_Stub *func_0014CB80(); // returns field 0x70
+    void *GetPtr50();                      // 0x0014CB40
+    void *GetPtr60();                      // 0x0014CB48
+    f32 func_0014CB50();                   // 0x0014CB50
+    void *GetPtr20();                      // 0x0014CB78
+    IVP_Real_Object_Stub *func_0014CB80(); // 0x0014CB80: returns field 0x70
+
+    char field_0x00[0x20];
+    char mBlock20[0x30]; // 0x20
+    char mBlock50[0x10]; // 0x50
+    char mBlock60[0x10]; // 0x60
+    IVP_Real_Object_Stub *mObj70; // 0x70
 };
 
 // Owner of a MarActCL (name inferred from the listener's RTTI name; no RTTI of its own).
 struct MarAct
 {
+    int TestFlag100();      // 0x0014B9E8
+    int TestFlag200();      // 0x0014B9F8
+    void *GetBodyPtr50();   // 0x0014BA08
+    f32 Action14CB50();     // 0x0014BA28
+    void SetField18(int v); // 0x0014BA48
+    int GetField1C();       // 0x0014BA50
+    int GetField10();       // 0x0014BA58
+
     int field_0x00;
     u32 mFlags04;      // 0x04: MarActCL sets bit 0 or bit 1
     UnkBody *mBody08;  // 0x08
+    int mField0C;
+    int mField10;      // 0x10
+    int mField14;
+    int mField18;      // 0x18
+    int mField1C;      // 0x1C
 };
 
 // Owner of a LunActCL (name inferred from the listener's RTTI name; no RTTI of its own).
 struct LunAct
 {
+    void *GetBodyPtr50();   // 0x00148E60
+    f32 Action14CB50();     // 0x00148E80
+    f32 GetField20();       // 0x00148EA0
+    int GetField40();       // 0x00148EA8
+    void SetField44NonZero(int v); // 0x00148EB0
+    void SetField18(int v); // 0x00148EC0
+    int GetField1C();       // 0x00148EC8
+
     int field_0x00;
     u32 mFlags04;      // 0x04: LunActCL sets bit 0 or bit 1
     UnkBody *mBody08;  // 0x08
-    char pad_0x0C[0x14];
+    char pad_0x0C[0x0C];
+    int mField18;      // 0x18
+    int mField1C;      // 0x1C
     f32 field_0x20;    // kept in 0..1 by LunActCL
     char pad_0x24[0x18];
     int field_0x3C;
-    char pad_0x40[0x8C];
+    int mField40;      // 0x40
+    int mField44;      // 0x44
+    char pad_0x48[0x84];
     f32 field_0xCC;    // LunActCL sets 2.0
 };
 
 class LunActCL : public IVP_Listener_Collision
 {
 public:
+    LunActCL(LunAct *owner);                                 // 0x00148F38
     virtual void event_pre_collision(IVP_Event_Collision *); // slot 1: 0x001463A8
 
     LunAct *mOwner08; // 0x08

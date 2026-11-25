@@ -180,3 +180,12 @@ file with `diff_func.py <file.cpp> <symbol> --variants <json>`. That command onl
 - **Reusing the same `int i;` declaration across two loops in one function** (`FECharacterScreen::~FECharacterScreen`)
   swaps the saved registers assigned to the loop counter (`$s0`) and array pointer (`$s1`) compared to
   declaring `for (int i = ...)` in each loop separately.
+- **Clearing a low bit on a `u32` member (`mFlags &= ~8`)** emits `lui $v0, 0xFFFF; ori $v0, $v0, 0xFFF7`,
+  whereas the game's `addiu $v1, $zero, -9; and $v0, $v0, $v1` (`Scooter::func_0017E4A0`) comes from a
+  signed 32-bit operation (`*(int *)&mFlags &= ~8` or `int mFlags`).
+- **Passing a `Vec3f` by value vs by pointer** (`MBCtrl::SetVel08`, `MBCtrl::SetPos14`): when a 12-byte
+  setter copies the argument with `ldl`/`ldr` + `lw` through a stack slot (`sdl`/`sdr` + `sw`), the
+  parameter is `Vec3f v` passed by value rather than `const Vec3f *v`.
+- **Copying three float arguments into a local `Vec3f` before using them** (`Scooter::func_0017F898`):
+  when a function taking `(f32 x, f32 y, f32 z)` spills `$f12..$f14` to `0x0($sp)..0x8($sp)` and reloads
+  `$f13`/`$f14` into `$f1`, it assigned them to a local `Vec3f v; v.x = x; v.y = y; v.z = z;` first.

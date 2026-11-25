@@ -1,6 +1,13 @@
 #include "game/Scooter.h"
 #include "game/CollisionListeners.h"
 
+struct UnkGameCtx18
+{
+    char field_0x00[0x18];
+    int mField18; // 0x18
+};
+extern UnkGameCtx18 *gGameCtx262250; // 0x00262250
+
 void PhysicsClear1F34B0(void *obj, int flag); // 0x001F34B0
 void func_0011A3E0(void *obj, int id);        // 0x0011A3E0
 void func_0011A590(void *obj);                // 0x0011A590
@@ -10,6 +17,232 @@ int func_00125968(int id);                    // 0x00125968
 int func_00125808();                          // 0x00125808
 int func_001257E0();                          // 0x001257E0
 void func_00186080(int value);                // 0x00186080
+int func_001860F0(int obj);                   // 0x001860F0
+void func_00185E20(int obj, int arg);         // 0x00185E20
+void func_00185F50(int obj);                  // 0x00185F50
+extern "C" int func_00230700();               // 0x00230700: rand()
+
+struct UnkScooterTimer
+{
+    u32 mFlags00; // 0x00
+    u32 mMask04;  // 0x04
+    f32 mTimer08; // 0x08
+    f32 mDur0C;   // 0x0C
+
+    void Init(u32 mask, f32 dur);      // 0x0017E0E0
+};
+
+void UnkScooterTimer::Init(u32 mask, f32 dur)
+{
+    mFlags00 = 0;
+    mMask04 = mask;
+    mTimer08 = dur;
+    mDur0C = dur;
+}
+
+void Scooter::Method17E298()
+{
+}
+
+int Scooter::GetField18()
+{
+    return mFlags18;
+}
+
+f32 Scooter::GetField70()
+{
+    return mHealth;
+}
+
+int Scooter::GetField6C()
+{
+    return mField6C;
+}
+
+void Scooter::func_0017E450()
+{
+    mState208->mFlags04 |= 0x10000;
+}
+
+void Scooter::func_0017E468()
+{
+    mState208->mFlags04 &= 0xFFFF;
+}
+
+int Scooter::func_0017E478()
+{
+    return mState208->mFlags04 & 0x10000;
+}
+
+void Scooter::func_0017E490()
+{
+    mFlags18 |= 8;
+}
+
+void Scooter::func_0017E4A0()
+{
+    *(int *)&mFlags18 &= ~8;
+}
+
+int Scooter::func_0017E4B8()
+{
+    return mState208->mState00;
+}
+
+void Scooter::ClearField9C()
+{
+    *(int *)&mField9C = 0;
+}
+
+int Scooter::func_0017E4D0()
+{
+    return mField52C != 0;
+}
+
+void Scooter::SetField544(f32 v)
+{
+    mField544 = v;
+}
+
+void Scooter::SetField558(f32 v)
+{
+    mField558 = v;
+}
+
+void Scooter::SetField5BC(f32 v)
+{
+    mField5BC = v;
+}
+
+void Scooter::SetFieldCC(int v)
+{
+    mFieldCC = v;
+}
+
+void Scooter::SetFieldC8(f32 v)
+{
+    mFieldC8 = v;
+}
+
+f32 Scooter::func_0017E508()
+{
+    f32 mul = 1.0f;
+    if (mFlags18 & 0x400)
+        mul = mParams1C0->mField158;
+    if (mSpeedBoostAmount > 0.0f)
+        mul *= mSpeedBoostDuration;
+    return mFieldC8 * mul;
+}
+
+f32 Scooter::func_0017E558()
+{
+    if (mSpinBoostAmount > 0.0f)
+        return mSpinBoostDuration;
+    return 1.0f;
+}
+
+f32 Scooter::func_0017E588()
+{
+    if (mJumpBoostAmount > 0.0f)
+        return mJumpBoostDuration;
+    return 1.0f;
+}
+
+f32 Scooter::func_0017E5B8()
+{
+    if (mBalanceBoostAmount > 0.0f)
+        return mBalanceBoostDuration;
+    return 1.0f;
+}
+
+f32 Scooter::func_0017E5E8()
+{
+    f32 mul = 1.0f;
+    if (mFlags18 & 0x400)
+        mul = mParams1C0->mField158;
+    if (mSpeedBoostAmount > 0.0f)
+        mul *= mSpeedBoostDuration;
+    return mFieldC8 * mul * mParams1C0->mField7C;
+}
+
+f32 Scooter::func_0017E640()
+{
+    f32 mul = 1.0f;
+    if (mFlags18 & 0x400)
+        mul = mParams1C0->mField158;
+    if (mSpeedBoostAmount > 0.0f)
+        mul *= mSpeedBoostDuration;
+    return mFieldC8 * mul * mParams1C0->mField68;
+}
+
+f32 Scooter::func_0017E698()
+{
+    f32 mul = 1.0f;
+    if (mFlags18 & 0x400)
+        mul = mParams1C0->mField158;
+    if (mSpeedBoostAmount > 0.0f)
+        mul *= mSpeedBoostDuration;
+    return mFieldC8 * mul * mParams1C0->mField118;
+}
+
+int Scooter::GetField504()
+{
+    return mField504;
+}
+
+int Scooter::GetField508()
+{
+    return mField508;
+}
+
+int Scooter::GetField50C()
+{
+    return mField50C;
+}
+
+void Scooter::ClearFields50C_508()
+{
+    mField508 = 0;
+    mField50C = 0;
+}
+
+f32 Scooter::func_0017E718(f32 v)
+{
+    if (gGameCtx262250->mField18 == 1)
+        v = (v - 1.0f) * mParams1C0->mField15C + 1.0f;
+    return v;
+}
+
+f32 Scooter::func_0017E758(f32 v)
+{
+    if (gGameCtx262250->mField18 == 1)
+        v = (v - 1.0f) * mParams1C0->mField160 + 1.0f;
+    return v;
+}
+
+f32 Scooter::func_0017E798()
+{
+    f32 val = mParams1C0->mField124;
+    if ((func_00230700() % 101 - 50) * 0.02f < 0.0f)
+        val = -val;
+    return val;
+}
+
+f32 Scooter::func_0017E810()
+{
+    f32 val = mParams1C0->mField100;
+    if ((func_00230700() % 101 - 50) * 0.02f < 0.0f)
+        val = -val;
+    return val;
+}
+
+f32 Scooter::func_0017E888()
+{
+    f32 val = mParams1C0->mField13C;
+    if ((func_00230700() % 101 - 50) * 0.02f < 0.0f)
+        val = -val;
+    return val;
+}
 
 Vec3f *Scooter::GetPtr194()
 {
@@ -255,6 +488,64 @@ void Scooter::func_0017EDF0(int flag)
 void Scooter::func_0017EE28(int flag)
 {
     func_0011A3E0(mField1A0, !flag ? 0x110AD : 0x100AD);
+}
+
+void Scooter::func_0017F500(int a, int b)
+{
+    mField27C = b;
+    mField280 = a;
+}
+
+void Scooter::func_0017F568()
+{
+    mField518 = 0;
+    mField510 = mField98;
+}
+
+void Scooter::func_0017F690(int arg)
+{
+    int prev;
+    if (((UnkScooterSub500 *)mField500)->mField04 != 0)
+        prev = func_001860F0(mField500);
+    else
+        prev = 0;
+    func_00185E20(mField500, arg);
+    f32 diff = func_001860F0(mField500) - prev;
+    asm("");
+    mAdrenaline += diff;
+}
+
+int Scooter::func_0017F718()
+{
+    return ((UnkScooterSub500 *)mField500)->mField04 == 0;
+}
+
+void Scooter::func_0017F790(UnkScooterArgC *arg)
+{
+    if (arg->mField0C > 0)
+        func_00185F50(mField500);
+}
+
+f32 Scooter::func_0017F820()
+{
+    f32 mul = 1.0f;
+    if (mFlags18 & 0x400)
+        mul = mParams1C0->mField158;
+    if (mSpeedBoostAmount > 0.0f)
+        mul *= mSpeedBoostDuration;
+    return mField9C * (mField90 / (mFieldC8 * mul * mParams1C0->mField7C)) * -0.43633235f;
+}
+
+void Scooter::func_0017F898(f32 x, f32 y, f32 z)
+{
+    Vec3f v;
+    v.x = x;
+    v.y = y;
+    v.z = z;
+    UnkScooterSub1CC *sub = (UnkScooterSub1CC *)mField1CC;
+    sub->mSub24->mField90 += v.x;
+    sub->mSub24->mField94 += v.y;
+    sub->mSub24->mField98 += v.z;
 }
 
 #ifdef NON_MATCHING

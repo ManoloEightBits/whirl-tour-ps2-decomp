@@ -9,8 +9,260 @@ void func_0017F328(Scooter *);            // 0x0017F328
 void func_0017F500(Scooter *);            // 0x0017F500
 void func_00174198(Scooter *, void *);    // 0x00174198
 void func_0011F8F8(void *obj, Vec3f *out);           // 0x0011F8F8
+int func_0011F650(void *obj);                        // 0x0011F650
 int func_00175970(Scooter *s, int id, f32 value);    // 0x00175970
 void func_0011EE30(void *obj, void *p);              // 0x0011EE30
+void func_0017E2A0(Scooter *s, f32 val);             // 0x0017E2A0
+void func_00172060(Scooter *s);                      // 0x00172060
+void func_0017F288(Scooter *s, void *a, void *b);    // 0x0017F288
+f32 func_0017F728(Scooter *s);                       // 0x0017F728
+
+Mat4x4f *Player::GetScooterPtr130()
+{
+    return (Mat4x4f *)mScooter->GetPtr130();
+}
+
+void Player::SetScooterField180(f32 val)
+{
+    mScooter->SetField180(val);
+}
+
+void Player::EnableScooterField170()
+{
+    mScooter->EnableField170();
+}
+
+void Player::DisableScooterField170()
+{
+    mScooter->DisableField170();
+}
+
+void Player::SetScooterVec174(f32 x, f32 y, f32 z)
+{
+    mScooter->SetVec174(x, y, z);
+}
+
+void *Player::GetScooterPtr84()
+{
+    return mScooter->GetPtr84();
+}
+
+Vec3f *Player::GetScooterPtr78()
+{
+    return mScooter->GetPtr78();
+}
+
+void *Player::GetScooterField1A0()
+{
+    return mScooter->GetField1A0();
+}
+
+DD_ActorInfo *Player::GetFieldA0()
+{
+    return mAmbientAreaA0;
+}
+
+int Player::TestAmbientStateD2(u8 mask)
+{
+    return mAmbientStateD2 & mask;
+}
+
+void Player::SetAmbientStateD2(u8 mask)
+{
+    mAmbientStateD2 |= mask;
+}
+
+void Player::ClearAmbientStateD2(u8 mask)
+{
+    mAmbientStateD2 &= ~mask;
+}
+
+f32 Player::GetScooterField70()
+{
+    return mScooter->GetField70();
+}
+
+int Player::GetScooterField6C()
+{
+    return mScooter->GetField6C();
+}
+
+f32 Player::Action17F728()
+{
+    return func_0017F728(mScooter);
+}
+
+void Player::Action17E468()
+{
+    mScooter->func_0017E468();
+}
+
+void Player::Action17E450()
+{
+    mScooter->func_0017E450();
+}
+
+int Player::Action17E478()
+{
+    return mScooter->func_0017E478();
+}
+
+int Player::IsScooterState4()
+{
+    return mScooter->func_0017E4B8() == 4;
+}
+
+void Player::Action17E4A0()
+{
+    mScooter->func_0017E4A0();
+}
+
+void Player::Action17E490()
+{
+    mScooter->func_0017E490();
+}
+
+void Player::Action17E2A0(f32 val)
+{
+    func_0017E2A0(mScooter, val);
+}
+
+void Player::Action172060()
+{
+    func_00172060(mScooter);
+}
+
+void Player::Action17ED58_100FA()
+{
+    mScooter->func_0017ED58(0x100FA);
+}
+
+int Player::Action17E4B8()
+{
+    return mScooter->func_0017E4B8();
+}
+
+void Player::ClearScooterField9C()
+{
+    mScooter->ClearField9C();
+}
+
+f32 Player::GetScooterField98()
+{
+    return mScooter->GetField98();
+}
+
+int Player::Action17E4D0()
+{
+    return mScooter->func_0017E4D0();
+}
+
+void Player::SetScooterField544(f32 val)
+{
+    mScooter->SetField544(val);
+}
+
+void Player::SetScooterField558(f32 val)
+{
+    mScooter->SetField558(val);
+}
+
+void Player::SetScooterField5BC(f32 val)
+{
+    mScooter->SetField5BC(val);
+}
+
+void Player::SetScooterFieldCC(int val)
+{
+    mScooter->SetFieldCC(val);
+}
+
+int Player::GetFieldB8()
+{
+    return mFieldB8;
+}
+
+u8 Player::GetFieldD3()
+{
+    return mFieldD3;
+}
+
+void Player::Action17EDF0(int flag)
+{
+    mScooter->func_0017EDF0(flag);
+}
+
+void Player::Action17EE28(int flag)
+{
+    mScooter->func_0017EE28(flag);
+}
+
+void Player::SetScooterFieldC8(f32 val)
+{
+    mScooter->SetFieldC8(val);
+}
+
+int Player::Action17F718()
+{
+    return mScooter->func_0017F718();
+}
+
+int Player::GetScooterField504()
+{
+    return mScooter->GetField504();
+}
+
+int Player::GetScooterField508()
+{
+    return mScooter->GetField508();
+}
+
+int Player::GetScooterField50C()
+{
+    return mScooter->GetField50C();
+}
+
+void Player::ClearScooterFields50C_508()
+{
+    mScooter->ClearFields50C_508();
+}
+
+void Player::SetFieldD4(int v)
+{
+    mFieldD4 = v;
+}
+
+int Player::GetFieldD4()
+{
+    return mFieldD4;
+}
+
+int Player::GetField30()
+{
+    return mField30;
+}
+
+int Player::GetField34()
+{
+    return mField34;
+}
+
+int Player::func_00123208()
+{
+    if (mField28 != 0)
+        return func_0011F650(mField28);
+    return 0;
+}
+
+void *Player::GetField28()
+{
+    return mField28;
+}
+
+void Player::Action17F288(void *a, void *b)
+{
+    func_0017F288(mScooter, a, b);
+}
 
 void Player::Action17F328()
 {

@@ -25,6 +25,55 @@ struct UnkCheckpoint
 class Player
 {
 public:
+    Mat4x4f *GetScooterPtr130();                 // 0x00122D08
+    void SetScooterField180(f32 val);            // 0x00122D28
+    void EnableScooterField170();                // 0x00122D48
+    void DisableScooterField170();               // 0x00122D68
+    void SetScooterVec174(f32 x, f32 y, f32 z);  // 0x00122D88
+    void *GetScooterPtr84();                     // 0x00122DA8
+    Vec3f *GetScooterPtr78();                    // 0x00122DC8
+    void *GetScooterField1A0();                  // 0x00122DE8
+    DD_ActorInfo *GetFieldA0();                  // 0x00122E08
+    int TestAmbientStateD2(u8 mask);             // 0x00122E10
+    void SetAmbientStateD2(u8 mask);             // 0x00122E20
+    void ClearAmbientStateD2(u8 mask);           // 0x00122E30
+    f32 GetScooterField70();                     // 0x00122E48
+    int GetScooterField6C();                     // 0x00122E68
+    f32 Action17F728();                          // 0x00122E88
+    void Action17E468();                         // 0x00122EA8
+    void Action17E450();                         // 0x00122EC8
+    int Action17E478();                          // 0x00122EE8
+    int IsScooterState4();                       // 0x00122F08
+    void Action17E4A0();                         // 0x00122F30
+    void Action17E490();                         // 0x00122F50
+    void Action17E2A0(f32 val);                  // 0x00122F70
+    void Action172060();                         // 0x00122F90
+    void Action17ED58_100FA();                   // 0x00122FB0
+    int Action17E4B8();                          // 0x00122FD8
+    void ClearScooterField9C();                  // 0x00122FF8
+    f32 GetScooterField98();                     // 0x00123018
+    int Action17E4D0();                          // 0x00123038
+    void SetScooterField544(f32 val);            // 0x00123058
+    void SetScooterField558(f32 val);            // 0x00123078
+    void SetScooterField5BC(f32 val);            // 0x00123098
+    void SetScooterFieldCC(int val);             // 0x001230B8
+    int GetFieldB8();                            // 0x001230D8
+    u8 GetFieldD3();                             // 0x001230E0
+    void Action17EDF0(int flag);                 // 0x001230E8
+    void Action17EE28(int flag);                 // 0x00123108
+    void SetScooterFieldC8(f32 val);             // 0x00123128
+    int Action17F718();                          // 0x00123148
+    int GetScooterField504();                    // 0x00123168
+    int GetScooterField508();                    // 0x00123188
+    int GetScooterField50C();                    // 0x001231A8
+    void ClearScooterFields50C_508();            // 0x001231C8
+    void SetFieldD4(int v);                      // 0x001231E8
+    int GetFieldD4();                            // 0x001231F0
+    int GetField30();                            // 0x001231F8
+    int GetField34();                            // 0x00123200
+    int func_00123208();                         // 0x00123208
+    void *GetField28();                          // 0x00123230
+    void Action17F288(void *a, void *b);         // 0x00123238
     void Action17F328();                         // 0x00123438
     void Action17F500();                         // 0x00123458
     void *GetPtr40();                            // 0x00123478
@@ -62,7 +111,8 @@ public:
     int mField24;           // 0x24: cleared by func_00123488
     void *mField28;         // 0x28
     Scooter *mScooter;      // 0x2C
-    char field_0x30[8];
+    int mField30;           // 0x30
+    int mField34;           // 0x34
     Player *mOtherPlayer38;              // 0x38: set by player_enter_player, cleared on leaving
     IVP_Real_Object_Stub *mVehicle3C;    // 0x3C: set by player_enter_vehicle, cleared on leaving
     char mBlock40[0x18];    // 0x40
@@ -77,6 +127,7 @@ public:
     char field_0xCC[6];     // 0xCC..0xD1
     u8 mAmbientStateD2;     // 0xD2: 9 on entering an ambient area, 10 on leaving; 0x10 = entered again
     u8 mFieldD3;            // 0xD3
+    int mFieldD4;           // 0xD4
 };
 
 Vec3f *func_00122DC8(Player *player);   // 0x00122DC8: the player's position

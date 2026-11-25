@@ -17,9 +17,90 @@ struct UnkScooterState
     int mField24;  // 0x24: cleared by TakeDamage
 };
 
+struct UnkScooterParams1C0
+{
+    char field_0x000[0x68];
+    f32 mField68;   // 0x068
+    char field_0x06C[0x10];
+    f32 mField7C;   // 0x07C
+    char field_0x080[0x80];
+    f32 mField100;  // 0x100
+    char field_0x104[0x14];
+    f32 mField118;  // 0x118
+    char field_0x11C[0x08];
+    f32 mField124;  // 0x124
+    char field_0x128[0x14];
+    f32 mField13C;  // 0x13C
+    char field_0x140[0x18];
+    f32 mField158;  // 0x158
+    f32 mField15C;  // 0x15C
+    f32 mField160;  // 0x160
+};
+
+struct UnkScooterSub1CC_24
+{
+    char field_0x00[0x90];
+    f32 mField90;  // 0x90
+    f32 mField94;  // 0x94
+    f32 mField98;  // 0x98
+};
+
+struct UnkScooterSub1CC
+{
+    char field_0x00[0x24];
+    UnkScooterSub1CC_24 *mSub24; // 0x24
+};
+
+struct UnkScooterSub500
+{
+    char field_0x000[4];
+    int mField04;  // 0x004
+    char field_0x008[0x290];
+    int mField298; // 0x298
+};
+
+struct UnkScooterArgC
+{
+    char field_0x00[0x0C];
+    int mField0C;  // 0x0C
+};
+
 class Scooter
 {
 public:
+    void Method17E298();                     // 0x0017E298
+    int GetField18();                        // 0x0017E438
+    f32 GetField70();                        // 0x0017E440
+    int GetField6C();                        // 0x0017E448
+    void func_0017E450();                    // 0x0017E450
+    void func_0017E468();                    // 0x0017E468
+    int func_0017E478();                     // 0x0017E478
+    void func_0017E490();                    // 0x0017E490
+    void func_0017E4A0();                    // 0x0017E4A0
+    int func_0017E4B8();                     // 0x0017E4B8
+    void ClearField9C();                     // 0x0017E4C8
+    int func_0017E4D0();                     // 0x0017E4D0
+    void SetField544(f32 v);                 // 0x0017E4E0
+    void SetField558(f32 v);                 // 0x0017E4E8
+    void SetField5BC(f32 v);                 // 0x0017E4F0
+    void SetFieldCC(int v);                  // 0x0017E4F8
+    void SetFieldC8(f32 v);                  // 0x0017E500
+    f32 func_0017E508();                     // 0x0017E508
+    f32 func_0017E558();                     // 0x0017E558
+    f32 func_0017E588();                     // 0x0017E588
+    f32 func_0017E5B8();                     // 0x0017E5B8
+    f32 func_0017E5E8();                     // 0x0017E5E8
+    f32 func_0017E640();                     // 0x0017E640
+    f32 func_0017E698();                     // 0x0017E698
+    int GetField504();                       // 0x0017E6F0
+    int GetField508();                       // 0x0017E6F8
+    int GetField50C();                       // 0x0017E700
+    void ClearFields50C_508();               // 0x0017E708
+    f32 func_0017E718(f32 v);                // 0x0017E718
+    f32 func_0017E758(f32 v);                // 0x0017E758
+    f32 func_0017E798();                     // 0x0017E798
+    f32 func_0017E810();                     // 0x0017E810
+    f32 func_0017E888();                     // 0x0017E888
     Vec3f *GetPtr194();                      // 0x0017E900
     void SetVec194(Vec3f *v);                // 0x0017E908
     int GetField500();                       // 0x0017E928
@@ -59,6 +140,13 @@ public:
     void func_0017EDD0();                     // 0x0017EDD0
     void func_0017EDF0(int flag);             // 0x0017EDF0
     void func_0017EE28(int flag);             // 0x0017EE28
+    void func_0017F500(int a, int b);        // 0x0017F500
+    void func_0017F568();                    // 0x0017F568
+    void func_0017F690(int arg);             // 0x0017F690
+    int func_0017F718();                     // 0x0017F718
+    void func_0017F790(UnkScooterArgC *arg); // 0x0017F790
+    f32 func_0017F820();                     // 0x0017F820
+    void func_0017F898(f32 x, f32 y, f32 z); // 0x0017F898
 
     char field_0x000[0x18];
     u32 mFlags18;              // 0x018
@@ -72,7 +160,11 @@ public:
     f32 mField90;              // 0x090
     f32 mField94;              // 0x094
     f32 mField98;              // 0x098
-    char field_0x09C[0x44];
+    f32 mField9C;              // 0x09C
+    char field_0x0A0[0x28];
+    f32 mFieldC8;              // 0x0C8
+    int mFieldCC;              // 0x0CC
+    char field_0x0D0[0x10];
     char mBlockE0[0x50];       // 0x0E0
     char mBlock130[0x40];      // 0x130
     int mField170;             // 0x170
@@ -85,7 +177,9 @@ public:
     void *mField1A0;           // 0x1A0
     char field_0x1A4[4];
     void *mField1A8;           // 0x1A8: passed to func_001BC438 with 0.1f, 1.0f
-    char field_0x1AC[0x20];
+    char field_0x1AC[0x14];
+    UnkScooterParams1C0 *mParams1C0; // 0x1C0
+    char field_0x1C4[8];
     int mField1CC;             // 0x1CC
     int mField1D0;             // 0x1D0
     int mField1D4;             // 0x1D4
@@ -94,11 +188,28 @@ public:
     UnkScooterState *mState208; // 0x208
     char field_0x20C[4];
     int mField210;             // 0x210: GetStatFactor passes it to func_00125968 (3 or 4 gives 1.0)
-    char field_0x214[0x158];
+    char field_0x214[0x68];
+    int mField27C;             // 0x27C
+    int mField280;             // 0x280
+    char field_0x284[0xE8];
     int mField36C;             // 0x36C: set to 1 by TakeDamage
     char field_0x370[0x190];
     int mField500;             // 0x500
-    char field_0x504[0x124];
+    int mField504;             // 0x504
+    int mField508;             // 0x508
+    int mField50C;             // 0x50C
+    f32 mField510;             // 0x510
+    int mField514;             // 0x514
+    int mField518;             // 0x518
+    char field_0x51C[0x10];
+    int mField52C;             // 0x52C
+    char field_0x530[0x14];
+    f32 mField544;             // 0x544
+    char field_0x548[0x10];
+    f32 mField558;             // 0x558
+    char field_0x55C[0x60];
+    f32 mField5BC;             // 0x5BC
+    char field_0x5C0[0x68];
     int mBoostState;           // 0x628
     f32 mField62C;             // 0x62C
     f32 mField630;             // 0x630
