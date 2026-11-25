@@ -1,6 +1,8 @@
 #ifndef WHIRL_TOUR_GAME_GL_H
 #define WHIRL_TOUR_GAME_GL_H
 
+#include "common/types.h"
+
 /* The game's OpenGL-style render layer (0x0019F000..0x001A5000). Its functions take OpenGL enum values,
    and glEnable/glDisable are a switch over capabilities that set or clear one flag each in the render
    state at 0x00277140 (glEnable(GL_SCISSOR_TEST) also reloads the scissor box). The enum values are
@@ -17,18 +19,33 @@
 #define GL_TEXTURE_2D          0x0DE1
 #define GL_UNSIGNED_BYTE       0x1401
 #define GL_FLOAT               0x1406
+#define GL_MODELVIEW           0x1700
+#define GL_PROJECTION          0x1701
 #define GL_POLYGON_OFFSET_FILL 0x8037
 #define GL_VERTEX_ARRAY        0x8074
 #define GL_COLOR_ARRAY         0x8076
 #define GL_TEXTURE_COORD_ARRAY 0x8078
 
-/* The *Pointer functions keep the size and the pointer (not the type or stride) in the array state at
+/* Immediate mode: glBegin starts a primitive in the vertex buffer (0x002670A0), glVertex3f appends a
+   0x30-byte vertex with the current texture coordinate and colour (glTexCoord2f, glColor3f/4f; colours
+   are kept scaled to the GS range 0..128) and glEnd sends it. glPushMatrix/glPopMatrix move the stack
+   of the mode glMatrixMode chose (GL_MODELVIEW or GL_PROJECTION) by one 0x40-byte matrix.
+   The *Pointer functions keep the size and the pointer (not the type or stride) in the array state at
    0x00267140; glDrawArrays reads them back. glBindTexture looks the name up in the texture table. */
 extern "C" {
+void glEnd(void);                                                                   /* 0x001A1418 */
 void glDrawArrays(unsigned int mode, int first, int count);                         /* 0x001A1938 */
 void glBindTexture(unsigned int target, unsigned int texture);                      /* 0x001A2340 */
 void glEnable(unsigned int cap);                                                    /* 0x001A2DB8 */
 void glDisable(unsigned int cap);                                                   /* 0x001A2FB8 */
+void glMatrixMode(unsigned int mode);                                               /* 0x001A3638 */
+void glPushMatrix(void);                                                            /* 0x001A3738 */
+void glPopMatrix(void);                                                             /* 0x001A3808 */
+void glBegin(unsigned int mode);                                                    /* 0x001A3ED8 */
+void glVertex3f(f32 x, f32 y, f32 z);                                               /* 0x001A3F10 */
+void glTexCoord2f(f32 s, f32 t);                                                    /* 0x001A4010 */
+void glColor3f(f32 r, f32 g, f32 b);                                                /* 0x001A40F0 */
+void glColor4f(f32 r, f32 g, f32 b, f32 a);                                         /* 0x001A4138 */
 void glTexCoordPointer(int size, unsigned int type, int stride, const void *ptr);   /* 0x001A43C8 */
 void glVertexPointer(int size, unsigned int type, int stride, const void *ptr);     /* 0x001A43E0 */
 void glColorPointer(int size, unsigned int type, int stride, const void *ptr);      /* 0x001A43F8 */

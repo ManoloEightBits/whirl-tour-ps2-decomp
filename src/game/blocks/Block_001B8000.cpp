@@ -84,41 +84,43 @@ u16 UnkObj1B91D8::GetField2()
     return mField2;
 }
 
-// UnkObj1BB0D0 (0x001BB0D0..0x001BB168): no RTTI; its layout is the fields these methods use.
-struct UnkObj1BB0D0
+// UnkArray1BB0D0 (0x001BB0D0..0x001BB168): a dynamic array (no RTTI). ArrayGetElement1BB098(array, i)
+// returns mData0C + i * mStride00 when 0 <= i < mCount08; Clear empties it, Destroy frees the
+// data and the array. mField4 is zeroed with the data (probably the capacity).
+struct UnkArray1BB0D0
 {
-    char field_0x0[0x4];
+    int mStride00;      
     int mField4;         // 0x4
-    int mField8;         // 0x8
-    void *mFieldC;       // 0xC
+    int mCount08;         // 0x8
+    void *mData0C;       // 0xC
 
-    int GetField8();     // 0x001BB0D0
-    void Method1BB120(); // 0x001BB120
-    void Method1BB168(); // 0x001BB168
+    int GetCount();     // 0x001BB0D0
+    void Clear(); // 0x001BB120
+    void Destroy(); // 0x001BB168
 };
 
-int UnkObj1BB0D0::GetField8()
+int UnkArray1BB0D0::GetCount()
 {
-    return mField8;
+    return mCount08;
 }
 
-void UnkObj1BB0D0::Method1BB120()
+void UnkArray1BB0D0::Clear()
 {
-    mField8 = 0;
+    mCount08 = 0;
 }
 
-void UnkObj1BB0D0::Method1BB168()
+void UnkArray1BB0D0::Destroy()
 {
     void *tmp;
 
-    tmp = mFieldC;
+    tmp = mData0C;
     if (tmp != NULL)
     {
         MemFree1BD978(tmp);
-        mFieldC = NULL;
+        mData0C = NULL;
     }
     mField4 = 0;
-    mField8 = 0;
+    mCount08 = 0;
     MemFree1BD978(this);
 }
 

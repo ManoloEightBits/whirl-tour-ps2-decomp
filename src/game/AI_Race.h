@@ -88,7 +88,7 @@ public:
     f32 mFieldB4;              // 0xB4
     f32 mFieldB8;              // 0xB8
     char field_0xBC[8];
-    void *mListC4;             // 0xC4: a list of lists (func_001BB0D0 counts, func_001BB098 gets)
+    void *mListC4;             // 0xC4: a dynamic array of arrays (UnkArray1BB0D0)
     u8 mStateC8;               // 0xC8
     u8 mPrevStateC9;           // 0xC9: mStateC8 before its last change
     u8 mStateCA;               // 0xCA

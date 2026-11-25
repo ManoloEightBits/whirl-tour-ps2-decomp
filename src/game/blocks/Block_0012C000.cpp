@@ -13,7 +13,7 @@ int func_0012ECB8(int arg0)
 }
 
 void func_001BB128(int);    // 0x001BB128
-void func_001BB168(int);    // 0x001BB168
+void ArrayDestroy1BB168(int);    // 0x001BB168
 void func_001BCAC0(int);    // 0x001BCAC0
 void MemFree1BD978(void *); // 0x001BD978
 
@@ -37,8 +37,8 @@ void UnkObj12D0F0::Method12D178()
 {
     func_001BB128(mField0);
     func_001BB128(mField4);
-    func_001BB168(mField0);
-    func_001BB168(mField4);
+    ArrayDestroy1BB168(mField0);
+    ArrayDestroy1BB168(mField4);
     MemFree1BD978(this);
 }
 

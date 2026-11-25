@@ -10,8 +10,6 @@ void func_00198628(int, int, int, int);                // 0x00198628
 void func_00198E08(int, int, int, int, int, int, int); // 0x00198E08
 void func_00199738();                                  // 0x00199738
 void func_0019B2C0();                                  // 0x0019B2C0
-void func_001A3638(int);                               // 0x001A3638
-void func_001A3808();                                  // 0x001A3808
 void func_001BD240(int);                               // 0x001BD240
 int MemAlloc1BD958(int);                                // 0x001BD958
 void MemFree1BD978(void *);                            // 0x001BD978
@@ -112,10 +110,10 @@ void func_0019A610()
 void DrawEnd19A6B0()
 {
     glEnable(GL_DEPTH_TEST);
-    func_001A3638(0x1701);
-    func_001A3808();
-    func_001A3638(0x1700);
-    func_001A3808();
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
+    glPopMatrix();
 }
 
 void func_0019B778()
@@ -155,10 +153,10 @@ struct UnkObj198C78
 void UnkObj198C78::Method198C78()
 {
     glDisable(GL_POLYGON_OFFSET_FILL);
-    func_001A3638(0x1701);
-    func_001A3808();
-    func_001A3638(0x1700);
-    func_001A3808();
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
+    glPopMatrix();
     glBindTexture(GL_TEXTURE_2D, mField14C);
     func_001A3188(0xDE1, 0, 0, 0, 0, 0, 0x80, 0x80);
     func_001A42F8(0x100);

@@ -1,7 +1,7 @@
 #include "game/AI_Race.h"
 
-int func_001BB0D0(void *list);          // 0x001BB0D0: number of elements
-void *func_001BB098(void *list, int i); // 0x001BB098: element i
+int ArrayGetCount1BB0D0(void *list);          // 0x001BB0D0: number of elements
+void *ArrayGetElement1BB098(void *list, int i); // 0x001BB098: element i
 
 int AI_Race::GetFieldA0()
 {
@@ -253,9 +253,9 @@ void AI_Race::func_0010BC20()
 
 void *AI_Race::func_0010BE90(int i)
 {
-    if (i >= func_001BB0D0(mListC4))
+    if (i >= ArrayGetCount1BB0D0(mListC4))
         return 0;
-    return func_001BB098(mListC4, i);
+    return ArrayGetElement1BB098(mListC4, i);
 }
 
 void *AI_Race::func_0010BF08(int i)
@@ -265,7 +265,7 @@ void *AI_Race::func_0010BF08(int i)
 
 void *AI_Race::func_0010BF50(int i, void **list)
 {
-    if (i >= func_001BB0D0(*list))
+    if (i >= ArrayGetCount1BB0D0(*list))
         return 0;
-    return *(void **)func_001BB098(*list, i);
+    return *(void **)ArrayGetElement1BB098(*list, i);
 }

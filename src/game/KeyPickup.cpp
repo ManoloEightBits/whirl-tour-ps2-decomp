@@ -1,3 +1,4 @@
+#include "game/GL.h"
 #include "common/libc.h"
 #include "game/Pickup.h"
 #include "game/CollisionListeners.h"
@@ -15,7 +16,6 @@ void PhysicsRelease1F3A70(void *);                       // 0x001F3A70
 void CleanupNode194EC0(void *);                          // 0x00194EC0
 void EnvObjCleanup14FB70(EnvObj *);                      // 0x0014FB70
 void func_00193100(UnkNode *);                           // 0x00193100
-void func_001A3738();                                    // 0x001A3738
 void func_001A3A00(f32 x, f32 y, f32 z);                 // 0x001A3A00
 void *func_0012ECC0();                                   // 0x0012ECC0
 void func_001F3F30(void *obj, void *a, void *b);                   // 0x001F3F30
@@ -25,7 +25,6 @@ void func_001B3900(Mat4x4f *dst, const Mat4x4f *src);              // 0x001B3900
 void func_00192820(UnkNode *node, f32 dt);                         // 0x00192820: updates a node
 void func_001A3AB0(void *);                              // 0x001A3AB0
 void func_00196110(void *model);                         // 0x00196110
-void func_001A3808();                                    // 0x001A3808
 int func_001262B0(int id);                               // 0x001262B0
 void *func_00116560(UnkObjDef *, const Vec3f *pos, const Vec4f *rot, int); // 0x00116560: creates the physics object
 void func_0014FB08(EnvObj *, UnkObjDef *, int);          // 0x0014FB08
@@ -589,11 +588,11 @@ void PickupHelper11B2A0(Pickup *p)
     {
         for (int k = 0; k < p->mCount1C; k++)
         {
-            func_001A3738();
+            glPushMatrix();
             TranslateTo(&p->mPos44, p);
             func_001A3AB0(func_0012ECC0());
             func_00196110(p->mArray20[k]);
-            func_001A3808();
+            glPopMatrix();
         }
     }
 }
