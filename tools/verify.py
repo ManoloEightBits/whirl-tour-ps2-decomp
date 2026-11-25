@@ -292,6 +292,8 @@ def compare(obj_path, game, game_base, addresses, verbose, found=None):
 
     If `found` is a list, (address, size, name) is appended to it for every matching function."""
     obj = Elf32(obj_path)
+    if not any(sec['name'] == '.text' for sec in obj.sections):
+        return 0, 0, [], 0  # every function of the file is under #ifdef NON_MATCHING
     text_index, text = obj.section('.text')
     code = obj.contents(text)
     relocs = obj.relocations(text_index)

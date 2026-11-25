@@ -365,6 +365,12 @@
 0x001DDC68 __tft23IVP_Listener_Set_Active1Z8IVP_Core
 0x00100C08 __builtin_delete
 
+# Tricks (src/game/Tricks.cpp)
+0x001240F8 func_001240F8__FP9UnkParserP12UnkTrickListPc
+0x00124280 func_00124280__FPCc
+0x00125880 func_00125880__FPCc
+0x0025DC28 data_0025DC28
+
 # AI_Vehicle (src/game/AI_Vehicle.cpp)
 0x0010E298 GetFieldEC__10AI_Vehicle
 0x0010E2A0 SetFieldEC__10AI_Vehiclef
