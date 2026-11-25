@@ -96,11 +96,11 @@ public:
     int GetField508();                       // 0x0017E6F8
     int GetField50C();                       // 0x0017E700
     void ClearFields50C_508();               // 0x0017E708
-    f32 func_0017E718(f32 v);                // 0x0017E718
-    f32 func_0017E758(f32 v);                // 0x0017E758
-    f32 func_0017E798();                     // 0x0017E798
-    f32 func_0017E810();                     // 0x0017E810
-    f32 func_0017E888();                     // 0x0017E888
+    f32 ScaleRampLaunch(f32 v);              // 0x0017E718
+    f32 ScaleWedgeLaunch(f32 v);             // 0x0017E758
+    f32 RandomStartAcc124();                 // 0x0017E798
+    f32 RandomStartAcc100();                 // 0x0017E810
+    f32 RandomStartAcc13C();                 // 0x0017E888
     Vec3f *GetPtr194();                      // 0x0017E900
     void SetVec194(Vec3f *v);                // 0x0017E908
     int GetField500();                       // 0x0017E928

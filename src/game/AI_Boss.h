@@ -12,6 +12,41 @@ struct UnkAttackActor
     f32 mField10; // 0x10
 };
 
+// Boss settings: the boss script's keys, read by the parser 0x0015DD70 (keyword table 0x00262398:
+// properties, talking, view, lookatsettings, states, distancereach, distancesearch, ...) into a buffer
+// of the level loader 0x0012BBB0, which copies it into a 0x20C-byte heap object. Field names are the
+// keys (tools/analysis/keyword_fields.py); the gaps hold values read through other buffers (attack,
+// sounds, movement, the per-state probabilities). Not used by matched code yet. +0x10 is the collision
+// damage; AI_Boss::mAttack1D8 points to something whose +0x10 is the damage dealt to the player, so it
+// may be this object (unchecked).
+struct UnkBossParams
+{
+    char field_0x00[0xC];
+    f32 mWeakness0C;        // 0x0C "weakness"
+    f32 mCollisionDamage10; // 0x10 "collisiondamage"
+    char field_0x14[0x8];
+    f32 mRange1C;           // 0x1C "range"
+    f32 mWall20;            // 0x20 "wall"
+    f32 mLookAt24;          // 0x24 "lookat"
+    f32 mBodyToHeadTurn28;  // 0x28 "bodytoheadturn"
+    char field_0x2C[0x4];
+    f32 mHearRange30;       // 0x30 "hearrange"
+    f32 mMinApproach34;     // 0x34 "minapproach"
+    f32 mMaxApproach38;     // 0x38 "maxapproach"
+    f32 mMinPercentage3C;   // 0x3C "minpercentage"
+    f32 mMaxRandChange40;   // 0x40 "maxrandchange"
+    f32 mTurnThreshold44;   // 0x44 "turnthreshold"
+    f32 mRadius48;          // 0x48 "radius" (distancereach or distancesearch section, unchecked)
+    f32 mRadius4C;          // 0x4C "radius" (the other one)
+    char field_0x50[0x8];
+    f32 mInvTime58;         // 0x58 "invtime"
+    char field_0x5C[0x18C];
+    f32 mProbability1E8;    // 0x1E8 "probability"
+    f32 mInterval1EC;       // 0x1EC "interval"
+    char field_0x1F0[0x1C];
+};
+STATIC_ASSERT(sizeof(UnkBossParams) == 0x20C, UnkBossParams_size);
+
 // RTTI: AI_Boss : AI_Agent (_vptr at +0x9C). Its __tf is still the generated stub in src/rtti/; the
 // accessors after it (0x0015E9B8..0x0015EE0F) were drafted with tools/analysis/gen_accessors.py.
 class AI_Boss : public AI_Agent

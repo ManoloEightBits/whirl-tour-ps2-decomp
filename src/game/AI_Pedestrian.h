@@ -56,17 +56,17 @@ public:
     f32 GetField138();                // 0x001066C0
     void SetField138Ratio(f32 v);     // 0x001066C8
     void ResetField138();             // 0x001066E8
-    f32 GetParam04();                 // 0x001066F8
+    f32 GetSpeed04();                 // 0x001066F8
     f32 GetField130();                // 0x00106708
     void SetField130(f32 v);          // 0x00106710
-    f32 GetParam14();                 // 0x00106718
-    f32 GetParam18();                 // 0x00106728
-    f32 GetParam1C();                 // 0x00106738
-    f32 GetParam20();                 // 0x00106748
-    f32 GetParam24();                 // 0x00106758
-    f32 GetParam28();                 // 0x00106768
-    f32 GetParam2C();                 // 0x00106778
-    f32 GetParam30();                 // 0x00106788
+    f32 GetProbability14();           // 0x00106718
+    f32 GetTimeIn18();                // 0x00106728
+    f32 GetTimeOut1C();               // 0x00106738
+    f32 GetProbability20();           // 0x00106748
+    f32 GetStopRange24();             // 0x00106758
+    f32 GetTime28();                  // 0x00106768
+    f32 GetSpeed2C();                 // 0x00106778
+    f32 GetLookAtRange30();           // 0x00106788
     int GetField184();                // 0x00106798
     char field_0xA0[0x30];
     Vec4f mFieldD0;            // 0xD0

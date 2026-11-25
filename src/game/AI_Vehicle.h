@@ -4,7 +4,7 @@
 #include "common/types.h"
 #include "game/AI_Agent.h"
 
-// Pointed to by AI_Vehicle+0x11C (floats read by GetParam1C/GetParam6C).
+// Pointed to by AI_Vehicle+0x11C (floats read by GetSpeed1C/GetWheelRadius6C).
 struct UnkNode;
 
 // Passed to AI_Vehicle::func_0010E558, which replaces its +0x58 with func_0012CCB0 of it.
@@ -43,12 +43,12 @@ public:
     Vec3f *GetPtrE0();                // 0x0010E320
     Vec4f *GetRow1();                 // 0x0010E330
     Vec4f *GetRow0();                 // 0x0010E338
-    f32 GetParam1C();                 // 0x0010E340
+    f32 GetSpeed1C();                 // 0x0010E340
     f32 GetFieldF8();                 // 0x0010E350
     void SetFieldF8(f32 v);           // 0x0010E358
     f32 GetFieldFC();                 // 0x0010E360
     f32 GetField100();                // 0x0010E368
-    f32 GetParam6C();                 // 0x0010E370
+    f32 GetWheelRadius6C();           // 0x0010E370
     void func_0010D1A0();             // 0x0010D1A0
     void Action10E468();              // 0x0010E448
     void func_0010E468();             // 0x0010E468: passes mNode138 to func_00193100

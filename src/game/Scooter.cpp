@@ -206,21 +206,21 @@ void Scooter::ClearFields50C_508()
     mField50C = 0;
 }
 
-f32 Scooter::func_0017E718(f32 v)
+f32 Scooter::ScaleRampLaunch(f32 v)
 {
     if (gGameCtx262250->mField18 == 1)
         v = (v - 1.0f) * mParams1C0->mRampLaunch15C + 1.0f;
     return v;
 }
 
-f32 Scooter::func_0017E758(f32 v)
+f32 Scooter::ScaleWedgeLaunch(f32 v)
 {
     if (gGameCtx262250->mField18 == 1)
         v = (v - 1.0f) * mParams1C0->mWedgeLaunch160 + 1.0f;
     return v;
 }
 
-f32 Scooter::func_0017E798()
+f32 Scooter::RandomStartAcc124()
 {
     f32 val = mParams1C0->mStartAcc124;
     if ((rand() % 101 - 50) * 0.02f < 0.0f)
@@ -228,7 +228,7 @@ f32 Scooter::func_0017E798()
     return val;
 }
 
-f32 Scooter::func_0017E810()
+f32 Scooter::RandomStartAcc100()
 {
     f32 val = mParams1C0->mStartAcc100;
     if ((rand() % 101 - 50) * 0.02f < 0.0f)
@@ -236,7 +236,7 @@ f32 Scooter::func_0017E810()
     return val;
 }
 
-f32 Scooter::func_0017E888()
+f32 Scooter::RandomStartAcc13C()
 {
     f32 val = mParams1C0->mStartAcc13C;
     if ((rand() % 101 - 50) * 0.02f < 0.0f)

@@ -77,7 +77,7 @@ Vec4f * AI_Vehicle::GetRow0()
     return &mMatrixA0.row[0];
 }
 
-f32 AI_Vehicle::GetParam1C()
+f32 AI_Vehicle::GetSpeed1C()
 {
     return mParams11C->mSpeed1C;
 }
@@ -102,7 +102,7 @@ f32 AI_Vehicle::GetField100()
     return mField100;
 }
 
-f32 AI_Vehicle::GetParam6C()
+f32 AI_Vehicle::GetWheelRadius6C()
 {
     return mParams11C->mWheelRadius6C;
 }

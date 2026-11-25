@@ -5,6 +5,25 @@
 #include "game/AI_Agent.h"
 #include "game/Player.h"
 
+// Race settings: the racer script's keys, read by the parser 0x0010B338 (keyword table 0x00259D30:
+// properties, catchup, talking, ...) into a buffer of the level loader 0x0012BBB0, which copies it into
+// a 0x28-byte heap object (func_001BD558(0x28, 6)). Field names are the keys (tools/analysis/
+// keyword_fields.py). Not used by matched code yet.
+struct UnkRaceParams
+{
+    char field_0x00[0x4];
+    f32 mGoalReach04;       // 0x04 "goalreach"
+    f32 mTurnRadiusMul08;   // 0x08 "turnradiusmul"
+    f32 mTurnMin0C;         // 0x0C "turnmin"
+    f32 mDistancePercent10; // 0x10 "distancepercent"
+    f32 mBehind14;          // 0x14 "behind"
+    f32 mAhead18;           // 0x18 "ahead"
+    f32 mRange1C;           // 0x1C "range"
+    f32 mInterval20;        // 0x20 "interval"
+    f32 mProbability24;     // 0x24 "probability"
+};
+STATIC_ASSERT(sizeof(UnkRaceParams) == 0x28, UnkRaceParams_size);
+
 // RTTI: AI_Race : AI_Agent (_vptr at +0x9C). Its __tf is still the generated stub in src/rtti/; this
 // file has the non-virtual accessors after it (0x0010B970..0x0010BB87). Names are offset-based.
 class AI_Race : public AI_Agent

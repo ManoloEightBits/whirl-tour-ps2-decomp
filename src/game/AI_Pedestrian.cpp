@@ -156,7 +156,7 @@ void AI_Pedestrian::ResetField138()
     mField138 = 1.0f;
 }
 
-f32 AI_Pedestrian::GetParam04()
+f32 AI_Pedestrian::GetSpeed04()
 {
     return mParams17C->mSpeed04;
 }
@@ -171,42 +171,42 @@ void AI_Pedestrian::SetField130(f32 v)
     mField130 = v;
 }
 
-f32 AI_Pedestrian::GetParam14()
+f32 AI_Pedestrian::GetProbability14()
 {
     return mParams17C->mProbability14;
 }
 
-f32 AI_Pedestrian::GetParam18()
+f32 AI_Pedestrian::GetTimeIn18()
 {
     return mParams17C->mTimeIn18;
 }
 
-f32 AI_Pedestrian::GetParam1C()
+f32 AI_Pedestrian::GetTimeOut1C()
 {
     return mParams17C->mTimeOut1C;
 }
 
-f32 AI_Pedestrian::GetParam20()
+f32 AI_Pedestrian::GetProbability20()
 {
     return mParams17C->mProbability20;
 }
 
-f32 AI_Pedestrian::GetParam24()
+f32 AI_Pedestrian::GetStopRange24()
 {
     return mParams17C->mStopRange24;
 }
 
-f32 AI_Pedestrian::GetParam28()
+f32 AI_Pedestrian::GetTime28()
 {
     return mParams17C->mTime28;
 }
 
-f32 AI_Pedestrian::GetParam2C()
+f32 AI_Pedestrian::GetSpeed2C()
 {
     return mParams17C->mSpeed2C;
 }
 
-f32 AI_Pedestrian::GetParam30()
+f32 AI_Pedestrian::GetLookAtRange30()
 {
     return mParams17C->mLookAtRange30;
 }
