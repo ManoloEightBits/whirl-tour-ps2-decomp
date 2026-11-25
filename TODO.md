@@ -71,6 +71,28 @@ map of the binary, regenerated with `tools/analysis/coverage.py --map docs/MAP.m
 5. **Front end:** the remaining larger `VirtSlot2`/`VirtSlot3`/constructor functions of the 10
    `FE*Screen` subclasses.
 
+## Naming (most matched code still has address names)
+
+Matching gives the bytes, not what the code is for: the game has no symbols, and a small accessor says
+nothing about its field. Names have to come from evidence, roughly in this order of yield:
+
+1. **Library functions by behaviour.** A few functions are called from hundreds of places, so naming them
+   makes many callers readable at once: `func_0022F50C(p, 0, 0x100)` looks like `memset`, `func_0022E8E0`
+   like `malloc` (called by `__builtin_new`), `func_001BD958(size)` like the game's allocator (its result
+   is checked for null and then constructed) and `func_001BD978(p)` like the matching free (destructors
+   call it with `this`). Confirm each from its code before renaming.
+2. **Keyword parsers.** Script keys such as `speed`, `acceleration`, `turnradiusmul` (listed per block in
+   `docs/MAP.md`) are compared and then stored to `this+off`; that names the field (`mField2C` ->
+   `mSpeed`) and every accessor of it.
+3. **Known API constants**, such as the OpenGL enums in the GL-style layer (step 0 above).
+4. **Watching the retail game run (later, not needed now).** This works on the original game, not on our
+   code: the decompilation only says which address holds what. In PCSX2 2.x, *Debug -> Open Debugger*:
+   a breakpoint on a function shows when it runs (menu, level load, every frame) with `this` in `$a0`;
+   a memory write breakpoint on `this+off` shows which function changes a field and when (it changes when
+   the scooter speeds up: it is the speed); a `.pnach` patch that puts `jr $ra; nop` at a function's start
+   shows what disappears without it. Useful for code with no strings nearby; it needs a person playing,
+   so prepare a short list of addresses and what to look for first.
+
 ## NON_MATCHING (register allocation or scheduling; the notes are in the source)
 
 - `Pickup::Pickup` `0x0011B060`, 123/144 (`KeyPickup.cpp`): the loop counter's `i = 0` and two FP registers.
