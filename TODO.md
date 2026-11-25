@@ -17,6 +17,25 @@ map of the binary, regenerated with `tools/analysis/coverage.py --map docs/MAP.m
 
 ## Next, in order
 
+0. **Raw m2c matches from `tools/analysis/m2c_sweep.py`.** The first sweep (2026-11-25, 185 s) found 1119
+   unmatched functions whose raw m2c draft already compiles to the game's bytes (618 game, 466 physics, 35
+   runtime; 549 are <= 16 B) and 263 more that differ only in registers or immediates. Game code only for now.
+   - **Phase 1 done:** the 226 game functions whose draft touches no fields (empty functions, constants,
+     one-call wrappers, allocate-then-construct helpers) are in `src/game/blocks/Block_<16 KB block>.cpp`
+     with address names; move them to their TU's file when one is identified. Left out on purpose: the 11
+     AI vtable slots (`0x00106568`, `0x0010B910`/`B918`/`BA20`/`BB88`/`BD60`, `0x0010E310`/`E318`/`E328`,
+     `0x0015EE28`, `0x0018D270`; see step 2), `__builtin_new`/`delete`/`vec_new`/`vec_delete`
+     (`0x00100BE8..0x00100C48`, the game's own `operator new`/`delete`), `EnvObjCleanup14FB70` and its 4
+     callers plus `0x00183CB8` (they need `EnvObj`/`UnkModel1B7` types), and 16 functions at addresses
+     4 mod 8 (`0x00154EDC..0x00154F6C` float constants, `0x001C4084..0x001C40AC` int constants): they
+     match in `verify.py`, but cc1plus aligns every function to 8 (`.align 3`), so `rebuild.py` cannot place
+     them; find out how the original got 4-byte alignment there before adding them.
+   - **Phase 2:** the ~354 whose draft reads or writes fields. They need the struct or class each pointer is
+     (one definition per structure, no raw casts), so take them TU by TU with
+     `m2c_sweep.py report --range A B --status match` and `gen_accessors.py`. Lead to check:
+   the calls in `0x00168A40` use OpenGL enum values (`0x1406` GL_FLOAT, `0x8074` GL_VERTEX_ARRAY, `0xDE1`
+   GL_TEXTURE_2D, `0xBE2` GL_BLEND), so `0x001A1938..0x001A4930` looks like a GL-style render layer
+   (`glVertexPointer`/`glEnableClientState`/`glDrawArrays`-like); confirm from more callers before naming.
 1. **Trivial batches with `tools/analysis/gen_accessors.py`.** About 380 leaf getters/setters are left
    (`scan_candidates.py --level 1`). Take one class TU at a time (ranges in `docs/MAP.md`), review the
    draft (names with evidence, field types, the `+0x...` that are pointers), and leave the vtable slots

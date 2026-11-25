@@ -11,12 +11,12 @@ A hobby reverse-engineering project for the US PS2 release of *Whirl Tour* (`SLU
 <!-- progress:begin -->
 | Metric | Matched / Confirmed | Total in `.text` | Share | Progress |
 | :--- | ---: | ---: | ---: | :--- |
-| **Total `.text` bytes** | **45,180 B** | 1,401,448 B | **3.224%** | `█░░░░░░░░░░░░░░░░░░░` |
-| **Game logic bytes** (`0x100000..0x1C62CF`) | **40,776 B** | 811,728 B | **5.023%** | `██░░░░░░░░░░░░░░░░░░` |
-| **Matched functions (`verify.py`)** | **876** | ~7,125 | **12.295%** | `███░░░░░░░░░░░░░░░░░` |
+| **Total `.text` bytes** | **50,212 B** | 1,401,448 B | **3.583%** | `█░░░░░░░░░░░░░░░░░░░` |
+| **Game logic bytes** (`0x100000..0x1C62CF`) | **45,808 B** | 811,728 B | **5.643%** | `██░░░░░░░░░░░░░░░░░░` |
+| **Matched functions (`verify.py`)** | **1102** | ~7,125 | **15.467%** | `████░░░░░░░░░░░░░░░░` |
 | **Confirmed vtable slots (`verify_vtables.py`)** | **207** | ~889 | **23.285%** | `█████░░░░░░░░░░░░░░░` |
 | **Confirmed RTTI classes (`vtables.txt`)** | **46** | 193 | **23.834%** | `█████░░░░░░░░░░░░░░░` |
-| **Full binary relink (`rebuild.py`)** | **876 linked** | `02f39f20...0744` | **SHA-1 MATCH** | `████████████████████` |
+| **Full binary relink (`rebuild.py`)** | **1102 linked** | `02f39f20...0744` | **SHA-1 MATCH** | `████████████████████` |
 <!-- progress:end -->
 
 ### Binary `.text` Map (`0x00100000..0x00256268`)
@@ -40,12 +40,13 @@ A hobby reverse-engineering project for the US PS2 release of *Whirl Tour* (`SLU
 | **Motion & Interpolation Controllers** | `MotionCtrl`, `IP_PosCtrl`, `IP_RotCtrl`, `IP_AnimCtrl`, `MBCtrl`, `ScootCtrl` (+ IVP bases `IVP_Controller`, `IVP_Controller_Independent`) | 52 / ~65 | 36 / 42 | `████████░░` **80%** (all vtables confirmed; `IP_PosCtrl`, `MBCtrl` and `ScootCtrl` 100% including constructors and accessors; the simulation step of `MotionCtrl`, `IP_RotCtrl` and `IP_AnimCtrl` left) |
 | **Collision & Event Listeners** | `DD_Event_Listener`, `DD_Collision_Listener`, `Global_Phantom_Listener`, `ScootCL`, `MBCL`, `LunActCL`, `MarActCL`, `AI_PedestrianCL` | 57 / ~67 | 31 / 40 | `█████████░` **85%** (all 8 listeners 100%, `LunActCL`/`MarActCL` constructors and `LunAct`/`MarAct`/`UnkBody` accessors matched, and the whole `DD_Event_Listener` TU `0x00116B00..0x00117727`; IVP base classes `IVP_Listener_Object`, `IVP_Listener_Collision` & `IVP_Listener_Phantom` also 100%) |
 | **AI & Boss Attacks** | `AI_Agent`, `AI_Pedestrian`, `AI_Race`, `AI_Vehicle`, `AI_Boss`, `AI_Attack*` | 170 / ~340 | 0 / 73 | `█████░░░░░` **50%** (RTTI `__tf` matched; the non-virtual accessors of `AI_Pedestrian` (43), `AI_Race` (43), `AI_Vehicle` (21) and `AI_Boss` (40), plus 14 short `AI_Race`/`AI_Vehicle` methods) |
+| **Address blocks (`src/game/blocks/`)** | none yet (translation unit not identified; address-based names) | 226 / 226 | — | `██████████` **100%** of this batch (raw m2c drafts that already compiled to the game's bytes, found by `tools/analysis/m2c_sweep.py`: empty functions, constants, one-call wrappers and allocate-then-construct helpers; one file per 16 KB block, to be moved to their TUs) |
 | **Single-inheritance RTTI (`src/rtti/`)** | 77 polymorphic classes | 77 / 77 | — | `██████████` **100%** (probe-generated `__tf*` functions) |
 
 For a block-by-block view of the whole binary (what each area holds, how much is matched), see
 [docs/MAP.md](docs/MAP.md).
 
-This table only lists the classes work has started on: about 850 of the ~3,700 functions in game code.
+This table only lists the classes work has started on: about 1,080 of the ~3,700 functions in game code.
 Its bars measure those classes, not the binary. `tools/analysis/coverage.py` shows what is left; on
 2026-11-24 it reported:
 
