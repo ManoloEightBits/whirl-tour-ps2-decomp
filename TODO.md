@@ -49,7 +49,9 @@ map of the binary, regenerated with `tools/analysis/coverage.py --map docs/MAP.m
      callers plus `0x00183CB8` (they need `EnvObj`/`UnkModel1B7` types), and 16 functions at addresses
      4 mod 8 (`0x00154EDC..0x00154F6C` float constants, `0x001C4084..0x001C40AC` int constants): they
      match in `verify.py`, but cc1plus aligns every function to 8 (`.align 3`), so `rebuild.py` cannot place
-     them; find out how the original got 4-byte alignment there before adding them.
+     them. They are not functions: the float ones are the cases of `func_00154EA8`, a switch that returns
+     a float per index (`FEOptionsScreen::VirtSlot3` uses it as a time), and the int ones at `0x001C4084`
+     are most likely the same; match the switches instead.
    - **Phase 2, first part done:** 171 functions whose draft only touches fields of its first argument are
      methods of 96 `UnkObj<addr>` classes in the same block files. A class groups functions within 0x100 bytes
      of each other, with no matched function of another class between them and no field used with two
@@ -98,13 +100,16 @@ map of the binary, regenerated with `tools/analysis/coverage.py --map docs/MAP.m
    552 B, `IP_AnimCtrl` `0x0016F128` 1288 B. `IP_RotCtrl`'s has a block of VU0 macro instructions
    (`lqc2`/`vmulx`/`vadd`/`sqc2`) that GCC does not generate, so it needs inline `asm`. (The `MBCL` and
    `ScootCL` constructors are inlined at `0x0015F7AC` / `0x00171534` and have no out-of-line copy.)
-5. **Front end:** the remaining larger `VirtSlot2`/`VirtSlot3`/constructor functions of the 10
-   `FE*Screen` subclasses (about 27 functions, 18 KB). Done: `FEMenu` (14 of 15), `FEScreen::VirtSlot3`,
-   `AddOwnerRecords`, `FELevelScreen::VirtSlot3`; the owner record (`FEOwner`), `FESub08`, `TextObj`
-   (`SetColor`, `mWidth34` from `MeasureText19B138`) and the GL calls `glRotatef`/`glTranslatef`/
-   `glMultMatrixf` are typed and named, and the screens' constructors take an `FEOwner *`. The key to
-   the draw functions is the `TEXT_SET_*` macros (see docs/MATCHING.md): try each text statement plain
-   and wrapped. Next: the other screens' `VirtSlot3` (draw) functions, then the `VirtSlot2` updates.
+5. **Front end:** left: the `VirtSlot2` updates, the constructors of `FEChooseScreen`,
+   `FECharacterScreen`, `FENameSelectScreen` and `FEScooterScreen`, and the draw functions of
+   `FENameSelectScreen` (`0x0016C0D8`) and `FEPlaylistScreen` (`0x00112578`). Done: `FEMenu` (14 of 15),
+   `FEScreen::VirtSlot3`/`AddOwnerRecords`, and the draw functions (`VirtSlot3`) of `FELevelScreen`,
+   `FEChooseScreen`, `FECharacterScreen`, `FEMovScreen`, `FEStartScreen` and `FEScooterScreen`. The key
+   to the draw functions is the `TEXT_SET_*` macros (docs/MATCHING.md): run each text statement plain and
+   wrapped through `diff_func.py --bodies`. Typed on the way: `FEOwner` (model ids, text scale and
+   colours, title), `FESub08`, `TextObj` (`SetColor`, `mWidth34`), the per-player definitions and model
+   pairs of the choose/scooter screens, and the GL calls `glLoadMatrixf`/`glRotatef`/`glTranslatef`/
+   `glMultMatrixf`/`glBlendFunc`.
 
 ## Naming (most matched code still has address names)
 
@@ -153,6 +158,9 @@ nothing about its field. Names have to come from evidence, roughly in this order
 - `FELevelScreen::VirtSlot4` `0x0016A9C8`, 1/8 (`FEScreens.cpp`).
 - `FEMenu::Draw` `0x0016B4A8`, 7/175 (`FEScreens.cpp`): the text pointer of two statements gets the
   other register; the text macros of `FEScreen.h` fixed the rest.
+- `FEMonsterScreen::VirtSlot3` `0x001153B8`, 117/131 and `FEOptionsScreen::VirtSlot3` `0x0016CED0`, 166/186
+  (`FEScreens.cpp`): each needs more saved registers than our code (two copies of a global's address,
+  hoisted constants; `$fp`), loop forms and the text macros did not change it.
 - `FEScreen::FEScreen` `0x0016E458`, 7/85 (`FEScreen.cpp`): the constants 1, 8 and 9 of `mField18..24`
   get other registers; the member initializer list fixes the stores and the vtable pointer.
 - `func_001240F8` (`tricklist` parser), 93/97 (`Tricks.cpp`): one pointer in `$s0` instead of `$v0`.

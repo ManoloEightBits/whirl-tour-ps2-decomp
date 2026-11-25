@@ -1,6 +1,60 @@
 #include "game/FEScreen.h"
+#include "game/GL.h"
 
 extern FEPad *gGameCtx262250; // 0x00262250
+
+void DrawBegin19A640();            // 0x0019A640
+void DrawEnd19A6B0();              // 0x0019A6B0
+const char *func_00151D40(u16 id); // 0x00151D40
+
+// The title screen: the background picture (texture 0x2B165FC1, a CRC of its name) over the whole
+// screen, string 3 at (500, 150), and the black fade while mField34 == 3.
+void FEStartScreen::VirtSlot3()
+{
+    DrawBegin19A640();
+    glDisable(GL_CULL_FACE);
+    glDisable(GL_DEPTH_TEST);
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, 0x2B165FC1);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glColor3f(1.0f, 1.0f, 1.0f);
+    glBegin(GL_TRIANGLE_STRIP);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(0.0f, 1000.0f, 0.0f);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(1000.0f, 1000.0f, 0.0f);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(0.0f, 0.0f, 0.0f);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(1000.0f, 0.0f, 0.0f);
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_BLEND);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+    DrawEnd19A6B0();
+    DrawBegin19A640();
+    TEXT_ADD_FLAGS(mText14, 2);
+    TEXT_SET_POS(mText14, 500.0f, 150.0f, 0.0f);
+    TEXT_SET_STRING(mText14, func_00151D40(3));
+    mText14->mScale1C.Set(0.5f, 0.5f, 1.0f);
+    TEXT_SET_RGBA(mText14, 0x80808080);
+    DrawText19B758(mText14);
+    if (mField34 == 3)
+    {
+        glEnable(GL_BLEND);
+        glColor4f(0.0f, 0.0f, 0.0f, mField2C);
+        glBegin(GL_TRIANGLE_STRIP);
+        glVertex3f(0.0f, 0.0f, 0.0f);
+        glVertex3f(1000.0f, 0.0f, 0.0f);
+        glVertex3f(0.0f, 1000.0f, 0.0f);
+        glVertex3f(1000.0f, 1000.0f, 0.0f);
+        glEnd();
+        glDisable(GL_BLEND);
+    }
+    DrawEnd19A6B0();
+}
 
 FEStartScreen::FEStartScreen(FEOwner *owner)
     : FEScreen(2, 3, owner)

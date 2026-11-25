@@ -9,6 +9,8 @@
    OpenGL's. */
 
 #define GL_TRIANGLE_STRIP      0x0005
+#define GL_SRC_ALPHA           0x0302
+#define GL_ONE_MINUS_SRC_ALPHA 0x0303
 #define GL_FOG                 0x0B60
 #define GL_LIGHTING            0x0B50
 #define GL_CULL_FACE           0x0B44
@@ -41,6 +43,7 @@ void glBindTexture(unsigned int target, unsigned int texture);                  
 void glEnable(unsigned int cap);                                                    /* 0x001A2DB8 */
 void glDisable(unsigned int cap);                                                   /* 0x001A2FB8 */
 void glMatrixMode(unsigned int mode);                                               /* 0x001A3638 */
+void glLoadMatrixf(const f32 *m);                                                   /* 0x001A3648 */
 void glPushMatrix(void);                                                            /* 0x001A3738 */
 void glPopMatrix(void);                                                             /* 0x001A3808 */
 void glRotatef(f32 angle, f32 x, f32 y, f32 z);                                     /* 0x001A3858 */
@@ -56,6 +59,7 @@ void glVertexPointer(int size, unsigned int type, int stride, const void *ptr); 
 void glColorPointer(int size, unsigned int type, int stride, const void *ptr);      /* 0x001A43F8 */
 void glEnableClientState(unsigned int array);                                       /* 0x001A4410 */
 void glDisableClientState(unsigned int array);                                      /* 0x001A4490 */
+void glBlendFunc(unsigned int sfactor, unsigned int dfactor);                       /* 0x001A4A60 */
 }
 
 #endif /* WHIRL_TOUR_GAME_GL_H */

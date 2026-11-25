@@ -21,7 +21,9 @@ struct GameCtxFE
     char pad20[0x30];
     int mNumTracks50;
     int mTracks54[64];
-    char pad154[0x1B8];
+    char pad154[0x134];
+    int mArr288[23];
+    int mArr2E4[10];
     int mArr30C[10];
     char pad334[0x50];
     BGMInfo *mBGMTable384;
@@ -73,6 +75,21 @@ void func_00192248(void *);
 const int *func_00155228();
 const char *func_00151D40(u16 id);
 void *func_001262E0(int);
+void *func_00126280(int id);
+void func_00119560(void *actor, int, int);
+void func_00191F80(void *cam, Mat4x4f *view, Mat4x4f *m);
+void func_00191FD0(void *cam, Mat4x4f *proj);
+void func_00196430(void *model, void *tex);
+const int *func_00155F30();
+int func_00155FC8(int);
+const int *func_001561C8();
+f32 func_00154EA8(int);
+void func_00187AB8(void *control, f32 x, f32 y);
+void func_00196E38(void *movie);
+void func_00192350(void *credits);
+f32 Sin1B1910(f32 x);
+void func_00121428(void *stats, TextObj *text, const char *title, f32 x, f32 y, f32, f32, f32, f32, f32, f32,
+                   f32, f32, f32, f32);
 void DrawModel196110(void *model);
 extern FEPad *gFEPads2659A0[4];
 UnkRes126250 *func_00126250(int);
@@ -180,6 +197,42 @@ void FEMonsterScreen::VirtSlot2(f32 dt)
         mMenu0C->mState1C = 0;
     }
 }
+
+#ifdef NON_MATCHING
+// 117 of 131 instructions differ: the game keeps two copies of gGameCtx262250's address (the loop test
+// has its own) and all four constants (150, 350, 750, 50) in registers, which takes two more saved
+// registers than this; loop forms (for/while, the max as if or ternary) and the text macros did not
+// change it.
+// Lists the last (up to) six entries: number, score (func_00155FC8) and name, 50 units apart.
+void FEMonsterScreen::VirtSlot3()
+{
+    char number[0x40];
+    char score[0x40];
+
+    FEScreen::VirtSlot3();
+    f32 y = 530.0f;
+    DrawBegin19A640();
+    mText164->mScale1C.Set(0.6f, 0.65f, 1.0f);
+    mText164->mColor28 = 0x80808080;
+    int n = gGameCtx262250->mCount1C - 6;
+    for (int i = n >= 0 ? n : 0; i < gGameCtx262250->mCount1C; i++)
+    {
+        sprintf(number, func_00151D40(0x6B), i + 1);
+        sprintf(score, func_00151D40(0x6C), func_00155FC8(i) + 1);
+        mText164->mPos04.Set(150.0f, y, 0.0f);
+        mText164->mString30 = number;
+        DrawText19B758(mText164);
+        mText164->mPos04.Set(350.0f, y, 0.0f);
+        mText164->mString30 = score;
+        DrawText19B758(mText164);
+        mText164->mPos04.Set(750.0f, y, 0.0f);
+        mText164->mString30 = func_00151D40(func_00155F30()[gGameCtx262250->mArr288[i]]);
+        DrawText19B758(mText164);
+        y -= 50.0f;
+        }
+    DrawEnd19A6B0();
+}
+#endif
 
 // 3. FEPlaylistScreen
 FEPlaylistScreen::FEPlaylistScreen(FEOwner *owner, int arg2)
@@ -303,6 +356,71 @@ int FEPlaylistScreen::VirtSlot8()
 }
 
 // 4. FEChooseScreen
+// Draws each player's character (mModels168) and, behind it, the two models of mPairs190 with the
+// texture of the player's choice, through the screen's camera.
+void FEChooseScreen::VirtSlot3()
+{
+    Mat4x4f view;
+    Mat4x4f m40;
+    Mat4x4f proj;
+
+    FEScreen::VirtSlot3();
+    func_00191F80(mCam208, &view, &m40);
+    func_00191FD0(mCam208, &proj);
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadMatrixf(&proj.row[0].x);
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadMatrixf(&view.row[0].x);
+    for (int i = 0; i < mCount164; i++)
+    {
+        f32 x;
+        f32 z;
+        if (mCount164 == 1)
+        {
+            x = 1.0f;
+            z = -0.6f;
+        }
+        else
+        {
+            x = 1.9f;
+            if (i == 0)
+                x = 0.7f;
+            z = -1.5f;
+        }
+        glPushMatrix();
+        glTranslatef(x, -0.8f, z);
+        glRotatef(-30.0f, 0.0f, 1.0f, 0.0f);
+        if (mModels168[i] != 0 && mClosing20C == 0)
+            func_00119560(mModels168[i], 0, 1);
+        glPopMatrix();
+        glPushMatrix();
+        glTranslatef(x - 0.1f, -0.8f, z - 0.7f);
+        glRotatef(-70.0f, 0.0f, 1.0f, 0.0f);
+        if (mPairs190[i].mModel00 != 0)
+        {
+            void *tex = func_00126280(mDefs1E0[i]->mTexIds1DC[gGameCtx262250->mArr2E4[i]]);
+            if (tex != 0)
+                func_00196430(mPairs190[i].mModel00, tex);
+            DrawModel196110(mPairs190[i].mModel00);
+        }
+        if (mPairs190[i].mModel04 != 0)
+        {
+            void *tex = func_00126280(mDefs1E0[i]->mTexIds1DC[gGameCtx262250->mArr2E4[i]]);
+            glTranslatef(0.0f, 0.46f, 0.3f);
+            if (tex != 0)
+                func_00196430(mPairs190[i].mModel04, tex);
+            DrawModel196110(mPairs190[i].mModel04);
+        }
+        glPopMatrix();
+    }
+    glPopMatrix();
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
+}
+
 FEChooseScreen::~FEChooseScreen()
 {
     for (int i = 0; i < mCount164; i++)
@@ -380,6 +498,51 @@ FEMovScreen::FEMovScreen(FEOwner *owner, int a2, int a3, int a4)
         mStream194 = func_00143100("BGM:pean_hip", 4);
         func_001432A0(mStream194, 1.0f);
         mSub198 = (FEMovSub198 *)func_00113FA0();
+    }
+}
+
+// Draws the movie (and a line of text over it while mField188/18C/180 say so), the 3D part
+// (mSub198), the credits, and a black fade whose alpha follows sin((1 - mField17C) * pi).
+void FEMovScreen::VirtSlot3()
+{
+    if (mField164 != 0 && mField16C != 0)
+    {
+        func_00196E38(mField164);
+        if (mField188 != 0 && mField18C == 1 && mField180 != 0)
+        {
+            DrawBegin19A640();
+            TEXT_ADD_FLAGS(mText14, 2);
+            TEXT_SET_POS(mText14, 500.0f, 100.0f, 0.0f);
+            TEXT_SET_STRING(mText14, func_00151D40(3));
+            mText14->mScale1C.Set(0.5f, 0.5f, 1.0f);
+            TEXT_SET_RGBA(mText14, 0x80808080);
+            DrawText19B758(mText14);
+            DrawEnd19A6B0();
+        }
+    }
+    if (mSub198 != 0)
+        mSub198->Draw114178();
+    if (mCredits190 != 0)
+    {
+        DrawBegin19A640();
+        func_00192350(mCredits190);
+        DrawEnd19A6B0();
+    }
+    if (mField17C > 0.0f)
+    {
+        f32 alpha = Sin1B1910((1.0f - mField17C) * 3.1415927f);
+        DrawBegin19A640();
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glBegin(GL_TRIANGLE_STRIP);
+        glColor4f(0.0f, 0.0f, 0.0f, alpha);
+        glVertex3f(0.0f, 0.0f, 0.0f);
+        glVertex3f(1000.0f, 0.0f, 0.0f);
+        glVertex3f(0.0f, 1000.0f, 0.0f);
+        glVertex3f(1000.0f, 1000.0f, 0.0f);
+        glEnd();
+        glDisable(GL_BLEND);
+        DrawEnd19A6B0();
     }
 }
 
@@ -845,6 +1008,58 @@ int FENameSelectScreen::VirtSlot8()
 }
 
 // 9. FEOptionsScreen
+#ifdef NON_MATCHING
+// 166 of 186 instructions differ: the game's frame has 0x100 bytes of locals (as here) but one more
+// saved register ($fp), so its register allocation differs throughout; the text macros did not help.
+// Draws each option's value right of its menu item: on/off (strings 0x27/0x28), a time as m:ss, a
+// fixed string, or the option's own control (func_00187AB8).
+void FEOptionsScreen::VirtSlot3()
+{
+    char value[0x100];
+
+    FEScreen::VirtSlot3();
+    mText168->mScale1C.Set(mOwner00->mTextScaleE8, mOwner00->mTextScaleEC, 1.0f);
+    mText168->mField00 |= 0x20;
+    for (int i = 0; i < mCount16C; i++)
+    {
+        glPushMatrix();
+        glMultMatrixf(&mMenu0C->GetItemMatrix(i)->row[0].x);
+        glRotatef(-90.0f, 0.0f, 1.0f, 0.0f);
+        glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
+        if (i == mMenu0C->mSelected0C)
+            mText168->SetColor(mOwner00->mColourFC.x, mOwner00->mColourFC.y, mOwner00->mColourFC.z);
+        else
+            mText168->SetColor(mOwner00->mColourF0.x, mOwner00->mColourF0.y, mOwner00->mColourF0.z);
+        mText168->mPos04.Set(mMenu0C->GetItemTextWidth(i) + 0.1f, 0.0f, 0.0f);
+        switch (mArr170[i])
+        {
+        case 1:
+            sprintf(value, "%s", func_00151D40(mArr1C0[i] == 0 ? 0x28 : 0x27));
+            mText168->mString30 = value;
+            DrawText19B758(mText168);
+            break;
+        case 3:
+        {
+            int t = (int)func_00154EA8(mArr1C0[i]);
+            sprintf(value, "%d:%02d", t / 60, t % 60);
+            mText168->mString30 = value;
+            DrawText19B758(mText168);
+            break;
+        }
+        case 4:
+            sprintf(value, "%s", func_00151D40(1));
+            mText168->mString30 = value;
+            DrawText19B758(mText168);
+            break;
+        case 2:
+            func_00187AB8(mArr210[i], mMenu0C->GetItemTextWidth(i) + 0.1f, 0.1f);
+            break;
+        }
+        glPopMatrix();
+    }
+}
+#endif
+
 FEOptionsScreen::FEOptionsScreen(FEOwner *owner, int a2, int a3)
     : FEScreen(0x29, 1, owner)
 {
@@ -884,6 +1099,75 @@ int FEOptionsScreen::VirtSlot7()
 }
 
 // 10. FEScooterScreen
+// Draws each player's scooter (two models, with the texture of the player's choice, turned by
+// mSpin1BC) and its name, then the scooter's stats panel, through the screen's camera.
+void FEScooterScreen::VirtSlot3()
+{
+    Mat4x4f view;
+    Mat4x4f m60;
+    Mat4x4f proj;
+
+    FEScreen::VirtSlot3();
+    func_00191F80(mCam1B8, &view, &m60);
+    func_00191FD0(mCam1B8, &proj);
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadMatrixf(&proj.row[0].x);
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadMatrixf(&view.row[0].x);
+    for (int i = 0; i < mCount164; i++)
+    {
+        int side;
+        f32 x0;
+        f32 panelX;
+        if (mCount164 >= 2)
+        {
+            x0 = 0.0f;
+            panelX = 400.0f;
+            side = i * 2 - 1;
+        }
+        else
+        {
+            x0 = -1.0f;
+            panelX = 200.0f;
+            side = 1;
+        }
+        glPushMatrix();
+        glTranslatef(x0 + side * 0.7f, -0.9f, 0.0f);
+        int sel = mArr260[i];
+        mText2B4->mPos04.Set(0.0f, -0.2f, 0.0f);
+        mText2B4->mScale1C.Set(0.003f, 0.003f, 1.0f);
+        TEXT_SET_STRING(mText2B4, func_00151D40(func_001561C8()[sel]));
+        TEXT_ADD_FLAGS(mText2B4, 2);
+        DrawText19B758(mText2B4);
+        f32 angle = side * 40.0f;
+        glRotatef(-mSpin1BC * angle, 0.0f, 1.0f, 0.0f);
+        if (mPairs1E8[sel].mModel00 != 0)
+        {
+            void *tex = func_00126280(mDefs1C0[sel]->mTexIds1DC[mArr238[i]]);
+            if (tex != 0)
+                func_00196430(mPairs1E8[sel].mModel00, tex);
+            DrawModel196110(mPairs1E8[sel].mModel00);
+        }
+        if (mPairs1E8[sel].mModel04 != 0)
+        {
+            void *tex = func_00126280(mDefs1C0[sel]->mTexIds1DC[mArr238[i]]);
+            glTranslatef(0.0f, 0.46f, 0.3f);
+            if (tex != 0)
+                func_00196430(mPairs1E8[sel].mModel04, tex);
+            DrawModel196110(mPairs1E8[sel].mModel04);
+        }
+        glPopMatrix();
+        func_00121428(mDefs1C0[sel], mText2B4, 0, panelX + side * 350.0f, 750.0f, 4.0f, 8.0f, 0.5f, 2.0f, 1.0f,
+                      2.0f, 3.0f, 17.0f, 0.5f, 2.0f);
+    }
+    glPopMatrix();
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
+}
+
 FEScooterScreen::~FEScooterScreen()
 {
     func_00191E40(mCam1B8);
@@ -913,6 +1197,62 @@ int FEScooterScreen::VirtSlot8()
 }
 
 // 11. FECharacterScreen
+// Draws each player's character and name, then the stats panel (func_00121428) of the character the
+// player has chosen, through the screen's camera.
+void FECharacterScreen::VirtSlot3()
+{
+    Mat4x4f view;
+    Mat4x4f m60;
+    Mat4x4f proj;
+    char line[0x80];
+
+    FEScreen::VirtSlot3();
+    func_00191F80(mCam314, &view, &m60);
+    func_00191FD0(mCam314, &proj);
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadMatrixf(&proj.row[0].x);
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadMatrixf(&view.row[0].x);
+    for (int i = 0; i < mCount164; i++)
+    {
+        glPushMatrix();
+        int side;
+        f32 x0;
+        f32 panelX;
+        if (mCount164 >= 2)
+        {
+            x0 = 0.0f;
+            panelX = 400.0f;
+            side = i * 2 - 1;
+        }
+        else
+        {
+            x0 = -1.0f;
+            panelX = 200.0f;
+            side = 1;
+        }
+        glTranslatef(x0 + side * 0.8f, -0.85f, 0.0f);
+        glRotatef(side * -30.0f, 0.0f, 1.0f, 0.0f);
+        if (mModels1D4[i] != 0 && mClosing34C == 0 && mArr24C[i] == 0)
+            func_00119560(mModels1D4[i], 0, 1);
+        mText320->mPos04.Set(0.0f, 0.0f, 0.0f);
+        mText320->mScale1C.Set(0.003f, 0.003f, 1.0f);
+        TEXT_SET_STRING(mText320, func_00151D40(func_00155F30()[mArr2C4[i]]));
+        TEXT_ADD_FLAGS(mText320, 2);
+        DrawText19B758(mText320);
+        glPopMatrix();
+        sprintf(line, func_00151D40(0x4F), mArr29C[i] + 1);
+        func_00121428(mStats1FC[mArr29C[i]], mText320, line, panelX + side * 340.0f, 550.0f, -12.0f, 3.0f, -5.0f,
+                      7.0f, 4.5f, 2.0f, -7.0f, 5.0f, 0.55f, 0.4f);
+    }
+    glPopMatrix();
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
+}
+
 FECharacterScreen::~FECharacterScreen()
 {
     int i;

@@ -32,6 +32,7 @@ struct TextObj
 #define TEXT_SET_COLOR(t, r, g, b) do { TextObj *text_ = (t); text_->SetColor(r, g, b); } while (0)
 #define TEXT_SET_RGBA(t, c) do { TextObj *text_ = (t); text_->mColor28 = (c); } while (0)
 #define TEXT_SET_STRING(t, s) do { (t)->mString30 = (s); } while (0)
+#define TEXT_ADD_FLAGS(t, f) do { (t)->mField00 |= (f); } while (0)
 
 TextObj *CreateTextObj198E48(void *font, int, f32, f32, f32); // 0x00198E48
 void MeasureText19B138(TextObj *text);                       // 0x0019B138
@@ -299,6 +300,20 @@ public:
     void *mStream194;   // 0x194
 };
 
+// What FEChooseScreen::mDefs1E0 points to: one per player, with texture ids at +0x1DC chosen by the
+// player's selection (GameCtxFE::mArr2E4).
+struct FEChoosePair
+{
+    void *mModel00; // 0x00
+    void *mModel04; // 0x04: drawn 0.46 higher and 0.3 nearer
+};
+
+struct FEChooseDef
+{
+    char field_0x000[0x1DC];
+    int mTexIds1DC[1]; // 0x1DC
+};
+
 class FEChooseScreen : public FEScreen
 {
 public:
@@ -310,8 +325,8 @@ public:
 
     int mCount164;        // 0x164
     void *mModels168[10]; // 0x168..0x18F
-    void *mSub190[20];    // 0x190..0x1DF
-    void *mDefs1E0[10];   // 0x1E0..0x207
+    FEChoosePair mPairs190[10]; // 0x190..0x1DF
+    FEChooseDef *mDefs1E0[10]; // 0x1E0..0x207
     void *mCam208;        // 0x208
     int mClosing20C;      // 0x20C
     int mCloseTimer210;   // 0x210
@@ -343,6 +358,7 @@ struct FEMovSub198
     int pad60;         // 0x60
     void *mArr64[10];  // 0x64..0x8B
 
+    void Draw114178();           // 0x00114178
     inline void Destroy114C88(); // 0x00114C88
 };
 
@@ -379,7 +395,7 @@ public:
     virtual void VirtSlot2(f32 dt); // 0x001152C8
     virtual void VirtSlot3();       // 0x001153B8
 
-    void *mText164; // 0x164
+    TextObj *mText164; // 0x164
 };
 
 class FECharacterScreen : public FEScreen
@@ -403,7 +419,9 @@ public:
     int mArr168[10];        // 0x168..0x18F
     char pad190[0x44];      // 0x190..0x1D3
     void *mModels1D4[10];   // 0x1D4..0x1FB
-    char pad1FC[0x78];      // 0x1FC..0x273
+    void *mStats1FC[10];    // 0x1FC..0x223: what func_00121428 draws as the stats panel
+    char pad224[0x28];      // 0x224..0x24B
+    int mArr24C[10];        // 0x24C..0x273
     int mArr274[10];        // 0x274..0x29B
     int mArr29C[10];        // 0x29C..0x2C3
     int mArr2C4[10];        // 0x2C4..0x2EB
@@ -411,7 +429,7 @@ public:
     void *mCam314;          // 0x314
     int mField318;          // 0x318
     int mField31C;          // 0x31C
-    void *mText320;         // 0x320
+    TextObj *mText320;      // 0x320
     void *mSounds324[10];   // 0x324..0x34B
     int mClosing34C;        // 0x34C
     int mCloseTimer350;     // 0x350
@@ -496,7 +514,7 @@ public:
     void InitMenu16C6D8(int mode);                // 0x0016C6D8
 
     int mField164;       // 0x164
-    void *mText168;      // 0x168
+    TextObj *mText168;   // 0x168
     int mCount16C;       // 0x16C
     int mArr170[20];     // 0x170..0x1BF
     int mArr1C0[20];     // 0x1C0..0x20F
@@ -521,12 +539,14 @@ public:
     int mArr168[10];   // 0x168..0x18F
     char pad190[0x28]; // 0x190..0x1B7
     void *mCam1B8;     // 0x1B8
-    char pad1BC[0x7C]; // 0x1BC..0x237
+    f32 mSpin1BC;                // 0x1BC: turns the boards (times +-40 degrees)
+    FEChooseDef *mDefs1C0[10];   // 0x1C0..0x1E7: per scooter, also its stats panel
+    FEChoosePair mPairs1E8[10];  // 0x1E8..0x237
     int mArr238[10];   // 0x238..0x25F
     int mArr260[10];   // 0x260..0x287
     int mReady288[10]; // 0x288..0x2AF
     int mField2B0;     // 0x2B0
-    void *mText2B4;    // 0x2B4
+    TextObj *mText2B4; // 0x2B4
 };
 
 #endif
