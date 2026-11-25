@@ -15,6 +15,7 @@ Performs local static analysis on SLUS_204.89 + split/asm/text.s + config/symbol
   methods so the AI doesn't need to read raw assembly for trivial functions.
 """
 import argparse
+import bisect
 import re
 import struct
 import sys
@@ -396,10 +397,22 @@ def main():
                 return min(s, addr + 0x2000)
         return min(e.TEXT_BASE + e.TEXT_SIZE, addr + 0x400)
 
+    def containing(addr):
+        """Start of the function that holds addr (the largest known start at or below it)."""
+        i = bisect.bisect_right(starts, addr)
+        return starts[i - 1] if i else addr
+
+    def note_inside(addr):
+        start = containing(addr)
+        if start != addr:
+            print('note: 0x%08X is not a function start; it is inside 0x%08X (%s)'
+                  % (addr, start, addr_to_sym.get(start, 'func_%08X' % start)))
+        return start
+
     if args.func:
-        addr = int(args.func, 16)
+        addr = note_inside(int(args.func, 16))
         info = analyze_function(addr, end_of(addr), text, rodata, addr_to_sym, vtable_addrs)
-        print_func_summary(info, show_dis=True, show_m2c=True, addr_to_sym=addr_to_sym)
+        print_func_summary(info, show_dis=args.dis, show_m2c=args.m2c, addr_to_sym=addr_to_sym)
         return 0
 
     if args.class_name:
@@ -423,7 +436,9 @@ def main():
         lo, hi = int(args.range[0], 16), int(args.range[1], 16)
         in_range = [s for s in starts if lo <= s < hi]
         if not in_range or in_range[0] > lo:
-            in_range = [lo] + in_range
+            start = note_inside(lo)
+            if not in_range:
+                in_range = [start]  # the range lies inside one function: show that function
         print('=== Range 0x%08X..0x%08X (%d functions) ===' % (lo, hi, len(in_range)))
         for addr in in_range:
             info = analyze_function(addr, min(hi, end_of(addr)), text, rodata, addr_to_sym, vtable_addrs)

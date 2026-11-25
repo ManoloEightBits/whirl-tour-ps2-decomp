@@ -40,7 +40,9 @@ Python prints a `sys.prefix` warning. Every tool finds the game files through `W
    vtable, also add a line to `config/vtables.txt`, and add the class to `HAND_WRITTEN` in
    `tools/gen_rtti_stubs.py`.
 3. **Diff:** run `diff_func.py src/game/X.cpp <mangled>`. To try several rewrites in one run, use
-   `--variants file.json`. Write a first draft from the m2c output and let the diff show what is
+   `--bodies -` with only the new function bodies on stdin, separated by `---` lines (the tool finds
+   the definition by name; `--apply` keeps the best one). `--variants file.json` replaces any other
+   snippet of the file. Write a first draft from the m2c output and let the diff show what is
    left, instead of reading the whole disassembly (`--dis` prints every instruction). For tables in
    data (vtables, jump tables, keyword tables), use `dump_data.py`, not a hex dump.
 4. **If it is stuck on details** (registers, scheduling, a stray `nop`):
@@ -71,10 +73,10 @@ the other tools directly.
 
 | Tool | What it does |
 | :--- | :--- |
-| `inspect_tu.py --class C \| --range A B \| --func A [--m2c] [--dis]` | Functions of a class or range: size, match status, calls, strings, floats, `$a0` field accesses, C++ drafts for trivial functions, m2c output. |
+| `inspect_tu.py --class C \| --range A B \| --func A [--m2c] [--dis]` | Functions of a class or range: size, match status, calls, strings, floats, `$a0` field accesses, C++ drafts for trivial functions, m2c output. An address inside a function is reported as such and replaced by that function's start. |
 | `scan_candidates.py [--level {1,2,3} \| --twins] [--limit N] [--class S]` | Unmatched candidates: leaf getters/setters (`--level 1`), one-call wrappers (`--level 2`), vtable methods sorted by size (`--level 3`), or structural twin families grouped by normalized instruction skeleton (`--twins`). |
 | `map_tus.py [--filter S] [--class C]` | Groups the RTTI vtables (193) into probable translation units and infers `_vptr` offsets and fields. |
-| `diff_func.py file.cpp <mangled> [--all] [-D X] [--variants v.json]` | Side-by-side R5900 diff of one repository function, or a batch of source variants (`{"target": "...", "candidates": [...]}`). |
+| `diff_func.py file.cpp <mangled> [--all] [-D X] [--bodies f\|- \| --variants v.json] [--apply]` | Side-by-side R5900 diff of one repository function, or a batch of candidates with one line each (diff count and first differing offset). `--bodies`: only function bodies, separated by `---` lines; a `@@` line puts the text above it before the function (inline helpers). `--variants`: `{"target": "...", "candidates": [...]}` for any snippet. `--apply` writes the best candidate into the file. |
 | `scratch_cc.py snippet.cpp\|- [--func S] [--vs ADDR] [--asm] [--regs] [-D X]` | Compiles a loose snippet in `build/scratch/` with the exact flags of `verify.py` (it can include repository headers). Shows its disassembly with relocations, or a side-by-side diff against any game address (`--vs`), GCC's `.s` (`--asm`), and the register-allocation table (`--regs`). |
 | `dump_data.py ADDR [-n N] [--vtable] [--string]` | Words at a data address with what each points to: a symbol (and whether it matches), a string, the function and offset of a jump-table target, or a float. `--vtable` lists a vtable's slots. |
 | `find_pattern.py '<re1>; <re2>; ...' [--range A B] [--context N] [--count]` | Searches `.text` for a sequence of instructions (one regex per instruction, `*` matches any). Each hit is labelled with the nearest known symbol. About 0.5 s for the whole binary. Put the pattern in single quotes so the shell keeps `\$`. |
@@ -87,6 +89,11 @@ to `symbols.txt` and print a note.
 Examples (venv active, from the repository root):
 
 ```bash
+python3 tools/analysis/diff_func.py src/game/Scooter.cpp SetVec194__7ScooterP5Vec3f --bodies - <<'EOF'
+    mVec194.x = v->x; mVec194.y = v->y; mVec194.z = v->z;
+---
+    Vec3f *d = &mVec194; d->x = v->x; d->y = v->y; d->z = v->z;
+EOF
 python3 tools/analysis/scratch_cc.py idea.cpp --func revived --vs 117340   # does this idea match?
 python3 tools/analysis/scratch_cc.py idea.cpp --func revived --regs        # why these registers?
 printf 'struct S { int x; void f(); };\nvoid S::f() { x = 3; }\n' | python3 tools/analysis/scratch_cc.py - --asm
