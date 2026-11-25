@@ -275,7 +275,8 @@ def suggest_cpp(words, this_reads, this_writes, callees):
 
 
 def m2c_asm(addr, words, addr_to_sym, fn_name=None):
-    """The function's instructions as an m2c input file (glabel, local branch labels, callee names).
+    """The function's instructions as an m2c input file (glabel, local branch labels, callee names,
+    symbols for the globals it addresses and the jump tables of its switches).
 
     Registers use N32 names: the EE ABI passes arguments 5-8 in $8-$11, which m2c's mipsee target
     knows as $a4-$a7 (with o32 names it reads $t0 as an unset register)."""
@@ -287,6 +288,145 @@ def m2c_asm(addr, words, addr_to_sym, fn_name=None):
         rabbitizer.config.regNames_gprAbiNames = old_names
 
 
+_LOADED = None
+_IMAGE = None
+CALLER_SAVED = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 24, 25, 1}  # $v*, $a*, $t*, $at
+
+
+def loaded_ranges():
+    """[(start, end, file offset, file size)] of the game's PT_LOAD segments (end includes .bss)."""
+    global _LOADED
+    if _LOADED is None:
+        with open(SLUS, 'rb') as f:
+            head = f.read(0x1000)
+        phoff, = struct.unpack_from('<I', head, 0x1C)
+        phentsize, phnum = struct.unpack_from('<HH', head, 0x2A)
+        _LOADED = []
+        for i in range(phnum):
+            p_type, p_offset, p_vaddr, _, p_filesz, p_memsz = struct.unpack_from('<6I', head,
+                                                                                phoff + i * phentsize)
+            if p_type == 1:
+                _LOADED.append((p_vaddr, p_vaddr + p_memsz, p_offset, p_filesz))
+    return _LOADED
+
+
+def read_word(addr):
+    """The word the game's file holds at a memory address, or None (outside the file, or .bss)."""
+    global _IMAGE
+    if _IMAGE is None:
+        _IMAGE = SLUS.read_bytes()
+    for start, _, off, size in loaded_ranges():
+        if start <= addr and addr + 4 <= start + size:
+            return struct.unpack_from('<I', _IMAGE, off + addr - start)[0]
+    return None
+
+
+def jump_tables(addr, insns, symbols):
+    """{table address: [targets]} for the switches of a function, renaming their symbols to jtbl_<addr>
+    in `symbols` (m2c finds a jump table by that prefix and reads its entries from the input file).
+    The table is the load that feeds a `jr` other than `jr $ra`; it runs while its entries point into
+    the function."""
+    end = addr + len(insns) * 4
+    tables = {}
+    for k, (_, _, ins) in enumerate(insns):
+        if not ins.isJrNotRa():
+            continue
+        reg = ins.rs.value
+        for j in range(k - 1, -1, -1):
+            dst = insns[j][2].getDestinationGpr()
+            if dst is not None and dst.value == reg:
+                break
+        else:
+            continue
+        if insns[j][2].getOpcodeName() != 'lw':
+            continue
+        # the table's symbol is on the lw itself, or on the addiu that formed its base a few
+        # instructions before (lui; addiu %lo; addu index; lw 0)
+        lo_at = next((i for i in range(j, max(j - 8, -1), -1)
+                      if re.match(r'%lo\(\w+\)$', symbols.get(i, ''))), None)
+        if lo_at is None or (lo_at != j and insns[lo_at][2].getOpcodeName() != 'addiu'):
+            continue
+        old = symbols[lo_at][4:-1]
+        hi_at = next((i for i, text in symbols.items() if text == '%%hi(%s)' % old), None)
+        if hi_at is None:
+            continue
+        base = ((insns[hi_at][2].getProcessedImmediate() & 0xFFFF) << 16) + \
+            insns[lo_at][2].getProcessedImmediate()
+        if lo_at != j:
+            base += insns[j][2].getProcessedImmediate()
+        base &= 0xFFFFFFFF
+        entries = []
+        while True:
+            w = read_word(base + 4 * len(entries))
+            if w is None or not (addr <= w < end) or w & 3:
+                break
+            entries.append(w)
+        if not entries:
+            continue
+        tables[base] = entries
+        new = 'jtbl_%08X' % base
+        for i, text in list(symbols.items()):
+            if text in ('%%hi(%s)' % old, '%%lo(%s)' % old):
+                symbols[i] = text.replace(old, new)
+    return tables
+
+
+def symbolize(insns, addr_to_sym):
+    """{instruction index: immediate text} naming the addresses that lui + %lo pairs build.
+
+    For each lui, the loads, stores and addiu that use its register as base (directly or after an
+    addu of an index into it) until the register is overwritten; when they all point into the game's
+    memory, the lowest address gets a symbol (its name in config/symbols.txt or D_<addr>): the lui
+    becomes %hi(sym), the use of that address %lo(sym) and the other uses offsets from it. That is the
+    form m2c reads (see m2c_ee.py); with raw addresses its drafts have untyped pointer arithmetic."""
+    ranges = loaded_ranges()
+    out = {}
+    for i, (_, _, ins) in enumerate(insns):
+        if ins.getOpcodeName() != 'lui':
+            continue
+        hi = (ins.getProcessedImmediate() & 0xFFFF) << 16
+        live = {ins.rt.value}
+        uses = []
+        call_at = None
+        unclear = False
+        for j in range(i + 1, len(insns)):
+            u = insns[j][2]
+            op = u.getOpcodeName()
+            dst = u.getDestinationGpr()
+            dst = dst.value if dst is not None else None
+            reads = ({u.rs.value} if u.readsRs() else set()) | ({u.rt.value} if u.readsRt() else set())
+            if u.canBeLo() and op != 'ori' and u.rs.value in live:
+                if u.doesStore() and u.readsRt() and u.rt.value in live:
+                    unclear = True  # the upper half itself is stored
+                    break
+                uses.append((j, (hi + u.getProcessedImmediate()) & 0xFFFFFFFF))
+                if dst in live:
+                    live.discard(dst)
+            elif op in ('addu', 'daddu') and reads & live:
+                live.add(dst)  # a copy, or the upper half plus an index: %lo uses through it name the symbol
+            elif reads & live:
+                unclear = True  # used some other way: leave the address as it is
+                break
+            elif dst in live:
+                live.discard(dst)
+            if call_at is not None and j == call_at + 1:
+                live -= CALLER_SAVED  # after the delay slot, which runs before the call
+            if u.isFunctionCall():
+                call_at = j
+            if not live:
+                break
+        if unclear or not uses or not all(any(lo <= a < hi_ for lo, hi_, _, _ in ranges) for _, a in uses):
+            continue
+        base = min(a for _, a in uses)
+        name = addr_to_sym.get(base, '')
+        if not re.fullmatch(r'[A-Za-z_]\w*', name):
+            name = 'D_%08X' % base
+        out[i] = '%%hi(%s)' % name
+        for j, a in uses:
+            out[j] = '%%lo(%s)' % name if a == base else '0x%X' % (a - base)
+    return out
+
+
 def _m2c_asm(addr, words, addr_to_sym, fn_name):
     fn_name = fn_name or addr_to_sym.get(addr, 'func_%08X' % addr)
     insns = []
@@ -294,13 +434,23 @@ def _m2c_asm(addr, words, addr_to_sym, fn_name):
     for i, w in enumerate(words):
         pc = addr + i * 4
         ins = rabbitizer.Instruction(w, vram=pc, category=rabbitizer.InstrCategory.R5900)
+        if ins.disassemble().startswith('.word'):
+            # rabbitizer rejects some FPU forms for the R5900 (cvt.w.s, which the EE runs as a
+            # truncation); the generic decoding is what m2c needs.
+            generic = rabbitizer.Instruction(w, vram=pc)
+            if generic.isValid():
+                ins = generic
         if ins.isBranch() or ins.isUnconditionalBranch():
             t = ins.getBranchVramGeneric()
             if addr <= t < addr + len(words) * 4:
                 targets.add(t)
         insns.append((pc, w, ins))
+    symbols = symbolize(insns, addr_to_sym)
+    tables = jump_tables(addr, insns, symbols)
+    for entries in tables.values():
+        targets.update(entries)
     asm_lines = ['.section .text', 'glabel %s' % fn_name]
-    for pc, w, ins in insns:
+    for idx, (pc, w, ins) in enumerate(insns):
         if pc in targets:
             asm_lines.append('.L%08X:' % pc)
         if ins.isBranch() or ins.isUnconditionalBranch():
@@ -309,10 +459,15 @@ def _m2c_asm(addr, words, addr_to_sym, fn_name):
         elif ins.isJumpWithAddress():
             t = ins.getInstrIndexAsVram()
             dis = ins.disassemble(immOverride=addr_to_sym.get(t, 'func_%08X' % t))
+        elif idx in symbols:
+            dis = ins.disassemble(immOverride=symbols[idx])
         else:
             dis = ins.disassemble()
         asm_lines.append('/* %06X %08X %08X */ %s' % (pc - e.TEXT_BASE + 0x80, pc, w, dis))
     asm_lines.append('endlabel %s' % fn_name)
+    for base, entries in sorted(tables.items()):
+        asm_lines += ['', '.section .rodata', 'glabel jtbl_%08X' % base]
+        asm_lines += ['.word .L%08X' % t for t in entries]
     return '\n'.join(asm_lines) + '\n'
 
 
@@ -323,6 +478,8 @@ def decompile_m2c(addr, words, addr_to_sym):
         import io
         import tempfile
         from contextlib import redirect_stdout
+        import m2c_ee
+        m2c_ee.patch()
     except ImportError:
         return None
     with tempfile.NamedTemporaryFile('w', suffix='.s', delete=False) as tf:

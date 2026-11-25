@@ -29,6 +29,10 @@ the counts per status and the best candidates (match, then regs by size, then di
 The draft is C with m2c's macros, not code for the repository: names, types and the C++ form still
 come from evidence and from diff_func.py. A good score says the control flow and operations are
 right, so the function is a cheap target.
+
+m2c's input comes from inspect_tu.m2c_asm (globals named through %hi/%lo, switch jump tables) and
+m2c runs through m2c_ee.py. A draft that does not compile gets the mechanical fixes of fix_draft()
+and is compiled again; the note lists the fixes used.
 """
 import argparse
 import collections
@@ -62,7 +66,7 @@ M2C_TIMEOUT = 120
 # Our own minimal versions of the macros m2c's --valid-syntax output uses.
 PRELUDE = r'''typedef signed char s8; typedef unsigned char u8; typedef short s16; typedef unsigned short u16;
 typedef int s32; typedef unsigned int u32; typedef long long s64; typedef unsigned long long u64;
-typedef float f32; typedef double f64;
+typedef float f32; typedef double f64; typedef s64 s128; typedef u64 u128;
 #define M2C_UNK int
 #define M2C_FIELD(expr, type, offset) (*(type)((char *)(expr) + (offset)))
 #define M2C_BITWISE(type, expr) ((type)(expr))
@@ -71,12 +75,24 @@ typedef float f32; typedef double f64;
 #define NULL ((void *)0)
 #define M2C_BREAK(x) ((void)0)
 #define M2C_TRAP_IF(x) ((void)0)
+#define M2C_UNK8 s8
+#define M2C_UNK16 s16
+#define M2C_UNK32 s32
+#define M2C_UNK64 s64
+#define M2C_UNALIGNED32(x) (x)
+#define M2C_SYNC() __asm__ __volatile__("sync")
 '''
 # GCC emits the division-by-zero "break 7" itself, so M2C_BREAK/M2C_TRAP_IF compile to nothing.
-UNSUPPORTED = re.compile(r'\bM2C_(?!UNK\b|FIELD\b|BITWISE\b|STRUCT_COPY\b|ERROR\b|BREAK\b|TRAP_IF\b)\w+')
+# M2C_UNK<bits> is a value of that size m2c could not call int or float: as an int it compiles.
+UNSUPPORTED = re.compile(r'\bM2C_(?!UNK(?:8|16|32|64)?\b|FIELD\b|BITWISE\b|STRUCT_COPY\b|ERROR\b|BREAK\b'
+                         r'|TRAP_IF\b|UNALIGNED32\b|SYNC\b)\w+')
 VOID_PTR = re.compile(r'\bvoid \*')
 # m2c's own copy of the check GCC already emits around a div: drop it so the draft does not get two.
 DIV_CHECK = re.compile(r'\n\s*if \(\w+ == 0\)\s*\{\s*M2C_BREAK\(\w*\);\s*\}')
+# A global m2c could not type: as char its address does byte arithmetic, which is what m2c meant.
+UNK_GLOBAL = re.compile(r'^extern M2C_UNK (\w+);', re.M)
+# A callee m2c gave a prototype but that is called with other argument counts (printf and the like).
+ARG_COUNT = re.compile(r"too (?:few|many) arguments to function `(\w+)'")
 FUNC_NAME = re.compile(r'^func_([0-9A-Fa-f]{8})$')
 
 
@@ -126,6 +142,38 @@ def first_error(stderr):
     return lines[-1][:120] if lines else 'failed'
 
 
+def fix_draft(draft, err, stderr):
+    """(draft, what was changed) for compile errors with a mechanical fix, else (None, None).
+
+    - a callee m2c gave a prototype but the draft calls with other argument counts (printf and the
+      like): declare it without one;
+    - `*(a + b)` where m2c left the sum an int (a field it typed s32 used as a pointer): on the lines
+      GCC reports, read through an s32 pointer, the most common load;
+    - stack slots m2c names but does not declare (`sp14`; a bare `sp` is the address of a local
+      array at offset 0): declared as s32, and `sp` as a char array so offsets stay in bytes."""
+    undeclared = sorted(set(re.findall(r"`((?:unk)?sp[0-9A-F]*)' undeclared", stderr)))
+    if undeclared:
+        decl = ''.join('    %s;\n' % ('char sp[0x40]' if v == 'sp' else 's32 ' + v) for v in undeclared)
+        new = re.sub(r'(?m)^\{\n', lambda m: m.group(0) + decl, draft, count=1)
+        return (new, 'declared ' + ' '.join(undeclared)) if new != draft else (None, None)
+    m = ARG_COUNT.search(err or '')
+    if m:
+        # the declaration only (column 0); the calls are indented
+        new = re.sub(r'(?m)^(\w[^\n]*?\b%s)\([^\n]*\);' % re.escape(m.group(1)), r'\1();', draft)
+        return (new, 'unprototyped ' + m.group(1)) if new != draft else (None, None)
+    lines = {int(n) - PRELUDE.count('\n') for n in re.findall(
+        r'^\S+?:(\d+): (?:invalid type argument of `unary \*\'|void value not ignored)', stderr, re.M)}
+    if lines:
+        text = draft.split('\n')
+        for n in lines:
+            if 1 <= n <= len(text):
+                text[n - 1] = re.sub(r'(?<![\w)\]])\*\((?!s32 \*\))', '*(s32 *)(', text[n - 1])
+                text[n - 1] = text[n - 1].replace('*(void *)', '*(s32 *)')
+        new = '\n'.join(text)
+        return (new, 'untyped deref read as s32') if new != draft else (None, None)
+    return None, None
+
+
 class Sweep:
     def __init__(self, args):
         _, self.text, _ = itu.load_binary()
@@ -155,8 +203,8 @@ class Sweep:
     def m2c(self, addr, words):
         asm = TMP / ('%08X.m2c.s' % addr)
         asm.write_text(itu.m2c_asm(addr, words, self.addr_to_sym, 'func_%08X' % addr))
-        cmd = [sys.executable, '-m', 'm2c.main', '-t', 'mipsee-gcc-c', '--valid-syntax', '--allman',
-               '--pointer-style', 'right', '--globals', 'none', str(asm)]
+        cmd = [sys.executable, str(Path(__file__).with_name('m2c_ee.py')), '-t', 'mipsee-gcc-c',
+               '--valid-syntax', '--allman', '--pointer-style', 'right', '--globals', 'used', str(asm)]
         try:
             p = subprocess.run(cmd, capture_output=True, text=True, errors='replace', timeout=M2C_TIMEOUT)
         except subprocess.TimeoutExpired:
@@ -168,7 +216,7 @@ class Sweep:
         return p.stdout, None
 
     def compile(self, addr, draft):
-        """Returns (words, relocs {index: (kind, symbol)}, None) or (None, None, error)."""
+        """Returns (words, relocs {index: (kind, symbol)}, None, '') or (None, None, error, stderr)."""
         comp = Path(self.args.compilers).resolve()
         tool_dir = comp / verify.COMPILER / verify.TOOL_DIR
         stem = TMP / ('%08X' % addr)
@@ -181,13 +229,13 @@ class Sweep:
                               ('cc1.exe', verify.CFLAGS + [r(i), '-o', r(s)])):
                 ok, err = run_quiet(tool_dir, exe, args)
                 if not ok:
-                    return None, None, first_error(err)
+                    return None, None, first_error(err), err
             asm_dir, asm_exe = verify.resolve_assembler(comp)
             fixed = files[4]
             fixed.write_text(verify.mtc1_pair_nops(s.read_text(encoding='latin-1')), encoding='latin-1')
             ok, err = run_quiet(asm_dir, asm_exe, verify.ASFLAGS + ['-o', r(o), r(fixed)])
             if not ok:
-                return None, None, 'as: ' + first_error(err)
+                return None, None, 'as: ' + first_error(err), err
             obj = verify.Elf32(o)
             ti, text = obj.section('.text')
             code = obj.contents(text)
@@ -198,13 +246,13 @@ class Sweep:
                 if name == want and shndx == ti:
                     break
             else:
-                return None, None, 'function not in object'
+                return None, None, 'function not in object', ''
             words = list(struct.unpack_from('<%dI' % (size // 4), code, value))
             notes = {}
             for pos, (kind, sym) in relocs.items():
                 if value <= pos < value + size:
                     notes[(pos - value) // 4] = (kind, symbols[sym][0])
-            return trim(words, 0), notes, None
+            return trim(words, 0), notes, None, ''
         finally:
             if not self.args.keep:
                 for f in files:
@@ -239,7 +287,7 @@ class Sweep:
         if draft is None:
             row.update(status='m2c-error', note=err)
             return row
-        draft = DIV_CHECK.sub('', draft)
+        draft = UNK_GLOBAL.sub(r'extern char \1;', DIV_CHECK.sub('', draft))
         (OUT / 'drafts' / ('%08X.c' % addr)).write_text(draft)
         if 'unknown instruction' in draft:
             insns = sorted(set(re.findall(r'unknown instruction: (\S+)', draft)))
@@ -249,12 +297,23 @@ class Sweep:
             m = re.search(r'M2C_ERROR\(/\* (.*?) \*/\)', draft) or UNSUPPORTED.search(draft)
             row.update(status='m2c-error', note=(m.group(1) if m.groups() else m.group(0))[:120])
             return row
-        ours, relocs, err = self.compile(addr, draft)
+        ours, relocs, err, stderr = self.compile(addr, draft)
+        notes = []
+        for _ in range(6):
+            if ours is not None:
+                break
+            fixed, what = fix_draft(draft, err, stderr)
+            if fixed is None:
+                break
+            draft = fixed
+            notes.append(what)
+            ours, relocs, err, stderr = self.compile(addr, draft)
         if ours is None and VOID_PTR.search(draft):
             # m2c sometimes dereferences a void * it could not type; as char * it compiles (with byte
             # loads where the game has words, which the score shows).
-            ours, relocs, err2 = self.compile(addr, VOID_PTR.sub('char *', draft))
-            row['note'] = 'void* compiled as char*'
+            ours, relocs, _, _ = self.compile(addr, VOID_PTR.sub('char *', draft))
+            notes.append('void* compiled as char*')
+        row['note'] = '; '.join(dict.fromkeys(notes))
         if ours is None:
             row.update(status='cc-error', note=err)
             return row

@@ -17,7 +17,13 @@ map of the binary, regenerated with `tools/analysis/coverage.py --map docs/MAP.m
 
 ## Next, in order
 
-0. **Raw m2c matches from `tools/analysis/m2c_sweep.py`.** The first sweep (2026-11-25, 185 s) found 1119
+0. **Raw m2c matches from `tools/analysis/m2c_sweep.py`.** Second sweep of game code (2026-11-25, after
+   giving m2c the globals' symbols, the switch jump tables, `&sp0` and `cvt.w.s`, and retrying drafts with
+   mechanical fixes): of 2465 unmatched functions, 406 match as drafts (26 KB), 240 differ only in registers,
+   428 more score >= 0.9; 126 still do not compile and 8 fail in m2c (was 193 / 178 / 219 / 649 / 175).
+   Most of the new matches use globals (data variables, strings, float constants): write strings and floats
+   as literals (`rebuild.py` checks them against the game's bytes) and declare variables as typed symbols.
+   The first sweep (2026-11-25, 185 s) found 1119
    unmatched functions whose raw m2c draft already compiles to the game's bytes (618 game, 466 physics, 35
    runtime; 549 are <= 16 B) and 263 more that differ only in registers or immediates. Game code only for now.
    - **Phase 1 done:** the 226 game functions whose draft touches no fields (empty functions, constants,
