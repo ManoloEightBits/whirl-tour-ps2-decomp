@@ -5,7 +5,6 @@
 // Names are address based; move each function to its file once its TU is identified.
 
 void MemFree1BD978(void *);       // 0x001BD978
-void func_002318F8(int, int);     // 0x002318F8
 void func_00239BE0(int);          // 0x00239BE0
 int func_0023CE78(int, int, int); // 0x0023CE78
 int func_0023D320(int, int, int); // 0x0023D320
@@ -45,9 +44,9 @@ int func_001C1428(u32 arg0)
     return (arg0 >> 0x18) | ((arg0 >> 8) & 0xFF00) | ((arg0 & 0xFF00) << 8) | (arg0 << 0x18);
 }
 
-void func_001C38D0(int arg0, int arg1)
+void func_001C38D0(char *arg0, char *arg1)
 {
-    func_002318F8(arg1, arg0 + 0x3030);
+    strcpy(arg1, arg0 + 0x3030);
 }
 
 void func_001BB128(int);         // 0x001BB128

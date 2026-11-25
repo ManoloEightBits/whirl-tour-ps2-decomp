@@ -15,39 +15,119 @@ struct TextObj
     u32 mColor28;          // 0x28
     void *mFont2C;         // 0x2C
     const char *mString30; // 0x30
-    int mField34;          // 0x34
+    f32 mField34;          // 0x34: read back after drawing (FEMenu::Draw)
     int mField38;          // 0x38
+
+    void SetColor(f32 r, f32 g, f32 b)
+    {
+        mColor28 = 0x80 << 24 | (int)(b * 128.0f) << 16 | (int)(g * 128.0f) << 8 | (int)(r * 128.0f);
+    }
 };
 
 TextObj *CreateTextObj198E48(void *font, int, f32, f32, f32); // 0x00198E48
 void DrawText19B758(TextObj *text);                          // 0x0019B758
 
-// Whirl Tour: FEScreen (front-end screen base class, RTTI name "8FEScreen").
-// Vtable at 0x002A4270 (_vt$8FEScreen), stored at offset +0x160.
-struct FEMenu
+// The object a screen's mSub08 and each menu item's mSub110 point to (0xB0 bytes). It is built from an
+// id and two optional vectors of the record func_00126250 returns for that id.
+struct UnkRes126250
 {
-    char field_0x00[0x0C];
-    int mSelected0C;       // 0x0C
-    char field_0x10[0x0C];
-    int mState1C;          // 0x1C
-    int mField20;          // 0x20
-    int mAlt24;            // 0x24
-    char field_0x28[0x14];
-
-    FEMenu(const int *ids, int count, void *owner);         // 0x0016B810
-    FEMenu(const char **strings, int count, void *owner);   // 0x0016B768
-    ~FEMenu();                                              // 0x0016B8D0
-    void Action16B9C8();                                    // 0x0016B9C8
-    void Action16B980();                                    // 0x0016B980
-    void Action16B9C8(int idx);                             // 0x0016B9C8
-    void Action16B980(int idx);                             // 0x0016B980
+    char field_0x00[0x18];
+    Vec3f mVec18; // 0x18
+    Vec3f mVec24; // 0x24
 };
 
 struct FESub08
 {
-    ~FESub08(); // 0x001305E0
+    char field_0x00[0x40];
+    Mat4x4f mMatrix40;                      // 0x40: where its menu item is drawn
+    u32 mFlags80;                           // 0x80: 0x100 plays mSound84 (FEMenu::Update)
+    u32 mSound84;                           // 0x84
+    char field_0x88[0x28];
+
+    FESub08(int id, Vec3f *a, Vec3f *b);    // 0x00130138
+    ~FESub08();                             // 0x001305E0
+    f32 Method1304E8(int);                  // 0x001304E8
+    void Method1306B0();                    // 0x001306B0
+    void Update130348(f32 dt);              // 0x00130348
+    void Method130720(f32);                 // 0x00130720
 };
 
+// What FEScreen::mField00 and FEMenu::mOwner00 point to: an id at +0x3C, from +0x48 one 16-byte
+// record per menu item (mCount44 of them: the ids of its three models and of its FESub08), and how
+// FEMenu::Draw draws the items' text: scale, and colours (0..1) for normal, selected and disabled.
+struct FEOwnerEntry
+{
+    int mField00; // 0x00
+    int mField04; // 0x04
+    int mField08; // 0x08
+    int mField0C; // 0x0C
+};
+
+struct FEOwner
+{
+    char field_0x00[0x3C];
+    int mField3C;                // 0x3C
+    int mField40;                // 0x40
+    int mCount44;                // 0x44
+    FEOwnerEntry mEntries48[10]; // 0x48
+    f32 mTextScaleE8;            // 0xE8
+    f32 mTextScaleEC;            // 0xEC
+    Vec3f mColourF0;             // 0xF0: normal
+    Vec3f mColourFC;             // 0xFC: selected
+    Vec3f mColour108;            // 0x108: disabled
+};
+
+// One line of a menu (0x118 bytes): its text, whether it can be selected, its models (drawn with
+// DrawModel196110: normal, extra when selected, disabled), and an FESub08 that places it.
+struct FEMenuItem
+{
+    char mText00[0x100]; // 0x000
+    int mDisabled100;    // 0x100: skipped when moving the selection
+    void *mModel104;     // 0x104
+    void *mModel108;     // 0x108
+    void *mModel10C;     // 0x10C
+    FESub08 *mSub110;    // 0x110
+    f32 mField114;       // 0x114: the text's mField34 after drawing
+};
+
+// A screen's menu (0x3C bytes, no RTTI): FEScreen::CreateMenuA/B build it from string ids or strings.
+struct FEMenu
+{
+    FEOwner *mOwner00;     // 0x00
+    int mCount04;          // 0x04
+    FEMenuItem *mItems08;  // 0x08
+    int mSelected0C;       // 0x0C
+    int mField10;          // 0x10
+    int mField14;          // 0x14
+    int mField18;          // 0x18
+    int mState1C;          // 0x1C
+    int mField20;          // 0x20
+    int mAlt24;            // 0x24
+    int mField28;          // 0x28
+    TextObj *mText2C;      // 0x2C
+    int mField30;          // 0x30
+    u32 mSelectSound34;    // 0x34: HashStringCRC32("mnu_selectitem")
+    u32 mCancelSound38;    // 0x38: HashStringCRC32("mnu_cancel")
+
+    void Init();                                            // 0x0016AFB8
+    void Update(int allPads, int active, f32 dt);           // 0x0016B1E8
+    void Draw();                                            // 0x0016B4A8
+    FEMenu(const char **strings, int count, void *owner);   // 0x0016B768
+    FEMenu(const int *ids, int count, void *owner);         // 0x0016B810
+    ~FEMenu();                                              // 0x0016B8D0
+    void DisableItem(int idx);                              // 0x0016B980
+    void EnableItem(int idx);                               // 0x0016B9C8
+    void SkipDisabledForward();                             // 0x0016B9E0
+    void SkipDisabledBackward();                            // 0x0016BA58
+    void Action16BAD8();                                    // 0x0016BAD8
+    Mat4x4f *GetItemMatrix(int idx);                        // 0x0016BB50
+    f32 GetItemField114(int idx);                           // 0x0016BB70
+    void SetTextIds(const int *ids);                        // 0x0016BB88
+    void SetTexts(const char **strings);                    // 0x0016BC18
+};
+
+// Whirl Tour: FEScreen (front-end screen base class, RTTI name "8FEScreen").
+// Vtable at 0x002A4270 (_vt$8FEScreen), stored at offset +0x160.
 struct FEPad
 {
     char field_0x00[0x1C];
@@ -76,8 +156,8 @@ public:
     void CreateMenuB(const char **strings, int count); // 0x0016E690
     void DestroyMenu();                                // 0x0016E6F8
     int GetMenuSelection();                            // 0x0016E730
-    void MenuAction16B9C8();                           // 0x0016E7B8
-    void MenuAction16B980();                           // 0x0016E7E0
+    void EnableMenuItem(int idx);                      // 0x0016E7B8
+    void DisableMenuItem(int idx);                     // 0x0016E7E0
     int IsSlot5AndState3();                            // 0x0016E808
     void SetField3C_1();                               // 0x0016E868
     void AddItem48(int item);                          // 0x0016E890

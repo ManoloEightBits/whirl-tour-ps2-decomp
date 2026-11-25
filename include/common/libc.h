@@ -12,6 +12,8 @@ int printf(const char *fmt, ...);                         /* 0x0022FC78: vfprint
 int rand(void);                                           /* 0x00230700: seed * 1103515245 + 12345 */
 int sprintf(char *buf, const char *fmt, ...);            /* 0x00231300: vfprintf to a string FILE, then the 0 */
 int strcmp(const char *a, const char *b);                 /* 0x002317B4: returns (u8)*a - (u8)*b */
+char *strcpy(char *dst, const char *src);                 /* 0x002318F8: 16 bytes at a time (EE MMI) */
+unsigned int strlen(const char *s);                       /* 0x00231A0C: 16 bytes at a time (EE MMI) */
 }
 
 #endif /* WHIRL_TOUR_COMMON_LIBC_H */

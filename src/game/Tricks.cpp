@@ -4,7 +4,7 @@
 extern UnkKeyword data_0025DC28[]; // "trickscores", "scoring", "trick", "/trickscores", "tricklist", "/tricklist"
 int func_00124280(const char *sequence);  // 0x00124280: parses a "sequence" string
 extern "C" void func_00124A28(void *);
-extern "C" void func_00196110__FPv(void *);
+void DrawModel196110(void *model); // 0x00196110
 extern "C" void *func_00182258();
 extern "C" void func_00183480(void *);
 
@@ -248,7 +248,7 @@ void UnkObj125F::Method125F10()
 // 0x00125F18
 void UnkObj125F::Action196110()
 {
-    func_00196110__FPv(this);
+    DrawModel196110(this);
 }
 
 // 0x00125F38

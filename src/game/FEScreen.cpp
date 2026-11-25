@@ -53,16 +53,16 @@ int FEScreen::GetMenuSelection()
     return -1;
 }
 
-void FEScreen::MenuAction16B9C8()
+void FEScreen::EnableMenuItem(int idx)
 {
     if (mMenu0C != 0)
-        mMenu0C->Action16B9C8();
+        mMenu0C->EnableItem(idx);
 }
 
-void FEScreen::MenuAction16B980()
+void FEScreen::DisableMenuItem(int idx)
 {
     if (mMenu0C != 0)
-        mMenu0C->Action16B980();
+        mMenu0C->DisableItem(idx);
 }
 
 int FEScreen::IsSlot5AndState3()

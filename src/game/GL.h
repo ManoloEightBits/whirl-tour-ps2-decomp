@@ -29,7 +29,8 @@
 /* Immediate mode: glBegin starts a primitive in the vertex buffer (0x002670A0), glVertex3f appends a
    0x30-byte vertex with the current texture coordinate and colour (glTexCoord2f, glColor3f/4f; colours
    are kept scaled to the GS range 0..128) and glEnd sends it. glPushMatrix/glPopMatrix move the stack
-   of the mode glMatrixMode chose (GL_MODELVIEW or GL_PROJECTION) by one 0x40-byte matrix.
+   of the mode glMatrixMode chose (GL_MODELVIEW or GL_PROJECTION) by one 0x40-byte matrix, and
+   glRotatef (a quaternion from the half angle in radians) and glMultMatrixf multiply into its top.
    The *Pointer functions keep the size and the pointer (not the type or stride) in the array state at
    0x00267140; glDrawArrays reads them back. glBindTexture looks the name up in the texture table. */
 extern "C" {
@@ -41,6 +42,8 @@ void glDisable(unsigned int cap);                                               
 void glMatrixMode(unsigned int mode);                                               /* 0x001A3638 */
 void glPushMatrix(void);                                                            /* 0x001A3738 */
 void glPopMatrix(void);                                                             /* 0x001A3808 */
+void glRotatef(f32 angle, f32 x, f32 y, f32 z);                                     /* 0x001A3858 */
+void glMultMatrixf(const f32 *m);                                                   /* 0x001A3AB0 */
 void glBegin(unsigned int mode);                                                    /* 0x001A3ED8 */
 void glVertex3f(f32 x, f32 y, f32 z);                                               /* 0x001A3F10 */
 void glTexCoord2f(f32 s, f32 t);                                                    /* 0x001A4010 */

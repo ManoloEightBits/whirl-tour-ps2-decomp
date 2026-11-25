@@ -71,7 +71,11 @@ void *func_00113FA0();
 void func_00197200(void *);
 void func_00192248(void *);
 const int *func_00155228();
-const char *func_00151D40(int id);
+const char *func_00151D40(u16 id);
+void *func_001262E0(int);
+void DrawModel196110(void *model);
+extern FEPad *gFEPads2659A0[4];
+UnkRes126250 *func_00126250(int);
 int func_001550D8(int level);
 int func_00155130();
 int func_00155310(int level);
@@ -159,17 +163,17 @@ void FEMonsterScreen::VirtSlot2(f32 dt)
 {
     FEScreen::VirtSlot2(dt);
     if (gGameCtx262250->mCount1C >= 2)
-        mMenu0C->Action16B9C8(0);
+        mMenu0C->EnableItem(0);
     else
-        mMenu0C->Action16B980(0);
+        mMenu0C->DisableItem(0);
     if (gGameCtx262250->mCount1C < 10)
-        mMenu0C->Action16B9C8(1);
+        mMenu0C->EnableItem(1);
     else
-        mMenu0C->Action16B980(1);
+        mMenu0C->DisableItem(1);
     if (gGameCtx262250->mCount1C > 0)
-        mMenu0C->Action16B9C8(2);
+        mMenu0C->EnableItem(2);
     else
-        mMenu0C->Action16B980(2);
+        mMenu0C->DisableItem(2);
     if (mMenu0C->mState1C != 0 && mMenu0C->mSelected0C == 2)
     {
         gGameCtx262250->mCount1C--;
@@ -542,9 +546,9 @@ FELevelScreen::~FELevelScreen()
 void FELevelScreen::UpdateLevels16A920()
 {
     for (int i = 0; i <= gGameCtx262250->mMaxLevel39C; i++)
-        mMenu0C->Action16B9C8(i);
+        mMenu0C->EnableItem(i);
     for (int i = gGameCtx262250->mMaxLevel39C + 1; i < 8; i++)
-        mMenu0C->Action16B980(i);
+        mMenu0C->DisableItem(i);
 }
 
 #ifdef NON_MATCHING
@@ -554,6 +558,287 @@ void FELevelScreen::VirtSlot4()
     gGameCtx262250->mField14 = mMenu0C->mSelected0C;
 }
 #endif
+
+// FEMenu (0x0016AFB8..0x0016BC90, between FELoadStateScreen and FENameSelectScreen)
+void FEMenu::Init()
+{
+    mSelected0C = 0;
+    mField10 = 0;
+    mField14 = 0;
+    mAlt24 = 0;
+    mField18 = 0;
+    mState1C = 0;
+    mField30 = 0;
+    mField20 = -1;
+    mField28 = 1;
+    mSelectSound34 = HashStringCRC32("mnu_selectitem");
+    mCancelSound38 = HashStringCRC32("mnu_cancel");
+    mText2C = CreateTextObj198E48(FindFont1264A8("font_body"), 0, 0.0f, 0.0f, 0.0f);
+    for (int i = 0; i < mCount04; i++)
+    {
+        mItems08[i].mDisabled100 = 0;
+        mItems08[i].mModel104 = 0;
+        mItems08[i].mModel10C = 0;
+        mItems08[i].mModel108 = 0;
+        mItems08[i].mSub110 = 0;
+        mItems08[i].mField114 = 100.0f;
+        if (i < mOwner00->mCount44)
+        {
+            mItems08[i].mModel104 = func_001262E0(mOwner00->mEntries48[i].mField00);
+            mItems08[i].mModel108 = func_001262E0(mOwner00->mEntries48[i].mField04);
+            mItems08[i].mModel10C = func_001262E0(mOwner00->mEntries48[i].mField08);
+            UnkRes126250 *res = func_00126250(mOwner00->mEntries48[i].mField0C);
+            if (res != 0)
+                mItems08[i].mSub110 = new FESub08(mOwner00->mEntries48[i].mField0C, &res->mVec18, &res->mVec24);
+            else
+                mItems08[i].mSub110 = new FESub08(mOwner00->mEntries48[i].mField0C, 0, 0);
+            if (mItems08[i].mSub110 != 0)
+            {
+                f32 v = mItems08[i].mSub110->Method1304E8(0xFFFF);
+                mItems08[i].mSub110->Method130720(v);
+            }
+        }
+    }
+}
+
+// Reads the pads (the first one, or all four), moves the selection (playing "mnu_p1select") and
+// sets the confirm/cancel state; then updates each item's FESub08.
+void FEMenu::Update(int allPads, int active, f32 dt)
+{
+    u32 held = gFEPads2659A0[0]->mButtons1C;
+    u32 pressed = gFEPads2659A0[0]->mPressed20;
+    if (allPads)
+    {
+        for (int p = 0; p < 4; p++)
+        {
+            held |= gFEPads2659A0[p]->mButtons1C;
+            pressed |= gFEPads2659A0[p]->mPressed20;
+        }
+    }
+    if (mState1C != 0 && held != 0)
+        mField18 = 1;
+    if (active)
+    {
+        if (pressed & 0x40000000)
+        {
+            PlaySoundCRC141520(HashStringCRC32("mnu_p1select"));
+            mSelected0C = (mSelected0C + mCount04 - 1) % mCount04;
+            SkipDisabledBackward();
+        }
+        if (pressed & 0x10000000)
+        {
+            PlaySoundCRC141520(HashStringCRC32("mnu_p1select"));
+            mSelected0C = (mSelected0C + 1) % mCount04;
+            SkipDisabledForward();
+        }
+        for (int p = 0; allPads ? p < 4 : p < 1; p++)
+        {
+            if ((gFEPads2659A0[p]->mButtons1C & 0x80000) && mItems08[mSelected0C].mDisabled100 == 0 &&
+                mState1C == 0 && mField28 != 0)
+            {
+                if (mSelectSound34 != 0)
+                    PlaySoundCRC141520(mSelectSound34);
+                mState1C = 1;
+                mField20 = p;
+            }
+        }
+        if (held & 0x100000)
+        {
+            if (mCancelSound38 != 0)
+                PlaySoundCRC141520(mCancelSound38);
+            mAlt24 = 1;
+        }
+        else
+        {
+            mAlt24 = 0;
+        }
+        if ((int)pressed < 0)
+            mField10 = 1;
+        else
+            mField10 = 0;
+        if (pressed & 0x20000000)
+            mField14 = 1;
+        else
+            mField14 = 0;
+    }
+    for (int i = 0; i < mCount04; i++)
+    {
+        if (mItems08[i].mSub110 != 0)
+        {
+            mItems08[i].mSub110->Update130348(dt);
+            if (mItems08[i].mSub110->mFlags80 & 0x100)
+                PlaySoundCRC141520(mItems08[i].mSub110->mSound84);
+        }
+    }
+}
+
+// Draws each item's models at its FESub08's matrix, then its text (turned to face the camera) in the
+// owner's normal, selected or disabled colour.
+#ifdef NON_MATCHING
+// 55 of 174 instructions differ, all in the second loop: the text pointer of the scale, string and
+// flag statements gets $v0/$v1/$a0 where the game has $a0/$a0/$v1, and the game has a nop after the
+// last colour load before the join. The first loop and the colour code match (TextObj::SetColor's
+// operand order, and the "disabled" branch first). Writing the scale through a local Vec3f pointer
+// gets the registers (38 diffs) but loads mTextScaleEC after the first store.
+void FEMenu::Draw()
+{
+    for (int i = 0; i < mCount04; i++)
+    {
+        glPushMatrix();
+        if (mItems08[i].mSub110 != 0)
+            glMultMatrixf(&mItems08[i].mSub110->mMatrix40.row[0].x);
+        if (mItems08[i].mDisabled100 != 0)
+        {
+            if (mItems08[i].mModel10C != 0)
+                DrawModel196110(mItems08[i].mModel10C);
+        }
+        else
+        {
+            if (mItems08[i].mModel104 != 0)
+                DrawModel196110(mItems08[i].mModel104);
+            if (i == mSelected0C && mItems08[i].mModel108 != 0)
+                DrawModel196110(mItems08[i].mModel108);
+        }
+        glPopMatrix();
+    }
+    for (int i = 0; i < mCount04; i++)
+    {
+        glPushMatrix();
+        if (mItems08[i].mSub110 != 0)
+            glMultMatrixf(&mItems08[i].mSub110->mMatrix40.row[0].x);
+        glRotatef(-90.0f, 0.0f, 1.0f, 0.0f);
+        glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
+        mText2C->mPos04.Set(0.0f, 0.0f, 0.0f);
+        mText2C->mScale1C.Set(mOwner00->mTextScaleE8, mOwner00->mTextScaleEC, 1.0f);
+        mText2C->mString30 = mItems08[i].mText00;
+        mText2C->mField00 |= 0x20;
+        if (i == mSelected0C)
+            mText2C->SetColor(mOwner00->mColourFC.x, mOwner00->mColourFC.y, mOwner00->mColourFC.z);
+        else if (mItems08[i].mDisabled100 != 0)
+            mText2C->SetColor(mOwner00->mColour108.x, mOwner00->mColour108.y, mOwner00->mColour108.z);
+        else
+            mText2C->SetColor(mOwner00->mColourF0.x, mOwner00->mColourF0.y, mOwner00->mColourF0.z);
+        DrawText19B758(mText2C);
+        mItems08[i].mField114 = mText2C->mField34;
+        glPopMatrix();
+    }
+}
+#endif
+
+FEMenu::FEMenu(const char **strings, int count, void *owner)
+{
+    mCount04 = count;
+    mItems08 = new FEMenuItem[count];
+    for (int i = 0; i < mCount04; i++)
+        strcpy(mItems08[i].mText00, strings[i]);
+    mOwner00 = (FEOwner *)owner;
+    Init();
+}
+
+FEMenu::FEMenu(const int *ids, int count, void *owner)
+{
+    mCount04 = count;
+    mItems08 = new FEMenuItem[count];
+    for (int i = 0; i < mCount04; i++)
+        strcpy(mItems08[i].mText00, func_00151D40(ids[i]));
+    mOwner00 = (FEOwner *)owner;
+    Init();
+}
+
+FEMenu::~FEMenu()
+{
+    for (int i = 0; i < mCount04; i++)
+    {
+        if (mItems08[i].mSub110 != 0)
+            delete mItems08[i].mSub110;
+    }
+    if (mItems08 != 0)
+        delete[] mItems08;
+    Release198F38(mText2C);
+}
+
+void FEMenu::DisableItem(int idx)
+{
+    mItems08[idx].mDisabled100 = 1;
+    if (idx == mSelected0C)
+        SkipDisabledForward();
+}
+
+void FEMenu::EnableItem(int idx)
+{
+    mItems08[idx].mDisabled100 = 0;
+}
+
+// Moves the selection to the next item that is not disabled, wrapping around (at most once round).
+void FEMenu::SkipDisabledForward()
+{
+    int sel = mSelected0C;
+    FEMenuItem *items = mItems08;
+    int n = 0;
+    if (items[sel].mDisabled100 != 0)
+    {
+        if (mCount04 > 0)
+        {
+            do
+            {
+                sel = mSelected0C = (sel + 1) % mCount04;
+                if (items[sel].mDisabled100 == 0)
+                    break;
+            } while (++n < mCount04);
+        }
+    }
+}
+
+void FEMenu::SkipDisabledBackward()
+{
+    int sel = mSelected0C;
+    FEMenuItem *items = mItems08;
+    int n = 0;
+    if (items[sel].mDisabled100 != 0)
+    {
+        if (mCount04 > 0)
+        {
+            do
+            {
+                sel = mSelected0C = (sel - 1 + mCount04) % mCount04;
+                if (items[sel].mDisabled100 == 0)
+                    break;
+            } while (++n < mCount04);
+        }
+    }
+}
+
+void FEMenu::Action16BAD8()
+{
+    for (int i = 0; i < mCount04; i++)
+    {
+        if (mItems08[i].mSub110 != 0)
+            mItems08[i].mSub110->Method1306B0();
+    }
+    mField30 = 1;
+}
+
+Mat4x4f *FEMenu::GetItemMatrix(int idx)
+{
+    return &mItems08[idx].mSub110->mMatrix40;
+}
+
+f32 FEMenu::GetItemField114(int idx)
+{
+    return mItems08[idx].mField114;
+}
+
+void FEMenu::SetTextIds(const int *ids)
+{
+    for (int i = 0; i < mCount04; i++)
+        strcpy(mItems08[i].mText00, func_00151D40(ids[i]));
+}
+
+void FEMenu::SetTexts(const char **strings)
+{
+    for (int i = 0; i < mCount04; i++)
+        strcpy(mItems08[i].mText00, strings[i]);
+}
 
 // 8. FENameSelectScreen
 FENameSelectScreen::~FENameSelectScreen()
