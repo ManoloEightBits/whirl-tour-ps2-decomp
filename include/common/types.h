@@ -23,6 +23,8 @@ struct Vec3f {
     f32 x; /* 0x00 */
     f32 y; /* 0x04 */
     f32 z; /* 0x08 */
+
+    void Set(f32 ax, f32 ay, f32 az) { x = ax; y = ay; z = az; }
 };
 
 struct Vec4f {

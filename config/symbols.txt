@@ -181,6 +181,7 @@
 # Runtime library (not decompiled yet)
 0x0022E8E0 malloc
 0x0022FC78 printf
+0x00231300 sprintf
 0x00233520 vfprintf
 0x0022CFF0 __rtti_si
 0x0022D010 __rtti_user
@@ -1015,6 +1016,11 @@
 0x0016DEF0 VirtSlot4__15FEScooterScreen
 0x0016DF60 VirtSlot7__15FEScooterScreen
 0x0016DF90 VirtSlot8__15FEScooterScreen
+0x0019B758 DrawText19B758__FP7TextObj
+0x001550D8 func_001550D8__Fi
+0x00155130 func_00155130__Fv
+0x00155310 func_00155310__Fi
+0x00156118 func_00156118__Fi
 
 # Collision & Event Listeners (src/game/DD_Event_Listener.cpp, IVP_Listener_Collision.cpp, MBCL.cpp, ScootCL.cpp)
 0x001171F0 _$_17DD_Event_Listener

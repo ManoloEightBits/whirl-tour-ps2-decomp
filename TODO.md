@@ -132,6 +132,10 @@ nothing about its field. Names have to come from evidence, roughly in this order
 - `Pickup::Pickup` `0x0011B060`, 123/144 (`KeyPickup.cpp`): the loop counter's `i = 0` and two FP registers.
 - `Scooter::ConsumeAdrenaline` `0x0017ED28`, 5/12 (`Scooter.cpp`): FP registers; `-ffast-math` did not help.
 - `FELevelScreen::VirtSlot4` `0x0016A9C8`, 1/8 (`FEScreens.cpp`).
+- `FELevelScreen::VirtSlot3` `0x0016A188`, 159/179 (`FEScreens.cpp`, draws the level info with `TextObj`):
+  one extra saved register because the first scheduling pass hoists the colour constant above two calls;
+  `do { } while (0)` around the third line fixes the frame (68-71 diffs) but not the first `sprintf`'s
+  argument order. A lead for the other screens' draw functions, which look the same.
 - `func_001240F8` (`tricklist` parser), 93/97 (`Tricks.cpp`): one pointer in `$s0` instead of `$v0`.
 
 ## Unverified names

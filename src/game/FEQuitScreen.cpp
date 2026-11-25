@@ -5,7 +5,6 @@ void PlaySoundCRC141520(u32 crc);                            // 0x00141520
 void *CreateDialog130960(int, int, int, void *, int);        // 0x00130960
 int UpdateDialog130760(void *dlg, FEPad *pad, int mask);     // 0x00130760
 void *FindFont1264A8(const char *name);                      // 0x001264A8
-void *CreateTextObj198E48(void *font, int, f32, f32, f32);   // 0x00198E48
 void Release198F38(void *);                                  // 0x00198F38
 void CleanupDialog1309E0(void *);                            // 0x001309E0
 void DrawBegin19A640();                                      // 0x0019A640

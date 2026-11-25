@@ -1,3 +1,4 @@
+#include "common/libc.h"
 #include "game/GL.h"
 #include "game/FEScreen.h"
 
@@ -26,6 +27,8 @@ struct GameCtxFE
     BGMInfo *mBGMTable384;
     char pad388[0x14];
     int mMaxLevel39C;
+    char pad3A0[0x134];
+    int mArr4D4[8];
 
     static inline GameCtxFE *Get()
     {
@@ -39,7 +42,6 @@ extern const int gMonsterMenuIds259F10[];
 extern int gMovCreditData282F68[];
 
 void *FindFont1264A8(const char *name);
-void *CreateTextObj198E48(void *font, int, f32, f32, f32);
 void Release198F38(void *);
 void CleanupDialog1309E0(void *);
 u32 HashStringCRC32(const char *str);
@@ -69,6 +71,11 @@ void *func_00113FA0();
 void func_00197200(void *);
 void func_00192248(void *);
 const int *func_00155228();
+const char *func_00151D40(int id);
+int func_001550D8(int level);
+int func_00155130();
+int func_00155310(int level);
+int func_00156118(int level);
 void func_00158140(void *, void *, int, int, f32, f32);
 void func_00156200();
 void func_00187DD0(void *, int);
@@ -457,6 +464,64 @@ void FELoadStateScreen::VirtSlot4()
 }
 
 // 7. FELevelScreen
+// Draws the selected level's information: three lines printed with the format strings 0x42, 0x43 and
+// 0x44, and two button icons when mArr174[1] / mArr174[2] are set and the level allows them.
+#ifdef NON_MATCHING
+// 159 of 179 instructions differ, all from one extra saved register: the first scheduling pass moves
+// the colour constant 0x80808080 (shared by the last two colour stores) above the sprintf and
+// func_00156118 calls, so it needs $s1 and everything shifts; the game loads it right before its
+// store, into $s0. Without -fno-schedule-insns the frame matches. do { } while (0) around the third
+// line's position/scale/colour/string/draw also gives the game's frame (71 diffs, 68 with the second
+// line wrapped too), but the first sprintf then sets $a0 = $sp before $a1/$a2 where the game sets it
+// last (in the delay slot). Tried: SetColor helpers, the colour as int, the format and value in
+// locals, &line[0]; all 64 do-while groupings of the six text blocks.
+void FELevelScreen::VirtSlot3()
+{
+    char line[0x40];
+    char line2[0x80];
+
+    FEScreen::VirtSlot3();
+    DrawBegin19A640();
+    if (mMenu0C->mSelected0C != 7)
+    {
+        sprintf(line, func_00151D40(0x42), func_001550D8(mMenu0C->mSelected0C));
+        mText164->mPos04.Set(570.0f, 710.0f, 0.0f);
+        mText164->mScale1C.Set(0.6f, 0.6f, 1.0f);
+        mText164->mColor28 = 0x80808080;
+        mText164->mString30 = line;
+        DrawText19B758(mText164);
+        int count = func_00155130();
+        if (count > 0)
+        {
+            sprintf(line, func_00151D40(0x43), count);
+            mText164->mPos04.Set(570.0f, 290.0f, 0.0f);
+            mText164->mString30 = line;
+            DrawText19B758(mText164);
+        }
+    }
+    sprintf(line2, func_00151D40(0x44), func_00156118(mMenu0C->mSelected0C));
+    mText164->mPos04.Set(570.0f, 660.0f, 0.0f);
+    mText164->mScale1C.Set(0.6f, 0.6f, 1.0f);
+    mText164->mColor28 = 0x80808080;
+    mText164->mString30 = line2;
+    DrawText19B758(mText164);
+    mText164->mScale1C.Set(1.0f, 1.0f, 1.0f);
+    mText164->mColor28 = 0x80808080;
+    mText164->mString30 = "\x80\x18";
+    if (mArr174[1] != 0 && func_00155310(mMenu0C->mSelected0C) != 0)
+    {
+        mText164->mPos04.Set(700.0f, 400.0f, 0.0f);
+        DrawText19B758(mText164);
+    }
+    if (mArr174[2] != 0 && gGameCtx262250->mArr4D4[mMenu0C->mSelected0C] != 0)
+    {
+        mText164->mPos04.Set(820.0f, 430.0f, 0.0f);
+        DrawText19B758(mText164);
+    }
+    DrawEnd19A6B0();
+}
+#endif
+
 FELevelScreen::FELevelScreen(void *owner)
     : FEScreen(0x40, 2, owner)
 {

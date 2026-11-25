@@ -3,6 +3,25 @@
 
 #include "common/types.h"
 
+// A line of text on screen (0x3C bytes): CreateTextObj198E48(font, ...) allocates one, the screens set
+// where it goes, its scale, colour and string, and draw it with DrawText19B758 between DrawBegin19A640
+// and DrawEnd19A6B0. Colours are RGBA bytes with 0x80 as full intensity (the GS range).
+struct TextObj
+{
+    int mField00;          // 0x00
+    Vec3f mPos04;          // 0x04
+    Vec3f mField10;        // 0x10
+    Vec3f mScale1C;        // 0x1C
+    u32 mColor28;          // 0x28
+    void *mFont2C;         // 0x2C
+    const char *mString30; // 0x30
+    int mField34;          // 0x34
+    int mField38;          // 0x38
+};
+
+TextObj *CreateTextObj198E48(void *font, int, f32, f32, f32); // 0x00198E48
+void DrawText19B758(TextObj *text);                          // 0x0019B758
+
 // Whirl Tour: FEScreen (front-end screen base class, RTTI name "8FEScreen").
 // Vtable at 0x002A4270 (_vt$8FEScreen), stored at offset +0x160.
 struct FEMenu
@@ -296,7 +315,7 @@ public:
 
     void UpdateLevels16A920();      // 0x0016A920
 
-    void *mText164; // 0x164
+    TextObj *mText164; // 0x164
     int mField168;  // 0x168
     int mField16C;  // 0x16C
     int mField170;  // 0x170
