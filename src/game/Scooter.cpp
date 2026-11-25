@@ -6,6 +6,9 @@ void func_0011A3E0(void *obj, int id);        // 0x0011A3E0
 void func_0011A590(void *obj);                // 0x0011A590
 void func_001BC438(void *obj, f32 a, f32 b);  // 0x001BC438
 f32 func_001255C8();                          // 0x001255C8: the adrenaline cap
+int func_00125808();                          // 0x00125808
+int func_001257E0();                          // 0x001257E0
+void func_00186080(int value);                // 0x00186080
 
 Vec3f *Scooter::GetPtr194()
 {
@@ -49,6 +52,19 @@ void Scooter::SetBoostField62C(f32 val)
 void Scooter::SetBoostField630(f32 val)
 {
     mField630 = val;
+}
+
+void Scooter::ApplySpecialAction(int mode)
+{
+    if (mBoostState != 0)
+    {
+        if (mode)
+            mField6C += func_00125808();
+        else
+            mField6C += func_001257E0();
+        return;
+    }
+    func_00186080(mField500);
 }
 
 void Scooter::TakeDamage(f32 amount)
