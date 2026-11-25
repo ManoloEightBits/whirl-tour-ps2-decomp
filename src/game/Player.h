@@ -29,6 +29,7 @@ public:
     void Action17F500();                         // 0x00123458
     void *GetPtr40();                            // 0x00123478
     void *GetPtr58();                            // 0x00123480
+    int func_00123488(int id, f32 value);        // 0x00123488
     void AddKey();                               // 0x00123548
     int GetKeys();                               // 0x00123558
     void AddSpeedBoost(f32 amount, f32 dur);     // 0x00123560
@@ -57,7 +58,9 @@ public:
     void EnableFieldD3();                        // 0x00123890
     int GetScooterField500();                    // 0x001238A0
 
-    char field_0x00[0x2C];
+    char field_0x00[0x24];
+    int mField24;           // 0x24: cleared by func_00123488
+    void *mField28;         // 0x28
     Scooter *mScooter;      // 0x2C
     char field_0x30[8];
     Player *mOtherPlayer38;              // 0x38: set by player_enter_player, cleared on leaving

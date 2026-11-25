@@ -48,7 +48,7 @@ public:
     void EnableField170();                   // 0x0017EC40
     void DisableField170();                  // 0x0017EC50
     void SetVec174(f32 x, f32 y, f32 z);     // 0x0017EC58
-    void *GetPtr78();                        // 0x0017EC68
+    Vec3f *GetPtr78();                       // 0x0017EC68
     void *GetField1A0();                     // 0x0017EC70
     int IsGrounded();                        // 0x0017EC78
     int HasAdrenaline();                     // 0x0017ECA0
@@ -67,7 +67,7 @@ public:
     int mField6C;              // 0x06C
     f32 mHealth;               // 0x070 (capped at 100.0f in AddHealth)
     f32 mAdrenaline;           // 0x074
-    char mBlock78[0x0C];       // 0x078
+    Vec3f mPos78;              // 0x078: a position (Player::func_00123488 subtracts it)
     char mBlock84[0x0C];       // 0x084
     f32 mField90;              // 0x090
     f32 mField94;              // 0x094
@@ -92,7 +92,9 @@ public:
     struct IVP_Real_Object_Stub *mPhysObj1D8; // 0x1D8
     char field_0x1DC[0x2C];
     UnkScooterState *mState208; // 0x208
-    char field_0x20C[0x160];
+    char field_0x20C[4];
+    int mField210;             // 0x210: GetStatFactor passes it to func_00125968 (3 or 4 gives 1.0)
+    char field_0x214[0x158];
     int mField36C;             // 0x36C: set to 1 by TakeDamage
     char field_0x370[0x190];
     int mField500;             // 0x500

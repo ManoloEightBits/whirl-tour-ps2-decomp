@@ -6,6 +6,7 @@ void func_0011A3E0(void *obj, int id);        // 0x0011A3E0
 void func_0011A590(void *obj);                // 0x0011A590
 void func_001BC438(void *obj, f32 a, f32 b);  // 0x001BC438
 f32 func_001255C8();                          // 0x001255C8: the adrenaline cap
+int func_00125968(int id);                    // 0x00125968
 int func_00125808();                          // 0x00125808
 int func_001257E0();                          // 0x001257E0
 void func_00186080(int value);                // 0x00186080
@@ -32,6 +33,18 @@ void Scooter::SetActorAndClear1D8(void *actor)
 {
     mPhysObj1D8->mActorA8 = (DD_ActorInfo *)actor;
     PhysicsClear1F34B0(mPhysObj1D8, 1);
+}
+
+f32 Scooter::GetStatFactor()
+{
+    if (mState208->mState00 == 1 && mField210 >= 0 &&
+        (func_00125968(mField210) == 3 || func_00125968(mField210) == 4))
+        return 1.0f;
+    if (mState208->mState00 == 13)
+        return 1.0f;
+    if (mBoostState != 0)
+        return mField634 * 0.5f;
+    return 0.0f;
 }
 
 int Scooter::IsBoostInactive()
@@ -180,9 +193,9 @@ void Scooter::SetVec174(f32 x, f32 y, f32 z)
     mVec174Z = z;
 }
 
-void *Scooter::GetPtr78()
+Vec3f *Scooter::GetPtr78()
 {
-    return mBlock78;
+    return &mPos78;
 }
 
 void *Scooter::GetField1A0()
@@ -249,7 +262,8 @@ void Scooter::func_0017EE28(int flag)
 // (it is returned) before the 0.0f constant, which sched1 hoists above the subtraction so that it
 // lives longer and loses priority. In the game 0.0f gets $f0, next $f1 and cur $f2, and the
 // zero store moves into a bc1tl delay slot. Result variables, do/while(0) and reordered
-// conditions did not change it.
+// conditions did not change it, and neither did -ffast-math (with >=, 0.0f >, a zero variable or
+// the result in a variable).
 f32 Scooter::ConsumeAdrenaline(f32 amount)
 {
     f32 cur = mAdrenaline;

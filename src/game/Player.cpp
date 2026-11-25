@@ -8,6 +8,9 @@ void SubComponentAction2(Scooter *);      // 0x001723F0
 void func_0017F328(Scooter *);            // 0x0017F328
 void func_0017F500(Scooter *);            // 0x0017F500
 void func_00174198(Scooter *, void *);    // 0x00174198
+void func_0011F8F8(void *obj, Vec3f *out);           // 0x0011F8F8
+int func_00175970(Scooter *s, int id, f32 value);    // 0x00175970
+void func_0011EE30(void *obj, void *p);              // 0x0011EE30
 
 void Player::Action17F328()
 {
@@ -27,6 +30,30 @@ void *Player::GetPtr40()
 void *Player::GetPtr58()
 {
     return mBlock58;
+}
+
+int Player::func_00123488(int id, f32 value)
+{
+    if (mField28 != NULL)
+    {
+        mField24 = 0;
+        Vec3f pos;
+        func_0011F8F8(mField28, &pos);
+        Vec3f *scooterPos = mScooter->GetPtr78();
+        Vec3f d; // computed and never used; the game keeps the stores
+        f32 dx = pos.x - scooterPos->x;
+        f32 dy = pos.y - scooterPos->y;
+        f32 dz = pos.z - scooterPos->z;
+        d.x = dx;
+        d.y = dy;
+        d.z = dz;
+    }
+    if (!func_00175970(mScooter, id, value))
+        return 0;
+    if (mField28 == NULL)
+        return 0;
+    func_0011EE30(mField28, mScooter->GetPtr130());
+    return 1;
 }
 
 void Player::AddKey()
