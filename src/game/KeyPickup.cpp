@@ -1,8 +1,8 @@
+#include "common/libc.h"
 #include "game/Pickup.h"
 #include "game/CollisionListeners.h"
 
 extern "C" char *func_00231F08(char *dst, const char *src, u32 n); // 0x00231F08 (runtime library; probably strncpy)
-extern "C" int func_002317B4(const char *a, const char *b);        // 0x002317B4 (runtime library; probably strcmp)
 extern UnkKeyword data_0025A230[]; // keywords of a pickups file: "pickups", "pickup", "mesh", ... "/pickup"
 
 u32 HashStringCRC32(const char *str);                    // 0x001B1CD0
@@ -257,12 +257,12 @@ void PickupDef::func_0011AD28(char *name, UnkParser *p)
             break;
         case 4: // fountains
             p->func_001C2C78("type", buf);
-            if (func_002317B4(buf, "creation") == 0)
+            if (strcmp(buf, "creation") == 0)
             {
                 creation = 1;
                 n = 0;
             }
-            else if (func_002317B4(buf, "destruction") == 0)
+            else if (strcmp(buf, "destruction") == 0)
             {
                 destruction = 1;
                 n = 0;

@@ -35,7 +35,7 @@ struct UnkClip1B7
     void SetField50(int v);                // 0x001B7F90
 };
 
-void func_001BD978(void *);       // 0x001BD978
+void MemFree1BD978(void *);       // 0x001BD978
 int func_001B6950(void *);        // 0x001B6950
 int func_001B6958(void *, int);   // 0x001B6958
 int func_001B6960(void *, int);   // 0x001B6960
@@ -97,7 +97,7 @@ int UnkClip1B7::GetField50()
 
 void UnkClip1B7::Destroy1B7F28()
 {
-    func_001BD978(this);
+    MemFree1BD978(this);
 }
 
 void UnkClip1B7::SetEntry54(int idx, int val)
@@ -916,7 +916,7 @@ struct UnkBlock4
 
 void UnkModel1B7::Destroy1B7AE8()
 {
-    func_001BD978(this);
+    MemFree1BD978(this);
 }
 
 void UnkModel1B7::InitPtrs1B7B08()
@@ -1156,7 +1156,7 @@ struct UnkTex1BA
 
 void UnkTex1BA::Destroy1BAA50()
 {
-    func_001BD978(this);
+    MemFree1BD978(this);
 }
 
 int UnkTex1BA::GetEntry24(u8 idx)

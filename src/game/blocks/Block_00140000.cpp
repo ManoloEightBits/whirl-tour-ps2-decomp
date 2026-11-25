@@ -11,7 +11,7 @@ void func_001A8950();         // 0x001A8950
 void func_001A89F0();         // 0x001A89F0
 void func_001A8C10(int, int); // 0x001A8C10
 void func_001A8D50();         // 0x001A8D50
-void func_001BD978(void *);   // 0x001BD978
+void MemFree1BD978(void *);   // 0x001BD978
 
 void func_00140A88()
 {
@@ -54,7 +54,7 @@ void func_00142D90()
 
 void func_001430E0(void *arg0)
 {
-    func_001BD978(arg0);
+    MemFree1BD978(arg0);
 }
 
 void func_001436B0()
@@ -156,7 +156,7 @@ struct UnkObj143538
 void UnkObj143538::Method143538()
 {
     func_001AB828(mField4);
-    func_001BD978(this);
+    MemFree1BD978(this);
 }
 
 // UnkObj143870 (0x00143870): no RTTI; its layout is the fields these methods use.

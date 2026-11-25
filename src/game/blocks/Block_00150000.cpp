@@ -4,11 +4,11 @@
 // Names are address based; move each function to its file once its TU is identified.
 
 void func_001974D8();       // 0x001974D8
-void func_001BD978(void *); // 0x001BD978
+void MemFree1BD978(void *); // 0x001BD978
 
 void func_00151608(void *arg0)
 {
-    func_001BD978(arg0);
+    MemFree1BD978(arg0);
 }
 
 void func_00151760()
@@ -69,9 +69,9 @@ struct UnkObj151900
 
 void UnkObj151900::Method151900()
 {
-    func_001BD978(mFieldC);
-    func_001BD978(mField8);
-    func_001BD978(this);
+    MemFree1BD978(mFieldC);
+    MemFree1BD978(mField8);
+    MemFree1BD978(this);
 }
 
 void UnkObj151900::Method151938()

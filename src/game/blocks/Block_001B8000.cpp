@@ -4,7 +4,7 @@
 // Names are address based; move each function to its file once its TU is identified.
 
 int func_001B9D98();        // 0x001B9D98
-void func_001BD978(void *); // 0x001BD978
+void MemFree1BD978(void *); // 0x001BD978
 void func_001C11D8();       // 0x001C11D8
 void func_001C1450(int);    // 0x001C1450
 
@@ -22,17 +22,17 @@ void func_001B9160(int arg0)
 
 void func_001B9240(void *arg0)
 {
-    func_001BD978(arg0);
+    MemFree1BD978(arg0);
 }
 
 void func_001B9D78(void *arg0)
 {
-    func_001BD978(arg0);
+    MemFree1BD978(arg0);
 }
 
 void func_001BA638(void *arg0)
 {
-    func_001BD978(arg0);
+    MemFree1BD978(arg0);
 }
 
 int func_001BA658(int arg0)
@@ -114,12 +114,12 @@ void UnkObj1BB0D0::Method1BB168()
     tmp = mFieldC;
     if (tmp != NULL)
     {
-        func_001BD978(tmp);
+        MemFree1BD978(tmp);
         mFieldC = NULL;
     }
     mField4 = 0;
     mField8 = 0;
-    func_001BD978(this);
+    MemFree1BD978(this);
 }
 
 // UnkObj1BB3E0 (0x001BB3E0): no RTTI; its layout is the fields these methods use.

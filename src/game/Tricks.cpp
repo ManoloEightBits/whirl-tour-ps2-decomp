@@ -1,6 +1,6 @@
+#include "common/libc.h"
 #include "game/Tricks.h"
 
-extern "C" int func_002317B4(const char *a, const char *b); // 0x002317B4 (runtime library; probably strcmp)
 extern UnkKeyword data_0025DC28[]; // "trickscores", "scoring", "trick", "/trickscores", "tricklist", "/tricklist"
 int func_00124280(const char *sequence);  // 0x00124280: parses a "sequence" string
 extern "C" void func_00124A28(void *);
@@ -66,7 +66,7 @@ int func_00125880(const char *name)
     int i = 0;
     do
     {
-        if (func_002317B4(func_00125940(i), name) == 0)
+        if (strcmp(func_00125940(i), name) == 0)
             found = i;
         i++;
     } while (found == -1 && i < NUM_TRICKS);
@@ -303,7 +303,7 @@ void func_001240F8(UnkParser *p, UnkTrickList *list, char *name)
             if (idx >= 0)
             {
                 list->mSequence144[idx] = seq;
-                int r = func_002317B4(lock, "yes");
+                int r = strcmp(lock, "yes");
                 int *unlocked = &list->mUnlocked000[idx];
                 if (r == 0)
                     *unlocked = 0;

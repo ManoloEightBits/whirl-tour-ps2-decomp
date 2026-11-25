@@ -4,7 +4,7 @@
 // Names are address based; move each function to its file once its TU is identified.
 
 int func_00190D88();        // 0x00190D88
-void func_001BD978(void *); // 0x001BD978
+void MemFree1BD978(void *); // 0x001BD978
 
 int func_00190BB8(int arg0)
 {
@@ -28,12 +28,12 @@ int func_00190DC0(int arg0)
 
 void func_00191768(void *arg0)
 {
-    func_001BD978(arg0);
+    MemFree1BD978(arg0);
 }
 
 void func_00191E40(void *arg0)
 {
-    func_001BD978(arg0);
+    MemFree1BD978(arg0);
 }
 
 // UnkObj190B68 (0x00190B68..0x00190BA0): no RTTI; its layout is the fields these methods use.

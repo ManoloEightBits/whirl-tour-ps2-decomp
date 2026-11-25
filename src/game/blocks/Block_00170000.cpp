@@ -4,7 +4,7 @@
 // Names are address based; move each function to its file once its TU is identified.
 
 int func_001BB0E0(int);     // 0x001BB0E0
-void func_001BD978(void *); // 0x001BD978
+void MemFree1BD978(void *); // 0x001BD978
 
 // UnkObj170958 (0x00170958): no RTTI; its layout is the fields these methods use.
 struct UnkObj170958
@@ -26,19 +26,19 @@ void UnkObj170958::Method170958()
     temp_a0 = mField8;
     if (temp_a0 != NULL)
     {
-        func_001BD978(temp_a0);
+        MemFree1BD978(temp_a0);
     }
     temp_a0_2 = mFieldC;
     if (temp_a0_2 != NULL)
     {
-        func_001BD978(temp_a0_2);
+        MemFree1BD978(temp_a0_2);
     }
     temp_a0_3 = mField10;
     if (temp_a0_3 != NULL)
     {
-        func_001BD978(temp_a0_3);
+        MemFree1BD978(temp_a0_3);
     }
-    func_001BD978(this);
+    MemFree1BD978(this);
 }
 
 // UnkObj170B00 (0x00170B00): no RTTI; its layout is the fields these methods use.

@@ -5,7 +5,7 @@
 
 int func_00125630(int);     // 0x00125630
 void func_00187750(int);    // 0x00187750
-void func_001BD978(void *); // 0x001BD978
+void MemFree1BD978(void *); // 0x001BD978
 
 // UnkObj185760 (0x00185760): no RTTI; its layout is the fields these methods use.
 struct UnkObj185760
@@ -21,11 +21,11 @@ struct UnkObj185760
 
 void UnkObj185760::Method185760()
 {
-    func_001BD978(mField14);
-    func_001BD978(mField18);
-    func_001BD978(mField1C);
-    func_001BD978(mField20);
-    func_001BD978(this);
+    MemFree1BD978(mField14);
+    MemFree1BD978(mField18);
+    MemFree1BD978(mField1C);
+    MemFree1BD978(mField20);
+    MemFree1BD978(this);
 }
 
 // UnkObj186040 (0x00186040): no RTTI; its layout is the fields these methods use.

@@ -1,9 +1,10 @@
 #include "common/types.h"
+#include "common/libc.h"
 
 // Functions of 0x001B4000..0x001B7FFF whose class and translation unit are not known yet.
 // Names are address based; move each function to its file once its TU is identified.
 
-void func_001BD978(void *); // 0x001BD978
+void MemFree1BD978(void *); // 0x001BD978
 void func_002306F0(int);    // 0x002306F0
 
 void func_001B4F08()
@@ -21,10 +22,9 @@ void func_001B4F30()
 
 void func_001B6590(void *arg0)
 {
-    func_001BD978(arg0);
+    MemFree1BD978(arg0);
 }
 
-void func_0022F50C(int, int, int); // 0x0022F50C
 
 // UnkObj1B61B0 (0x001B61B0..0x001B61B8): no RTTI; its layout is the fields these methods use.
 struct UnkObj1B61B0
@@ -82,19 +82,19 @@ struct UnkObj1B6F00
 {
     char field_0x0[0x6];
     u16 mField6;         // 0x6
-    int mField8;         // 0x8
+    u8 *mField8;         // 0x8
 
     void Method1B6F00(); // 0x001B6F00
 };
 
 void UnkObj1B6F00::Method1B6F00()
 {
-    int tmp;
+    u8 *buf;
 
-    tmp = mField8;
-    if (tmp != 0)
+    buf = mField8;
+    if (buf != NULL)
     {
-        func_0022F50C(tmp + 2, 0, mField6 - 2);
+        memset(buf + 2, 0, mField6 - 2);
     }
 }
 
@@ -116,8 +116,8 @@ void UnkObj1B7010::Method1B7010()
     tmp = mField8;
     if (tmp != NULL)
     {
-        func_001BD978(tmp);
+        MemFree1BD978(tmp);
         mField8 = NULL;
     }
-    func_001BD978(this);
+    MemFree1BD978(this);
 }

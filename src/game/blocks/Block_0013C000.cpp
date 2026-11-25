@@ -1,9 +1,9 @@
 #include "common/types.h"
+#include "game/GL.h"
 
 // Functions of 0x0013C000..0x0013FFFF whose class and translation unit are not known yet.
 // Names are address based; move each function to its file once its TU is identified.
 
-void func_001A2340(int, int);                               // 0x001A2340
 void func_001A3188(int, int, int, int, int, int, int, int); // 0x001A3188
 
 // UnkObj13F690 (0x0013F690..0x0013F6D8): no RTTI; its layout is the fields these methods use.
@@ -52,6 +52,6 @@ int UnkObj13F690::GetField1B0()
 
 void UnkObj13F690::Method13F6D8()
 {
-    func_001A2340(0xDE1, mField1CC);
+    glBindTexture(GL_TEXTURE_2D, mField1CC);
     func_001A3188(0xDE1, 0, 0, 0, 0, 0, 0x100, 0x100);
 }

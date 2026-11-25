@@ -53,7 +53,7 @@ int func_00183E88()
 }
 
 void func_001BCAC0(int);    // 0x001BCAC0
-void func_001BD978(void *); // 0x001BD978
+void MemFree1BD978(void *); // 0x001BD978
 void func_001BFAC0(int);    // 0x001BFAC0
 
 // UnkObj180EA8 (0x00180EA8): no RTTI; its layout is the fields these methods use.
@@ -67,8 +67,8 @@ struct UnkObj180EA8
 
 void UnkObj180EA8::Method180EA8()
 {
-    func_001BD978(mField4C);
-    func_001BD978(this);
+    MemFree1BD978(mField4C);
+    MemFree1BD978(this);
 }
 
 // UnkObj182AC8 (0x00182AC8): no RTTI; its layout is the fields these methods use.

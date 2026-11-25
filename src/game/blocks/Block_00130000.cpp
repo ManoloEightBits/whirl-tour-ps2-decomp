@@ -3,11 +3,11 @@
 // Functions of 0x00130000..0x00133FFF whose class and translation unit are not known yet.
 // Names are address based; move each function to its file once its TU is identified.
 
-void func_001BD978(void *); // 0x001BD978
+void MemFree1BD978(void *); // 0x001BD978
 
 void CleanupDialog1309E0(void *arg0)
 {
-    func_001BD978(arg0);
+    MemFree1BD978(arg0);
 }
 
 // UnkObj130608 (0x00130608): no RTTI; its layout is the fields these methods use.

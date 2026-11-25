@@ -1,3 +1,4 @@
+#include "common/libc.h"
 #include "game/Scooter.h"
 #include "game/CollisionListeners.h"
 
@@ -20,7 +21,6 @@ void func_00186080(int value);                // 0x00186080
 int func_001860F0(int obj);                   // 0x001860F0
 void func_00185E20(int obj, int arg);         // 0x00185E20
 void func_00185F50(int obj);                  // 0x00185F50
-extern "C" int func_00230700();               // 0x00230700: rand()
 
 struct UnkScooterTimer
 {
@@ -223,7 +223,7 @@ f32 Scooter::func_0017E758(f32 v)
 f32 Scooter::func_0017E798()
 {
     f32 val = mParams1C0->mField124;
-    if ((func_00230700() % 101 - 50) * 0.02f < 0.0f)
+    if ((rand() % 101 - 50) * 0.02f < 0.0f)
         val = -val;
     return val;
 }
@@ -231,7 +231,7 @@ f32 Scooter::func_0017E798()
 f32 Scooter::func_0017E810()
 {
     f32 val = mParams1C0->mField100;
-    if ((func_00230700() % 101 - 50) * 0.02f < 0.0f)
+    if ((rand() % 101 - 50) * 0.02f < 0.0f)
         val = -val;
     return val;
 }
@@ -239,7 +239,7 @@ f32 Scooter::func_0017E810()
 f32 Scooter::func_0017E888()
 {
     f32 val = mParams1C0->mField13C;
-    if ((func_00230700() % 101 - 50) * 0.02f < 0.0f)
+    if ((rand() % 101 - 50) * 0.02f < 0.0f)
         val = -val;
     return val;
 }

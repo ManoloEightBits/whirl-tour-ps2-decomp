@@ -3,7 +3,7 @@
 // Functions of 0x001C0000..0x001C3FFF whose class and translation unit are not known yet.
 // Names are address based; move each function to its file once its TU is identified.
 
-void func_001BD978(void *);       // 0x001BD978
+void MemFree1BD978(void *);       // 0x001BD978
 void func_002318F8(int, int);     // 0x002318F8
 void func_00239BE0(int);          // 0x00239BE0
 int func_0023CE78(int, int, int); // 0x0023CE78
@@ -31,7 +31,7 @@ int func_001C02A0(int arg0, int arg1, int arg2)
 
 void func_001C03A0(void *arg0)
 {
-    func_001BD978(arg0);
+    MemFree1BD978(arg0);
 }
 
 int func_001C13A8(u32 arg0)
@@ -92,8 +92,8 @@ void UnkObj1C0E80::Method1C0FF0()
 
 void UnkObj1C0E80::Method1C1070()
 {
-    func_001BD978(mFieldC);
-    func_001BD978(this);
+    MemFree1BD978(mFieldC);
+    MemFree1BD978(this);
 }
 
 int UnkObj1C0E80::Method1C10C0()

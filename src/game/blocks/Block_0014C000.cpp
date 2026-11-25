@@ -6,8 +6,8 @@
 void func_00126138(int);    // 0x00126138
 void func_0014C4E8(int);    // 0x0014C4E8
 void func_001974D8();       // 0x001974D8
-int func_001BD958(int);     // 0x001BD958
-void func_001BD978(void *); // 0x001BD978
+int MemAlloc1BD958(int);     // 0x001BD958
+void MemFree1BD978(void *); // 0x001BD978
 
 void func_0014C198()
 {
@@ -20,7 +20,7 @@ void func_0014C200()
 
 void func_0014C208(void *arg0)
 {
-    func_001BD978(arg0);
+    MemFree1BD978(arg0);
     func_00126138(0);
 }
 
@@ -55,7 +55,7 @@ int func_0014C9C0()
 {
     int result;
 
-    result = func_001BD958(0x98);
+    result = MemAlloc1BD958(0x98);
     if (result != 0)
     {
         func_0014C4E8(result);
@@ -65,7 +65,7 @@ int func_0014C9C0()
 
 void func_0014CAC8(void *arg0)
 {
-    func_001BD978(arg0);
+    MemFree1BD978(arg0);
 }
 
 int func_0014CAE8(int arg0)
@@ -75,7 +75,7 @@ int func_0014CAE8(int arg0)
 
 void func_0014E990(void *arg0)
 {
-    func_001BD978(arg0);
+    MemFree1BD978(arg0);
 }
 
 void func_0014E9B0()

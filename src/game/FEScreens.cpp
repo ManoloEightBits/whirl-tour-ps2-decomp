@@ -1,3 +1,4 @@
+#include "game/GL.h"
 #include "game/FEScreen.h"
 
 struct BGMInfo
@@ -45,8 +46,6 @@ u32 HashStringCRC32(const char *str);
 void PlaySoundCRC141520(u32 crc);
 void DrawBegin19A640();
 void DrawEnd19A6B0();
-void func_001A2FB8(int);
-void func_001A2DB8(int);
 void func_00113BD0();
 void func_00158330(void *, int);
 int func_001586D0(void *);
@@ -64,7 +63,7 @@ void func_0011A3E0(void *, int);
 void func_00119210(void *, f32);
 void func_00191E40(void *);
 void PhysicsRelease1F3A70(void *);
-void func_001BD978(void *);
+void MemFree1BD978(void *);
 void *func_00192130(int, int, void *, void *, f32);
 void *func_00113FA0();
 void func_00197200(void *);
@@ -120,13 +119,13 @@ void FEMcScreen::VirtSlot2(f32 dt)
 void FEMcScreen::VirtSlot3()
 {
     DrawBegin19A640();
-    func_001A2FB8(0xB44);
-    func_001A2FB8(0xB71);
+    glDisable(GL_CULL_FACE);
+    glDisable(GL_DEPTH_TEST);
     if (mMode170 != 200)
         func_00113BD0();
     func_00158330(mMc16C, 1);
-    func_001A2DB8(0xB71);
-    func_001A2DB8(0xB44);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
     DrawEnd19A6B0();
 }
 
@@ -344,7 +343,7 @@ inline void FEMovSub198::Destroy114C88()
         if (mArr64[i] != 0)
             PhysicsRelease1F3A70(mArr64[i]);
     }
-    func_001BD978(this);
+    MemFree1BD978(this);
 }
 
 FEMovScreen::FEMovScreen(void *owner, int a2, int a3, int a4)
