@@ -34,8 +34,10 @@ Python prints a `sys.prefix` warning. Every tool finds the game files through `W
 
 ## Loop for one function
 
-1. **Pick a target:** run `scan_candidates.py --level 1|2|3`, `map_tus.py --class X` or
+1. **Pick a target:** look at `docs/MAP.md` (what each block of the binary holds and how much is matched),
+   run `scan_candidates.py --level 1|2|3`, `map_tus.py --class X` or
    `inspect_tu.py --class X` / `--range A B` (that one includes m2c drafts).
+   For a run of trivial methods of one class, `gen_accessors.py --range A B --class X` drafts the C++.
 2. **Write the C++** in `src/game/`, and add the address to `config/symbols.txt`. For a class with a
    vtable, also add a line to `config/vtables.txt`, and add the class to `HAND_WRITTEN` in
    `tools/gen_rtti_stubs.py`.
@@ -75,7 +77,8 @@ the other tools directly.
 | :--- | :--- |
 | `inspect_tu.py --class C \| --range A B \| --func A [--m2c] [--dis]` | Functions of a class or range: size, match status, calls, strings, floats, `$a0` field accesses, C++ drafts for trivial functions, m2c output. An address inside a function is reported as such and replaced by that function's start. |
 | `scan_candidates.py [--level {1,2,3} \| --twins] [--limit N] [--class S]` | Unmatched candidates: leaf getters/setters (`--level 1`), one-call wrappers (`--level 2`), vtable methods sorted by size (`--level 3`), or structural twin families grouped by normalized instruction skeleton (`--twins`). |
-| `coverage.py [--region game\|physics\|runtime\|all] [--top N] [--block KB]` | What is left, per region of the binary map: matched/total functions and bytes, unmatched functions in an RTTI vtable, unmatched bytes by function size, the largest unmatched functions, and the address blocks with the most unmatched bytes (labelled with nearby RTTI classes). |
+| `coverage.py [--region game\|physics\|runtime\|all] [--top N] [--block KB] [--map FILE]` | What is left, per region of the binary map: matched/total functions and bytes, unmatched functions in an RTTI vtable, unmatched bytes by function size, the largest unmatched functions, and the address blocks with the most unmatched bytes (labelled with nearby RTTI classes). `--map docs/MAP.md` writes the per-block map instead: share matched, RTTI classes, our files and the keywords each block's code uses. |
+| `gen_accessors.py --range A B --class C [--data-start OFF] [--all]` | Drafts a class's trivial methods in a range (getters, address getters, setters, float add/subtract, empty methods, constants): declarations with the field layout the accesses imply, definitions, and `symbols.txt` lines. Marks vtable slots and lists what it does not recognise. `--all` includes matched functions, to check it against hand-written code. |
 | `map_tus.py [--filter S] [--class C]` | Groups the RTTI vtables (193) into probable translation units and infers `_vptr` offsets and fields. |
 | `diff_func.py file.cpp <mangled> [--all] [-D X] [--bodies f\|- \| --variants v.json] [--apply]` | Side-by-side R5900 diff of one repository function, or a batch of candidates with one line each (diff count and first differing offset). `--bodies`: only function bodies, separated by `---` lines; a `@@` line puts the text above it before the function (inline helpers). `--variants`: `{"target": "...", "candidates": [...]}` for any snippet. `--apply` writes the best candidate into the file. |
 | `scratch_cc.py snippet.cpp\|- [--func S] [--vs ADDR] [--asm] [--regs] [-D X] [--cflag F]` | Compiles a loose snippet in `build/scratch/` with the exact flags of `verify.py` (it can include repository headers). Shows its disassembly with relocations, or a side-by-side diff against any game address (`--vs`), GCC's `.s` (`--asm`), and the register-allocation table (`--regs`). `--cflag` adds a compiler flag for experiments (this is how `-ffast-math` was confirmed). |
