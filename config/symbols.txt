@@ -378,6 +378,7 @@
 0x0017EA30 SetBoostField630__7Scooterf
 0x0017EA38 ApplySpecialAction__7Scooteri
 0x0017EAA0 func_0017EAA0__7Scooterf
+0x0017EB48 func_0017EB48__7Scooter
 0x0017EB90 AddHealth__7Scooterf
 0x0017EBC0 AddSpeedBoost__7Scooterff
 0x0017EBD0 AddSpinBoost__7Scooterff
@@ -458,6 +459,7 @@
 0x00122DC8 func_00122DC8__FP6Player
 0x0015EFB8 func_0015EFB8__7AI_Bossf
 0x00153C10 UnlockScooterGlobal__Fi
+0x001BC438 func_001BC438__FPvff
 0x001722B0 SubComponentAction1__FP7ScooterP5Vec3ff
 0x001723F0 SubComponentAction2__FP7Scooter
 

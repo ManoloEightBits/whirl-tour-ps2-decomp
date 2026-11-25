@@ -4,6 +4,7 @@
 void PhysicsClear1F34B0(void *obj, int flag); // 0x001F34B0
 void func_0011A3E0(void *obj, int id);        // 0x0011A3E0
 void func_0011A590(void *obj);                // 0x0011A590
+void func_001BC438(void *obj, f32 a, f32 b);  // 0x001BC438
 
 Vec3f *Scooter::GetPtr194()
 {
@@ -47,6 +48,12 @@ void Scooter::SetBoostField62C(f32 val)
 void Scooter::SetBoostField630(f32 val)
 {
     mField630 = val;
+}
+
+void Scooter::func_0017EB48()
+{
+    func_0017ED58(0x11093);
+    func_001BC438(mField1A8, 0.1f, 1.0f);
 }
 
 void Scooter::AddHealth(f32 percent)

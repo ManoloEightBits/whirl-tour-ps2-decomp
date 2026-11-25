@@ -22,6 +22,7 @@ public:
     void SetBoostField630(f32 val);          // 0x0017EA30
     void ApplySpecialAction(int mode);       // 0x0017EA38
     void func_0017EAA0(f32 amount);          // 0x0017EAA0 (boss attacks pass the attack's +0x10)
+    void func_0017EB48();                    // 0x0017EB48
     void AddHealth(f32 percent);             // 0x0017EB90
     void AddSpeedBoost(f32 amount, f32 dur); // 0x0017EBC0
     void AddSpinBoost(f32 amount, f32 dur);  // 0x0017EBD0
@@ -73,7 +74,9 @@ public:
     char field_0x184[0x10];
     Vec3f mVec194;             // 0x194
     void *mField1A0;           // 0x1A0
-    char field_0x1A4[0x28];
+    char field_0x1A4[4];
+    void *mField1A8;           // 0x1A8: passed to func_001BC438 with 0.1f, 1.0f
+    char field_0x1AC[0x20];
     int mField1CC;             // 0x1CC
     int mField1D0;             // 0x1D0
     int mField1D4;             // 0x1D4
