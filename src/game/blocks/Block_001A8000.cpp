@@ -26,3 +26,17 @@ int func_001ABE88()
 {
     return 0;
 }
+
+// UnkObj1A9768 (0x001A9768): no RTTI; its layout is the fields these methods use.
+struct UnkObj1A9768
+{
+    char field_0x0[0x8];
+    int mField8;         // 0x8
+
+    int GetField8();     // 0x001A9768
+};
+
+int UnkObj1A9768::GetField8()
+{
+    return mField8;
+}

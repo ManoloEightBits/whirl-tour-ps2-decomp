@@ -17,3 +17,45 @@ void func_00112150()
 void func_00112158()
 {
 }
+
+void func_0010F550(int); // 0x0010F550
+
+// UnkObj110020 (0x00110020): no RTTI; its layout is the fields these methods use.
+struct UnkObj110020
+{
+    char field_0x0[0xA8];
+    int mFieldA8;         // 0xA8
+
+    void Method110020();  // 0x00110020
+};
+
+void UnkObj110020::Method110020()
+{
+    func_0010F550(mFieldA8);
+}
+
+// UnkObj111EB8 (0x00111EB8..0x00111ED0): no RTTI; its layout is the fields these methods use.
+struct UnkObj111EB8
+{
+    char field_0x0[0x68];
+    int mField68;         // 0x68
+
+    void Method111EB8();  // 0x00111EB8
+    void Method111EC8();  // 0x00111EC8
+    int GetField68();     // 0x00111ED0
+};
+
+void UnkObj111EB8::Method111EB8()
+{
+    mField68 = 1;
+}
+
+void UnkObj111EB8::Method111EC8()
+{
+    mField68 = 0;
+}
+
+int UnkObj111EB8::GetField68()
+{
+    return mField68;
+}

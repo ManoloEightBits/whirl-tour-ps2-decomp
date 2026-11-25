@@ -122,3 +122,97 @@ void func_0019B778()
 {
     func_0019B2C0();
 }
+
+void func_00197D98();                                       // 0x00197D98
+void func_001A2340(int, int);                               // 0x001A2340
+void func_001A2FB8(int);                                    // 0x001A2FB8
+void func_001A3188(int, int, int, int, int, int, int, int); // 0x001A3188
+void func_001A3410(int);                                    // 0x001A3410
+void func_001A42F8(int);                                    // 0x001A42F8
+
+// UnkObj1982D0 (0x001982D0): no RTTI; its layout is the fields these methods use.
+struct UnkObj1982D0
+{
+    char field_0x0[0x74];
+    int mField74;                // 0x74
+
+    void Method1982D0(int arg1); // 0x001982D0
+};
+
+void UnkObj1982D0::Method1982D0(int arg1)
+{
+    mField74 = arg1;
+    func_00197D98();
+}
+
+// UnkObj198C78 (0x00198C78): no RTTI; its layout is the fields these methods use.
+struct UnkObj198C78
+{
+    char field_0x0[0x14C];
+    int mField14C;         // 0x14C
+
+    void Method198C78();   // 0x00198C78
+};
+
+void UnkObj198C78::Method198C78()
+{
+    func_001A2FB8(0x8037);
+    func_001A3638(0x1701);
+    func_001A3808();
+    func_001A3638(0x1700);
+    func_001A3808();
+    func_001A2340(0xDE1, mField14C);
+    func_001A3188(0xDE1, 0, 0, 0, 0, 0, 0x80, 0x80);
+    func_001A42F8(0x100);
+    func_001A3410(0);
+}
+
+// UnkObj198D20 (0x00198D20): no RTTI; its layout is the fields these methods use.
+struct UnkObj198D20
+{
+    char field_0x0[0x14C];
+    int mField14C;         // 0x14C
+
+    int GetField14C();     // 0x00198D20
+};
+
+int UnkObj198D20::GetField14C()
+{
+    return mField14C;
+}
+
+// UnkObj199C88 (0x00199C88..0x00199D60): no RTTI; its layout is the fields these methods use.
+struct UnkObj199C88
+{
+    u32 mField0;         // 0x0
+    char field_0x4[0x4];
+    u32 mField8;         // 0x8
+    u32 mFieldC;         // 0xC
+
+    void Method199C88(); // 0x00199C88
+    void Method199D60(); // 0x00199D60
+};
+
+void UnkObj199C88::Method199C88()
+{
+    u32 tmp;
+
+    tmp = mField8;
+    if ((u32) mFieldC < tmp)
+    {
+        mFieldC = tmp;
+    }
+    mField8 = (u32) mField0;
+}
+
+void UnkObj199C88::Method199D60()
+{
+    u32 tmp;
+
+    tmp = mField8;
+    if ((u32) mFieldC < tmp)
+    {
+        mFieldC = tmp;
+    }
+    mField8 = (u32) mField0;
+}

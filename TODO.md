@@ -30,9 +30,18 @@ map of the binary, regenerated with `tools/analysis/coverage.py --map docs/MAP.m
      4 mod 8 (`0x00154EDC..0x00154F6C` float constants, `0x001C4084..0x001C40AC` int constants): they
      match in `verify.py`, but cc1plus aligns every function to 8 (`.align 3`), so `rebuild.py` cannot place
      them; find out how the original got 4-byte alignment there before adding them.
-   - **Phase 2:** the ~354 whose draft reads or writes fields. They need the struct or class each pointer is
-     (one definition per structure, no raw casts), so take them TU by TU with
-     `m2c_sweep.py report --range A B --status match` and `gen_accessors.py`. Lead to check:
+   - **Phase 2, first part done:** 171 functions whose draft only touches fields of its first argument are
+     methods of 96 `UnkObj<addr>` classes in the same block files. A class groups functions within 0x100 bytes
+     of each other, with no matched function of another class between them and no field used with two
+     types; many classes have one method, so merge them when callers or layouts show they are the same
+     object. Left for hand work (`m2c_sweep.py report --range A B --status match` lists them): the 36 next
+     to classes we already have (`AI_Race`, `AI_Boss`, `Player`, `Scooter`, `UnkModel1B7`, `UnkClip1B7`,
+     `UnkAnim1B8`, `UnkScene1B9`, `UnkBody`, `MBCL`, `ScootCtrl`, `MBCtrl`, `UnkObj11F`, `UnkTable11A8`),
+     which should join those classes; about 140 whose draft reads fields through a second pointer, does
+     arithmetic on the first one or calls a method; and 8 more that the mechanical C++ did not compile or
+     match: `0x00111F60`, `0x0012CBA0`, `0x00130B50`, `0x00182FD0`, `0x001830A0`, `0x00197468`,
+     `0x001B2948`, `0x001B6F58`. `0x00168900` compiles 2 words off as a method (two stores swapped) though
+     the C draft matched. Lead to check:
    the calls in `0x00168A40` use OpenGL enum values (`0x1406` GL_FLOAT, `0x8074` GL_VERTEX_ARRAY, `0xDE1`
    GL_TEXTURE_2D, `0xBE2` GL_BLEND), so `0x001A1938..0x001A4930` looks like a GL-style render layer
    (`glVertexPointer`/`glEnableClientState`/`glDrawArrays`-like); confirm from more callers before naming.

@@ -21,3 +21,23 @@ void func_0013B2E0()
 {
     func_0013B300();
 }
+
+// UnkObj13B240 (0x0013B240): no RTTI; its layout is the fields these methods use.
+struct UnkObj13B240
+{
+    char field_0x0[0x18];
+    f32 mField18;          // 0x18
+    char field_0x1C[0x30];
+    u8 *mField4C;          // 0x4C
+
+    void Method13B240();   // 0x0013B240
+};
+
+void UnkObj13B240::Method13B240()
+{
+    u8 *tmp;
+
+    tmp = mField4C;
+    *tmp &= 0xFE;
+    mField18 = (f32) (mField18 - 0.2f);
+}

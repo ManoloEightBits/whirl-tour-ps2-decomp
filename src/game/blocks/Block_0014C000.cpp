@@ -87,3 +87,114 @@ void func_0014EC80()
 {
     func_001974D8();
 }
+
+void func_0014C2B8();    // 0x0014C2B8
+void func_0016F630(int); // 0x0016F630
+void func_0018BFA0(int); // 0x0018BFA0
+int func_0018C018(int);  // 0x0018C018
+void func_001F48A0(int); // 0x001F48A0
+
+// UnkObj14C1B8 (0x0014C1B8): no RTTI; its layout is the fields these methods use.
+struct UnkObj14C1B8
+{
+    char field_0x0[0x94];
+    int mField94;         // 0x94
+
+    void Method14C1B8();  // 0x0014C1B8
+};
+
+void UnkObj14C1B8::Method14C1B8()
+{
+    int tmp;
+
+    tmp = mField94;
+    switch (tmp)                                /* irregular */
+    {
+    case 0x100:
+        mField94 = 0xF000;
+        return;
+    case 0xF000:
+        func_0014C2B8();
+        break;
+    }
+}
+
+// UnkObj14E748 (0x0014E748): no RTTI; its layout is the fields these methods use.
+struct UnkObj14E748
+{
+    int mField0;                 // 0x0
+    int mField4;                 // 0x4
+
+    void Method14E748(int arg1); // 0x0014E748
+};
+
+void UnkObj14E748::Method14E748(int arg1)
+{
+    mField4 = 0;
+    mField0 = (int) (1 << arg1);
+}
+
+// UnkObj14EF90 (0x0014EF90): no RTTI; its layout is the fields these methods use.
+struct UnkObj14EF90
+{
+    char field_0x0[0x6C];
+    int mField6C;         // 0x6C
+
+    int Method14EF90();   // 0x0014EF90
+};
+
+int UnkObj14EF90::Method14EF90()
+{
+    int temp_a0;
+    int var_v0;
+
+    temp_a0 = mField6C;
+    var_v0 = 0;
+    if (temp_a0 != 0)
+    {
+        var_v0 = func_0018C018(temp_a0);
+    }
+    return var_v0;
+}
+
+// UnkObj14F3A8 (0x0014F3A8): no RTTI; its layout is the fields these methods use.
+struct UnkObj14F3A8
+{
+    char field_0x0[0x6C];
+    int mField6C;         // 0x6C
+
+    void Method14F3A8();  // 0x0014F3A8
+};
+
+void UnkObj14F3A8::Method14F3A8()
+{
+    int tmp;
+
+    tmp = mField6C;
+    if (tmp != 0)
+    {
+        func_0018BFA0(tmp);
+    }
+}
+
+// UnkObj14F5D8 (0x0014F5D8): no RTTI; its layout is the fields these methods use.
+struct UnkObj14F5D8
+{
+    char field_0x0[0x18];
+    int mField18;         // 0x18
+    int mField1C;         // 0x1C
+
+    void Method14F5D8();  // 0x0014F5D8
+};
+
+void UnkObj14F5D8::Method14F5D8()
+{
+    int tmp;
+
+    tmp = mField1C;
+    if (tmp != 0)
+    {
+        func_0016F630(tmp);
+        func_001F48A0(mField18);
+    }
+}

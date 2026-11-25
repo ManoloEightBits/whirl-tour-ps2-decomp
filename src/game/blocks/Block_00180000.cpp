@@ -51,3 +51,96 @@ int func_00183E88()
 {
     return 1;
 }
+
+void func_001BCAC0(int);    // 0x001BCAC0
+void func_001BD978(void *); // 0x001BD978
+void func_001BFAC0(int);    // 0x001BFAC0
+
+// UnkObj180EA8 (0x00180EA8): no RTTI; its layout is the fields these methods use.
+struct UnkObj180EA8
+{
+    char field_0x0[0x4C];
+    void *mField4C;       // 0x4C
+
+    void Method180EA8();  // 0x00180EA8
+};
+
+void UnkObj180EA8::Method180EA8()
+{
+    func_001BD978(mField4C);
+    func_001BD978(this);
+}
+
+// UnkObj182AC8 (0x00182AC8): no RTTI; its layout is the fields these methods use.
+struct UnkObj182AC8
+{
+    char field_0x0[0x10];
+    int mField10;                // 0x10
+    char field_0x14[0x80];
+    int *mField94;               // 0x94
+
+    int *Method182AC8(int arg1); // 0x00182AC8
+};
+
+int *UnkObj182AC8::Method182AC8(int arg1)
+{
+    int *temp_v1;
+    int *var_a1;
+
+    var_a1 = NULL;
+    if (mField10 == 1)
+    {
+        temp_v1 = mField94;
+        var_a1 = ((arg1 ^ *temp_v1) == 0) ? temp_v1 : NULL;
+    }
+    return var_a1;
+}
+
+// UnkObj182CD0 (0x00182CD0): no RTTI; its layout is the fields these methods use.
+struct UnkObj182CD0
+{
+    char field_0x0[0x8];
+    int mField8;         // 0x8
+
+    void Method182CD0(); // 0x00182CD0
+};
+
+void UnkObj182CD0::Method182CD0()
+{
+    func_001BFAC0(mField8);
+}
+
+// UnkObj1832A0 (0x001832A0): no RTTI; its layout is the fields these methods use.
+struct UnkObj1832A0
+{
+    char field_0x0[0x444];
+    int mField444;         // 0x444
+
+    int GetField444();     // 0x001832A0
+};
+
+int UnkObj1832A0::GetField444()
+{
+    return mField444;
+}
+
+// UnkObj183480 (0x00183480..0x00183578): no RTTI; its layout is the fields these methods use.
+struct UnkObj183480
+{
+    char field_0x0[0x4];
+    int mField4;         // 0x4
+    int mField8;         // 0x8
+
+    void Method183480(); // 0x00183480
+    int GetField8();     // 0x00183578
+};
+
+void UnkObj183480::Method183480()
+{
+    func_001BCAC0(mField4);
+}
+
+int UnkObj183480::GetField8()
+{
+    return mField8;
+}

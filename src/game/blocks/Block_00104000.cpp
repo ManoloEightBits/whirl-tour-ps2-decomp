@@ -23,3 +23,17 @@ void func_00106C40()
 void func_00106C60()
 {
 }
+
+// UnkObj106E68 (0x00106E68): no RTTI; its layout is the fields these methods use.
+struct UnkObj106E68
+{
+    char field_0x0[0x20];
+    int mField20;         // 0x20
+
+    void Method106E68();  // 0x00106E68
+};
+
+void UnkObj106E68::Method106E68()
+{
+    mField20 &= 0xFFBFFFFF;
+}

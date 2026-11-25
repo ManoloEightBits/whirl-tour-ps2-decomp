@@ -37,3 +37,62 @@ void func_00129CB8()
 {
     func_00154C58();
 }
+
+void func_001BCAC0(int); // 0x001BCAC0
+
+// UnkObj128E48 (0x00128E48..0x00128E50): no RTTI; its layout is the fields these methods use.
+struct UnkObj128E48
+{
+    char field_0x0[0xD50];
+    int mFieldD50;                 // 0xD50
+    char field_0xD54[0xB78];
+    f32 mField18CC;                // 0x18CC
+
+    void SetField18CC(f32 fparg0); // 0x00128E48
+    void SetFieldD50(int v);    // 0x00128E50
+};
+
+void UnkObj128E48::SetField18CC(f32 fparg0)
+{
+    mField18CC = fparg0;
+}
+
+void UnkObj128E48::SetFieldD50(int v)
+{
+    mFieldD50 = v;
+}
+
+// UnkObj129098 (0x00129098..0x001290B0): no RTTI; its layout is the fields these methods use.
+struct UnkObj129098
+{
+    char field_0x0[0x187C];
+    f32 mField187C;                // 0x187C
+    int mField1880;                // 0x1880
+
+    void SetField1880(int v);   // 0x00129098
+    void SetField187C(f32 fparg0); // 0x001290B0
+};
+
+void UnkObj129098::SetField1880(int v)
+{
+    mField1880 = v;
+}
+
+void UnkObj129098::SetField187C(f32 fparg0)
+{
+    mField187C = fparg0;
+}
+
+// UnkObj129CD8 (0x00129CD8): no RTTI; its layout is the fields these methods use.
+struct UnkObj129CD8
+{
+    char field_0x0[0x18];
+    int mField18;         // 0x18
+
+    void Method129CD8();  // 0x00129CD8
+};
+
+void UnkObj129CD8::Method129CD8()
+{
+    func_001BCAC0(mField18);
+}

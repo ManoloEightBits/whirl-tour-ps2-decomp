@@ -33,3 +33,31 @@ void func_0018FA18(void *arg0)
 {
     func_001BD978(arg0);
 }
+
+// UnkObj18C018 (0x0018C018): no RTTI; its layout is the fields these methods use.
+struct UnkObj18C018
+{
+    char field_0x0[0x3C];
+    u16 mField3C;         // 0x3C
+
+    int Method18C018();   // 0x0018C018
+};
+
+int UnkObj18C018::Method18C018()
+{
+    return mField3C & 1;
+}
+
+// UnkObj18D1D8 (0x0018D1D8): no RTTI; its layout is the fields these methods use.
+struct UnkObj18D1D8
+{
+    char field_0x0[0x18];
+    int mField18;         // 0x18
+
+    void Method18D1D8();  // 0x0018D1D8
+};
+
+void UnkObj18D1D8::Method18D1D8()
+{
+    mField18 |= 0x100;
+}
