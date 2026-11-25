@@ -11,12 +11,12 @@ A hobby reverse-engineering project for the US PS2 release of *Whirl Tour* (`SLU
 <!-- progress:begin -->
 | Metric | Matched / Confirmed | Total in `.text` | Share | Progress |
 | :--- | ---: | ---: | ---: | :--- |
-| **Total `.text` bytes** | **33,616 B** | 1,401,448 B | **2.399%** | `█░░░░░░░░░░░░░░░░░░░` |
-| **Game logic bytes** (`0x100000..0x1C62CF`) | **29,212 B** | 811,728 B | **3.599%** | `█░░░░░░░░░░░░░░░░░░░` |
-| **Matched functions (`verify.py`)** | **386** | ~7,125 | **5.418%** | `██░░░░░░░░░░░░░░░░░░` |
+| **Total `.text` bytes** | **34,052 B** | 1,401,448 B | **2.430%** | `█░░░░░░░░░░░░░░░░░░░` |
+| **Game logic bytes** (`0x100000..0x1C62CF`) | **29,648 B** | 811,728 B | **3.652%** | `█░░░░░░░░░░░░░░░░░░░` |
+| **Matched functions (`verify.py`)** | **429** | ~7,125 | **6.021%** | `██░░░░░░░░░░░░░░░░░░` |
 | **Confirmed vtable slots (`verify_vtables.py`)** | **207** | ~889 | **23.285%** | `█████░░░░░░░░░░░░░░░` |
 | **Confirmed RTTI classes (`vtables.txt`)** | **46** | 193 | **23.834%** | `█████░░░░░░░░░░░░░░░` |
-| **Full binary relink (`rebuild.py`)** | **386 linked** | `02f39f20...0744` | **SHA-1 MATCH** | `████████████████████` |
+| **Full binary relink (`rebuild.py`)** | **429 linked** | `02f39f20...0744` | **SHA-1 MATCH** | `████████████████████` |
 <!-- progress:end -->
 
 ### Binary `.text` Map (`0x00100000..0x00256268`)
@@ -37,7 +37,7 @@ A hobby reverse-engineering project for the US PS2 release of *Whirl Tour* (`SLU
 | **Player & Scooter (`Player`, `Scooter`)** | `Player`, `Scooter` (no RTTI; name is ours) | 81 / ~83 | — | `█████████░` **97%** (stat/boost/adrenaline/health methods, `IsGrounded`, the wrappers around `Scooter+0x1A0`, `Player::func_001237E8` and all 13 `player_*` collision callbacks matched) |
 | **Motion & Interpolation Controllers** | `MotionCtrl`, `IP_PosCtrl`, `IP_RotCtrl`, `IP_AnimCtrl`, `MBCtrl`, `ScootCtrl` (+ IVP bases `IVP_Controller`, `IVP_Controller_Independent`) | 27 / ~52 | 36 / 42 | `█████░░░░░` **52%** (all vtables confirmed; `IP_PosCtrl`, `MBCtrl` and `ScootCtrl` complete; the simulation step of `MotionCtrl`, `IP_RotCtrl` and `IP_AnimCtrl` left) |
 | **Collision & Event Listeners** | `DD_Event_Listener`, `DD_Collision_Listener`, `Global_Phantom_Listener`, `ScootCL`, `MBCL`, `LunActCL`, `MarActCL`, `AI_PedestrianCL` | 39 / ~67 | 31 / 40 | `█████░░░░░` **58%** (all 8 listeners 100%, and the whole `DD_Event_Listener` TU `0x00116B00..0x00117727`; IVP base classes `IVP_Listener_Object`, `IVP_Listener_Collision` & `IVP_Listener_Phantom` also 100%) |
-| **AI & Boss Attacks** | `AI_Agent`, `AI_Pedestrian`, `AI_Race`, `AI_Vehicle`, `AI_Boss`, `AI_Attack*` | 9 / ~340 | 0 / 73 | `░░░░░░░░░░` **3%** (RTTI `__tf` matched) |
+| **AI & Boss Attacks** | `AI_Agent`, `AI_Pedestrian`, `AI_Race`, `AI_Vehicle`, `AI_Boss`, `AI_Attack*` | 52 / ~340 | 0 / 73 | `█░░░░░░░░░` **15%** (RTTI `__tf` matched; `AI_Pedestrian`'s 43 accessors `0x001065C8..0x0010679F`) |
 | **Single-inheritance RTTI (`src/rtti/`)** | 77 polymorphic classes | 77 / 77 | — | `██████████` **100%** (probe-generated `__tf*` functions) |
 
 ---
