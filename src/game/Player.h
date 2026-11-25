@@ -79,4 +79,7 @@ public:
     u8 mFieldD3;            // 0xD3
 };
 
+Vec3f *func_00122DC8(Player *player);   // 0x00122DC8: the player's position
+Mat4x4f *func_00122D08(Player *player); // 0x00122D08: the player's matrix (row 2 is used)
+
 #endif

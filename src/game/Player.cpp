@@ -356,9 +356,6 @@ void func_00123AC8(IVP_Real_Object_Stub *self, IVP_Real_Object_Stub *other, u32,
         player->mOtherPlayer38 = 0;
 }
 
-Vec3f *func_00122DC8(Player *player);   // 0x00122DC8: the player's position
-Mat4x4f *func_00122D08(Player *player); // 0x00122D08: the player's matrix (row 2 is used)
-
 // With -ffast-math (verify.py) GCC turns this into a bare sqrt.s, as in the game.
 extern "C" float sqrtf(float);
 
