@@ -140,6 +140,7 @@ public:
     void func_0017EDD0();                     // 0x0017EDD0
     void func_0017EDF0(int flag);             // 0x0017EDF0
     void func_0017EE28(int flag);             // 0x0017EE28
+    void Action1850D0(int seq);              // 0x0017F4C8: hands trick sequence seq to mField20C
     void func_0017F500(int a, int b);        // 0x0017F500
     void func_0017F568();                    // 0x0017F568
     void func_0017F690(int arg);             // 0x0017F690
@@ -147,6 +148,7 @@ public:
     void func_0017F790(UnkScooterArgC *arg); // 0x0017F790
     f32 func_0017F820();                     // 0x0017F820
     void func_0017F898(f32 x, f32 y, f32 z); // 0x0017F898
+    int Method17F8F0(f32 v);                 // 0x0017F8F0: 0x4F or 0x50 when v < mField90 and mField20C accepts trick sequence 0x27 or 0x26, else -1
 
     char field_0x000[0x18];
     u32 mFlags18;              // 0x018
@@ -186,7 +188,7 @@ public:
     struct IVP_Real_Object_Stub *mPhysObj1D8; // 0x1D8
     char field_0x1DC[0x2C];
     UnkScooterState *mState208; // 0x208
-    char field_0x20C[4];
+    void *mField20C;           // 0x20C: Action1850D0 hands it a trick sequence
     int mField210;             // 0x210: GetStatFactor passes it to func_00125968 (3 or 4 gives 1.0)
     char field_0x214[0x68];
     int mField27C;             // 0x27C

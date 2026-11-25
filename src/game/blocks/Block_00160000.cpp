@@ -15,11 +15,19 @@ struct UnkObj1618D0
 {
     char field_0x0[0x1C];
     int mField1C;                // 0x1C
+    char field_0x20[0xC];
+    f32 mField2C;                // 0x2C
 
+    void SetField2C(f32 v);      // 0x001618C8
     int GetField1C();            // 0x001618D0
     void Method1618D8(int arg1); // 0x001618D8
     void Method1618E8(int arg1); // 0x001618E8
 };
+
+void UnkObj1618D0::SetField2C(f32 v)
+{
+    mField2C = v;
+}
 
 int UnkObj1618D0::GetField1C()
 {

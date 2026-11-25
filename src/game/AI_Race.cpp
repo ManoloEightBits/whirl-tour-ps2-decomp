@@ -91,6 +91,16 @@ void AI_Race::SetFieldCC(int v)
     mFieldCC = v;
 }
 
+Vec4f *AI_Race::GetPlayerRow2()
+{
+    return &func_00122D08(mPlayer110)->row[2];
+}
+
+Mat4x4f *AI_Race::GetPlayerMatrix()
+{
+    return func_00122D08(mPlayer110);
+}
+
 Vec4f * AI_Race::GetPlayerRow1()
 {
     return &func_00122D08(mPlayer110)->row[1];
@@ -268,4 +278,15 @@ void *AI_Race::func_0010BF50(int i, void **list)
     if (i >= ArrayGetCount1BB0D0(*list))
         return 0;
     return *(void **)ArrayGetElement1BB098(*list, i);
+}
+
+void UnkPtrList10C058::Create()
+{
+    mArray00 = ArrayCreate1BB0E0(4);
+}
+
+void UnkPtrList10C058::Destroy()
+{
+    mArray00->Destroy();
+    mArray00 = NULL;
 }

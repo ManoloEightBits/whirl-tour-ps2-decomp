@@ -12,6 +12,14 @@ struct UnkAttackActor
     f32 mField10; // 0x10
 };
 
+// What AI_Boss+0x1E0 points to: an object with a 4x4 matrix at +0x50, whose rows the boss returns (as
+// AI_Race does for its Player's matrix). No RTTI; the name is ours.
+struct UnkBossObj1E0
+{
+    char field_0x00[0x50];
+    Mat4x4f mMatrix50; // 0x50
+};
+
 // Boss settings: the boss script's keys, read by the parser 0x0015DD70 (keyword table 0x00262398:
 // properties, talking, view, lookatsettings, states, distancereach, distancesearch, ...) into a buffer
 // of the level loader 0x0012BBB0, which copies it into a 0x20C-byte heap object. Field names are the
@@ -52,8 +60,18 @@ STATIC_ASSERT(sizeof(UnkBossParams) == 0x20C, UnkBossParams_size);
 class AI_Boss : public AI_Agent
 {
 public:
+    f32 GetAttackField10();         // 0x0015EB78
+    Vec4f *GetObj1E0Row3();         // 0x0015EBB0
+    void Action161978();            // 0x0015EBC0
+    Vec4f *GetObj1E0Row1();         // 0x0015EBE0
+    Vec4f *GetObj1E0Row2();         // 0x0015EBF0
+    Vec4f *GetObj1E0Row0();         // 0x0015EC00
+    f32 GetField138();              // 0x0015ECF0
+    void SetBits134(int bits);      // 0x0015EDD0
+    void ClearBits134(int bits);    // 0x0015EDE0
+    int TestFlags20_200();          // 0x0015EDF8
     void func_0015EFB8(f32 amount); // 0x0015EFB8: player_hit_boss passes Player::GetStatFactor()
-    int GetField1E0();                  // 0x0015E9B8
+    UnkBossObj1E0 *GetObj1E0();       // 0x0015E9B8
     UnkAttackActor *GetField1D8();                  // 0x0015EAF0
     int GetField1DC();                  // 0x0015EAF8
     int GetField188();                  // 0x0015EB88
@@ -124,7 +142,7 @@ public:
     char field_0x194[0x44];
     UnkAttackActor *mAttack1D8; // 0x1D8: its +0x10 goes to Player::Action1722B0 (probably the current attack)
     int mField1DC;            // 0x1DC
-    int mField1E0;            // 0x1E0
+    UnkBossObj1E0 *mObj1E0;   // 0x1E0
     int mField1E4;            // 0x1E4
     char field_0x1E8[0x8];
     int mField1F0;            // 0x1F0

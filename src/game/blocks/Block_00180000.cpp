@@ -56,6 +56,38 @@ void func_001BCAC0(int);    // 0x001BCAC0
 void MemFree1BD978(void *); // 0x001BD978
 void func_001BFAC0(int);    // 0x001BFAC0
 
+void PhysicsRelease1F3A70(void *); // 0x001F3A70
+
+// UnkObj1804E8 (0x001804E8..0x00180558, just before ScootCtrl): no RTTI; a float and two physics
+// objects that Destroy releases.
+struct UnkObj1804E8
+{
+    f32 mField00;    // 0x0
+    void *mPhys04;   // 0x4
+    void *mPhys08;   // 0x8
+
+    void Destroy();          // 0x001804E8
+    void SubField00(f32 v);  // 0x00180548
+    f32 GetField00();        // 0x00180558
+};
+
+void UnkObj1804E8::Destroy()
+{
+    PhysicsRelease1F3A70(mPhys08);
+    PhysicsRelease1F3A70(mPhys04);
+    MemFree1BD978(this);
+}
+
+void UnkObj1804E8::SubField00(f32 v)
+{
+    mField00 -= v;
+}
+
+f32 UnkObj1804E8::GetField00()
+{
+    return mField00;
+}
+
 // UnkObj180EA8 (0x00180EA8): no RTTI; its layout is the fields these methods use.
 struct UnkObj180EA8
 {

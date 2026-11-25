@@ -1,4 +1,5 @@
 #include "common/types.h"
+#include "game/UnkArray.h"
 
 // Functions of 0x001B8000..0x001BBFFF whose class and translation unit are not known yet.
 // Names are address based; move each function to its file once its TU is identified.
@@ -83,21 +84,6 @@ u16 UnkObj1B91D8::GetField2()
 {
     return mField2;
 }
-
-// UnkArray1BB0D0 (0x001BB0D0..0x001BB168): a dynamic array (no RTTI). ArrayGetElement1BB098(array, i)
-// returns mData0C + i * mStride00 when 0 <= i < mCount08; Clear empties it, Destroy frees the
-// data and the array. mField4 is zeroed with the data (probably the capacity).
-struct UnkArray1BB0D0
-{
-    int mStride00;      
-    int mField4;         // 0x4
-    int mCount08;         // 0x8
-    void *mData0C;       // 0xC
-
-    int GetCount();     // 0x001BB0D0
-    void Clear(); // 0x001BB120
-    void Destroy(); // 0x001BB168
-};
 
 int UnkArray1BB0D0::GetCount()
 {

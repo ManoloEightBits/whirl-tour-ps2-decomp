@@ -375,7 +375,7 @@
 0x0025DC28 data_0025DC28
 
 # AI_Boss (src/game/AI_Boss.cpp)
-0x0015E9B8 GetField1E0__7AI_Boss
+0x0015E9B8 GetObj1E0__7AI_Boss
 0x0015EAF0 GetField1D8__7AI_Boss
 0x0015EAF8 GetField1DC__7AI_Boss
 0x0015EB88 GetField188__7AI_Boss
@@ -415,6 +415,17 @@
 0x0015ED90 SetField170__7AI_Bossf
 0x0015EDC8 GetField134__7AI_Boss
 0x0015EE08 GetField1F0__7AI_Boss
+0x0015EB78 GetAttackField10__7AI_Boss
+0x0015EBB0 GetObj1E0Row3__7AI_Boss
+0x0015EBC0 Action161978__7AI_Boss
+0x0015EBE0 GetObj1E0Row1__7AI_Boss
+0x0015EBF0 GetObj1E0Row2__7AI_Boss
+0x0015EC00 GetObj1E0Row0__7AI_Boss
+0x0015ECF0 GetField138__7AI_Boss
+0x0015EDD0 SetBits134__7AI_Bossi
+0x0015EDE0 ClearBits134__7AI_Bossi
+0x0015EDF8 TestFlags20_200__7AI_Boss
+0x00161978 func_00161978__FPv
 
 # AI_Vehicle (src/game/AI_Vehicle.cpp)
 0x0010D1A0 func_0010D1A0__10AI_Vehicle
@@ -504,6 +515,8 @@
 0x0010BB68 GetFieldD8__7AI_Race
 0x0010BB70 SetFieldD8__7AI_Racef
 0x0010BB78 SubFieldD8__7AI_Racef
+0x0010BA28 GetPlayerRow2__7AI_Race
+0x0010BA48 GetPlayerMatrix__7AI_Race
 
 # AI_Pedestrian (src/game/AI_Pedestrian.cpp)
 0x001065C8 GetField128__13AI_Pedestrian
@@ -637,6 +650,8 @@
 0x0017F790 func_0017F790__7ScooterP14UnkScooterArgC
 0x0017F820 func_0017F820__7Scooter
 0x0017F898 func_0017F898__7Scooterfff
+0x0017F4C8 Action1850D0__7Scooteri
+0x001850D0 func_001850D0__FPvP11UnkTrickSeq
 
 # Player (src/game/Player.cpp)
 0x0011F650 func_0011F650__FPv
@@ -1821,7 +1836,7 @@
 0x001B8D20 Method1B8D20__12UnkObj1B8D20
 0x001B91D8 GetField2__12UnkObj1B91D8
 0x001BB0D0 GetCount__14UnkArray1BB0D0
-0x001BB0E0 func_001BB0E0__Fi
+0x001BB0E0 ArrayCreate1BB0E0__Fi
 0x001BB120 Clear__14UnkArray1BB0D0
 0x001BB128 func_001BB128__Fi
 0x001BB168 ArrayDestroy1BB168__Fi
@@ -1880,3 +1895,16 @@
 0x001A4010 glTexCoord2f
 0x001A40F0 glColor3f
 0x001A4138 glColor4f
+
+# Next to known classes (AI_Race.h, AnimModel.cpp, Scooter.h, block files)
+0x0010C058 Create__16UnkPtrList10C058
+0x0010C088 Destroy__16UnkPtrList10C058
+0x0011A910 Init__12UnkObj11A910
+0x001618C8 SetField2C__12UnkObj1618D0f
+0x0017F8F0 Method17F8F0__7Scooterf
+0x001804E8 Destroy__12UnkObj1804E8
+0x00180548 SubField00__12UnkObj1804E8f
+0x00180558 GetField00__12UnkObj1804E8
+0x001B7A68 Method1B7A68__11UnkModel1B7
+0x001B7938 func_001B7938__FP11UnkModel1B7iiiii
+0x001B72E0 func_001B72E0__FPvP11UnkModel1B7

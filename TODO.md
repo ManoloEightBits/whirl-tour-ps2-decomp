@@ -37,7 +37,14 @@ map of the binary, regenerated with `tools/analysis/coverage.py --map docs/MAP.m
      object. Left for hand work (`m2c_sweep.py report --range A B --status match` lists them): the 36 next
      to classes we already have (`AI_Race`, `AI_Boss`, `Player`, `Scooter`, `UnkModel1B7`, `UnkClip1B7`,
      `UnkAnim1B8`, `UnkScene1B9`, `UnkBody`, `MBCL`, `ScootCtrl`, `MBCtrl`, `UnkObj11F`, `UnkTable11A8`),
-     which should join those classes; about 140 whose draft reads fields through a second pointer, does
+     which should join those classes (22 done: 10 `AI_Boss` methods, `AI_Race::GetPlayerRow2` and
+     `GetPlayerMatrix`, the pointer list `UnkPtrList10C058`, 2 `Scooter`, `UnkModel1B7::Method1B7A68`,
+     `UnkObj11A910`, `UnkObj1618D0::SetField2C`, `UnkObj1804E8`; left: the `EnvObj` destroy functions
+     `0x0011FA48`, `0x0014CC78`, `0x00161708` and `Player`'s `0x00123258` (they call
+     `EnvObjCleanup14FB70(this)`, so their classes derive from `EnvObj`), `0x0017EF30` (passes `mField370`
+     to methods of both `UnkObj141A38` and `UnkEffect`), `0x0014CAF0`, `0x0014CCB0`, `0x0015EFF8`,
+     `0x0018E758`, `0x001B7CA8`/`0x001B8108` (byte-swap two u16 / u32 in place), `0x001B8B30`, `0x001B8BA0`,
+     `0x001B9B30`, whose class is not settled); about 140 whose draft reads fields through a second pointer, does
      arithmetic on the first one or calls a method; and 8 more that the mechanical C++ did not compile or
      match: `0x00111F60`, `0x0012CBA0`, `0x00130B50`, `0x00182FD0`, `0x001830A0`, `0x00197468`,
      `0x001B2948`, `0x001B6F58`. `0x00168900` compiles 2 words off as a method (two stores swapped) though

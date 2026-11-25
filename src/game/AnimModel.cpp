@@ -36,6 +36,9 @@ struct UnkClip1B7
 };
 
 void MemFree1BD978(void *);       // 0x001BD978
+struct UnkModel1B7;
+void *func_001B7938(UnkModel1B7 *, int, int, int, int, int); // 0x001B7938
+void func_001B72E0(void *, UnkModel1B7 *);                  // 0x001B72E0
 int func_001B6950(void *);        // 0x001B6950
 int func_001B6958(void *, int);   // 0x001B6958
 int func_001B6960(void *, int);   // 0x001B6960
@@ -662,6 +665,26 @@ void UnkActor11A::Method11A818()
 {
 }
 
+// UnkObj11A910 (0x0011A910): no RTTI; three arrays of 10 that Init resets to 1.0, 0 and 0.
+struct UnkObj11A910
+{
+    f32 mField00[10]; // 0x00
+    int mField28[10]; // 0x28
+    int mField50[10]; // 0x50
+
+    void Init(); // 0x0011A910
+};
+
+void UnkObj11A910::Init()
+{
+    for (int i = 0; i < 10; i++)
+    {
+        mField50[i] = 0;
+        mField00[i] = 1.0f;
+        mField28[i] = 0;
+    }
+}
+
 struct UnkTable11A8Entry
 {
     f32 mField00;
@@ -890,6 +913,7 @@ struct UnkModel1B7
     int mField68; // 0x68
     int mField6C; // 0x6C
 
+    void *Method1B7A68();              // 0x001B7A68
     void Destroy1B7AE8();              // 0x001B7AE8
     void InitPtrs1B7B08();             // 0x001B7B08
     u16 GetCount42();                  // 0x001B7B58
@@ -913,6 +937,16 @@ struct UnkBlock4
 {
     u8 b[4];
 };
+
+void *UnkModel1B7::Method1B7A68()
+{
+    int a = GetCount42();
+    int b = GetCount4A();
+    void *p = func_001B7938(this, a, b, GetCount52(), mCount5A, mCount62);
+    if (p != NULL)
+        func_001B72E0(p, this);
+    return p;
+}
 
 void UnkModel1B7::Destroy1B7AE8()
 {

@@ -1,8 +1,10 @@
 #include "game/AI_Boss.h"
 
-int AI_Boss::GetField1E0()
+void func_00161978(void *); // 0x00161978
+
+UnkBossObj1E0 *AI_Boss::GetObj1E0()
 {
-    return mField1E0;
+    return mObj1E0;
 }
 
 UnkAttackActor *AI_Boss::GetField1D8()
@@ -13,6 +15,11 @@ UnkAttackActor *AI_Boss::GetField1D8()
 int AI_Boss::GetField1DC()
 {
     return mField1DC;
+}
+
+f32 AI_Boss::GetAttackField10()
+{
+    return mAttack1D8->mField10;
 }
 
 int AI_Boss::GetField188()
@@ -38,6 +45,31 @@ int AI_Boss::GetField190()
 void AI_Boss::SetField190(int v)
 {
     mField190 = v;
+}
+
+Vec4f *AI_Boss::GetObj1E0Row3()
+{
+    return &mObj1E0->mMatrix50.row[3];
+}
+
+void AI_Boss::Action161978()
+{
+    func_00161978(mObj1E0);
+}
+
+Vec4f *AI_Boss::GetObj1E0Row1()
+{
+    return &mObj1E0->mMatrix50.row[1];
+}
+
+Vec4f *AI_Boss::GetObj1E0Row2()
+{
+    return &mObj1E0->mMatrix50.row[2];
+}
+
+Vec4f *AI_Boss::GetObj1E0Row0()
+{
+    return &mObj1E0->mMatrix50.row[0];
 }
 
 int * AI_Boss::GetPtr174()
@@ -130,6 +162,11 @@ void AI_Boss::SetField13D(u8 v)
     mField13D = v;
 }
 
+f32 AI_Boss::GetField138()
+{
+    return mField138;
+}
+
 void AI_Boss::SetField138(f32 v)
 {
     mField138 = v;
@@ -193,6 +230,21 @@ void AI_Boss::SetField170(f32 v)
 int AI_Boss::GetField134()
 {
     return mField134;
+}
+
+void AI_Boss::SetBits134(int bits)
+{
+    mField134 |= bits;
+}
+
+void AI_Boss::ClearBits134(int bits)
+{
+    mField134 &= ~bits;
+}
+
+int AI_Boss::TestFlags20_200()
+{
+    return mFlags20 & 0x200;
 }
 
 int AI_Boss::GetField1F0()

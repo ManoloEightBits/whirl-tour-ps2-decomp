@@ -1,6 +1,9 @@
 #include "common/libc.h"
 #include "game/Scooter.h"
 #include "game/CollisionListeners.h"
+#include "game/Tricks.h"
+
+int func_001850D0(void *obj, UnkTrickSeq *seq); // 0x001850D0: nonzero when obj accepts seq
 
 struct UnkGameCtx18
 {
@@ -490,6 +493,11 @@ void Scooter::func_0017EE28(int flag)
     func_0011A3E0(mField1A0, !flag ? 0x110AD : 0x100AD);
 }
 
+void Scooter::Action1850D0(int seq)
+{
+    func_001850D0(mField20C, func_001258F8(seq));
+}
+
 void Scooter::func_0017F500(int a, int b)
 {
     mField27C = b;
@@ -568,3 +576,16 @@ f32 Scooter::ConsumeAdrenaline(f32 amount)
     return amount;
 }
 #endif
+
+int Scooter::Method17F8F0(f32 v)
+{
+    int trick = -1;
+    if (v < mField90)
+    {
+        if (func_001850D0(mField20C, func_001258F8(0x27)) != 0)
+            trick = 0x4F;
+        else
+            trick = (func_001850D0(mField20C, func_001258F8(0x26)) != 0) ? 0x50 : -1;
+    }
+    return trick;
+}

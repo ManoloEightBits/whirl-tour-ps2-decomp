@@ -1,9 +1,9 @@
 #include "common/types.h"
+#include "game/UnkArray.h"
 
 // Functions of 0x00170000..0x00173FFF whose class and translation unit are not known yet.
 // Names are address based; move each function to its file once its TU is identified.
 
-int func_001BB0E0(int);     // 0x001BB0E0
 void MemFree1BD978(void *); // 0x001BD978
 
 // UnkObj170958 (0x00170958): no RTTI; its layout is the fields these methods use.
@@ -72,15 +72,15 @@ void UnkObj170B00::Method170B00(f32 fparg0)
 // UnkObj171050 (0x00171050): no RTTI; its layout is the fields these methods use.
 struct UnkObj171050
 {
-    int mField0;          // 0x0
-    int mField4;          // 0x4
+    UnkArray1BB0D0 *mArray0; // 0x0: stride 0x1C
+    UnkArray1BB0D0 *mArray4; // 0x4: stride 0x80
 
     void *Method171050(); // 0x00171050
 };
 
 void *UnkObj171050::Method171050()
 {
-    mField0 = func_001BB0E0(0x1C);
-    mField4 = func_001BB0E0(0x80);
+    mArray0 = ArrayCreate1BB0E0(0x1C);
+    mArray4 = ArrayCreate1BB0E0(0x80);
     return this;
 }

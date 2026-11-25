@@ -4,6 +4,7 @@
 #include "common/types.h"
 #include "game/AI_Agent.h"
 #include "game/Player.h"
+#include "game/UnkArray.h"
 
 // Race settings: the racer script's keys, read by the parser 0x0010B338 (keyword table 0x00259D30:
 // properties, catchup, talking, ...) into a buffer of the level loader 0x0012BBB0, which copies it into
@@ -23,6 +24,15 @@ struct UnkRaceParams
     f32 mProbability24;     // 0x24 "probability"
 };
 STATIC_ASSERT(sizeof(UnkRaceParams) == 0x28, UnkRaceParams_size);
+
+// A list of pointers: a dynamic array of stride 4 (in AI_Race's translation unit, after its methods).
+struct UnkPtrList10C058
+{
+    UnkArray1BB0D0 *mArray00; // 0x00
+
+    void Create();  // 0x0010C058
+    void Destroy(); // 0x0010C088
+};
 
 // RTTI: AI_Race : AI_Agent (_vptr at +0x9C). Its __tf is still the generated stub in src/rtti/; this
 // file has the non-virtual accessors after it (0x0010B970..0x0010BB87). Names are offset-based.
@@ -46,6 +56,8 @@ public:
     void SetStateCA(u8 s);            // 0x0010BA00
     int GetFieldCC();                 // 0x0010BA10
     void SetFieldCC(int v);           // 0x0010BA18
+    Vec4f *GetPlayerRow2();           // 0x0010BA28
+    Mat4x4f *GetPlayerMatrix();       // 0x0010BA48
     Vec4f *GetPlayerRow1();           // 0x0010BA68
     Vec4f *GetPlayerRow0();           // 0x0010BA88
     Player *GetPlayer110();           // 0x0010BAA8
