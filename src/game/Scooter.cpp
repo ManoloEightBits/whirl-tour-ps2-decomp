@@ -5,6 +5,7 @@ void PhysicsClear1F34B0(void *obj, int flag); // 0x001F34B0
 void func_0011A3E0(void *obj, int id);        // 0x0011A3E0
 void func_0011A590(void *obj);                // 0x0011A590
 void func_001BC438(void *obj, f32 a, f32 b);  // 0x001BC438
+f32 func_001255C8();                          // 0x001255C8: the adrenaline cap
 
 Vec3f *Scooter::GetPtr194()
 {
@@ -159,6 +160,19 @@ int Scooter::HasAdrenaline()
     if (mAdrenaline > 0.0f)
         return 1;
     return 0;
+}
+
+f32 Scooter::AddAdrenaline(f32 amount)
+{
+    f32 max = func_001255C8();
+    f32 next = mAdrenaline + amount;
+    if (next > max)
+    {
+        mAdrenaline = max;
+        return next - max;
+    }
+    mAdrenaline = next;
+    return amount;
 }
 
 int Scooter::IsGrounded()

@@ -43,7 +43,7 @@ public:
     void *GetField1A0();                     // 0x0017EC70
     int IsGrounded();                        // 0x0017EC78
     int HasAdrenaline();                     // 0x0017ECA0
-    void func_0017ECC8(void *arg);           // 0x0017ECC8
+    f32 AddAdrenaline(f32 amount);           // 0x0017ECC8: capped at func_001255C8(), returns the excess
     f32 ConsumeAdrenaline(f32 amount);       // 0x0017ED28
     void func_0017ED58(int arg);              // 0x0017ED58
     void func_0017ED78(const int *list);  // 0x0017ED78

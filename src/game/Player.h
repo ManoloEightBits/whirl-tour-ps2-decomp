@@ -51,7 +51,7 @@ public:
     f32 GetMaxConstant1000();                    // 0x00123758
     int HasAdrenaline();                         // 0x00123768
     f32 ConsumeAdrenaline(f32 amount);           // 0x00123788
-    void Action17ECC8(void *arg);                // 0x001237A8
+    f32 AddAdrenaline(f32 amount);               // 0x001237A8
     void Action174198(void *arg);                // 0x001237C8
     void func_001237E8(UnkCheckpoint *cp);       // 0x001237E8
     void EnableFieldD3();                        // 0x00123890

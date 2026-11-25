@@ -140,9 +140,9 @@ f32 Player::ConsumeAdrenaline(f32 amount)
     return mScooter->ConsumeAdrenaline(amount);
 }
 
-void Player::Action17ECC8(void *arg)
+f32 Player::AddAdrenaline(f32 amount)
 {
-    mScooter->func_0017ECC8(arg);
+    return mScooter->AddAdrenaline(amount);
 }
 
 void Player::Action174198(void *arg)

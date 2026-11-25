@@ -399,7 +399,7 @@
 0x0017EC70 GetField1A0__7Scooter
 0x0017EC78 IsGrounded__7Scooter
 0x0017ECA0 HasAdrenaline__7Scooter
-0x0017ECC8 func_0017ECC8__7ScooterPv
+0x0017ECC8 AddAdrenaline__7Scooterf
 0x0017ED28 ConsumeAdrenaline__7Scooterf
 0x0017ED58 func_0017ED58__7Scooteri
 0x0017ED78 func_0017ED78__7ScooterPCi
@@ -437,7 +437,7 @@
 0x00123758 GetMaxConstant1000__6Player
 0x00123768 HasAdrenaline__6Player
 0x00123788 ConsumeAdrenaline__6Playerf
-0x001237A8 Action17ECC8__6PlayerPv
+0x001237A8 AddAdrenaline__6Playerf
 0x001237C8 Action174198__6PlayerPv
 0x001237E8 func_001237E8__6PlayerP13UnkCheckpoint
 0x00123890 EnableFieldD3__6Player
@@ -458,6 +458,7 @@
 0x00122D08 func_00122D08__FP6Player
 0x00122DC8 func_00122DC8__FP6Player
 0x0015EFB8 func_0015EFB8__7AI_Bossf
+0x001255C8 func_001255C8__Fv
 0x00153C10 UnlockScooterGlobal__Fi
 0x001BC438 func_001BC438__FPvff
 0x001722B0 SubComponentAction1__FP7ScooterP5Vec3ff
