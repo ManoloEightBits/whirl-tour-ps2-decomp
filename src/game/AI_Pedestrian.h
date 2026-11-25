@@ -8,16 +8,16 @@
 struct UnkPedParams
 {
     char field_0x00[4];
-    f32 mField04;  // 0x04
+    f32 mSpeed04;         // 0x04
     char field_0x08[0xC];
-    f32 mField14;  // 0x14
-    f32 mField18;  // 0x18
-    f32 mField1C;  // 0x1C
-    f32 mField20;  // 0x20
-    f32 mField24;  // 0x24
-    f32 mField28;  // 0x28
-    f32 mField2C;  // 0x2C
-    f32 mField30;  // 0x30
+    f32 mProbability14;   // 0x14
+    f32 mTimeIn18;        // 0x18
+    f32 mTimeOut1C;       // 0x1C
+    f32 mProbability20;   // 0x20
+    f32 mStopRange24;     // 0x24
+    f32 mTime28;          // 0x28
+    f32 mSpeed2C;         // 0x2C
+    f32 mLookAtRange30;   // 0x30
 };
 
 // RTTI: AI_Pedestrian : AI_Agent (_vptr at +0x9C). Its __tf is the generated stub in src/rtti/;

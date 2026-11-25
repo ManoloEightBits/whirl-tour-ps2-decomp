@@ -79,7 +79,7 @@ Vec4f * AI_Vehicle::GetRow0()
 
 f32 AI_Vehicle::GetParam1C()
 {
-    return mParams11C->mField1C;
+    return mParams11C->mSpeed1C;
 }
 
 f32 AI_Vehicle::GetFieldF8()
@@ -104,7 +104,7 @@ f32 AI_Vehicle::GetField100()
 
 f32 AI_Vehicle::GetParam6C()
 {
-    return mParams11C->mField6C;
+    return mParams11C->mWheelRadius6C;
 }
 
 void AI_Vehicle::Action10E468()
@@ -127,13 +127,13 @@ f32 AI_Vehicle::func_0010E4B0(f32 v)
 {
     mFlags20 &= ~0x10000;
     f32 next = mFieldF8 + v;
-    if (next < mParams11C->mField1C)
+    if (next < mParams11C->mSpeed1C)
     {
         mFieldF8 = next;
         return next;
     }
     mFlags20 &= ~0x40000;
-    mFieldF8 = mParams11C->mField1C;
+    mFieldF8 = mParams11C->mSpeed1C;
     return mFieldF8;
 }
 

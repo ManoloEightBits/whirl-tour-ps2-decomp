@@ -20,21 +20,21 @@ struct UnkScooterState
 struct UnkScooterParams1C0
 {
     char field_0x000[0x68];
-    f32 mField68;   // 0x068
+    f32 mField68;           // 0x068
     char field_0x06C[0x10];
-    f32 mField7C;   // 0x07C
+    f32 mField7C;           // 0x07C
     char field_0x080[0x80];
-    f32 mField100;  // 0x100
+    f32 mStartAcc100;       // 0x100
     char field_0x104[0x14];
-    f32 mField118;  // 0x118
+    f32 mSpeedMin118;       // 0x118
     char field_0x11C[0x08];
-    f32 mField124;  // 0x124
+    f32 mStartAcc124;       // 0x124
     char field_0x128[0x14];
-    f32 mField13C;  // 0x13C
+    f32 mStartAcc13C;       // 0x13C
     char field_0x140[0x18];
-    f32 mField158;  // 0x158
-    f32 mField15C;  // 0x15C
-    f32 mField160;  // 0x160
+    f32 mAdrenaline158;     // 0x158
+    f32 mRampLaunch15C;     // 0x15C
+    f32 mWedgeLaunch160;    // 0x160
 };
 
 struct UnkScooterSub1CC_24

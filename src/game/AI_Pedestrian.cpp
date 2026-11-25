@@ -158,7 +158,7 @@ void AI_Pedestrian::ResetField138()
 
 f32 AI_Pedestrian::GetParam04()
 {
-    return mParams17C->mField04;
+    return mParams17C->mSpeed04;
 }
 
 f32 AI_Pedestrian::GetField130()
@@ -173,42 +173,42 @@ void AI_Pedestrian::SetField130(f32 v)
 
 f32 AI_Pedestrian::GetParam14()
 {
-    return mParams17C->mField14;
+    return mParams17C->mProbability14;
 }
 
 f32 AI_Pedestrian::GetParam18()
 {
-    return mParams17C->mField18;
+    return mParams17C->mTimeIn18;
 }
 
 f32 AI_Pedestrian::GetParam1C()
 {
-    return mParams17C->mField1C;
+    return mParams17C->mTimeOut1C;
 }
 
 f32 AI_Pedestrian::GetParam20()
 {
-    return mParams17C->mField20;
+    return mParams17C->mProbability20;
 }
 
 f32 AI_Pedestrian::GetParam24()
 {
-    return mParams17C->mField24;
+    return mParams17C->mStopRange24;
 }
 
 f32 AI_Pedestrian::GetParam28()
 {
-    return mParams17C->mField28;
+    return mParams17C->mTime28;
 }
 
 f32 AI_Pedestrian::GetParam2C()
 {
-    return mParams17C->mField2C;
+    return mParams17C->mSpeed2C;
 }
 
 f32 AI_Pedestrian::GetParam30()
 {
-    return mParams17C->mField30;
+    return mParams17C->mLookAtRange30;
 }
 
 int AI_Pedestrian::GetField184()

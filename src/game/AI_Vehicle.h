@@ -17,9 +17,9 @@ struct UnkObj58
 struct UnkVehicleParams
 {
     char field_0x00[0x1C];
-    f32 mField1C;  // 0x1C
+    f32 mSpeed1C;          // 0x1C
     char field_0x20[0x4C];
-    f32 mField6C;  // 0x6C
+    f32 mWheelRadius6C;    // 0x6C
 };
 
 // RTTI: AI_Vehicle : AI_Agent (_vptr at +0x9C). Its __tf is still the generated stub in src/rtti/;
@@ -53,7 +53,7 @@ public:
     void Action10E468();              // 0x0010E448
     void func_0010E468();             // 0x0010E468: passes mNode138 to func_00193100
     void Action10D1A0();              // 0x0010E490
-    f32 func_0010E4B0(f32 v);         // 0x0010E4B0: mFieldF8 += v, capped at mParams11C->mField1C
+    f32 func_0010E4B0(f32 v);         // 0x0010E4B0: mFieldF8 += v, capped at mParams11C->mSpeed1C
     f32 func_0010E508(f32 v);         // 0x0010E508: mFieldF8 -= v, floored at 0
     void func_0010E558(UnkObj58 *obj); // 0x0010E558
     void *func_0012CCB0(void *p);     // 0x0012CCB0 (called with this unchanged; may belong to a base)

@@ -76,14 +76,28 @@ map of the binary, regenerated with `tools/analysis/coverage.py --map docs/MAP.m
 Matching gives the bytes, not what the code is for: the game has no symbols, and a small accessor says
 nothing about its field. Names have to come from evidence, roughly in this order of yield:
 
-1. **Library functions by behaviour.** A few functions are called from hundreds of places, so naming them
-   makes many callers readable at once: `func_0022F50C(p, 0, 0x100)` looks like `memset`, `func_0022E8E0`
-   like `malloc` (called by `__builtin_new`), `func_001BD958(size)` like the game's allocator (its result
-   is checked for null and then constructed) and `func_001BD978(p)` like the matching free (destructors
-   call it with `this`). Confirm each from its code before renaming.
-2. **Keyword parsers.** Script keys such as `speed`, `acceleration`, `turnradiusmul` (listed per block in
-   `docs/MAP.md`) are compared and then stored to `this+off`; that names the field (`mField2C` ->
-   `mSpeed`) and every accessor of it.
+1. **Library functions by behaviour (done for the most called).** newlib, identified from the code
+   (`include/common/libc.h`): `malloc`, `memcpy`, `memset`, `printf`, `rand`, `strcmp`. The GL-style
+   layer (`src/game/GL.h`, from the OpenGL enums each one switches on or is called with): `glEnable`,
+   `glDisable`, `glBindTexture`, `glDrawArrays`, `gl{Vertex,Color,TexCoord}Pointer`,
+   `gl{Enable,Disable}ClientState`. The game's allocator and free: `MemAlloc1BD958(size)` (calls
+   `func_001BD558(size, 3)`) and `MemFree1BD978(p)`. Next by call count: `0x001A3F10` (371 calls, fills a
+   0x30-byte struct of floats and ints), `0x001BB098` (174), `0x0020A0E8` (171, physics), `0x001A4010`
+   (162, two floats into the render state), `0x001A4930` (a boolean in the render state, set to 0 before
+   blended drawing and 1 after: probably `glDepthMask`, unconfirmed), `0x00233520` (`vfprintf`, from
+   `printf`).
+2. **Keyword parsers (tool done, first names applied).** `tools/analysis/keyword_fields.py` lists, for
+   each of the ~500 reads of `UnkParser`, the script key and the field it goes to. Applied where the
+   object is a struct we already have, matched by offsets and types: `UnkVehicleParams` (`speed`,
+   `wheelradius`), `UnkPedParams` (`speed`, `probability`, `timein`, `timeout`, `stoprange`, `time`,
+   `lookatrange`) and `UnkScooterParams1C0` (`startacc`, `speedmin`, `adrenaline` (the multiplier applied
+   while `Scooter::mFlags18 & 0x400`), `ramplaunch`, `wedgelaunch`). Left: the other fields those parsers
+   fill (add them to the structs as they get used), the boss parser `0x0015DD70` (`weakness`,
+   `collisiondamage`, `invtime`, ...: it is not clear yet whether the object is `AI_Boss` or its
+   `UnkAttackActor`), `0x0010B338` (race settings: `turnmin`, `distancepercent`, `goalreach`, `behind`,
+   `ahead`, `range`, `interval`, `probability`) and about 40 smaller parsers; keys that repeat in one
+   parser (`speed`, `acc`, `startacc`) belong to the sections in its `--tables` output, so keep the offset in
+   their names until the section is known. The accessors of renamed fields keep their offset names.
 3. **Known API constants**, such as the OpenGL enums in the GL-style layer (step 0 above).
 4. **Watching the retail game run (later, not needed now).** This works on the original game, not on our
    code: the decompilation only says which address holds what. In PCSX2 2.x, *Debug -> Open Debugger*:

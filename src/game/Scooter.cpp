@@ -128,7 +128,7 @@ f32 Scooter::func_0017E508()
 {
     f32 mul = 1.0f;
     if (mFlags18 & 0x400)
-        mul = mParams1C0->mField158;
+        mul = mParams1C0->mAdrenaline158;
     if (mSpeedBoostAmount > 0.0f)
         mul *= mSpeedBoostDuration;
     return mFieldC8 * mul;
@@ -159,7 +159,7 @@ f32 Scooter::func_0017E5E8()
 {
     f32 mul = 1.0f;
     if (mFlags18 & 0x400)
-        mul = mParams1C0->mField158;
+        mul = mParams1C0->mAdrenaline158;
     if (mSpeedBoostAmount > 0.0f)
         mul *= mSpeedBoostDuration;
     return mFieldC8 * mul * mParams1C0->mField7C;
@@ -169,7 +169,7 @@ f32 Scooter::func_0017E640()
 {
     f32 mul = 1.0f;
     if (mFlags18 & 0x400)
-        mul = mParams1C0->mField158;
+        mul = mParams1C0->mAdrenaline158;
     if (mSpeedBoostAmount > 0.0f)
         mul *= mSpeedBoostDuration;
     return mFieldC8 * mul * mParams1C0->mField68;
@@ -179,10 +179,10 @@ f32 Scooter::func_0017E698()
 {
     f32 mul = 1.0f;
     if (mFlags18 & 0x400)
-        mul = mParams1C0->mField158;
+        mul = mParams1C0->mAdrenaline158;
     if (mSpeedBoostAmount > 0.0f)
         mul *= mSpeedBoostDuration;
-    return mFieldC8 * mul * mParams1C0->mField118;
+    return mFieldC8 * mul * mParams1C0->mSpeedMin118;
 }
 
 int Scooter::GetField504()
@@ -209,20 +209,20 @@ void Scooter::ClearFields50C_508()
 f32 Scooter::func_0017E718(f32 v)
 {
     if (gGameCtx262250->mField18 == 1)
-        v = (v - 1.0f) * mParams1C0->mField15C + 1.0f;
+        v = (v - 1.0f) * mParams1C0->mRampLaunch15C + 1.0f;
     return v;
 }
 
 f32 Scooter::func_0017E758(f32 v)
 {
     if (gGameCtx262250->mField18 == 1)
-        v = (v - 1.0f) * mParams1C0->mField160 + 1.0f;
+        v = (v - 1.0f) * mParams1C0->mWedgeLaunch160 + 1.0f;
     return v;
 }
 
 f32 Scooter::func_0017E798()
 {
-    f32 val = mParams1C0->mField124;
+    f32 val = mParams1C0->mStartAcc124;
     if ((rand() % 101 - 50) * 0.02f < 0.0f)
         val = -val;
     return val;
@@ -230,7 +230,7 @@ f32 Scooter::func_0017E798()
 
 f32 Scooter::func_0017E810()
 {
-    f32 val = mParams1C0->mField100;
+    f32 val = mParams1C0->mStartAcc100;
     if ((rand() % 101 - 50) * 0.02f < 0.0f)
         val = -val;
     return val;
@@ -238,7 +238,7 @@ f32 Scooter::func_0017E810()
 
 f32 Scooter::func_0017E888()
 {
-    f32 val = mParams1C0->mField13C;
+    f32 val = mParams1C0->mStartAcc13C;
     if ((rand() % 101 - 50) * 0.02f < 0.0f)
         val = -val;
     return val;
@@ -530,7 +530,7 @@ f32 Scooter::func_0017F820()
 {
     f32 mul = 1.0f;
     if (mFlags18 & 0x400)
-        mul = mParams1C0->mField158;
+        mul = mParams1C0->mAdrenaline158;
     if (mSpeedBoostAmount > 0.0f)
         mul *= mSpeedBoostDuration;
     return mField9C * (mField90 / (mFieldC8 * mul * mParams1C0->mField7C)) * -0.43633235f;

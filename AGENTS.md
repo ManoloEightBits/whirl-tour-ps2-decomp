@@ -27,6 +27,8 @@ and can trip output filters.
   candidate; `--apply` keeps the best). Pick a heredoc delimiter that does not appear in the text.
 - `m2c_sweep.py report [--range A B] [--status match|regs]` ranks unmatched functions by how close their raw
   m2c draft compiles to the game (refresh with `m2c_sweep.py run`, unattended); `show ADDR` prints the draft.
+- `keyword_fields.py --func A` names fields from the script keys a parser reads into them (`"speed"` ->
+  `arg1+0x1C`); see the Naming section of `TODO.md`.
 - `dump_data.py ADDR` for tables (vtables, jump tables, keyword tables), `coverage.py` and `docs/MAP.md`
   to choose what to work on, `gen_accessors.py --range A B --class C` to draft runs of trivial methods,
   `scratch_cc.py --regs` for register-allocation questions and `--cflag` for compiler-flag experiments.
