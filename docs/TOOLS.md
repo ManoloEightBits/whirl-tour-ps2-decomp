@@ -35,7 +35,8 @@ Python prints a `sys.prefix` warning. Every tool finds the game files through `W
 ## Loop for one function
 
 1. **Pick a target:** look at `docs/MAP.md` (what each block of the binary holds and how much is matched),
-   run `scan_candidates.py --level 1|2|3`, `map_tus.py --class X` or
+   run `m2c_sweep.py report` (after one `m2c_sweep.py run`: functions whose raw m2c draft already
+   matches or nearly does), `scan_candidates.py --level 1|2|3`, `map_tus.py --class X` or
    `inspect_tu.py --class X` / `--range A B` (that one includes m2c drafts).
    For a run of trivial methods of one class, `gen_accessors.py --range A B --class X` drafts the C++.
 2. **Write the C++** in `src/game/`, and add the address to `config/symbols.txt`. For a class with a
@@ -83,6 +84,7 @@ the other tools directly.
 | `diff_func.py file.cpp <mangled> [--all] [-D X] [--bodies f\|- \| --variants v.json] [--apply]` | Side-by-side R5900 diff of one repository function, or a batch of candidates with one line each (diff count and first differing offset). `--bodies`: only function bodies, separated by `---` lines; a `@@` line puts the text above it before the function (inline helpers). `--variants`: `{"target": "...", "candidates": [...]}` for any snippet. `--apply` writes the best candidate into the file. |
 | `scratch_cc.py snippet.cpp\|- [--func S] [--vs ADDR] [--asm] [--regs] [-D X] [--cflag F]` | Compiles a loose snippet in `build/scratch/` with the exact flags of `verify.py` (it can include repository headers). Shows its disassembly with relocations, or a side-by-side diff against any game address (`--vs`), GCC's `.s` (`--asm`), and the register-allocation table (`--regs`). `--cflag` adds a compiler flag for experiments (this is how `-ffast-math` was confirmed). |
 | `dump_data.py ADDR [-n N] [--vtable] [--string]` | Words at a data address with what each points to: a symbol (and whether it matches), a string, the function and offset of a jump-table target, or a float. `--vtable` lists a vtable's slots. |
+| `m2c_sweep.py run\|report\|show [--region R] [--range A B] [--max-size N] [--status S]` | Batch run, left alone (the whole binary in minutes, 16 jobs): for each unmatched function it compiles m2c's `--valid-syntax` C draft with the game's `cc1` at `verify.py`'s flags and compares it with the game. Results (`results.tsv`) and drafts go to `../whirl-tour-work/sweep` (`WHIRL_SWEEP`); the run resumes where it stopped (`--redo` to redo). Status: `match` (the raw draft gives the game's bytes), `regs` (same mnemonics, only registers or immediates differ), `diff` (score = mnemonic similarity 0..1), `asm` (VU0/MMI instructions m2c cannot express), `m2c-error`, `cc-error`. `report` drops functions matched since and ranks the rest; `show ADDR` prints one result and its draft. The drafts are C, a starting point for the C++ and its names, not code to commit. |
 | `find_pattern.py '<re1>; <re2>; ...' [--range A B] [--context N] [--count]` | Searches `.text` for a sequence of instructions (one regex per instruction, `*` matches any). Each hit is labelled with the nearest known symbol. About 0.5 s for the whole binary. Put the pattern in single quotes so the shell keeps `\$`. |
 
 A function counts as matched when it is in `build/matched.txt`. `config/symbols.txt` is not enough: it

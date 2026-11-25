@@ -25,6 +25,8 @@ and can trip output filters.
 - `diff_func.py file.cpp <mangled>` shows only the differing lines. To try rewrites, pass bodies on stdin:
   `diff_func.py file.cpp <mangled> --bodies - [--apply] <<'BODIES' ... --- ... BODIES` (one line per
   candidate; `--apply` keeps the best). Pick a heredoc delimiter that does not appear in the text.
+- `m2c_sweep.py report [--range A B] [--status match|regs]` ranks unmatched functions by how close their raw
+  m2c draft compiles to the game (refresh with `m2c_sweep.py run`, unattended); `show ADDR` prints the draft.
 - `dump_data.py ADDR` for tables (vtables, jump tables, keyword tables), `coverage.py` and `docs/MAP.md`
   to choose what to work on, `gen_accessors.py --range A B --class C` to draft runs of trivial methods,
   `scratch_cc.py --regs` for register-allocation questions and `--cflag` for compiler-flag experiments.

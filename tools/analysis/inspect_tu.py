@@ -274,16 +274,21 @@ def suggest_cpp(words, this_reads, this_writes, callees):
     return None
 
 
-def decompile_m2c(addr, words, addr_to_sym):
-    """Run m2c (-t mipsee-gcc-c++) on the function's instructions and return pseudo-C++."""
+def m2c_asm(addr, words, addr_to_sym, fn_name=None):
+    """The function's instructions as an m2c input file (glabel, local branch labels, callee names).
+
+    Registers use N32 names: the EE ABI passes arguments 5-8 in $8-$11, which m2c's mipsee target
+    knows as $a4-$a7 (with o32 names it reads $t0 as an unset register)."""
+    old_names = rabbitizer.config.regNames_gprAbiNames
+    rabbitizer.config.regNames_gprAbiNames = rabbitizer.Abi.N32
     try:
-        from m2c.main import parse_flags, run
-        import io
-        import tempfile
-        from contextlib import redirect_stdout
-    except ImportError:
-        return None
-    fn_name = addr_to_sym.get(addr, 'func_%08X' % addr)
+        return _m2c_asm(addr, words, addr_to_sym, fn_name)
+    finally:
+        rabbitizer.config.regNames_gprAbiNames = old_names
+
+
+def _m2c_asm(addr, words, addr_to_sym, fn_name):
+    fn_name = fn_name or addr_to_sym.get(addr, 'func_%08X' % addr)
     insns = []
     targets = set()
     for i, w in enumerate(words):
@@ -308,8 +313,20 @@ def decompile_m2c(addr, words, addr_to_sym):
             dis = ins.disassemble()
         asm_lines.append('/* %06X %08X %08X */ %s' % (pc - e.TEXT_BASE + 0x80, pc, w, dis))
     asm_lines.append('endlabel %s' % fn_name)
+    return '\n'.join(asm_lines) + '\n'
+
+
+def decompile_m2c(addr, words, addr_to_sym):
+    """Run m2c (-t mipsee-gcc-c++) on the function's instructions and return pseudo-C++."""
+    try:
+        from m2c.main import parse_flags, run
+        import io
+        import tempfile
+        from contextlib import redirect_stdout
+    except ImportError:
+        return None
     with tempfile.NamedTemporaryFile('w', suffix='.s', delete=False) as tf:
-        tf.write('\n'.join(asm_lines) + '\n')
+        tf.write(m2c_asm(addr, words, addr_to_sym))
         tf_path = tf.name
     try:
         options = parse_flags(['-t', 'mipsee-gcc-c++', '--allman', '--pointer-style', 'right',
