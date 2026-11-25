@@ -28,6 +28,14 @@ struct UnkVehicleParams
 class AI_Vehicle : public AI_Agent
 {
 public:
+    virtual ~AI_Vehicle();                 // slot 1, 0x0010E380 (not decompiled; declared first so no file emits the vtable)
+    virtual void VirtSlot2();         // slot 2, 0x0010C870
+    virtual void VirtSlot3();         // slot 3, 0x0010CE30
+    virtual void VirtSlot4();         // slot 4, 0x0010D788
+    virtual Vec3f *GetPosition();     // slot 5, 0x0010E310
+    virtual Vec4f *GetRow2();         // slot 6, 0x0010E318
+    virtual Mat4x4f *GetMatrix();     // slot 7, 0x0010E328
+
     f32 GetFieldEC();                 // 0x0010E298
     void SetFieldEC(f32 v);           // 0x0010E2A0
     void AddFieldEC(f32 v);           // 0x0010E2A8

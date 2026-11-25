@@ -47,9 +47,9 @@ void AI_Boss::SetField190(int v)
     mField190 = v;
 }
 
-Vec4f *AI_Boss::GetObj1E0Row3()
+Vec3f *AI_Boss::GetPosition()
 {
-    return &mObj1E0->mMatrix50.row[3];
+    return (Vec3f *)&mObj1E0->mMatrix50.row[3];
 }
 
 void AI_Boss::Action161978()
@@ -62,14 +62,14 @@ Vec4f *AI_Boss::GetObj1E0Row1()
     return &mObj1E0->mMatrix50.row[1];
 }
 
-Vec4f *AI_Boss::GetObj1E0Row2()
+Vec4f *AI_Boss::GetRow2()
 {
     return &mObj1E0->mMatrix50.row[2];
 }
 
-Vec4f *AI_Boss::GetObj1E0Row0()
+Mat4x4f *AI_Boss::GetMatrix()
 {
-    return &mObj1E0->mMatrix50.row[0];
+    return &mObj1E0->mMatrix50;
 }
 
 int * AI_Boss::GetPtr174()
@@ -162,7 +162,7 @@ void AI_Boss::SetField13D(u8 v)
     mField13D = v;
 }
 
-f32 AI_Boss::GetField138()
+f32 AI_Boss::VirtSlot8()
 {
     return mField138;
 }
@@ -250,4 +250,8 @@ int AI_Boss::TestFlags20_200()
 int AI_Boss::GetField1F0()
 {
     return mField1F0;
+}
+
+void AI_Boss::VirtSlot3()
+{
 }

@@ -25,6 +25,16 @@ struct UnkPedParams
 class AI_Pedestrian : public AI_Agent
 {
 public:
+    virtual ~AI_Pedestrian();                 // slot 1, 0x00106AC0 (not decompiled; declared first so no file emits the vtable)
+    virtual void VirtSlot2();         // slot 2, 0x00103B70
+    virtual void VirtSlot3();         // slot 3, 0x001049B0
+    virtual void VirtSlot4();         // slot 4, 0x001060C8
+    virtual Vec3f *GetPosition();     // slot 5, 0x00106688
+    virtual Vec4f *GetRow2();         // slot 6, 0x00106690
+    virtual Mat4x4f *GetMatrix();     // slot 7, 0x00106698
+    virtual void VirtSlot9();         // slot 9, 0x00106D10
+    virtual void VirtSlot10();        // slot 10, 0x00106D80
+
     f32 GetField128();                // 0x001065C8
     void SetField128(f32 v);          // 0x001065D0
     void AddField128(f32 v);          // 0x001065D8
@@ -46,11 +56,8 @@ public:
     int GetField140();                // 0x00106670
     int GetField148();                // 0x00106678
     f32 GetField14C();                // 0x00106680
-    Vec4f *GetPtr100();               // 0x00106688
-    Vec4f *GetPtrF0();                // 0x00106690
-    Vec4f *GetPtrD0();                // 0x00106698
-    Vec4f *GetPtrE0();                // 0x001066A0
-    Vec4f *GetPtrD0b();               // 0x001066A8
+    Vec4f *GetRow1();                 // 0x001066A0
+    Vec4f *GetRow0();                 // 0x001066A8
     Vec3f *GetPtr110();               // 0x001066B0
     Vec3f *GetPtr11C();               // 0x001066B8
     f32 GetField138();                // 0x001066C0
@@ -69,10 +76,7 @@ public:
     f32 GetLookAtRange30();           // 0x00106788
     int GetField184();                // 0x00106798
     char field_0xA0[0x30];
-    Vec4f mFieldD0;            // 0xD0
-    Vec4f mFieldE0;            // 0xE0
-    Vec4f mFieldF0;            // 0xF0
-    Vec4f mField100;           // 0x100
+    Mat4x4f mMatrixD0;         // 0xD0: the agent's matrix (vtable slots 5-7)
     Vec3f mField110;           // 0x110
     Vec3f mField11C;           // 0x11C
     f32 mField128;             // 0x128

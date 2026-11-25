@@ -47,3 +47,8 @@
 0x002A4478 IP_AnimCtrl game/Controllers.h
 0x002A5518 MBCtrl game/Controllers.h
 0x002A48C0 ScootCtrl game/Controllers.h
+0x002A3098 AI_Agent game/AI_Agent.h
+0x00281BA0 AI_Race game/AI_Race.h
+0x00281F08 AI_Vehicle game/AI_Vehicle.h
+0x00281740 AI_Pedestrian game/AI_Pedestrian.h
+0x002A3620 AI_Boss game/AI_Boss.h

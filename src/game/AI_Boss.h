@@ -60,13 +60,18 @@ STATIC_ASSERT(sizeof(UnkBossParams) == 0x20C, UnkBossParams_size);
 class AI_Boss : public AI_Agent
 {
 public:
+    virtual ~AI_Boss();                 // slot 1, 0x00159B48 (not decompiled; declared first so no file emits the vtable)
+    virtual void VirtSlot2();         // slot 2, 0x00159CB0
+    virtual void VirtSlot3();         // slot 3, 0x0015EE28
+    virtual void VirtSlot4();         // slot 4, 0x0015DC90
+    virtual Vec3f *GetPosition();     // slot 5, 0x0015EBB0
+    virtual Vec4f *GetRow2();         // slot 6, 0x0015EBF0
+    virtual Mat4x4f *GetMatrix();     // slot 7, 0x0015EC00
+    virtual f32 VirtSlot8();          // slot 8, 0x0015ECF0: mField138
+
     f32 GetAttackField10();         // 0x0015EB78
-    Vec4f *GetObj1E0Row3();         // 0x0015EBB0
     void Action161978();            // 0x0015EBC0
     Vec4f *GetObj1E0Row1();         // 0x0015EBE0
-    Vec4f *GetObj1E0Row2();         // 0x0015EBF0
-    Vec4f *GetObj1E0Row0();         // 0x0015EC00
-    f32 GetField138();              // 0x0015ECF0
     void SetBits134(int bits);      // 0x0015EDD0
     void ClearBits134(int bits);    // 0x0015EDE0
     int TestFlags20_200();          // 0x0015EDF8

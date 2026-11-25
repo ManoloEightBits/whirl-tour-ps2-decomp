@@ -617,7 +617,7 @@ void func_00123AE8(IVP_Real_Object_Stub *self, IVP_Real_Object_Stub *other, u32,
 {
     AI_Boss *boss = (AI_Boss *)other->mActorA8;
     Player *player = (Player *)self->mActorA8;
-    Vec3f *bossPos = boss->VirtSlot5();
+    Vec3f *bossPos = boss->GetPosition();
     Vec3f *pos = func_00122DC8(player);
     f32 dx = bossPos->x - pos->x;
     f32 dy = bossPos->y - pos->y;
@@ -642,7 +642,7 @@ void func_00123AE8(IVP_Real_Object_Stub *self, IVP_Real_Object_Stub *other, u32,
     }
     else
     {
-        player->Action1722B0(boss->VirtSlot5(), boss->mAttack1D8->mField10);
+        player->Action1722B0(boss->GetPosition(), boss->mAttack1D8->mField10);
     }
 }
 

@@ -416,12 +416,12 @@
 0x0015EDC8 GetField134__7AI_Boss
 0x0015EE08 GetField1F0__7AI_Boss
 0x0015EB78 GetAttackField10__7AI_Boss
-0x0015EBB0 GetObj1E0Row3__7AI_Boss
+0x0015EBB0 GetPosition__7AI_Boss
 0x0015EBC0 Action161978__7AI_Boss
 0x0015EBE0 GetObj1E0Row1__7AI_Boss
-0x0015EBF0 GetObj1E0Row2__7AI_Boss
-0x0015EC00 GetObj1E0Row0__7AI_Boss
-0x0015ECF0 GetField138__7AI_Boss
+0x0015EBF0 GetRow2__7AI_Boss
+0x0015EC00 GetMatrix__7AI_Boss
+0x0015ECF0 VirtSlot8__7AI_Boss
 0x0015EDD0 SetBits134__7AI_Bossi
 0x0015EDE0 ClearBits134__7AI_Bossi
 0x0015EDF8 TestFlags20_200__7AI_Boss
@@ -515,8 +515,8 @@
 0x0010BB68 GetFieldD8__7AI_Race
 0x0010BB70 SetFieldD8__7AI_Racef
 0x0010BB78 SubFieldD8__7AI_Racef
-0x0010BA28 GetPlayerRow2__7AI_Race
-0x0010BA48 GetPlayerMatrix__7AI_Race
+0x0010BA28 GetRow2__7AI_Race
+0x0010BA48 GetMatrix__7AI_Race
 
 # AI_Pedestrian (src/game/AI_Pedestrian.cpp)
 0x001065C8 GetField128__13AI_Pedestrian
@@ -540,11 +540,11 @@
 0x00106670 GetField140__13AI_Pedestrian
 0x00106678 GetField148__13AI_Pedestrian
 0x00106680 GetField14C__13AI_Pedestrian
-0x00106688 GetPtr100__13AI_Pedestrian
-0x00106690 GetPtrF0__13AI_Pedestrian
-0x00106698 GetPtrD0__13AI_Pedestrian
-0x001066A0 GetPtrE0__13AI_Pedestrian
-0x001066A8 GetPtrD0b__13AI_Pedestrian
+0x00106688 GetPosition__13AI_Pedestrian
+0x00106690 GetRow2__13AI_Pedestrian
+0x00106698 GetMatrix__13AI_Pedestrian
+0x001066A0 GetRow1__13AI_Pedestrian
+0x001066A8 GetRow0__13AI_Pedestrian
 0x001066B0 GetPtr110__13AI_Pedestrian
 0x001066B8 GetPtr11C__13AI_Pedestrian
 0x001066C0 GetField138__13AI_Pedestrian
@@ -1908,3 +1908,26 @@
 0x001B7A68 Method1B7A68__11UnkModel1B7
 0x001B7938 func_001B7938__FP11UnkModel1B7iiiii
 0x001B72E0 func_001B72E0__FPvP11UnkModel1B7
+
+# AI vtables (config/vtables.txt): slot functions not decompiled yet, and the small ones now matched
+0x00106568 VirtSlot8__8AI_Agent
+0x0010B910 VirtSlot9__8AI_Agent
+0x0010B918 VirtSlot10__8AI_Agent
+0x00107398 VirtSlot2__7AI_Race
+0x0010BB88 VirtSlot3__7AI_Race
+0x0010BD60 VirtSlot4__7AI_Race
+0x0010BA20 GetPosition__7AI_Race
+0x0010C870 VirtSlot2__10AI_Vehicle
+0x0010CE30 VirtSlot3__10AI_Vehicle
+0x0010D788 VirtSlot4__10AI_Vehicle
+0x0010E310 GetPosition__10AI_Vehicle
+0x0010E318 GetRow2__10AI_Vehicle
+0x0010E328 GetMatrix__10AI_Vehicle
+0x00103B70 VirtSlot2__13AI_Pedestrian
+0x001049B0 VirtSlot3__13AI_Pedestrian
+0x001060C8 VirtSlot4__13AI_Pedestrian
+0x00106D10 VirtSlot9__13AI_Pedestrian
+0x00106D80 VirtSlot10__13AI_Pedestrian
+0x00159CB0 VirtSlot2__7AI_Boss
+0x0015EE28 VirtSlot3__7AI_Boss
+0x0015DC90 VirtSlot4__7AI_Boss

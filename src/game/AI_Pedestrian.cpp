@@ -105,29 +105,29 @@ f32 AI_Pedestrian::GetField14C()
     return mField14C;
 }
 
-Vec4f * AI_Pedestrian::GetPtr100()
+Vec3f *AI_Pedestrian::GetPosition()
 {
-    return &mField100;
+    return (Vec3f *)&mMatrixD0.row[3];
 }
 
-Vec4f * AI_Pedestrian::GetPtrF0()
+Vec4f *AI_Pedestrian::GetRow2()
 {
-    return &mFieldF0;
+    return &mMatrixD0.row[2];
 }
 
-Vec4f * AI_Pedestrian::GetPtrD0()
+Mat4x4f *AI_Pedestrian::GetMatrix()
 {
-    return &mFieldD0;
+    return &mMatrixD0;
 }
 
-Vec4f * AI_Pedestrian::GetPtrE0()
+Vec4f *AI_Pedestrian::GetRow1()
 {
-    return &mFieldE0;
+    return &mMatrixD0.row[1];
 }
 
-Vec4f * AI_Pedestrian::GetPtrD0b()
+Vec4f *AI_Pedestrian::GetRow0()
 {
-    return &mFieldD0;
+    return &mMatrixD0.row[0];
 }
 
 Vec3f * AI_Pedestrian::GetPtr110()

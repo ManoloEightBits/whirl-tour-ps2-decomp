@@ -11,12 +11,12 @@ A hobby reverse-engineering project for the US PS2 release of *Whirl Tour* (`SLU
 <!-- progress:begin -->
 | Metric | Matched / Confirmed | Total in `.text` | Share | Progress |
 | :--- | ---: | ---: | ---: | :--- |
-| **Total `.text` bytes** | **55,552 B** | 1,401,448 B | **3.964%** | `█░░░░░░░░░░░░░░░░░░░` |
-| **Game logic bytes** (`0x100000..0x1C62CF`) | **51,148 B** | 811,728 B | **6.301%** | `██░░░░░░░░░░░░░░░░░░` |
-| **Matched functions (`verify.py`)** | **1295** | ~7,125 | **18.175%** | `████░░░░░░░░░░░░░░░░` |
-| **Confirmed vtable slots (`verify_vtables.py`)** | **207** | ~889 | **23.285%** | `█████░░░░░░░░░░░░░░░` |
-| **Confirmed RTTI classes (`vtables.txt`)** | **46** | 193 | **23.834%** | `█████░░░░░░░░░░░░░░░` |
-| **Full binary relink (`rebuild.py`)** | **1295 linked** | `02f39f20...0744` | **SHA-1 MATCH** | `████████████████████` |
+| **Total `.text` bytes** | **55,608 B** | 1,401,448 B | **3.968%** | `█░░░░░░░░░░░░░░░░░░░` |
+| **Game logic bytes** (`0x100000..0x1C62CF`) | **51,204 B** | 811,728 B | **6.308%** | `██░░░░░░░░░░░░░░░░░░` |
+| **Matched functions (`verify.py`)** | **1302** | ~7,125 | **18.274%** | `████░░░░░░░░░░░░░░░░` |
+| **Confirmed vtable slots (`verify_vtables.py`)** | **246** | ~889 | **27.672%** | `██████░░░░░░░░░░░░░░` |
+| **Confirmed RTTI classes (`vtables.txt`)** | **51** | 193 | **26.425%** | `██████░░░░░░░░░░░░░░` |
+| **Full binary relink (`rebuild.py`)** | **1302 linked** | `02f39f20...0744` | **SHA-1 MATCH** | `████████████████████` |
 <!-- progress:end -->
 
 ### Binary `.text` Map (`0x00100000..0x00256268`)
@@ -39,7 +39,7 @@ A hobby reverse-engineering project for the US PS2 release of *Whirl Tour* (`SLU
 | **Tricks System (`Tricks`)** | `UnkTrickScores`, `UnkTrickDef`, `UnkTrickSeq`, `UnkTrickState`, `UnkObj125F` (no RTTI) | 35 / 59 | — | `██████░░░░` **59%** (`0x001255C8..0x00125F70`: score table getters, trick lookup by name, 12 trick definition getters, sequence & state accessors; `tricklist` parser in `NON_MATCHING`) |
 | **Motion & Interpolation Controllers** | `MotionCtrl`, `IP_PosCtrl`, `IP_RotCtrl`, `IP_AnimCtrl`, `MBCtrl`, `ScootCtrl` (+ IVP bases `IVP_Controller`, `IVP_Controller_Independent`) | 52 / ~65 | 36 / 42 | `████████░░` **80%** (all vtables confirmed; `IP_PosCtrl`, `MBCtrl` and `ScootCtrl` 100% including constructors and accessors; the simulation step of `MotionCtrl`, `IP_RotCtrl` and `IP_AnimCtrl` left) |
 | **Collision & Event Listeners** | `DD_Event_Listener`, `DD_Collision_Listener`, `Global_Phantom_Listener`, `ScootCL`, `MBCL`, `LunActCL`, `MarActCL`, `AI_PedestrianCL` | 57 / ~67 | 31 / 40 | `█████████░` **85%** (all 8 listeners 100%, `LunActCL`/`MarActCL` constructors and `LunAct`/`MarAct`/`UnkBody` accessors matched, and the whole `DD_Event_Listener` TU `0x00116B00..0x00117727`; IVP base classes `IVP_Listener_Object`, `IVP_Listener_Collision` & `IVP_Listener_Phantom` also 100%) |
-| **AI & Boss Attacks** | `AI_Agent`, `AI_Pedestrian`, `AI_Race`, `AI_Vehicle`, `AI_Boss`, `AI_Attack*` | 184 / ~340 | 0 / 73 | `█████░░░░░` **54%** (RTTI `__tf` matched; the non-virtual accessors of `AI_Pedestrian` (43), `AI_Race` (43), `AI_Vehicle` (21) and `AI_Boss` (40), plus 14 short `AI_Race`/`AI_Vehicle` methods) |
+| **AI & Boss Attacks** | `AI_Agent`, `AI_Pedestrian`, `AI_Race`, `AI_Vehicle`, `AI_Boss`, `AI_Attack*` | 191 / ~340 | 39 / 73 | `██████░░░░` **56%** (RTTI `__tf` matched; the vtables of `AI_Agent` and its four subclasses confirmed; the non-virtual accessors of `AI_Pedestrian` (43), `AI_Race` (43), `AI_Vehicle` (21) and `AI_Boss` (40), plus 14 short `AI_Race`/`AI_Vehicle` methods) |
 | **Address blocks (`src/game/blocks/`)** | 97 `UnkObj<addr>` classes (no RTTI; layout = the fields their methods use) | 401 / 401 | — | `██████████` **100%** of these batches (raw m2c drafts that already compiled to the game's bytes, found by `tools/analysis/m2c_sweep.py`: 226 free functions (empty functions, constants, one-call wrappers, allocate-then-construct helpers) and 171 methods that only touch `this`'s fields; one file per 16 KB block, to be moved to their TUs) |
 | **Single-inheritance RTTI (`src/rtti/`)** | 77 polymorphic classes | 77 / 77 | — | `██████████` **100%** (probe-generated `__tf*` functions) |
 

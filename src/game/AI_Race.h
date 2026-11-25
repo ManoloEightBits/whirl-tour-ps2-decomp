@@ -39,6 +39,14 @@ struct UnkPtrList10C058
 class AI_Race : public AI_Agent
 {
 public:
+    virtual ~AI_Race();                 // slot 1, 0x0010BB90 (not decompiled; declared first so no file emits the vtable)
+    virtual void VirtSlot2();         // slot 2, 0x00107398
+    virtual void VirtSlot3();         // slot 3, 0x0010BB88
+    virtual void VirtSlot4();         // slot 4, 0x0010BD60
+    virtual Vec3f *GetPosition();     // slot 5, 0x0010BA20
+    virtual Vec4f *GetRow2();         // slot 6, 0x0010BA28
+    virtual Mat4x4f *GetMatrix();     // slot 7, 0x0010BA48
+
     int GetFieldA0();                 // 0x0010B970
     void SetFieldA0(int v);           // 0x0010B978
     int GetFieldD0();                 // 0x0010B980
@@ -56,8 +64,6 @@ public:
     void SetStateCA(u8 s);            // 0x0010BA00
     int GetFieldCC();                 // 0x0010BA10
     void SetFieldCC(int v);           // 0x0010BA18
-    Vec4f *GetPlayerRow2();           // 0x0010BA28
-    Mat4x4f *GetPlayerMatrix();       // 0x0010BA48
     Vec4f *GetPlayerRow1();           // 0x0010BA68
     Vec4f *GetPlayerRow0();           // 0x0010BA88
     Player *GetPlayer110();           // 0x0010BAA8
@@ -114,7 +120,7 @@ public:
     f32 mFieldF0;              // 0xF0
     int mFieldF4;              // 0xF4
     char mBlockF8[0x18];       // 0xF8
-    Player *mPlayer110;        // 0x110: its matrix rows are returned by GetPlayerRow*
+    Player *mPlayer110;        // 0x110: GetRow2, GetMatrix and GetPlayerRow0/1 return its matrix
     char field_0x114[8];
     Vec3f mField11C;           // 0x11C
     Vec3f mPos128;             // 0x128: returned by vtable slot 5

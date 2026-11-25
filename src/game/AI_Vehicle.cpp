@@ -154,3 +154,18 @@ void AI_Vehicle::func_0010E558(UnkObj58 *obj)
 {
     obj->mField58 = func_0012CCB0(obj->mField58);
 }
+
+Vec3f *AI_Vehicle::GetPosition()
+{
+    return (Vec3f *)&mMatrixA0.row[3];
+}
+
+Vec4f *AI_Vehicle::GetRow2()
+{
+    return &mMatrixA0.row[2];
+}
+
+Mat4x4f *AI_Vehicle::GetMatrix()
+{
+    return &mMatrixA0;
+}

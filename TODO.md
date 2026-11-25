@@ -59,14 +59,17 @@ map of the binary, regenerated with `tools/analysis/coverage.py --map docs/MAP.m
    `LunAct`/`MarAct`/`UnkBody`, `IP_PosCtrl`/`MotionCtrl`/`IP_RotCtrl`/`IP_AnimCtrl`/`MBCtrl`/`ScootCtrl`,
    `FEScreen`, `UnkObj11F`, `UnkActor11A`/`UnkDef11AB`/`UnkSkel1B6`/`UnkKey1B76`/`UnkModel1B7`/`UnkClip1B7`/`UnkAnim1B8`/`UnkScene1B9`/`UnkTex1BA`,
    `Tricks` (`0x001255C8..0x00125F70`).
-2. **AI vtables.** `AI_Race`, `AI_Vehicle`, `AI_Pedestrian` and `AI_Boss` derive from `AI_Agent` (`_vptr`
-   at +0x9C). Slots 5, 6 and 7 return the position (matrix row 3, or `AI_Race::mPos128`), row 2 and the
-   matrix (`AI_Vehicle` has its own at +0xA0, `AI_Race` uses its Player's); `AI_Boss` slot 8 returns
-   `mField138`. Before declaring the vtables (which moves each `__tf` out of `src/rtti/`): slots 9 and 10
-   of `AI_Boss` are `0x0010B910`/`0x0010B918`, the two empty functions just before `__tf7AI_Race`,
-   although RTTI says `AI_Boss : AI_Agent`; find out why first. Each AI TU also ends with its own copies
-   of `__tf8AI_Agent` and `__tf6EnvObj` (16 such copies), which only appear once the TU has whatever
-   uses them.
+2. **AI vtables (declared and confirmed).** `AI_Agent` and its four subclasses declare their virtuals in
+   slot order and `verify_vtables.py` confirms every slot. `AI_Agent` has `__pure_virtual` in slots 1-7 and
+   inline defaults in 8-10 (`0x00106568` returns 0.0f, `0x0010B910`/`0x0010B918` are empty): they were
+   emitted once, in the first TU that needed them, which is why slot 8 sits in `AI_Pedestrian`'s TU and 9-10
+   in `AI_Race`'s, and why `AI_Race`, `AI_Vehicle` and `AI_Boss` share them. Slots 5-7 (`GetPosition`,
+   `GetRow2`, `GetMatrix`) return the agent's matrix row 3, row 2 and the matrix. Each subclass declares its
+   destructor first and does not define it, so no file of ours emits its vtable and the `__tf` functions
+   stay generated stubs in `src/rtti/`. Left: the slot 1 destructors, the big slot 2 functions (one per
+   class, 1.3 to 3.6 KB, probably the per-frame update), `AI_Vehicle`/`AI_Pedestrian`/`AI_Boss` slots 3-4
+   and `AI_Pedestrian`'s own slots 9-10; and the 16 copies of `__tf8AI_Agent`/`__tf6EnvObj` at the end of
+   the AI TUs, which appear only once a TU of ours emits what uses them.
 3. **Game code TU by TU, in address order.** Use the keywords in `docs/MAP.md` for names. Started: the
    tricks script TU (`0x00123CD0..0x00125FF0`, `src/game/Tricks.cpp`: 35 of 59 functions matched, the
    `tricklist` parser is in `NON_MATCHING`, the larger parsers/evaluators and the 9 `cvt.w.s` + `dsll32`/`dsra32`

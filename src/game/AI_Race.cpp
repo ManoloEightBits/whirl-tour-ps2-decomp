@@ -91,12 +91,25 @@ void AI_Race::SetFieldCC(int v)
     mFieldCC = v;
 }
 
-Vec4f *AI_Race::GetPlayerRow2()
+void AI_Race::VirtSlot3()
+{
+}
+
+void AI_Race::VirtSlot4()
+{
+}
+
+Vec3f *AI_Race::GetPosition()
+{
+    return &mPos128;
+}
+
+Vec4f *AI_Race::GetRow2()
 {
     return &func_00122D08(mPlayer110)->row[2];
 }
 
-Mat4x4f *AI_Race::GetPlayerMatrix()
+Mat4x4f *AI_Race::GetMatrix()
 {
     return func_00122D08(mPlayer110);
 }
