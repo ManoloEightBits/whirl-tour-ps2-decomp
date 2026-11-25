@@ -332,20 +332,8 @@ void func_00123AC8(IVP_Real_Object_Stub *self, IVP_Real_Object_Stub *other, u32,
 Vec3f *func_00122DC8(Player *player);   // 0x00122DC8: the player's position
 Mat4x4f *func_00122D08(Player *player); // 0x00122D08: the player's matrix (row 2 is used)
 
-#ifdef NON_MATCHING
-// 109 of 122 instructions match: the control flow, calls and stack layout are right. Left: the
-// loads of side.x and side.y get $f5/$f6 the other way round (the game puts side.x in $f6, and
-// side.y then 5.0f in $f5), and the sqrt.s asm is scheduled before add.s $f3 instead of after it.
-// No change helped: volatile, "0"/"+f" constraints, a macro, a squared-length variable, the dot
-// or length in inline helpers, reordered statements. Writing the vector maths as scalars first
-// (d, then side) is what brought it from 29 to 13 differences.
-// The game has a bare sqrt.s here; sqrtf() gets a NaN check and a call to sqrtf.
-static inline f32 SqrtF(f32 x)
-{
-    f32 r;
-    asm("sqrt.s %0, %1" : "=f"(r) : "f"(x));
-    return r;
-}
+// With -ffast-math (verify.py) GCC turns this into a bare sqrt.s, as in the game.
+extern "C" float sqrtf(float);
 
 // "player_hit_boss": within 5 units, the player hits the boss when its boost state and the side
 // the boss is on agree; otherwise the boss's attack hits the player.
@@ -368,18 +356,16 @@ void func_00123AE8(IVP_Real_Object_Stub *self, IVP_Real_Object_Stub *other, u32,
     side.z = dx;
     Vec4f *axis = &func_00122D08(player)->row[2];
     f32 dot = axis->x * side.x + axis->y * side.y + axis->z * side.z;
-    if (!(SqrtF(d.x * d.x + d.y * d.y + d.z * d.z) > 5.0f))
+    if (sqrtf(d.x * d.x + d.y * d.y + d.z * d.z) > 5.0f)
+        return;
+    if (player->GetStatFactor() > 0.0f &&
+        ((player->IsBoostInactive() && dot >= 0.0f) || (player->IsBoostUnavailable() && dot <= 0.0f)))
     {
-        if (player->GetStatFactor() > 0.0f &&
-            ((player->IsBoostInactive() && dot >= 0.0f) || (player->IsBoostUnavailable() && dot <= 0.0f)))
-        {
-            boss->func_0015EFB8(player->GetStatFactor());
-            player->ApplySpecialAction(boss->VirtSlot8() <= 0.0f);
-        }
-        else
-        {
-            player->Action1722B0(boss->VirtSlot5(), boss->mAttack1D8->mField10);
-        }
+        boss->func_0015EFB8(player->GetStatFactor());
+        player->ApplySpecialAction(boss->VirtSlot8() <= 0.0f);
+    }
+    else
+    {
+        player->Action1722B0(boss->VirtSlot5(), boss->mAttack1D8->mField10);
     }
 }
-#endif

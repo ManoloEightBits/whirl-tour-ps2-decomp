@@ -7,7 +7,7 @@ Every function compiled from src/ must be listed in config/symbols.txt and must 
 byte-identical to the game at its listed address. Exit status is 0 only when that holds.
 
 Whirl Tour (SLUS_204.89) was compiled with SN Systems ProDG ee-gcc 2.95.3 build 1.14
-at `-O2 -G0 -fno-exceptions` (with C++ RTTI enabled) and assembled with SN's `ps2eeas.exe`
+at `-O2 -G0 -fno-exceptions -ffast-math` (with C++ RTTI enabled) and assembled with SN's `ps2eeas.exe`
 (ProDG 2.0 build without short-loop padding).
 
 Run it in Linux/WSL. The compiler is an old proprietary Windows binary, so it runs under
@@ -43,7 +43,7 @@ ASSEMBLER_TOOL_DIR = 'lib/gcc-lib/ee/2.95.2'
 ASSEMBLER = 'ps2eeas.exe'
 
 CPPFLAGS = ['-lang-c++', '-nostdinc', '-Iinclude', '-Isrc']
-CFLAGS = ['-quiet', '-O2', '-G0', '-fno-exceptions']
+CFLAGS = ['-quiet', '-O2', '-G0', '-fno-exceptions', '-ffast-math']
 ASFLAGS = ['-G0']
 
 BUILD_KEY = CPPFLAGS + CFLAGS + [ASSEMBLER_COMPILER, ASSEMBLER] + ASFLAGS + ['mtc1-pair-nops']

@@ -5,7 +5,7 @@ Usage:
   scratch_cc.py <file.cpp|-> [--func SUBSTR] [--asm] [--regs] [--vs ADDR] [-D NAME]
 
 The snippet ("-" reads it from stdin) is copied to <repo>/build/scratch/ and built the way
-verify.py builds src/: cpp -Iinclude -Isrc, cc1plus -O2 -G0 -fno-exceptions, SN's ps2eeas.
+verify.py builds src/: cpp -Iinclude -Isrc, cc1plus -O2 -G0 -fno-exceptions -ffast-math, SN's ps2eeas.
 It can therefore #include "game/....h". Nothing needs to be listed in config/symbols.txt.
 
   --func SUBSTR  only show functions whose mangled or demangled name contains SUBSTR
@@ -59,7 +59,7 @@ def build(src_text, stem, defines, regs):
     tool_dir = comp / verify.COMPILER / verify.TOOL_DIR
     r = lambda p: p.relative_to(verify.ROOT).as_posix()
     verify.run_tool(tool_dir, 'cpp.exe', verify.CPPFLAGS + ['-D' + d for d in defines] + [r(src), r(ii)])
-    verify.run_tool(tool_dir, 'cc1plus.exe', verify.CFLAGS + (['-dl', '-dg'] if regs else []) + [r(ii), '-o', r(asm)])
+    verify.run_tool(tool_dir, 'cc1plus.exe', verify.CFLAGS + ARGS.cflag + (['-dl', '-dg'] if regs else []) + [r(ii), '-o', r(asm)])
     verify.assemble(comp, asm, obj)
     return ii, asm, obj
 
@@ -172,6 +172,8 @@ def main():
     ap.add_argument('--regs', action='store_true', help='print the register allocation dump')
     ap.add_argument('--vs', type=lambda s: int(s, 16), metavar='ADDR', help='compare with the game at this hex address')
     ap.add_argument('-D', dest='defines', action='append', default=[])
+    ap.add_argument('--cflag', action='append', default=[],
+                    help='extra cc1plus flag, for experiments only (verify.py never uses it)')
     ap.add_argument('--compilers', default=str(COMPILERS))
     ap.add_argument('--slus', default=str(SLUS))
     ARGS = ap.parse_args()

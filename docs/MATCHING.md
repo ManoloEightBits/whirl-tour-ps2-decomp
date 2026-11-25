@@ -1,6 +1,6 @@
 # Matching notes
 
-Source patterns that ee-gcc 2.95.3 (`-O2 -G0 -fno-exceptions`) needs before the output matches the game.
+Source patterns that ee-gcc 2.95.3 (`-O2 -G0 -fno-exceptions -ffast-math`) needs before the output matches the game.
 Each one is used by a function that matches in `src/`.
 
 ## Assembler
@@ -104,6 +104,12 @@ file with `diff_func.py <file.cpp> <symbol> --variants <json>`. That command onl
   `Vec3f` field by field interleaves loads and stores, and moves the call's `$a0` setup out of the
   `bc1f` delay slot. Wrapped in `do { } while (0)` (as in `AI_PedestrianCL`), the three loads come before
   the three stores, as in the game. `diff_func.py --variants` found it among four candidates.
+- **`-ffast-math` is part of the build.** Without it `sqrtf()` gets a NaN check and a call to `sqrtf`,
+  and `t < 1.0f ? t : 1.0f` a compare and branch; the game has a bare `sqrt.s` (184 of them) and `min.s`
+  (`player_hit_boss`, `AI_Pedestrian::SetField138Ratio`). With it, write plain `sqrtf()` and the ternary,
+  no `asm`. It also lets GCC invert float compares, so the source form matters: `player_hit_boss` needs
+  `if (sqrtf(...) > 5.0f) return;` (`c.lt.s` + `bc1t`); `if (sqrtf(...) <= 5.0f) { ... }` gives
+  `c.le.s` + `bc1f`. Every function matched before the switch still matched after it.
 - **And around two stores before a call.** In `Scooter::TakeDamage`, wrapping the two stores through
   `mState208` keeps the float argument in `$f12` until the call (copied to `$f13` there) and `this` in
   `$a1`; without it GCC moves the argument to `$f13` at entry and hoists the constants, 27 of 42
