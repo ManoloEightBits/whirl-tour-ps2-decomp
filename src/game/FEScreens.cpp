@@ -20,12 +20,21 @@ struct GameCtxFE
     int mCount1C;
     char pad20[0x30];
     int mNumTracks50;
-    int mTracks54[64];
-    char pad154[0x134];
+    int mTracks54[41];
+    // Options (FEOptionsScreen::InitMenu16C6D8; the item order is the menu's, as seen in the game)
+    int mActionCameras;  // 0xF8: string 0x2C, on/off
+    int mVibration;      // 0xFC: string 0x2D, on/off
+    int mBalanceMeter;   // 0x100: string 0x2E, on/off
+    char pad104[0x184];
     int mArr288[23];
     int mArr2E4[10];
     int mArr30C[10];
-    char pad334[0x50];
+    char pad334[0x3C];
+    int mVersusTime;        // 0x370: 2 player options, string 0x37, an index for GetVersusTime154EA8
+    int mVersusDegradation; // 0x374: string 0x38, on/off
+    f32 mFxVolume;       // 0x378: audio options, string 0x34, a slider
+    f32 mMusicVolume;    // 0x37C: string 0x35, a slider
+    int mInGameMusic;    // 0x380: string 0x36, on/off
     BGMInfo *mBGMTable384;
     char pad388[0x14];
     int mMaxLevel39C;
@@ -83,7 +92,7 @@ void func_00196430(void *model, void *tex);
 const int *func_00155F30();
 int func_00155FC8(int);
 const int *func_001561C8();
-f32 func_00154EA8(int);
+f32 GetVersusTime154EA8(int index);
 void func_00187AB8(void *control, f32 x, f32 y);
 void func_00196E38(void *movie);
 void func_00192350(void *credits);
@@ -511,7 +520,7 @@ void FEMovScreen::VirtSlot3()
         if (mField188 != 0 && mField18C == 1 && mField180 != 0)
         {
             DrawBegin19A640();
-            TEXT_ADD_FLAGS(mText14, 2);
+            TEXT_ADD_ALIGN(mText14, 2);
             TEXT_SET_POS(mText14, 500.0f, 100.0f, 0.0f);
             TEXT_SET_STRING(mText14, func_00151D40(3));
             mText14->mScale1C.Set(0.5f, 0.5f, 1.0f);
@@ -579,7 +588,7 @@ FELoadStateScreen::FELoadStateScreen(FEOwner *owner, void *mc, int mode)
     mField170 = 0;
     mField174 = 0;
     if (mode == 0)
-        mField28 = 0x22;
+        mTitleId28 = 0x22;
     for (u32 i = 0; i < 8; i++)
         mSlots17C[i].mState00 = 0;
     mMc3BC = mc;
@@ -862,7 +871,7 @@ void FEMenu::Draw()
         TEXT_SET_POS(mText2C, 0.0f, 0.0f, 0.0f);
         TEXT_SET_SCALE(mText2C, mOwner00->mTextScaleE8, mOwner00->mTextScaleEC, 1.0f);
         mText2C->mString30 = mItems08[i].mText00;
-        mText2C->mField00 |= 0x20;
+        mText2C->mAlign00 |= 0x20;
         if (i == mSelected0C)
             TEXT_SET_COLOR(mText2C, mOwner00->mColourFC.x, mOwner00->mColourFC.y, mOwner00->mColourFC.z);
         else if (mItems08[i].mDisabled100 != 0)
@@ -1019,7 +1028,7 @@ void FEOptionsScreen::VirtSlot3()
 
     FEScreen::VirtSlot3();
     mText168->mScale1C.Set(mOwner00->mTextScaleE8, mOwner00->mTextScaleEC, 1.0f);
-    mText168->mField00 |= 0x20;
+    mText168->mAlign00 |= 0x20;
     for (int i = 0; i < mCount16C; i++)
     {
         glPushMatrix();
@@ -1040,7 +1049,7 @@ void FEOptionsScreen::VirtSlot3()
             break;
         case 3:
         {
-            int t = (int)func_00154EA8(mArr1C0[i]);
+            int t = (int)GetVersusTime154EA8(mArr1C0[i]);
             sprintf(value, "%d:%02d", t / 60, t % 60);
             mText168->mString30 = value;
             DrawText19B758(mText168);
@@ -1139,7 +1148,7 @@ void FEScooterScreen::VirtSlot3()
         mText2B4->mPos04.Set(0.0f, -0.2f, 0.0f);
         mText2B4->mScale1C.Set(0.003f, 0.003f, 1.0f);
         TEXT_SET_STRING(mText2B4, func_00151D40(func_001561C8()[sel]));
-        TEXT_ADD_FLAGS(mText2B4, 2);
+        TEXT_ADD_ALIGN(mText2B4, 2);
         DrawText19B758(mText2B4);
         f32 angle = side * 40.0f;
         glRotatef(-mSpin1BC * angle, 0.0f, 1.0f, 0.0f);
@@ -1240,7 +1249,7 @@ void FECharacterScreen::VirtSlot3()
         mText320->mPos04.Set(0.0f, 0.0f, 0.0f);
         mText320->mScale1C.Set(0.003f, 0.003f, 1.0f);
         TEXT_SET_STRING(mText320, func_00151D40(func_00155F30()[mArr2C4[i]]));
-        TEXT_ADD_FLAGS(mText320, 2);
+        TEXT_ADD_ALIGN(mText320, 2);
         DrawText19B758(mText320);
         glPopMatrix();
         sprintf(line, func_00151D40(0x4F), mArr29C[i] + 1);

@@ -6,17 +6,23 @@
 // A line of text on screen (0x3C bytes): CreateTextObj198E48(font, ...) allocates one, the screens set
 // where it goes, its scale, colour and string, and draw it with DrawText19B758 between DrawBegin19A640
 // and DrawEnd19A6B0. Colours are RGBA bytes with 0x80 as full intensity (the GS range).
+// DrawTextEx19B2C0 (0x0019B2C0) shows what the fields mean: it draws from mPos04 - mOffset10, moved by
+// the alignment in mAlign00 (low nibble: 1 right, 2 centred on mWidth34; high nibble: 0x10 down by
+// mHeight38, 0x20 by half of it), in the font's glyphs; in the string 0x80 starts a two-byte glyph,
+// "\\n" breaks the line and "\\c{...}" changes the colour.
 struct TextObj
 {
-    int mField00;          // 0x00
+    int mAlign00;          // 0x00
     Vec3f mPos04;          // 0x04
-    Vec3f mField10;        // 0x10
+    Vec3f mOffset10;       // 0x10
     Vec3f mScale1C;        // 0x1C
     u32 mColor28;          // 0x28
     void *mFont2C;         // 0x2C
     const char *mString30; // 0x30
     f32 mWidth34;          // 0x34: set by MeasureText19B138 (and DrawText19B758)
-    int mField38;          // 0x38
+    f32 mHeight38;         // 0x38: set by MeasureText19B138
+
+    void Init(void *font, const char *str, f32 x, f32 y, f32 z); // 0x00198ED0
 
     void SetColor(f32 r, f32 g, f32 b)
     {
@@ -32,11 +38,13 @@ struct TextObj
 #define TEXT_SET_COLOR(t, r, g, b) do { TextObj *text_ = (t); text_->SetColor(r, g, b); } while (0)
 #define TEXT_SET_RGBA(t, c) do { TextObj *text_ = (t); text_->mColor28 = (c); } while (0)
 #define TEXT_SET_STRING(t, s) do { (t)->mString30 = (s); } while (0)
-#define TEXT_ADD_FLAGS(t, f) do { (t)->mField00 |= (f); } while (0)
+#define TEXT_ADD_ALIGN(t, f) do { (t)->mAlign00 |= (f); } while (0)
 
-TextObj *CreateTextObj198E48(void *font, int, f32, f32, f32); // 0x00198E48
+TextObj *CreateTextObj198E48(void *font, const char *str, f32 x, f32 y, f32 z); // 0x00198E48
 void MeasureText19B138(TextObj *text);                       // 0x0019B138
+void DrawTextEx19B2C0(TextObj *text, f32 arg);              // 0x0019B2C0
 void DrawText19B758(TextObj *text);                          // 0x0019B758
+void DrawText19B778(TextObj *text, f32 arg);                 // 0x0019B778
 
 // The object a screen's mSub08 and each menu item's mSub110 point to (0xB0 bytes). It is built from an
 // id and two optional vectors of the record func_00126250 returns for that id.
@@ -65,7 +73,7 @@ struct FESub08
     void Method130720(f32);                 // 0x00130720
 };
 
-// What FEScreen::mField00 and FEMenu::mOwner00 point to: an id at +0x3C, from +0x48 one 16-byte
+// What FEScreen::mOwner00 and FEMenu::mOwner00 point to: an id at +0x3C, from +0x48 one 16-byte
 // record per menu item (mCount44 of them: the ids of its three models and of its FESub08), and how
 // FEMenu::Draw draws the items' text: scale, and colours (0..1) for normal, selected and disabled.
 struct FEOwnerEntry
@@ -158,7 +166,8 @@ struct FEMenu
 // Vtable at 0x002A4270 (_vt$8FEScreen), stored at offset +0x160.
 struct FEPad
 {
-    char field_0x00[0x1C];
+    int mConnected00; // 0x00: the front end greys out Multiplayer while pad 2's is 0 (func_00110B60)
+    char field_0x04[0x18];
     u32 mButtons1C; // 0x1C
     int mPressed20; // 0x20
 };
@@ -170,7 +179,7 @@ class FEScreen
 {
 public:
     FEScreen();
-    FEScreen(int a, int b, FEOwner *owner); // 0x0016E458
+    FEScreen(int titleId, int state, FEOwner *owner); // 0x0016E458
     virtual ~FEScreen();             // slot 1: 0x0016E5B0
     virtual void VirtSlot2(f32 dt);  // slot 2: 0x0016DF98
     virtual void VirtSlot3();        // slot 3: 0x0016E180
@@ -205,7 +214,7 @@ public:
     int mField1C;          // 0x1C
     int mField20;          // 0x20
     int mField24;          // 0x24
-    int mField28;          // 0x28
+    int mTitleId28;        // 0x28: string id of the title VirtSlot3 draws
     f32 mField2C;          // 0x2C
     int mField30;          // 0x30
     int mField34;          // 0x34

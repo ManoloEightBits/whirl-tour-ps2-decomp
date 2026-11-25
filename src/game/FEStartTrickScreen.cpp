@@ -35,7 +35,7 @@ void FEStartScreen::VirtSlot3()
     glEnable(GL_CULL_FACE);
     DrawEnd19A6B0();
     DrawBegin19A640();
-    TEXT_ADD_FLAGS(mText14, 2);
+    TEXT_ADD_ALIGN(mText14, 2);
     TEXT_SET_POS(mText14, 500.0f, 150.0f, 0.0f);
     TEXT_SET_STRING(mText14, func_00151D40(3));
     mText14->mScale1C.Set(0.5f, 0.5f, 1.0f);

@@ -49,8 +49,8 @@ map of the binary, regenerated with `tools/analysis/coverage.py --map docs/MAP.m
      callers plus `0x00183CB8` (they need `EnvObj`/`UnkModel1B7` types), and 16 functions at addresses
      4 mod 8 (`0x00154EDC..0x00154F6C` float constants, `0x001C4084..0x001C40AC` int constants): they
      match in `verify.py`, but cc1plus aligns every function to 8 (`.align 3`), so `rebuild.py` cannot place
-     them. They are not functions: the float ones are the cases of `func_00154EA8`, a switch that returns
-     a float per index (`FEOptionsScreen::VirtSlot3` uses it as a time), and the int ones at `0x001C4084`
+     them. They are not functions: the float ones are the cases of `GetVersusTime154EA8`, a switch that
+     returns the versus time in seconds per option index, and the int ones at `0x001C4084`
      are most likely the same; match the switches instead.
    - **Phase 2, first part done:** 171 functions whose draft only touches fields of its first argument are
      methods of 96 `UnkObj<addr>` classes in the same block files. A class groups functions within 0x100 bytes
@@ -110,6 +110,32 @@ map of the binary, regenerated with `tools/analysis/coverage.py --map docs/MAP.m
    colours, title), `FESub08`, `TextObj` (`SetColor`, `mWidth34`), the per-player definitions and model
    pairs of the choose/scooter screens, and the GL calls `glLoadMatrixf`/`glRotatef`/`glTranslatef`/
    `glMultMatrixf`/`glBlendFunc`.
+
+6. **Text library (`0x00198000..0x0019C000`).** Done: `TextObj.cpp` (`CreateTextObj198E48`, `Init`,
+   `Release198F38`, `DrawText19B758`/`DrawText19B778`), the front end's start-up/shut-down
+   (`func_00198F58`/`func_00199030`: memory pool, the four pads and their copies at `0x002659B0`), and
+   `TextObj`'s fields (alignment flags, offset, width/height) from the renderer. Left:
+   `DrawTextEx19B2C0` (1176 B, the renderer: alignment, two-byte glyphs after 0x80, `\n`,
+   `\c{...}` colour codes, clipping to a width), `MeasureText19B138` (uses MMI instructions), the
+   debug vector font (`func_001990E8` draws a string as line strips from the table at `0x002658F0`,
+   scaled by `data_002659E0..E8`, coloured by `func_001994D0`; `0x00199358`/`0x001993D0` are its
+   printf-style wrappers, varargs), and a scene object of 0x318 bytes at `0x00198090..0x00198640` with
+   three linked lists (not text).
+
+7. **Front-end flow (from playing the PAL release, checked against the NTSC code).** At start-up the
+   game plays two skippable intro movies (`FEMovScreen`), then the title screen (`FEStartScreen`: the
+   background picture and string 3, "press Start"; `FEMovScreen` can show string 3 over a movie too),
+   then New/Load, then the main menu: Arcade, Story, Entertainment, Multiplayer, Options, Extras, Save,
+   Exit. `UpdateFrontEnd110B60` (`0x00110B60`, 3536 B, not decompiled) is the state machine behind it:
+   in its state 9 it greys out menu item 3 (Multiplayer) while pad 2 is not connected
+   (`FEPad::mConnected00`). `FEScreen`'s first constructor argument is the title's string id
+   (`mTitleId28`); `FELoadStateScreen` uses 0x20 or 0x22 by mode (likely load and save). The PAL
+   strings differ by language, so use these observations for meaning, not for text. Options
+   (`FEOptionsScreen::InitMenu16C6D8`, tables `gOptionsMenuIds2627A8` and the like): Action cameras,
+   Vibration, Balance meter (on/off), 2 player options, Audio options, Playlist (`FEPlaylistScreen`,
+   title 0x67), Default settings, Accept (PAL adds Language first); Audio: In-game music, Music volume,
+   Fx volume; 2 player: Versus time (`GetVersusTime154EA8`), Versus degradation. The values live in
+   `GameCtxFE` (`mActionCameras`..`mInGameMusic`).
 
 ## Naming (most matched code still has address names)
 

@@ -1,5 +1,6 @@
 #include "common/types.h"
 #include "game/GL.h"
+#include "game/FEScreen.h"
 
 // Functions of 0x00198000..0x0019BFFF whose class and translation unit are not known yet.
 // Names are address based; move each function to its file once its TU is identified.
@@ -9,7 +10,6 @@ void func_001982D0(int, int);                          // 0x001982D0
 void func_00198628(int, int, int, int);                // 0x00198628
 void func_00198E08(int, int, int, int, int, int, int); // 0x00198E08
 void func_00199738();                                  // 0x00199738
-void func_0019B2C0();                                  // 0x0019B2C0
 void func_001BD240(int);                               // 0x001BD240
 int MemAlloc1BD958(int);                                // 0x001BD958
 void MemFree1BD978(void *);                            // 0x001BD978
@@ -89,11 +89,6 @@ void func_00198DE8(void *arg0)
     MemFree1BD978(arg0);
 }
 
-void Release198F38(void *arg0)
-{
-    MemFree1BD978(arg0);
-}
-
 void func_001990C8()
 {
     func_00199738();
@@ -114,11 +109,6 @@ void DrawEnd19A6B0()
     glPopMatrix();
     glMatrixMode(GL_MODELVIEW);
     glPopMatrix();
-}
-
-void func_0019B778()
-{
-    func_0019B2C0();
 }
 
 void func_00197D98();                                       // 0x00197D98
@@ -269,4 +259,49 @@ void func_0019A618(int arg0)
     func_001A24D0(1, &sp0);
 }
 
+// The front end's start-up and shut-down: a memory pool of the given size (func_001996F8 prepares it),
+// the four pads (func_001BC2B8(1, n)), their copies at 0x002659B0, a pad of type 2 over all four and
+// a 0x101-byte buffer (func_001BC448).
+FEPad *func_001BC2B8(int type, int index); // 0x001BC2B8
+void func_001BC318(void *pad);             // 0x001BC318
+s8 *func_001BC448();                       // 0x001BC448
+void func_001BC490(void *buffer);          // 0x001BC490
+void func_001996F8(int pool, int size);    // 0x001996F8
+extern FEPad *gFEPads2659A0[4];
+extern FEPad *data_002659B8;
+extern FEPad *data_002659BC;
+extern FEPad *data_002659C0;
+extern s8 *data_002659C4;
+extern int data_002659D8;
+extern int data_002659DC;
+
+void func_00198F58(int size)
+{
+    data_002659DC = size;
+    data_002659D8 = MemAlloc1BD958(size);
+    func_001996F8(data_002659D8, data_002659DC);
+    for (int i = 0; i < 4; i++)
+        gFEPads2659A0[i] = func_001BC2B8(1, i);
+    gFEPad2659B0 = gFEPads2659A0[0];
+    gFEPad2659B4 = gFEPads2659A0[1];
+    data_002659B8 = gFEPads2659A0[2];
+    data_002659BC = gFEPads2659A0[3];
+    data_002659C0 = func_001BC2B8(2, 4);
+    data_002659C4 = func_001BC448();
+}
+
+void func_00199030()
+{
+    for (int i = 0; i < 4; i++)
+    {
+        if (gFEPads2659A0[i] != 0)
+            func_001BC318(gFEPads2659A0[i]);
+    }
+    if (data_002659C0 != 0)
+        func_001BC318(data_002659C0);
+    func_001BC490(data_002659C4);
+    MemFree1BD978((void *)data_002659D8);
+    data_002659D8 = 0;
+    data_002659DC = 0;
+}
 
