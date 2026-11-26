@@ -503,3 +503,8 @@ void *MemAlloc1BD958(int size)
 {
     return func_001BD558(size, 3);
 }
+
+int func_001BFAC0(int arg0)
+{
+    return *(int *)arg0 == 3;
+}

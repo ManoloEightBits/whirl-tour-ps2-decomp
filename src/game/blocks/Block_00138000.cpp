@@ -41,3 +41,21 @@ void UnkObj13B240::Method13B240()
     *tmp &= 0xFE;
     mField18 = (f32) (mField18 - 0.2f);
 }
+
+struct UnkObj1397E0A
+{
+    char pad00[0x03];
+    s8 mField03; // 0x03
+};
+
+struct UnkObj1397E0B
+{
+    char pad00[0x4A];
+    u16 mField4A; // 0x4A
+};
+
+void func_001397E0(UnkObj1397E0A *arg0, UnkObj1397E0B *arg1)
+{
+    arg1->mField4A |= 0x20;
+    arg0->mField03 = 0;
+}

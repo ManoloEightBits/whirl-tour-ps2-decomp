@@ -112,7 +112,8 @@ extern int data_0025E738;
 // The object at data_0025E73C; only the fields read by func_001519B0..func_001519D0 are known.
 struct UnkObj25E73C
 {
-    char pad00[0xCC];
+    char pad00[0xC8];
+    int mFieldC8; // 0xC8
     int mFieldCC; // 0xCC
     int mFieldD0; // 0xD0
     int padD4;
@@ -182,4 +183,14 @@ void func_00151D20(int arg0)
 int func_00151D30()
 {
     return data_00261C4C;
+}
+
+void func_00151CD8()
+{
+    data_0025E73C->mFieldC8 |= 1;
+}
+
+void func_00151CF0()
+{
+    data_0025E73C->mFieldC8 &= ~1;
 }

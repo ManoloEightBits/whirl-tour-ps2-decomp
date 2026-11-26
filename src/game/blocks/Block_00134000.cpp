@@ -4,6 +4,7 @@
 // Names are address based; move each function to its file once its TU is identified.
 
 void func_001562E8();    // 0x001562E8
+void func_00136FB8();    // 0x00136FB8
 void func_001BDCF8(int); // 0x001BDCF8
 void func_001BDE60(int); // 0x001BDE60
 
@@ -109,4 +110,32 @@ struct UnkObj136D78
 void UnkObj136D78::Method136D78()
 {
     func_001BCAC0(mField6C);
+}
+
+struct UnkObj136FC0
+{
+    char pad00[0x08];
+    void *mField08; // 0x08
+};
+
+void func_00136FC0(UnkObj136FC0 *arg0)
+{
+    arg0->mField08 = (void *)func_00136FB8;
+}
+
+struct UnkSub137818
+{
+    char pad00[0x28];
+    u32 mField28; // 0x28
+};
+
+struct UnkObj137818
+{
+    char pad00[0x1C];
+    UnkSub137818 *mField1C; // 0x1C
+};
+
+void func_00137818(UnkObj137818 *arg0)
+{
+    arg0->mField1C->mField28 &= 0xFFFFFFFE;
 }

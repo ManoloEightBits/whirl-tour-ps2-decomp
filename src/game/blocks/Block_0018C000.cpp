@@ -87,3 +87,7 @@ void UnkObj18E758::Method18E758()
     mField18 = (mField18 | 0x30) & ~1;
     mField58 = rand() % mField2C->mField01;
 }
+
+void func_0018D270()
+{
+}

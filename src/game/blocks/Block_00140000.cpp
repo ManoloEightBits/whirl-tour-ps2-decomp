@@ -229,3 +229,14 @@ void func_00143A68(EnvObj *obj)
     EnvObjCleanup14FB70(obj);
     MemFree1BD978(obj);
 }
+
+struct UnkObj141728
+{
+    char pad00[0x08];
+    int mField08; // 0x08
+};
+
+int func_00141728(UnkObj141728 **arg0)
+{
+    return (*arg0)->mField08;
+}
