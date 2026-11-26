@@ -126,15 +126,16 @@ map of the binary, regenerated with `tools/analysis/coverage.py --map docs/MAP.m
    `glMultMatrixf`/`glBlendFunc`.
 
 6. **Text library (`0x00198000..0x0019C000`).** Done: `TextObj.cpp` (`CreateTextObj198E48`, `Init`,
-   `Release198F38`, `DrawText19B758`/`DrawText19B778`), the front end's start-up/shut-down
+   `Release198F38`, `DrawText19B758`/`DrawText19B778`), `Block_00198000.cpp` (`func_00199740`,
+   `func_00199BA0`, `UnkObj199C88::Method199CD8`), the front end's start-up/shut-down
    (`func_00198F58`/`func_00199030`: memory pool, the four pads and their copies at `0x002659B0`), and
    `TextObj`'s fields (alignment flags, offset, width/height) from the renderer. Left:
-   `DrawTextEx19B2C0` (1176 B, the renderer: alignment, two-byte glyphs after 0x80, `\n`,
-   `\c{...}` colour codes, clipping to a width), `MeasureText19B138` (uses MMI instructions), the
-   debug vector font (`func_001990E8` draws a string as line strips from the table at `0x002658F0`,
-   scaled by `data_002659E0..E8`, coloured by `func_001994D0`; `0x00199358`/`0x001993D0` are its
-   printf-style wrappers, varargs), and a scene object of 0x318 bytes at `0x00198090..0x00198640` with
-   three linked lists (not text).
+   `DrawTextEx19B2C0` (1176 B, in `TextObj.cpp` under `#ifdef NON_MATCHING`, 209/296 diffs: alignment,
+   two-byte glyphs after 0x80, `\n`, `\c{...}` colour codes, clipping to a width), `MeasureText19B138`
+   (uses MMI instructions), the debug vector font (`func_001990E8` draws a string as line strips from
+   the table at `0x002658F0`, scaled by `data_002659E0..E8`, coloured by `func_001994D0`;
+   `0x00199358`/`0x001993D0` are its printf-style wrappers, varargs), and a scene object of 0x318 bytes
+   at `0x00198090..0x00198640` with three linked lists (not text).
 
 7. **Front-end flow (from playing the PAL release, checked against the NTSC code).** At start-up the
    game plays two skippable intro movies (`FEMovScreen`), then the title screen (`FEStartScreen`: the

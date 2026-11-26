@@ -317,6 +317,33 @@ void func_00199858(int count, int alignBits, void **outPtr)
 }
 #endif
 
+void func_00199BA0(int count, int alignBits, u32 *out0, u32 *out1, u32 *out2)
+{
+    UnkObj199C88 *p = &data_00265CE8;
+    u32 align = 1 << alignBits;
+    u32 mask = align - 1;
+    int padded = (count + 3) & ~3;
+    u32 rem = p->mField8 & mask;
+    int bytes = padded * 0x1C;
+    if (rem != 0)
+        p->mField8 += align - rem;
+    if (p->mField8 + bytes >= p->mField0 + p->mField4)
+    {
+        if (p->mFieldC < p->mField8)
+            p->mFieldC = p->mField8;
+        u32 rem0 = p->mField0 & mask;
+        p->mField8 = p->mField0;
+        if (rem0 != 0)
+            p->mField8 = p->mField0 + (align - rem0);
+    }
+    u32 cur = p->mField8;
+    u32 v1 = cur + padded * 0x10;
+    p->mField8 = cur + bytes;
+    *out0 = cur;
+    *out1 = v1;
+    *out2 = v1 + padded * 8;
+}
+
 void func_00199D80(int alignBits)
 {
     u32 align = 1 << alignBits;
