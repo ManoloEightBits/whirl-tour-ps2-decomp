@@ -634,3 +634,102 @@ void func_00155658()
         gGameCtx262250->mArr4F4[i] = 1;
     gGameCtx262250->mField5A8 = 1;
 }
+
+void func_00153CE8(int arg0, int arg1, int arg2)
+{
+    if (gGameCtx262250->mArr550[arg0][arg1] == 0)
+    {
+        gGameCtx262250->mArr550[arg0][arg1] = 1;
+        if (gGameCtx262250->mField120 < 10)
+        {
+            gGameCtx262250->mEvents124[gGameCtx262250->mField120].mField00 = 1;
+            gGameCtx262250->mEvents124[gGameCtx262250->mField120].mField04 = arg0;
+            gGameCtx262250->mEvents124[gGameCtx262250->mField120].mField08 = arg1;
+            gGameCtx262250->mEvents124[gGameCtx262250->mField120].mField0C = arg2;
+            gGameCtx262250->mField120++;
+        }
+    }
+}
+
+void func_00153D80(int arg0, int arg1, int arg2)
+{
+    if (gGameCtx262250->mScooterBits573[arg0][arg1] == 0)
+    {
+        gGameCtx262250->mScooterBits573[arg0][arg1] = 1;
+        if (gGameCtx262250->mField120 < 10)
+        {
+            gGameCtx262250->mEvents124[gGameCtx262250->mField120].mField00 = 0;
+            gGameCtx262250->mEvents124[gGameCtx262250->mField120].mField04 = arg0;
+            gGameCtx262250->mEvents124[gGameCtx262250->mField120].mField08 = arg1;
+            gGameCtx262250->mEvents124[gGameCtx262250->mField120].mField0C = arg2;
+            gGameCtx262250->mField120++;
+        }
+    }
+}
+
+int func_001556F8()
+{
+{
+    int ret = 0;
+    int mode = gGameCtx262250->mMode00;
+    if (mode != 1 && mode != 6 && mode != 5)
+    {
+        if (gGameCtx262250->mField18 != 1)
+            ret = 1;
+    }
+    return ret;
+}
+}
+
+int func_001558A8()
+{
+{
+    int ret = 0;
+    int mode = gGameCtx262250->mMode00;
+    if (mode != 1 && mode != 6 && mode != 5)
+    {
+        if (gGameCtx262250->mField18 != 1)
+            ret = 1;
+    }
+    return ret;
+}
+}
+
+int func_00155940()
+{
+{
+    int mode = gGameCtx262250->mMode00;
+    if (mode == 5)
+        return 0;
+    return gGameCtx262250->mCount1C >= 2;
+}
+}
+
+int func_00155B48(f32 *arg0, f32 *arg1)
+{
+    if (*arg0 < *arg1)
+        return 1;
+    if (*arg1 < *arg0)
+        return -1;
+    return 0;
+}
+
+int func_00155B80(f32 *arg0, f32 *arg1)
+{
+    if (*arg0 < *arg1)
+        return -1;
+    if (*arg1 < *arg0)
+        return 1;
+    return 0;
+}
+
+int func_00155BB8()
+{
+{
+    int ret = 0;
+    int mode = gGameCtx262250->mMode00;
+    if (mode != 1 && mode != 4 && mode != 5)
+        ret = 1;
+    return ret;
+}
+}

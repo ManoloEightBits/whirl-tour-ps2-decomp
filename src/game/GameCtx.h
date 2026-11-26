@@ -39,6 +39,14 @@ struct GameCtxSub5AC
     int mField00;
 };
 
+struct GameCtxEvent124
+{
+    int mField00;
+    int mField04;
+    int mField08;
+    int mField0C;
+};
+
 struct GameCtx
 {
     int mMode00;             // 0x000: the game mode, 0..7. Likely 0 Story and 2 Arcade (the level select
@@ -61,8 +69,8 @@ struct GameCtx
     int mArr104[5];          // 0x104
     int mNewScooter118;      // 0x118: set when collectibles unlock a scooter
     int mField11C;           // 0x11C
-    int mField120;           // 0x120
-    char pad124[0xA0];
+    u32 mField120;           // 0x120
+    GameCtxEvent124 mEvents124[10]; // 0x124
     int mArr1C4[6];          // 0x1C4
     int mField1DC;           // 0x1DC
     int mField1E0;           // 0x1E0
@@ -100,7 +108,7 @@ struct GameCtx
     int mArr510[7];          // 0x510
     int mArr52C[8];          // 0x52C: one per level (func_00155280 sets them all)
     int mField54C;           // 0x54C
-    char pad550[0x23];
+    s8 mArr550[7][5];        // 0x550
     s8 mScooterBits573[10][5]; // 0x573: five per scooter
     char pad5A5[3];
     int mField5A8;           // 0x5A8: CreateScreen1101A8 adds a main-menu item when set
