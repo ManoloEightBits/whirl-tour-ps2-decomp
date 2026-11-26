@@ -50,12 +50,35 @@ void func_001A4D78(int arg0, int arg1, int arg2)
 
 struct UnkGLState
 {
-    char field_0x0[0x5E8];
+    char field_0x0[0x70];
+    f32 mField70;     // 0x70: GL_LIGHT_MODEL_AMBIENT r
+    f32 mField74;     // 0x74: GL_LIGHT_MODEL_AMBIENT g
+    f32 mField78;     // 0x78: GL_LIGHT_MODEL_AMBIENT b
+    f32 mField7C;     // 0x7C: GL_LIGHT_MODEL_AMBIENT a
+    char field_0x80[0x568];
     f32 mField5E8;    // 0x5E8
     f32 mField5EC;    // 0x5EC
     f32 mField5F0;    // 0x5F0
-    char field_0x5F4[0x119A8];
+    int mField5F4;    // 0x5F4
+    int mField5F8;    // 0x5F8
+    int mField5FC;    // 0x5FC
+    int mField600;    // 0x600
+    char field_0x604[0x8];
+    const void *mField60C; // 0x60C: vertex pointer
+    const void *mField610; // 0x610: texcoord pointer
+    const void *mField614; // 0x614: color pointer
+    int mField618;         // 0x618: vertex size
+    int mField61C;         // 0x61C: texcoord size
+    int mField620;         // 0x620: color size
+    char field_0x624[0x11978];
     int mField11F9C;  // 0x11F9C
+    unsigned int mField11FA0; // 0x11FA0
+    int mField11FA4;  // 0x11FA4
+    int mField11FA8;  // 0x11FA8
+    char field_0x11FAC[0x8];
+    int mField11FB4;  // 0x11FB4: GL_TEXTURE_COORD_ARRAY
+    int mField11FB8;  // 0x11FB8: GL_COLOR_ARRAY
+    int mField11FBC;  // 0x11FBC: GL_VERTEX_ARRAY
 };
 extern UnkGLState data_00267140;
 
@@ -80,4 +103,170 @@ void glTexCoord2fv(const f32 *v)
     data_00267140.mField5F0 = 1.0f;
     data_00267140.mField5EC = t;
     *(u32 *)&data_00267140.mField5E8 &= 0xFFFFFFFEU;
+}
+
+void glTexCoord2f(f32 s, f32 t)
+{
+    data_00267140.mField5E8 = s;
+    *(u32 *)&data_00267140.mField5E8 &= 0xFFFFFFFEU;
+    data_00267140.mField5EC = t;
+    data_00267140.mField5F0 = 1.0f;
+}
+
+void glColor3f(f32 r, f32 g, f32 b)
+{
+    data_00267140.mField5F4 = (int)(r * 128.0f);
+    data_00267140.mField5F8 = (int)(g * 128.0f);
+    data_00267140.mField5FC = (int)(b * 128.0f);
+    data_00267140.mField600 = 0x80;
+}
+
+void glColor4f(f32 r, f32 g, f32 b, f32 a)
+{
+    data_00267140.mField5F4 = (int)(r * 128.0f);
+    data_00267140.mField5F8 = (int)(g * 128.0f);
+    data_00267140.mField5FC = (int)(b * 128.0f);
+    data_00267140.mField600 = (int)(a * 128.0f);
+}
+
+void glTexCoordPointer(int size, unsigned int type, int stride, const void *ptr)
+{
+    data_00267140.mField61C = size;
+    data_00267140.mField610 = ptr;
+}
+
+void glVertexPointer(int size, unsigned int type, int stride, const void *ptr)
+{
+    data_00267140.mField618 = size;
+    data_00267140.mField60C = ptr;
+}
+
+void glColorPointer(int size, unsigned int type, int stride, const void *ptr)
+{
+    data_00267140.mField620 = size;
+    data_00267140.mField614 = ptr;
+}
+
+void glEnableClientState(unsigned int array)
+{
+    switch (array)
+    {
+    case GL_TEXTURE_COORD_ARRAY:
+        data_00267140.mField11FB4 = 1;
+        return;
+    case GL_COLOR_ARRAY:
+        data_00267140.mField11FB8 = 1;
+        return;
+    case GL_VERTEX_ARRAY:
+        data_00267140.mField11FBC = 1;
+        return;
+    }
+}
+
+void glDisableClientState(unsigned int array)
+{
+    switch (array)
+    {
+    case GL_TEXTURE_COORD_ARRAY:
+        data_00267140.mField11FB4 = 0;
+        return;
+    case GL_COLOR_ARRAY:
+        data_00267140.mField11FB8 = 0;
+        return;
+    case GL_VERTEX_ARRAY:
+        data_00267140.mField11FBC = 0;
+        return;
+    }
+}
+
+void glBlendFunc(unsigned int sfactor, unsigned int dfactor)
+{
+    data_00267140.mField11FA0 = dfactor;
+    if (sfactor == GL_SRC_ALPHA && dfactor == GL_ONE_MINUS_SRC_ALPHA)
+    {
+        data_00267140.mField11FA8 = 0;
+    }
+    else if (sfactor == 1 && dfactor == 1)
+    {
+        data_00267140.mField11FA8 = dfactor;
+    }
+    else if (sfactor <= 1 && dfactor == 0x301)
+    {
+        data_00267140.mField11FA8 = 2;
+    }
+    else
+    {
+        data_00267140.mField11FA8 = 0;
+    }
+}
+
+void glColor3fv(const f32 *v)
+{
+    f32 r = v[0], g = v[1], b = v[2];
+    data_00267140.mField5F4 = (int)(r * 128.0f);
+    data_00267140.mField5F8 = (int)(g * 128.0f);
+    data_00267140.mField5FC = (int)(b * 128.0f);
+    data_00267140.mField600 = 0x80;
+}
+
+void glColor4fv(const f32 *v)
+{
+    f32 r = v[0], g = v[1], b = v[2], a = v[3];
+    data_00267140.mField5F4 = (int)(r * 128.0f);
+    data_00267140.mField5F8 = (int)(g * 128.0f);
+    data_00267140.mField5FC = (int)(b * 128.0f);
+    data_00267140.mField600 = (int)(a * 128.0f);
+}
+
+void glColor3i(int r, int g, int b)
+{
+    data_00267140.mField5F4 = r;
+    data_00267140.mField5F8 = g;
+    data_00267140.mField5FC = b;
+    data_00267140.mField600 = 0x80;
+}
+
+void glColor4i(int r, int g, int b, int a)
+{
+    data_00267140.mField5F4 = r;
+    data_00267140.mField5F8 = g;
+    data_00267140.mField5FC = b;
+    data_00267140.mField600 = a;
+}
+
+void glColor4ub(u8 r, u8 g, u8 b, u8 a)
+{
+    data_00267140.mField5F4 = r;
+    data_00267140.mField5F8 = g;
+    data_00267140.mField5FC = b;
+    data_00267140.mField600 = a;
+}
+
+void glColor4ubv(const u8 *v)
+{
+    u8 r = v[0], g = v[1], b = v[2], a = v[3];
+    data_00267140.mField5F4 = r;
+    data_00267140.mField5F8 = g;
+    data_00267140.mField5FC = b;
+    data_00267140.mField600 = a;
+}
+
+void glColor4iv(const int *v)
+{
+    int r = v[0], g = v[1], b = v[2], a = v[3];
+    data_00267140.mField5F4 = r;
+    data_00267140.mField5F8 = g;
+    data_00267140.mField5FC = b;
+    data_00267140.mField600 = a;
+}
+
+void glLightModelfv(unsigned int pname, const f32 *params)
+{
+    if (pname == GL_LIGHT_MODEL_AMBIENT)
+    {
+        data_00267140.mField70 = params[0] * 128.0f;
+        data_00267140.mField74 = params[1] * 128.0f;
+        data_00267140.mField78 = params[2] * 128.0f;
+        data_00267140.mField7C = params[3] * 128.0f;
+    }
 }

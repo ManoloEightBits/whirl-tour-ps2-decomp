@@ -1172,6 +1172,17 @@
 0x001B3900 func_001B3900__FP7Mat4x4fPC7Mat4x4f
 0x00192820 func_00192820__FP7UnkNodef
 0x001A3AB0 glMultMatrixf
+0x001A3B18 glScissor
+0x001A3B60 glViewport
+0x001A4180 glColor3fv
+0x001A41D0 glColor4fv
+0x001A4228 glColor3i
+0x001A4248 glColor4i
+0x001A4268 glColor4ub
+0x001A4298 glColor4ubv
+0x001A42C8 glColor4iv
+0x001A46F0 glLightModelfv
+0x001A4AF0 func_001A4AF0__Fv
 0x00196110 DrawModel196110__FPv
 0x001A3808 glPopMatrix
 0x001A3648 glLoadMatrixf

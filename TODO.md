@@ -238,6 +238,7 @@ nothing about its field. Names have to come from evidence, roughly in this order
 - `UnlockScooterGlobal` `0x00153C10`, 38/55 (`GameCtx.cpp`): a `nop` after the outer loop's `mult` and before
   the inner loop's first load, and the second loop's divide by 20 laid out differently; a row pointer, a
   local context pointer and the count in a local did not help.
+- `glScissor` `0x001A3B18`, 2/17 (`Block_001A0000.cpp`): `mField11F84` gets `$t0` instead of `$v1`.
 
 ## Unverified names
 
