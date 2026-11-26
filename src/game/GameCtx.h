@@ -58,10 +58,11 @@ struct GameCtx
     int mActionCameras;      // 0x0F8: string 0x2C, on/off
     int mVibration;          // 0x0FC: string 0x2D, on/off
     int mBalanceMeter;       // 0x100: string 0x2E, on/off
-    int pad104[5];
+    int mArr104[5];          // 0x104
     int mNewScooter118;      // 0x118: set when collectibles unlock a scooter
     int mField11C;           // 0x11C
-    char pad120[0xA4];
+    int mField120;           // 0x120
+    char pad124[0xA0];
     int mArr1C4[6];          // 0x1C4
     int mField1DC;           // 0x1DC
     int mField1E0;           // 0x1E0
@@ -77,7 +78,8 @@ struct GameCtx
     int mArr2E4[10];         // 0x2E4: set with the scooter (a texture of FEScooterScreen)
     int mArr30C[10];         // 0x30C
     UnkObj125CD8 *mObjs334[10]; // 0x334
-    char pad35C[0x14];
+    int mField35C;           // 0x35C
+    char pad360[0x10];
     int mVersusTime;         // 0x370: 2 player options, string 0x37, an index for GetVersusTime154EA8
     int mVersusDegradation;  // 0x374: string 0x38, on/off
     f32 mFxVolume;           // 0x378: audio options, string 0x34, a slider
@@ -93,11 +95,12 @@ struct GameCtx
     int mScootersUnlocked48C[10]; // 0x48C: one more per 20 collectibles
     int mArr4B4[8];          // 0x4B4: one per level (func_00155250 sets them all)
     int mRaceOpen4D4[8];     // 0x4D4: the level can be played as a race (checkered flag on its icon)
-    char pad4F4[0x18];
+    int mArr4F4[6];          // 0x4F4
     int mCount50C;           // 0x50C: how many of mArr510 are set
     int mArr510[7];          // 0x510
     int mArr52C[8];          // 0x52C: one per level (func_00155280 sets them all)
-    char pad54C[0x27];
+    int mField54C;           // 0x54C
+    char pad550[0x23];
     s8 mScooterBits573[10][5]; // 0x573: five per scooter
     char pad5A5[3];
     int mField5A8;           // 0x5A8: CreateScreen1101A8 adds a main-menu item when set

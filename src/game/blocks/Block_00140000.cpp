@@ -39,7 +39,7 @@ void UnkEffect::func_00141A18()
     func_00142400();
 }
 
-void func_001425E0()
+void func_001425E0(int, f32)
 {
 }
 

@@ -576,3 +576,61 @@ void func_001562E8()
     gGameCtx262250->mField5A8 = 1;
     gGameCtx262250->mField11C = 1;
 }
+
+void func_00151D20(int);          // 0x00151D20
+int func_00142320();              // 0x00142320
+void func_001425E0(int, f32);     // 0x001425E0
+extern int data_0025E5DC;
+extern const int data_002A2DB8[];
+extern const int data_002A2DD8[];
+
+void func_00154E80(int arg0)
+{
+    gGameCtx262250->mField35C = arg0;
+    func_00151D20(arg0);
+}
+
+void func_00154F88(f32 vol)
+{
+    gGameCtx262250->mFxVolume = vol;
+    if (data_0025E5DC != 0)
+        func_001425E0(func_00142320(), vol);
+}
+
+int func_00155198()
+{
+    return data_002A2DB8[gGameCtx262250->mLevel14];
+}
+
+void func_001551C0()
+{
+    for (int i = 6; i >= 0; i--)
+        gGameCtx262250->mArr104[i] = 0;
+    gGameCtx262250->mField120 = 0;
+}
+
+const char *func_00155200()
+{
+    return gLevelNames261C70[gGameCtx262250->mLevel14];
+}
+
+int GetLevelKey155310(int level)
+{
+    if (level < 6)
+        return gGameCtx262250->mArr510[data_002A2CB8[level]];
+    if (level == 6)
+        return gGameCtx262250->mField54C;
+    return 0;
+}
+
+int func_001555A8(int idx)
+{
+    return data_002A2DD8[idx];
+}
+
+void func_00155658()
+{
+    for (int i = 0; i < 6; i++)
+        gGameCtx262250->mArr4F4[i] = 1;
+    gGameCtx262250->mField5A8 = 1;
+}
