@@ -1,7 +1,15 @@
+#include "common/libc.h"
 #include "game/Controllers.h"
 
 extern "C" float sqrtf(float);
+extern "C" float fabsf(float);
+extern "C" void func_001F9FC8(void *, void *); // 0x001F9FC8
 void func_001B2DF0(Vec4f *out, void *arg); // 0x001B2DF0
+
+struct Vec4f16
+{
+    f32 x, y, z, w;
+} __attribute__((aligned(16)));
 
 static inline void VecZero(Vec3f *v)
 {
@@ -348,3 +356,71 @@ void ScootCtrl::do_simulation_controller(void *event, void *)
     f32 dt = *(f32 *)event;
     VecAddScaled(&mCore24->field_0xB0, &mVel14, dt);
 }
+
+struct UnkMotionParams117D30
+{
+    f32 mField00; // 0x00
+    f32 mField04; // 0x04
+    f32 mField08; // 0x08
+    f32 mField0C; // 0x0C
+    f32 mField10; // 0x10
+    f32 mField14; // 0x14
+    f32 mField18; // 0x18
+    f32 mField1C; // 0x1C
+    f32 mField20; // 0x20
+    f32 mField24; // 0x24
+    f32 mField28; // 0x28
+    f32 mField2C; // 0x2C
+    f32 mField30; // 0x30
+    f32 mField34; // 0x34
+    f32 mField38; // 0x38
+    f32 mField3C; // 0x3C
+    f32 mField40; // 0x40
+    char pad44[0x0C];
+};
+
+UnkMotionParams117D30 *func_00117D30(UnkMotionParams117D30 *arg0)
+{
+{
+    memset(arg0, 0, 0x50);
+    VecSetElems((Vec3f *)&arg0->mField30, 1000000.0f, 1000000.0f, 1000000.0f);
+    arg0->mField40 = 1000000.0f;
+    arg0->mField20 = 0.8f;
+    arg0->mField24 = 1.0f;
+    VecSetElems((Vec3f *)&arg0->mField00, 0.8f, 0.8f, 0.8f);
+    VecSetElems((Vec3f *)&arg0->mField10, 1.0f, 1.0f, 1.0f);
+    return arg0;
+}
+}
+
+#ifdef NON_MATCHING
+// 2/3, 28/31, 35/38 match: GCC schedules sq into jr $ra delay slot in Method117EA0, and
+// hoists lw $v1, 0x78($a0) before sq in Method117F68/Method117FE8.
+void MotionCtrl::Method117EA0(const Vec4f *v)
+{
+    do { *(Vec4f16 *)&mVec40 = *(const Vec4f16 *)v; } while (0);
+}
+
+void MotionCtrl::Method117F68(const Vec4f *v)
+{
+    f32 *p = &mVec10.x;
+    f32 dx = v->x - mVec10.x;
+    f32 dy = v->y - p[1];
+    f32 dz = v->z - p[2];
+    if (dx * dx + dy * dy + dz * dz != 0.0f)
+    {
+        *(Vec4f16 *)&mVec10 = *(const Vec4f16 *)v;
+        func_001F9FC8(mField78->mField90, mCore80);
+    }
+}
+
+void MotionCtrl::Method117FE8(const Vec4f *v)
+{
+    f32 *p = &mVec20.x;
+    f32 dot = v->x * mVec20.x + v->y * p[1] + v->z * p[2] + v->w * p[3];
+    if (fabsf(dot - 1.0f) < 1e-10f)
+        return;
+    *(Vec4f16 *)&mVec20 = *(const Vec4f16 *)v;
+    func_001F9FC8(mField78->mField90, mCore80);
+}
+#endif

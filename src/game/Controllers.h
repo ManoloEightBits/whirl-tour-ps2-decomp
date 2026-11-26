@@ -68,16 +68,32 @@ public:
     Vec3f mPos0C;     // 0x0C
 };
 
+struct UnkCtrlSub78
+{
+    char pad00[0x90];
+    void *mField90; // 0x90
+};
+
 class MotionCtrl : public IVP_Controller_Independent
 {
 public:
     WHIRL_CONTROLLER_SLOTS(MotionCtrl) // 0x00117ED0, 0x00117728, 0x00117D28, 0x00117F08
     void ClearFlag04_1();              // 0x00117E78
     void SetFlag04_1();                // 0x00117E90
+    void Method117EA0(const Vec4f *v); // 0x00117EA0
+    void Method117F68(const Vec4f *v); // 0x00117F68
+    void Method117FE8(const Vec4f *v); // 0x00117FE8
 
     int mFlags04;     // 0x04
-    char field_0x08[0x78];
-    void *mCore80; // 0x80
+    char field_0x08[0x08];
+    Vec4f mVec10;     // 0x10
+    Vec4f mVec20;     // 0x20
+    Vec4f mVec30;     // 0x30
+    Vec4f mVec40;     // 0x40
+    char field_0x50[0x28];
+    UnkCtrlSub78 *mField78; // 0x78
+    int mField7C;     // 0x7C
+    void *mCore80;    // 0x80
 };
 
 class IP_RotCtrl : public IVP_Controller_Independent
