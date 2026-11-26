@@ -11,8 +11,11 @@ void func_00198628(int, int, int, int);                // 0x00198628
 void func_00198E08(int, int, int, int, int, int, int); // 0x00198E08
 void func_00199738();                                  // 0x00199738
 void func_001BD240(int);                               // 0x001BD240
+void func_001BD360(void *);                            // 0x001BD360
 int MemAlloc1BD958(int);                                // 0x001BD958
 void MemFree1BD978(void *);                            // 0x001BD978
+
+extern int data_002B2500[];
 
 int func_00198090(int arg0)
 {
@@ -348,4 +351,106 @@ void func_00199470(f32 fparg0, f32 fparg1, f32 fparg2)
     data_002659E0 = fparg0;
     data_002659E4 = fparg1;
     data_002659E8 = fparg2;
+}
+
+struct UnkNode198538
+{
+    UnkNode198538 *mNext; // 0x00
+    char pad04[0x08];
+    int mId;              // 0x0C
+};
+
+struct UnkObj198538
+{
+    char pad00[0x18];
+    UnkNode198538 *mHead18; // 0x18
+};
+
+int func_00198538(void *arg0, int arg1)
+{
+{
+    UnkNode198538 *node = ((UnkObj198538 *)arg0)->mHead18;
+    UnkNode198538 *next = node->mNext;
+    while (next != 0)
+    {
+        if (arg1 == node->mId)
+            return 1;
+        node = next;
+        next = next->mNext;
+    }
+    return 0;
+}
+}
+
+struct UnkObj198628
+{
+    int mField00; // 0x00
+    int mField04; // 0x04
+    int mField08; // 0x08
+    int mField0C; // 0x0C
+    int mField10; // 0x10
+};
+
+void func_001985E0(UnkObj198628 *arg0)
+{
+    if (arg0->mField00 != 0 || arg0->mField04 != 0)
+        func_001BD360(arg0);
+    MemFree1BD978(arg0);
+}
+
+void func_00198628(int arg0, int arg1, int arg2, int arg3)
+{
+{
+    UnkObj198628 *obj = (UnkObj198628 *)arg0;
+    obj->mField04 = 0;
+    obj->mField00 = 0;
+    do {
+        obj->mField08 = arg1;
+        obj->mField10 = arg3;
+    } while (0);
+    obj->mField0C = arg2;
+}
+}
+
+int func_00198D38(int arg0)
+{
+    return data_002B2500[arg0];
+}
+
+struct UnkObj198E08
+{
+    int mField00; // 0x00
+    int mField04; // 0x04
+    int mField08; // 0x08
+    int mField0C; // 0x0C
+    int mField10; // 0x10
+    int mField14; // 0x14
+    f32 mField18; // 0x18
+    f32 mField1C; // 0x1C
+    f32 mField20; // 0x20
+    f32 mField24; // 0x24
+    int mField28; // 0x28
+};
+
+void func_00198E08(int arg0, int arg1, int arg2, int arg3, int arg4, int arg5, int arg6)
+{
+{
+    UnkObj198E08 *obj = (UnkObj198E08 *)arg0;
+    do {
+        obj->mField10 = arg1;
+        obj->mField14 = arg2;
+        obj->mField08 = arg4;
+        obj->mField0C = arg5;
+        obj->mField04 = arg6;
+        obj->mField00 = arg3;
+    } while (0);
+    f32 one = 1.0f;
+    obj->mField24 = one;
+    obj->mField18 = one;
+    do {
+        obj->mField1C = one;
+        obj->mField20 = one;
+    } while (0);
+    obj->mField28 = 0;
+}
 }
