@@ -1,4 +1,5 @@
 #include "common/types.h"
+#include "game/GL.h"
 
 // Functions of 0x0014C000..0x0014FFFF whose class and translation unit are not known yet.
 // Names are address based; move each function to its file once its TU is identified.
@@ -226,8 +227,47 @@ void func_0014F158(int arg0, int arg1, int arg2)
 }
 
 struct EnvObj;
+void func_001F39D0(void *);      // 0x001F39D0
+void DrawModel196110(void *);    // 0x00196110
 
 // Empty in this build (the EnvObj delete helpers call it before freeing).
 void EnvObjCleanup14FB70(EnvObj *obj)
 {
+}
+
+// UnkObj14CAF0 (0x0014CAF0..0x0014CCB0): EnvObj-derived object with matrix at +0x20, physics at +0x70, model at +0x78.
+struct UnkObj14CAF0
+{
+    char field_0x0[0x8];
+    int mField8;                 // 0x08
+    char field_0xC[0x14];
+    f32 mMatrix20[16];           // 0x20
+    char field_0x60[0x10];
+    void *mPhysics70;            // 0x70
+    char field_0x74[0x4];
+    void *mModel78;              // 0x78
+
+    int GetField8();             // 0x0014CAF0
+    void Destroy14CC78();        // 0x0014CC78
+    void Draw14CCB0();           // 0x0014CCB0
+};
+
+int UnkObj14CAF0::GetField8()
+{
+    return mField8;
+}
+
+void UnkObj14CAF0::Destroy14CC78()
+{
+    EnvObjCleanup14FB70((EnvObj *)this);
+    func_001F39D0(mPhysics70);
+    MemFree1BD978(this);
+}
+
+void UnkObj14CAF0::Draw14CCB0()
+{
+    glPushMatrix();
+    glMultMatrixf(mMatrix20);
+    DrawModel196110(mModel78);
+    glPopMatrix();
 }

@@ -43,3 +43,29 @@ void UnkObj1618D0::Method1618E8(int arg1)
 {
     mField1C &= ~arg1;
 }
+
+struct EnvObj;
+void PhysicsRelease1F3A70(void *); // 0x001F3A70
+void func_0016FCC8(void *, int);   // 0x0016FCC8
+void EnvObjCleanup14FB70(EnvObj *); // 0x0014FB70
+void MemFree1BD978(void *);        // 0x001BD978
+
+struct UnkObj161708
+{
+    char field_0x0[0xF4];
+    void *mFieldF4;                // 0xF4
+    void *mPhysicsF8;              // 0xF8
+
+    void Destroy161708();          // 0x00161708
+};
+
+void UnkObj161708::Destroy161708()
+{
+    PhysicsRelease1F3A70(mPhysicsF8);
+    if (mFieldF4 != 0)
+    {
+        func_0016FCC8(mFieldF4, 3);
+    }
+    EnvObjCleanup14FB70((EnvObj *)this);
+    MemFree1BD978(this);
+}

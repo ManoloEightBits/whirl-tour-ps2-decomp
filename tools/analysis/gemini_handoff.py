@@ -4,6 +4,7 @@ and test its answer locally.
 
   gemini_handoff.py select [--status regs|diff] [--region R] [--range A B] [--max-size N] [--min-score X]
                            [--skip ADDR] [--no-rules]
+  gemini_handoff.py identify [--region runtime] [--count 60] [--min-size 16] [--max-size 400] [-o OUT]
   gemini_handoff.py pack --func ADDR [--file src/game/X.cpp --sym MANGLED] [--body FILE] [--note TEXT]
                          [--context A B]
                          [--no-rules] [-o OUT]
@@ -125,6 +126,61 @@ def select(a):
         f.write('%s\n' % pick.group(1))
 
 
+IDENTIFY = """\
+# Identification task: which well-known routines are these?
+
+I am decompiling a PS2 game (MIPS R5900, 2002, built with ee-gcc 2.95.3 `-O2`). The code below is from its
+runtime region (libgcc, libc, the C++ runtime that the compiler links in, and Sony SDK libraries). Each item
+is a raw draft from the m2c decompiler: field names (`unkXX`), types and control flow are approximate.
+Use web search: GCC 2.95 libgcc2 / fp-bit / `__eh_*` / tinfo sources, newlib (mprec, dtoa, vfprintf,
+strtod, memcpy...), the PS2 `ee-gcc` libc, public PS2 SDK knowledge. Take your time and check the
+sources; I prefer fewer, certain answers over many guesses.
+
+For every function, answer with:
+1. **Name**: the standard routine it implements, or `unknown`. Confidence: high, medium or low.
+2. **Reason**: at most two lines naming the instructions or constants that identify it.
+3. **Source**: the standard C or C++ source of that routine from the library you think it came from, as it
+   appears there (not cleaned up), in a fenced block, or `none`. It must compile with a 2002 compiler:
+   no `long long` tricks the original did not use, no C99.
+4. **Origin**: libgcc / libc / libm / C++ runtime / Sony SDK / game code.
+
+Neighbours are usually from the same file: functions with close addresses often belong to one library
+source file (the list is in address order). Use that to identify the unknown ones, and say which file you
+think a run of functions comes from. Do not invent; `unknown` is a valid answer.
+
+Format: one `## 0xADDRESS` heading per function with the four items. At the end, a table
+`address | name | origin | confidence` and, below it, the likely library source files in address order.
+
+"""
+
+
+def identify(a):
+    r = run([sys.executable, str(TOOLS / 'm2c_sweep.py'), 'report', '--region', a.region, '--status', 'diff',
+             '--max-size', str(a.max_size), '--top', '2000'])
+    r2 = run([sys.executable, str(TOOLS / 'm2c_sweep.py'), 'report', '--region', a.region, '--status',
+              'match', '--top', '2000'])
+    items = {}
+    for text in (r.stdout, r2.stdout):
+        for line in text.splitlines():
+            m = re.match(r'\s+([0-9A-F]{8})\s+(\d+) B\s+(\S+)\s+([\d.]+)', line)
+            if m and int(m.group(2)) >= a.min_size and float(m.group(4)) >= a.min_score:
+                items[m.group(1)] = int(m.group(2))
+    done = set()
+    if TRIED.is_file():
+        done = {l.split()[0].upper() for l in TRIED.read_text().splitlines() if l.strip()}
+    picks = sorted(x for x in items if x not in done)[:a.count]
+    out = [IDENTIFY]
+    for addr in picks:
+        d = run([sys.executable, str(TOOLS / 'inspect_tu.py'), '--func', '0x' + addr, '--m2c'])
+        out.append('## 0x%s\n```c\n%s```\n\n' % (addr, d.stdout))
+    path = type(WORK)(a.o or WORK / 'handoff' / ('identify_%s.md' % a.region))
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(''.join(out))
+    with open(TRIED, 'a') as f:
+        f.writelines('%s\n' % x for x in picks)
+    print('%s  (%d functions, %d bytes)' % (path, len(picks), path.stat().st_size))
+
+
 def test(a):
     if not (a.file and a.sym):
         sys.exit('give --file and --sym (the function must be in src/ to be diffed; see the '
@@ -160,6 +216,14 @@ def main():
     k.add_argument('--no-rules', action='store_true', help='leave out STANDARDS.md and MATCHING.md')
     k.add_argument('-o')
     k.set_defaults(f=pack)
+    i = sub.add_parser('identify')
+    i.add_argument('--region', default='runtime', choices=['game', 'physics', 'runtime', 'all'])
+    i.add_argument('--count', type=int, default=60)
+    i.add_argument('--min-size', type=int, default=16)
+    i.add_argument('--max-size', type=int, default=400)
+    i.add_argument('--min-score', type=float, default=0.5)
+    i.add_argument('-o')
+    i.set_defaults(f=identify)
     q = sub.add_parser('select')
     q.add_argument('--status', default='regs', choices=['regs', 'diff', 'match'])
     q.add_argument('--region', default='game', choices=['game', 'physics', 'runtime', 'all'])
