@@ -131,12 +131,28 @@ map of the binary, regenerated with `tools/analysis/coverage.py --map docs/MAP.m
    in its state 9 it greys out menu item 3 (Multiplayer) while pad 2 is not connected
    (`FEPad::mConnected00`). `FEScreen`'s first constructor argument is the title's string id
    (`mTitleId28`); `FELoadStateScreen` uses 0x20 or 0x22 by mode (likely load and save). The PAL
-   strings differ by language, so use these observations for meaning, not for text. Options
+   strings differ by language, so use these observations for meaning, not for text.
+   `CreateScreen1101A8` (`0x001101A8`, not decompiled) builds each screen by its definition's name
+   (`FindScreenDef113B48`): "newload" and "main" are plain `FEScreen`s with menus of 2 and 8 items
+   (`gNewLoadMenuIds259E00`, `gMainMenuIds259E08`), "playlevel" is `FEChooseScreen`, the play menu of both
+   Arcade and Story mode (Play level, Select character, Select scooter, Trick setup;
+   `gPlayLevelMenuIds259E28`); the others
+   are "mcscreen", "save", "quitconfirmation", "movie", "start", "load", "name", "multi", "monster",
+   "level", "character", "scooter", "tricksetup", "options", "playlist". Options
    (`FEOptionsScreen::InitMenu16C6D8`, tables `gOptionsMenuIds2627A8` and the like): Action cameras,
    Vibration, Balance meter (on/off), 2 player options, Audio options, Playlist (`FEPlaylistScreen`,
    title 0x67), Default settings, Accept (PAL adds Language first); Audio: In-game music, Music volume,
    Fx volume; 2 player: Versus time (`GetVersusTime154EA8`), Versus degradation. The values live in
-   `GameCtxFE` (`mActionCameras`..`mInGameMusic`).
+   `GameCtxFE` (`mActionCameras`..`mInGameMusic`). Levels (Play level, `GetLevelMenuIds155228`): Castle,
+   Theme park, Suburbia, City in the sky, Subway, Deep water rig, Movie set, Tibet; only Castle is open at
+   first (`mMaxLevel39C`). Each has 7 goals (`mLevels228[n].mGoals00`, `GetLevelGoals1550D8`) and 20
+   "Scooters" collectibles that unlock a scooter (`mScooterParts3E8`, `GetLevelScooters156118`);
+   `GetGoalsToUnlock155130` is how many goals the next level still needs (`gUnlockGoals261CB8`).
+   The level screen's two icons: a key (`GetLevelKey155310`, a flag per level; shown on every level so
+   far, its effect unknown) and a checkered flag when the level can be played as a race
+   (`mRaceOpen4D4`); winning the race puts a trophy on it (not found in the code yet).
+   `gGameCtx262250` has three partial views (`GameCtxFE` in `FEScreens.cpp`, `UnkGameCtx18` in
+   `Scooter.cpp`, an `FEPad *` in `FEStartTrickScreen.cpp`): merge them into one header.
 
 ## Naming (most matched code still has address names)
 

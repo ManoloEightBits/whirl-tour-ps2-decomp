@@ -73,7 +73,9 @@ struct FESub08
     void Method130720(f32);                 // 0x00130720
 };
 
-// What FEScreen::mOwner00 and FEMenu::mOwner00 point to: an id at +0x3C, from +0x48 one 16-byte
+// A screen's definition, which CreateScreen1101A8 looks up by the screen's name ("main", "playlevel",
+// "options", ...) with FindScreenDef113B48 and passes to the screen's constructor; FEScreen::mOwner00
+// and FEMenu::mOwner00 point to it. It holds an id at +0x3C, from +0x48 one 16-byte
 // record per menu item (mCount44 of them: the ids of its three models and of its FESub08), and how
 // FEMenu::Draw draws the items' text: scale, and colours (0..1) for normal, selected and disabled.
 struct FEOwnerEntry
@@ -309,6 +311,9 @@ public:
     void *mStream194;   // 0x194
 };
 
+// The "playlevel" screen (FEChooseScreen) is the play menu of both Arcade and Story mode: Play level,
+// Select character, Select scooter, Trick setup (gPlayLevelMenuIds259E28); it shows each player's
+// character with their scooter.
 // What FEChooseScreen::mDefs1E0 points to: one per player, with texture ids at +0x1DC chosen by the
 // player's selection (GameCtxFE::mArr2E4).
 struct FEChoosePair

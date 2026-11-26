@@ -942,7 +942,7 @@
 0x00143270 func_00143270__FPv
 0x001432A0 func_001432A0__FPvf
 0x001433F8 func_001433F8__FPv
-0x00155228 func_00155228__Fv
+0x00155228 GetLevelMenuIds155228__Fv
 0x00155ED0 func_00155ED0__Fiii
 0x00155F40 func_00155F40__Fiii
 0x00156200 func_00156200__Fv
@@ -1049,10 +1049,10 @@
 0x00121428 func_00121428__FPvP7TextObjPCcffffffffffff
 0x0019B138 MeasureText19B138__FP7TextObj
 0x0019B758 DrawText19B758__FP7TextObj
-0x001550D8 func_001550D8__Fi
-0x00155130 func_00155130__Fv
-0x00155310 func_00155310__Fi
-0x00156118 func_00156118__Fi
+0x001550D8 GetLevelGoals1550D8__Fi
+0x00155130 GetGoalsToUnlock155130__Fv
+0x00155310 GetLevelKey155310__Fi
+0x00156118 GetLevelScooters156118__Fi
 
 # Collision & Event Listeners (src/game/DD_Event_Listener.cpp, IVP_Listener_Collision.cpp, MBCL.cpp, ScootCL.cpp)
 0x001171F0 _$_17DD_Event_Listener
@@ -2119,3 +2119,9 @@
 0x00262818 gTwoPlayerMenuIds262818
 0x00262828 gTwoPlayerMenuKinds262828
 0x00187D30 __8FESliderfffffffffPv
+0x001101A8 CreateScreen1101A8__FPvi
+0x00113B48 FindScreenDef113B48__FPvPCc
+0x00259E00 gNewLoadMenuIds259E00
+0x00259E08 gMainMenuIds259E08
+0x00259E28 gPlayLevelMenuIds259E28
+0x00261CB8 gUnlockGoals261CB8

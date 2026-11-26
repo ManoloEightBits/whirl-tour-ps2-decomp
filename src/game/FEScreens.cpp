@@ -10,6 +10,14 @@ struct BGMInfo
     char pad06[2];
 };
 
+// One level's progress in the game context (12 bytes; GetLevelGoals1550D8 reads mGoals00).
+struct FELevelProgress
+{
+    int mGoals00;  // 0x00: goals done, of 7
+    int mField04;  // 0x04
+    int mField08;  // 0x08
+};
+
 struct GameCtxFE
 {
     int pad00;
@@ -25,7 +33,9 @@ struct GameCtxFE
     int mActionCameras;  // 0xF8: string 0x2C, on/off
     int mVibration;      // 0xFC: string 0x2D, on/off
     int mBalanceMeter;   // 0x100: string 0x2E, on/off
-    char pad104[0x184];
+    char pad104[0x124];
+    FELevelProgress mLevels228[8]; // 0x228: Castle, Theme park, Suburbia, City in the sky, Subway,
+                                   // Deep water rig, Movie set, Tibet
     int mArr288[23];
     int mArr2E4[10];
     int mArr30C[10];
@@ -37,9 +47,11 @@ struct GameCtxFE
     int mInGameMusic;    // 0x380: string 0x36, on/off
     BGMInfo *mBGMTable384;
     char pad388[0x14];
-    int mMaxLevel39C;
-    char pad3A0[0x134];
-    int mArr4D4[8];
+    int mMaxLevel39C;    // 0x39C: the last level unlocked (0: only Castle)
+    char pad3A0[0x48];
+    u8 mScooterParts3E8[8][20]; // 0x3E8: the 20 "Scooters" collectibles of each level
+    char pad488[0x4C];
+    int mRaceOpen4D4[8]; // 0x4D4: the level can be played as a race (checkered flag on its icon)
 
     static inline GameCtxFE *Get()
     {
@@ -87,7 +99,7 @@ void *func_00192130(int, int, void *, void *, f32);
 void *func_00113FA0();
 void func_00197200(void *);
 void func_00192248(void *);
-const int *func_00155228();
+const int *GetLevelMenuIds155228();
 const char *func_00151D40(u16 id);
 void *func_001262E0(int);
 void *func_00126280(int id);
@@ -107,10 +119,10 @@ void func_00121428(void *stats, TextObj *text, const char *title, f32 x, f32 y, 
 void DrawModel196110(void *model);
 extern FEPad *gFEPads2659A0[4];
 UnkRes126250 *func_00126250(int);
-int func_001550D8(int level);
-int func_00155130();
-int func_00155310(int level);
-int func_00156118(int level);
+int GetLevelGoals1550D8(int level);
+int GetGoalsToUnlock155130();
+int GetLevelKey155310(int level);
+int GetLevelScooters156118(int level);
 void func_00158140(void *, void *, int, int, f32, f32);
 void func_00156200();
 void func_00155F40(int, int, int);
@@ -644,8 +656,10 @@ void FELoadStateScreen::VirtSlot4()
 }
 
 // 7. FELevelScreen
-// Draws the selected level's information: three lines printed with the format strings 0x42, 0x43 and
-// 0x44, and two button icons when mArr174[1] / mArr174[2] are set and the level allows them.
+// Draws the selected level's information: the goals done there (string 0x42; each level has 7), how many
+// more unlock the next level (0x43, when any), the "Scooters" collectibles found there (0x44, of 20),
+// and the key (GetLevelKey155310) and race (mRaceOpen4D4, a checkered flag in the game) icons while
+// mArr174[1] / mArr174[2] are set; both are drawn with the glyph "\x80\x18" here.
 void FELevelScreen::VirtSlot3()
 {
     char line[0x40];
@@ -655,13 +669,13 @@ void FELevelScreen::VirtSlot3()
     DrawBegin19A640();
     if (mMenu0C->mSelected0C != 7)
     {
-        sprintf(line, func_00151D40(0x42), func_001550D8(mMenu0C->mSelected0C));
+        sprintf(line, func_00151D40(0x42), GetLevelGoals1550D8(mMenu0C->mSelected0C));
         mText164->mPos04.Set(570.0f, 710.0f, 0.0f);
         mText164->mScale1C.Set(0.6f, 0.6f, 1.0f);
         TEXT_SET_RGBA(mText164, 0x80808080);
         TEXT_SET_STRING(mText164, line);
         DrawText19B758(mText164);
-        int count = func_00155130();
+        int count = GetGoalsToUnlock155130();
         if (count > 0)
         {
             sprintf(line, func_00151D40(0x43), count);
@@ -670,7 +684,7 @@ void FELevelScreen::VirtSlot3()
             DrawText19B758(mText164);
         }
     }
-    sprintf(line2, func_00151D40(0x44), func_00156118(mMenu0C->mSelected0C));
+    sprintf(line2, func_00151D40(0x44), GetLevelScooters156118(mMenu0C->mSelected0C));
     mText164->mPos04.Set(570.0f, 660.0f, 0.0f);
     mText164->mScale1C.Set(0.6f, 0.6f, 1.0f);
     TEXT_SET_RGBA(mText164, 0x80808080);
@@ -679,12 +693,12 @@ void FELevelScreen::VirtSlot3()
     mText164->mScale1C.Set(1.0f, 1.0f, 1.0f);
     TEXT_SET_RGBA(mText164, 0x80808080);
     TEXT_SET_STRING(mText164, "\x80\x18");
-    if (mArr174[1] != 0 && func_00155310(mMenu0C->mSelected0C) != 0)
+    if (mArr174[1] != 0 && GetLevelKey155310(mMenu0C->mSelected0C) != 0)
     {
         mText164->mPos04.Set(700.0f, 400.0f, 0.0f);
         DrawText19B758(mText164);
     }
-    if (mArr174[2] != 0 && gGameCtx262250->mArr4D4[mMenu0C->mSelected0C] != 0)
+    if (mArr174[2] != 0 && gGameCtx262250->mRaceOpen4D4[mMenu0C->mSelected0C] != 0)
     {
         mText164->mPos04.Set(820.0f, 430.0f, 0.0f);
         DrawText19B758(mText164);
@@ -695,7 +709,7 @@ void FELevelScreen::VirtSlot3()
 FELevelScreen::FELevelScreen(FEOwner *owner)
     : FEScreen(0x40, 2, owner)
 {
-    CreateMenuA(func_00155228(), 8);
+    CreateMenuA(GetLevelMenuIds155228(), 8);
     mField16C = -1;
     mField170 = -1;
     mText164 = CreateTextObj198E48(FindFont1264A8("font_body"), 0, 0.0f, 0.0f, 0.0f);
