@@ -1,4 +1,5 @@
 #include "common/types.h"
+#include "game/GL.h"
 
 // Functions of 0x001A4000..0x001A7FFF whose class and translation unit are not known yet.
 // Names are address based; move each function to its file once its TU is identified.
@@ -49,12 +50,34 @@ void func_001A4D78(int arg0, int arg1, int arg2)
 
 struct UnkGLState
 {
-    char field_0x0[0x11F9C];
-    int mField11F9C; // 0x11F9C
+    char field_0x0[0x5E8];
+    f32 mField5E8;    // 0x5E8
+    f32 mField5EC;    // 0x5EC
+    f32 mField5F0;    // 0x5F0
+    char field_0x5F4[0x119A8];
+    int mField11F9C;  // 0x11F9C
 };
 extern UnkGLState data_00267140;
 
 void func_001A4930(int arg0)
 {
     data_00267140.mField11F9C = arg0 & 0xFF;
+}
+
+void glTexCoord3f(f32 s, f32 t, f32 r)
+{
+    data_00267140.mField5E8 = s;
+    data_00267140.mField5F0 = r;
+    data_00267140.mField5EC = t;
+    *(u32 *)&data_00267140.mField5E8 &= 0xFFFFFFFEU;
+}
+
+void glTexCoord2fv(const f32 *v)
+{
+    f32 s = v[0];
+    f32 t = v[1];
+    data_00267140.mField5E8 = s;
+    data_00267140.mField5F0 = 1.0f;
+    data_00267140.mField5EC = t;
+    *(u32 *)&data_00267140.mField5E8 &= 0xFFFFFFFEU;
 }

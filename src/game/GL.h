@@ -44,14 +44,19 @@ void glEnable(unsigned int cap);                                                
 void glDisable(unsigned int cap);                                                   /* 0x001A2FB8 */
 void glMatrixMode(unsigned int mode);                                               /* 0x001A3638 */
 void glLoadMatrixf(const f32 *m);                                                   /* 0x001A3648 */
+void glLoadIdentity(void);                                                          /* 0x001A3708 */
 void glPushMatrix(void);                                                            /* 0x001A3738 */
 void glPopMatrix(void);                                                             /* 0x001A3808 */
 void glRotatef(f32 angle, f32 x, f32 y, f32 z);                                     /* 0x001A3858 */
+void glScalef(f32 x, f32 y, f32 z);                                                 /* 0x001A3950 */
 void glTranslatef(f32 x, f32 y, f32 z);                                             /* 0x001A3A00 */
 void glMultMatrixf(const f32 *m);                                                   /* 0x001A3AB0 */
 void glBegin(unsigned int mode);                                                    /* 0x001A3ED8 */
 void glVertex3f(f32 x, f32 y, f32 z);                                               /* 0x001A3F10 */
+void glVertex3fv(const f32 *v);                                                     /* 0x001A3F88 */
 void glTexCoord2f(f32 s, f32 t);                                                    /* 0x001A4010 */
+void glTexCoord3f(f32 s, f32 t, f32 r);                                             /* 0x001A4048 */
+void glTexCoord2fv(const f32 *v);                                                   /* 0x001A4078 */
 void glColor3f(f32 r, f32 g, f32 b);                                                /* 0x001A40F0 */
 void glColor4f(f32 r, f32 g, f32 b, f32 a);                                         /* 0x001A4138 */
 void glTexCoordPointer(int size, unsigned int type, int stride, const void *ptr);   /* 0x001A43C8 */

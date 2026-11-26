@@ -1175,6 +1175,14 @@
 0x00196110 DrawModel196110__FPv
 0x001A3808 glPopMatrix
 0x001A3648 glLoadMatrixf
+0x001A3708 glLoadIdentity
+0x001A3950 glScalef
+0x001A3F88 glVertex3fv
+0x001A4048 glTexCoord3f
+0x001A4078 glTexCoord2fv
+0x002670A0 data_002670A0
+0x002670C0 data_002670C0
+0x002B3608 data_002B3608
 0x001A4A60 glBlendFunc
 0x001A3858 glRotatef
 0x00100C28 __builtin_vec_new
