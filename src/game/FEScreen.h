@@ -506,7 +506,18 @@ public:
     virtual int VirtSlot8();                   // 0x0016C6D0
 
     void *mText164;     // 0x164
-    char pad168[0x220]; // 0x168..0x387
+    int mField168;      // 0x168
+    int mField16C;      // 0x16C
+    int mField170;      // 0x170
+    int mField174;      // 0x174
+    int mField178;      // 0x178
+    int mField17C;      // 0x17C
+    int mField180;      // 0x180
+    int mField184;      // 0x184
+    char mField188;     // 0x188
+    char pad189[0xFF];  // 0x189..0x287
+    char mCharset288[30]; // 0x288: "ABCDEFGHIJKLMNOPQRSTUVWXYZ ]["
+    char pad2A6[0xE2];  // 0x2A6..0x387
     int mField388;      // 0x388
     int mField38C;      // 0x38C
     int mField390;      // 0x390

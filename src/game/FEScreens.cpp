@@ -969,6 +969,30 @@ void FEMenu::SetTexts(const char **strings)
 }
 
 // 8. FENameSelectScreen
+#ifdef NON_MATCHING
+// 25 of 82 instructions differ: division and 70.0f/80.0f store scheduling.
+FENameSelectScreen::FENameSelectScreen(FEOwner *owner, int arg2) : FEScreen(0x1E, 1, owner)
+{
+    memcpy(mCharset288, "ABCDEFGHIJKLMNOPQRSTUVWXYZ ][", 30);
+    mField174 = strlen(mCharset288);
+    mField178 = 6;
+    mField168 = 0;
+    mField17C = mField174 / 6 + ((mField174 % 6) != 0);
+    mField39C = arg2;
+    mField184 = 0;
+    mField180 = 0;
+    mField188 = 0;
+    mField388 = 0;
+    mField38C = 0;
+    mField390 = 0;
+    mField16C = mField168 / 6;
+    mField170 = (mField16C == 0) ? 0 : 6;
+    mField394 = 70.0f;
+    mField398 = 80.0f;
+    mText164 = CreateTextObj198E48(FindFont1264A8("font_body"), 0, 0.0f, 0.0f, 0.0f);
+}
+#endif
+
 FENameSelectScreen::~FENameSelectScreen()
 {
     Release198F38(mText164);
