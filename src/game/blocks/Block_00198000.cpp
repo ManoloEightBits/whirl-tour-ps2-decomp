@@ -174,13 +174,90 @@ int UnkObj198D20::GetField14C()
 struct UnkObj199C88
 {
     u32 mField0;         // 0x0
-    char field_0x4[0x4];
+    u32 mField4;         // 0x4
     u32 mField8;         // 0x8
     u32 mFieldC;         // 0xC
+    void *mField10;      // 0x10
+    int mField14;        // 0x14
 
+    void Method199C58(u32 a, u32 b); // 0x00199C58
+    void Method199C78(void *a, int b); // 0x00199C78
     void Method199C88(); // 0x00199C88
+    void Method199CA8(int alignBits); // 0x00199CA8
     void Method199D60(); // 0x00199D60
 };
+
+extern UnkObj199C88 data_00265CE8;
+
+void UnkObj199C88::Method199C58(u32 a, u32 b)
+{
+{
+    do {
+        mField4 = b;
+        mFieldC = a;
+        mField14 = 0;
+    } while (0);
+    mField0 = a;
+    mField8 = a;
+    mField10 = 0;
+}
+}
+
+void UnkObj199C88::Method199C78(void *a, int b)
+{
+{
+    do { mField14 = b; } while (0);
+    mField10 = a;
+}
+}
+
+void UnkObj199C88::Method199CA8(int alignBits)
+{
+    u32 align = 1 << alignBits;
+    u32 rem = mField8 & (align - 1);
+    if (rem != 0)
+        mField8 += align - rem;
+}
+
+void func_00199D80(int alignBits)
+{
+    u32 align = 1 << alignBits;
+    u32 rem = data_00265CE8.mField8 & (align - 1);
+    if (rem != 0)
+        data_00265CE8.mField8 += align - rem;
+}
+
+void DrawBegin19A640()
+{
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    glOrtho(0.0f, 1000.0f, 0.0f, 1000.0f, -1000.0f, 1000.0f);
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+    glDisable(GL_DEPTH_TEST);
+}
+
+struct UnkObj19AE48
+{
+    char pad00[0x60];
+    int mField60; // 0x60
+    int mField64; // 0x64
+    int mField68; // 0x68
+    int mField6C; // 0x6C
+};
+
+void func_0019AE48(UnkObj19AE48 *arg0, int arg1, int arg2, int arg3, int arg4)
+{
+{
+    arg0->mField60 = arg1;
+    arg0->mField64 = arg2;
+    arg0->mField68 = arg3;
+    arg0->mField6C = arg4;
+    glViewport(arg1, arg2, arg3, arg4);
+}
+}
 
 void UnkObj199C88::Method199C88()
 {
