@@ -44,12 +44,24 @@ struct UnkObj128E48
 {
     char field_0x0[0xD50];
     int mFieldD50;                 // 0xD50
-    char field_0xD54[0xB78];
+    char field_0xD54[0xB48];
+    f32 mField189C;                // 0x189C
+    f32 mField18A0;                // 0x18A0
+    f32 mField18A4;                // 0x18A4
+    char field_0x18A8[0x24];
     f32 mField18CC;                // 0x18CC
 
+    void SetFields189C(f32 fparg0, f32 fparg1, f32 fparg2); // 0x00128E18
     void SetField18CC(f32 fparg0); // 0x00128E48
     void SetFieldD50(int v);    // 0x00128E50
 };
+
+void UnkObj128E48::SetFields189C(f32 fparg0, f32 fparg1, f32 fparg2)
+{
+    mField189C = fparg0;
+    mField18A0 = fparg1;
+    mField18A4 = fparg2;
+}
 
 void UnkObj128E48::SetField18CC(f32 fparg0)
 {
