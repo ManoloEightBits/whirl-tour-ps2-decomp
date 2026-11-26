@@ -132,3 +132,60 @@ void func_0012EEB8(int *arg0, int arg1)
     sp0 = arg1;
     func_001BB250(*arg0, &sp0);
 }
+
+void *MemAlloc1BD958(int);          // 0x001BD958
+void *ArrayCreate1BB0E0(int);       // 0x001BB0E0
+void func_0012D1C0(UnkObj12D0F0 *); // 0x0012D1C0
+
+UnkObj12D0F0 *func_0012D120()
+{
+    UnkObj12D0F0 *p = (UnkObj12D0F0 *)MemAlloc1BD958(8);
+    if (p != 0)
+    {
+        p->mField0 = (int)ArrayCreate1BB0E0(0x10);
+        p->mField4 = (int)ArrayCreate1BB0E0(0xC);
+        func_0012D1C0(p);
+    }
+    return p;
+}
+
+struct UnkObj12EAA0
+{
+    void *mField00; // 0x00
+    char pad04[0x0C];
+    u8 mSub10[0x40]; // 0x10
+    int mField50;    // 0x50
+    char pad54[0x0C];
+};
+
+void *__builtin_new(u32); // 0x00100BE8
+void func_001B38D0(void *); // 0x001B38D0
+
+void func_0012EAA0()
+{
+    if (data_0025E19C == 0)
+    {
+        UnkObj12EAA0 *p = (UnkObj12EAA0 *)__builtin_new(0x60);
+        p->mField00 = ArrayCreate1BB0E0(4);
+        func_001B38D0(p->mSub10);
+        data_0025E19C = (int)p;
+        p->mField50 = 0;
+    }
+}
+
+struct UnkObj12E280
+{
+    char pad00[0x40];
+    u8 mSub40[0x80]; // 0x40
+    u8 *mFieldC0;    // 0xC0
+};
+
+f32 func_001AF368(u8 *, u16 *, int, int); // 0x001AF368
+void func_001B3928(void *, f32 *, int);   // 0x001B3928
+
+void func_0012E280(UnkObj12E280 *arg0, int arg1, u16 *arg2, int arg3)
+{
+    f32 sp0;
+    func_001AF368(arg0->mFieldC0, arg2, arg1, (int)&sp0);
+    func_001B3928(arg0->mSub40, &sp0, arg3);
+}

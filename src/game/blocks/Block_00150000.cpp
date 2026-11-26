@@ -313,3 +313,13 @@ void func_00152420(UnkObj152420 *arg0)
             arg0->mField7C = func_00194DE0(sub->mArrE8[rand() % arg0->mField08->mCount6E]);
     }
 }
+
+extern f32 data_002656F0[3][4];
+void func_001A27E8(int, int, f32 *); // 0x001A27E8
+
+void func_00151768()
+{
+    func_001A27E8(0x4000, 0x1201, data_002656F0[0]);
+    func_001A27E8(0x4001, 0x1201, data_002656F0[1]);
+    func_001A27E8(0x4002, 0x1201, data_002656F0[2]);
+}

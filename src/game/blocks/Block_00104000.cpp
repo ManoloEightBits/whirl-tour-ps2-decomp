@@ -37,3 +37,36 @@ void UnkObj106E68::Method106E68()
 {
     mField20 &= 0xFFBFFFFF;
 }
+
+struct UnkSub106C68
+{
+    int mField00;
+    f32 mField04;
+};
+
+struct UnkObj106C68
+{
+    char pad00[0x20];
+    int mField20;         // 0x20
+    char pad24[0x10C];
+    f32 mField130;        // 0x130
+    char pad134[0x48];
+    UnkSub106C68 *mSub17C; // 0x17C
+};
+
+f32 func_00106C68(UnkObj106C68 *arg0, f32 arg1)
+{
+    int flags = arg0->mField20 & 0xFFFEFFFF;
+    UnkSub106C68 *sub = arg0->mSub17C;
+    arg0->mField20 = flags;
+    f32 val = arg0->mField130 + arg1;
+    if (val < sub->mField04)
+    {
+        arg0->mField130 = val;
+        return val;
+    }
+    arg0->mField20 = flags & 0xFFFBFFFF;
+    f32 limit = sub->mField04;
+    arg0->mField130 = limit;
+    return limit;
+}

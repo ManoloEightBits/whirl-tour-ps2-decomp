@@ -512,3 +512,13 @@ void gluPerspective(f32 fovy, f32 aspect, f32 zNear, f32 zFar)
     }
     data_002B3608 = 1;
 }
+
+extern f32 data_00266000[];
+void func_0019CBC8(int, int); // 0x0019CBC8
+
+void func_001A02E8(int arg0, const f32 *arg1, int arg2)
+{
+    glLoadMatrixf(data_00266000);
+    glMultMatrixf(arg1);
+    func_0019CBC8(arg0, arg2);
+}

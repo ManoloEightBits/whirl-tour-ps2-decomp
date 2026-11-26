@@ -360,3 +360,22 @@ void UnkObj127048::SetFields4_0(int a, int b)
     mField0 = b;
     mField4 = a;
 }
+
+struct UnkObj12D0F0
+{
+    void Method12D0F0(); // 0x0012D0F0
+    void Method12D178(); // 0x0012D178
+};
+
+void func_001265D0()
+{
+    if (data_0025DC64 != 0)
+    {
+        ((UnkObj12D0F0 *)data_0025DC64)->Method12D0F0();
+        if (data_0025DC64 != 0)
+        {
+            ((UnkObj12D0F0 *)data_0025DC64)->Method12D178();
+            data_0025DC64 = 0;
+        }
+    }
+}
