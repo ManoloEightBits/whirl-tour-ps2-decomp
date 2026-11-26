@@ -89,9 +89,19 @@ struct UnkGLState1A0
     int mField600;      // 0x600: color a
     int mField604;      // 0x604
     unsigned int mField608; // 0x608: primitive mode
-    char field_0x60C[0x11978];
+    char field_0x60C[0x11964];
+    int mField11F70;    // 0x11F70: GL_FOG
+    int mField11F74;    // 0x11F74: GL_TEXTURE_2D
+    int mField11F78;    // 0x11F78: GL_ALPHA_TEST
+    int mField11F7C;    // 0x11F7C: GL_DEPTH_TEST
+    int mField11F80;    // 0x11F80: GL_BLEND
     int mField11F84;    // 0x11F84: GL_SCISSOR_TEST
-    char field_0x11F88[0x38];
+    int mField11F88;    // 0x11F88: GL_POLYGON_OFFSET_FILL
+    int mField11F8C;    // 0x11F8C: GL_LIGHTING
+    int mField11F90;    // 0x11F90: GL_LIGHT0
+    int mField11F94;    // 0x11F94: GL_LIGHT1
+    int mField11F98;    // 0x11F98: GL_LIGHT2
+    char field_0x11F9C[0x24];
     int mField11FC0;    // 0x11FC0: viewport x
     int mField11FC4;    // 0x11FC4: viewport y
     int mField11FC8;    // 0x11FC8: viewport w
@@ -216,7 +226,10 @@ void glMultMatrixf(const f32 *m)
 }
 
 void func_001A1070(); // 0x001A1070
-void func_001A4AF0(); // 0x001A4AF0
+void func_001A4AF0(int, int, int, int); // 0x001A4AF0
+f32 Sin1B1910(f32);  // 0x001B1910
+f32 Cos1B19E8(f32);  // 0x001B19E8
+void func_001B3B48(Mat4x4f *dst, const f32 *q); // 0x001B3B48
 
 void glLoadMatrixf(const f32 *m)
 {
@@ -280,7 +293,7 @@ void glScissor(int x, int y, int width, int height)
     data_00267140.mField11FD8 = width;
     data_00267140.mField11FDC = height;
     if (data_00267140.mField11F84 != 0)
-        func_001A4AF0();
+        func_001A4AF0(x, y, width, height);
 }
 #endif
 
@@ -291,5 +304,211 @@ void glViewport(int x, int y, int width, int height)
     data_00267140.mField11FC8 = width;
     data_00267140.mField11FCC = height;
     func_001A1070();
+    data_002B3608 = 1;
+}
+
+void glEnable(unsigned int cap)
+{
+    switch (cap)
+    {
+    case GL_TEXTURE_2D:
+        data_00267140.mField11F74 = 1;
+        return;
+    case GL_DEPTH_TEST:
+        data_00267140.mField11F7C = 1;
+        break;
+    case GL_BLEND:
+        data_00267140.mField11F80 = 1;
+        break;
+    case GL_ALPHA_TEST:
+        data_00267140.mField11F78 = 1;
+        break;
+    case GL_SCISSOR_TEST:
+        data_00267140.mField11F84 = 1;
+        func_001A4AF0(data_00267140.mField11FD0, data_00267140.mField11FD4,
+                      data_00267140.mField11FD8, data_00267140.mField11FDC);
+        break;
+    case GL_POLYGON_OFFSET_FILL:
+        data_00267140.mField11F88 = 1;
+        break;
+    case GL_FOG:
+        data_00267140.mField11F70 = 1;
+        break;
+    case GL_LIGHTING:
+        data_00267140.mField11F8C = 1;
+        break;
+    case GL_LIGHT0:
+        data_00267140.mField11F90 = 1;
+        break;
+    case GL_LIGHT1:
+        data_00267140.mField11F94 = 1;
+        break;
+    case GL_LIGHT2:
+        data_00267140.mField11F98 = 1;
+        break;
+    }
+}
+
+void glDisable(unsigned int cap)
+{
+    switch (cap)
+    {
+    case GL_TEXTURE_2D:
+        data_00267140.mField11F74 = 0;
+        return;
+    case GL_DEPTH_TEST:
+        data_00267140.mField11F7C = 0;
+        break;
+    case GL_BLEND:
+        data_00267140.mField11F80 = 0;
+        break;
+    case GL_ALPHA_TEST:
+        data_00267140.mField11F78 = 0;
+        break;
+    case GL_SCISSOR_TEST:
+        data_00267140.mField11F84 = 0;
+        func_001A4AF0(data_00267140.mField11FC0, data_00267140.mField11FC4,
+                      data_00267140.mField11FC8, data_00267140.mField11FCC);
+        break;
+    case GL_POLYGON_OFFSET_FILL:
+        data_00267140.mField11F88 = 0;
+        break;
+    case GL_FOG:
+        data_00267140.mField11F70 = 0;
+        break;
+    case GL_LIGHTING:
+        data_00267140.mField11F8C = 0;
+        break;
+    case GL_LIGHT0:
+        data_00267140.mField11F90 = 0;
+        break;
+    case GL_LIGHT1:
+        data_00267140.mField11F94 = 0;
+        break;
+    case GL_LIGHT2:
+        data_00267140.mField11F98 = 0;
+        break;
+    }
+}
+
+#ifdef NON_MATCHING
+// 57 of 59 instructions differ: scheduling/register order of angle, x, y, z and quaternion stores.
+void glRotatef(f32 angle, f32 x, f32 y, f32 z)
+{
+    f32 q[4];
+    Mat4x4f m;
+    f32 half = -angle * 0.008726647f;
+    f32 s = Sin1B1910(half);
+    q[0] = x * s;
+    q[1] = y * s;
+    q[2] = z * s;
+    q[3] = Cos1B19E8(half);
+    func_001B3B48(&m, q);
+    if (data_00267140.mField5C0 != GL_MODELVIEW)
+    {
+        if (data_00267140.mField5C0 == GL_PROJECTION)
+            func_001B3EC8(data_00267140.mField5C4, &m, data_00267140.mField5C4);
+    }
+    else
+    {
+        func_001B3EC8(data_00267140.mField5C8, &m, data_00267140.mField5C8);
+    }
+    data_002B3608 = 1;
+}
+#endif
+
+void glOrtho(f32 left, f32 right, f32 bottom, f32 top, f32 zNear, f32 zFar)
+{
+    Mat4x4f m;
+    do { m.row[0].x = 2.0f / (right - left); m.row[0].y = 0.0f; m.row[0].z = 0.0f; m.row[0].w = 0.0f; } while (0);
+    do { m.row[1].x = 0.0f; m.row[1].y = 2.0f / (top - bottom); m.row[1].z = 0.0f; m.row[1].w = 0.0f; } while (0);
+    do { m.row[2].x = 0.0f; m.row[2].y = 0.0f; m.row[2].z = -2.0f / (zFar - zNear); m.row[2].w = 0.0f; } while (0);
+    do {
+        m.row[3].x = -(right + left) / (right - left);
+        m.row[3].y = -(top + bottom) / (top - bottom);
+        m.row[3].z = (zFar + zNear) / (zFar - zNear);
+        m.row[3].w = 1.0f;
+    } while (0);
+    if (data_00267140.mField5C0 != GL_MODELVIEW)
+    {
+        if (data_00267140.mField5C0 == GL_PROJECTION)
+            func_001B3EC8(data_00267140.mField5C4, &m, data_00267140.mField5C4);
+    }
+    else
+    {
+        func_001B3EC8(data_00267140.mField5C8, &m, data_00267140.mField5C8);
+    }
+    data_002B3608 = 1;
+}
+
+#ifdef NON_MATCHING
+// 52 of 64 instructions differ: subexpression scheduling for invDz/invDx/invDy.
+void glFrustum(f32 left, f32 right, f32 bottom, f32 top, f32 zNear, f32 zFar)
+{
+    Mat4x4f m;
+    f32 invDz = 1.0f / (zFar - zNear);
+    f32 invDx = 1.0f / (right - left);
+    f32 invDy = 1.0f / (top - bottom);
+    f32 twoNear = 2.0f * zNear;
+    m.row[0].x = twoNear * invDx;
+    m.row[0].y = 0.0f;
+    m.row[0].z = (right + left) * invDx;
+    m.row[0].w = 0.0f;
+    m.row[1].x = 0.0f;
+    m.row[1].y = twoNear * invDy;
+    m.row[1].z = (top + bottom) * invDy;
+    m.row[1].w = 0.0f;
+    m.row[2].x = 0.0f;
+    m.row[2].y = 0.0f;
+    m.row[2].z = -(zFar + zNear) * invDz;
+    m.row[2].w = twoNear * -(zFar + zNear) * invDz;
+    m.row[3].x = 0.0f;
+    m.row[3].y = 0.0f;
+    m.row[3].z = -1.0f;
+    m.row[3].w = 0.0f;
+    if (data_00267140.mField5C0 != GL_MODELVIEW)
+    {
+        if (data_00267140.mField5C0 == GL_PROJECTION)
+            func_001B3EC8(data_00267140.mField5C4, &m, data_00267140.mField5C4);
+    }
+    else
+    {
+        func_001B3EC8(data_00267140.mField5C8, &m, data_00267140.mField5C8);
+    }
+    data_002B3608 = 1;
+}
+#endif
+
+void gluPerspective(f32 fovy, f32 aspect, f32 zNear, f32 zFar)
+{
+    Mat4x4f m;
+    f32 half = fovy * 0.008726647f;
+    f32 cot = Cos1B19E8(half) / Sin1B1910(half);
+    f32 invDz = 1.0f / (zNear - zFar);
+    m.row[0].x = cot / aspect;
+    m.row[0].y = 0.0f;
+    m.row[0].z = 0.0f;
+    m.row[0].w = 0.0f;
+    m.row[1].x = 0.0f;
+    m.row[1].y = -cot;
+    m.row[1].z = 0.0f;
+    m.row[1].w = 0.0f;
+    m.row[2].x = 0.0f;
+    m.row[2].y = 0.0f;
+    m.row[2].z = -(zNear + zFar) * invDz;
+    m.row[2].w = 1.0f;
+    m.row[3].x = 0.0f;
+    m.row[3].y = 0.0f;
+    m.row[3].z = 2.0f * zNear * zFar * invDz;
+    m.row[3].w = 0.0f;
+    if (data_00267140.mField5C0 != GL_MODELVIEW)
+    {
+        if (data_00267140.mField5C0 == GL_PROJECTION)
+            func_001B3EC8(data_00267140.mField5C4, &m, data_00267140.mField5C4);
+    }
+    else
+    {
+        func_001B3EC8(data_00267140.mField5C8, &m, data_00267140.mField5C8);
+    }
     data_002B3608 = 1;
 }
