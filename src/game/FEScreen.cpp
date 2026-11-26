@@ -224,3 +224,73 @@ int FEScreen::GetMenuField20()
 {
     return mMenu0C->mField20;
 }
+
+void FEScreen::Method16E930()
+{
+    if (mOwner00 != 0)
+    {
+        for (int i = 0; i < mOwner00->mCount114; i++)
+        {
+            if (mOwner00->mRecs118[i].mField00 == 0)
+                AddItem48(&mOwner00->mRecs118[i]);
+        }
+    }
+}
+
+#ifdef NON_MATCHING
+// 120 of 121 instructions match; at +0x0A0 GCC branches to the mtc1 delay nop (+0x0B0)
+// instead of directly to swc1 (+0x0B4).
+void FEScreen::VirtSlot2(f32 dt)
+{
+    f32 t = *(f32 *)&mField30 + dt;
+    *(f32 *)&mField30 = t;
+    switch (mState38)
+    {
+    case 0:
+    {
+        f32 val = (mOwner00->mField20 != 0.0f) ? (((t / mOwner00->mField20) < 0.0f) ? 1.0f : (1.0f - ((t / mOwner00->mField20) <? 1.0f))) : 1.0f;
+        mField2C = val;
+        if (mOwner00->mField20 < *(f32 *)&mField30)
+        {
+            *(f32 *)&mField30 = 0.0f;
+            mState38 = 1;
+        }
+        break;
+    }
+    case 1:
+        mField2C = 0.0f;
+        if (mField3C != 0 && VirtSlot6() != 0)
+        {
+            mState38 = 2;
+            mField3C = 0;
+            *(f32 *)&mField30 = 0.0f;
+            if (mMenu0C != 0)
+                mMenu0C->Action16BAD8();
+            if (mSub08 != 0)
+                mSub08->Method130720(1.0f);
+            Method16E930();
+        }
+        break;
+    case 2:
+        mField2C = t / mOwner00->mField24;
+        if (mOwner00->mField24 < t)
+        {
+            *(f32 *)&mField30 = 0.0f;
+            mState38 = 3;
+        }
+        break;
+    case 3:
+        mField2C = 1.0f;
+        break;
+    }
+    if (mSub08 != 0)
+        mSub08->Update130348(dt);
+    if (mMenu0C != 0)
+    {
+        int active = 0;
+        if (mState38 == 1 && mField3C == 0)
+            active = 1;
+        mMenu0C->Update(mField40, active, dt);
+    }
+}
+#endif

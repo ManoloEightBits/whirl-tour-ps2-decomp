@@ -97,7 +97,9 @@ struct FEOwnerRec
 
 struct FEOwner
 {
-    char field_0x00[0x28];
+    char field_0x00[0x20];
+    f32 mField20;                // 0x20
+    f32 mField24;                // 0x24
     f32 mTitleScale28;           // 0x28: FEScreen::VirtSlot3 draws the screen's title text
     f32 mTitleScale2C;           // 0x2C
     Vec3f mTitleColour30;        // 0x30
@@ -201,6 +203,7 @@ public:
     void SetField3C_1();                               // 0x0016E868
     void AddItem48(FEOwnerRec *item);                  // 0x0016E890
     void AddOwnerRecords();                            // 0x0016E8B8
+    void Method16E930();                               // 0x0016E930
     int GetCount44();                                  // 0x0016E9A8
     void ClearCount44();                               // 0x0016E9B0
     FEOwnerRec *GetItem48(int idx);                    // 0x0016E9B8
@@ -304,7 +307,7 @@ public:
     int mField178;      // 0x178
     int mField17C;      // 0x17C
     int mField180;      // 0x180
-    void *mText184;     // 0x184
+    TextObj *mText184;  // 0x184
     int mPlayingIdx188; // 0x188
     f32 mTimer18C;      // 0x18C
     int mBlink190;      // 0x190
