@@ -298,3 +298,108 @@ UnkRes143438 *func_00143438(UnkSrc143438 *arg0, int arg1, int arg2, int arg3)
     }
     return res;
 }
+
+struct UnkEffect1424
+{
+    char pad00[0x24];
+    int mField24; // 0x24
+    char pad28[0x04];
+    int mField2C; // 0x2C
+};
+
+struct UnkObj142428
+{
+    char pad00[0x20C];
+    int mField20C; // 0x20C
+};
+
+int func_001425E8();                  // 0x001425E8
+void func_00141860(int);              // 0x00141860
+void func_00141A50(UnkEffect1424 *);  // 0x00141A50
+void func_001BB348(int, int);         // 0x001BB348
+
+int func_00142428(UnkObj142428 *arg0, UnkEffect1424 *arg1)
+{
+    int idx = func_001425E8();
+    if (idx >= 0)
+    {
+        if (arg1->mField2C & 0x20)
+        {
+            func_00141860(arg1->mField24);
+            func_00141A50(arg1);
+        }
+        func_001BB348(arg0->mField20C, idx);
+    }
+    return 1;
+}
+
+struct EnvObj;
+struct UnkObjDef;
+
+struct UnkSub1437D0
+{
+    char pad00[0x18];
+    int mField18; // 0x18
+};
+
+struct UnkObj1437D0
+{
+    char pad00[0xA8];
+    void *mFieldA8; // 0xA8
+};
+
+void *MemAlloc1BD958(int);                            // 0x001BD958
+void func_0014FB08(EnvObj *, UnkObjDef *, int);       // 0x0014FB08
+
+void *func_001437D0(int arg0, UnkObjDef *arg1, UnkObj1437D0 *arg2)
+{
+    UnkSub1437D0 *p = (UnkSub1437D0 *)MemAlloc1BD958(0x1C);
+    if (p != 0)
+    {
+        func_0014FB08((EnvObj *)p, arg1, 0);
+        p->mField18 = arg0;
+        arg2->mFieldA8 = p;
+    }
+    return p;
+}
+
+void *func_001439F8(int arg0, UnkObjDef *arg1, UnkObj1437D0 *arg2)
+{
+    UnkSub1437D0 *p = (UnkSub1437D0 *)MemAlloc1BD958(0x1C);
+    if (p != 0)
+    {
+        func_0014FB08((EnvObj *)p, arg1, 0);
+        p->mField18 = arg0;
+        arg2->mFieldA8 = p;
+    }
+    return p;
+}
+
+int *func_001B9978(int, int);         // 0x001B9978
+void func_00143568(int *, f32, f32);  // 0x00143568
+
+void func_00141548(int arg0, f32 arg1, f32 arg2)
+{
+    int *p = func_001B9978(data_0025E5E0[3], arg0);
+    if (p != 0 && *p == 1)
+        func_00143568(p, arg1, arg2);
+}
+
+struct UnkEntry143078
+{
+    int mField00;
+    f32 mField04;
+    char mName08[0x20];
+};
+
+UnkEntry143078 *func_00143078(const char *arg0, int arg1, f32 arg2)
+{
+    UnkEntry143078 *p = (UnkEntry143078 *)MemAlloc1BD958(0x28);
+    if (p != 0)
+    {
+        p->mField00 = arg1;
+        p->mField04 = arg2;
+        strcpy(p->mName08, arg0);
+    }
+    return p;
+}

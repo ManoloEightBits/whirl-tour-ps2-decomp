@@ -296,3 +296,44 @@ UnkObj14EB68 *func_0014EB68(int arg0)
     }
     return obj;
 }
+
+struct UnkSub14C128
+{
+    char pad00[0x1C];
+    int mField1C; // 0x1C
+};
+
+struct UnkObj14C128
+{
+    char pad00[0x98];
+    UnkSub14C128 *mField98; // 0x98
+    void *mField9C;         // 0x9C
+    void *mFieldA0;         // 0xA0
+    char padA4[0x18];
+    int mFieldBC;           // 0xBC
+    int mFieldC0;           // 0xC0
+    char padC4[0x08];
+    void *mFieldCC;         // 0xCC
+    char padD0[0x04];
+    void *mFieldD4;         // 0xD4
+};
+
+void func_001982D0(int, int);      // 0x001982D0
+void Release198F38(void *);       // 0x00198F38
+void func_00191E40(void *);       // 0x00191E40
+void ArrayDestroy1BB168(int);     // 0x001BB168
+void CleanupDialog1309E0(void *); // 0x001309E0
+void func_0014CAC8(void *);       // 0x0014CAC8
+
+void func_0014C128(UnkObj14C128 *arg0)
+{
+    func_001982D0(arg0->mField98->mField1C, 0);
+    Release198F38(arg0->mFieldA0);
+    func_00191E40(arg0->mField9C);
+    ArrayDestroy1BB168(arg0->mFieldC0);
+    ArrayDestroy1BB168(arg0->mFieldBC);
+    CleanupDialog1309E0(arg0->mFieldCC);
+    func_0014CAC8(arg0->mFieldD4);
+    MemFree1BD978(arg0);
+    func_00126138(0);
+}

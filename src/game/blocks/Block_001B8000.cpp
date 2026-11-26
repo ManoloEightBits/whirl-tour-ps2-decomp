@@ -375,3 +375,19 @@ void func_001B9CA0(UnkTable1B9CA0 *arg0, void (*cb)(int, int))
         }
     }
 }
+
+void *MemAlloc1BD958(int); // 0x001BD958
+
+UnkTable1B9CA0 *func_001B9B60(int arg0)
+{
+    int bytes = arg0 * 4;
+    UnkTable1B9CA0 *t = (UnkTable1B9CA0 *)MemAlloc1BD958(bytes + 8);
+    UnkNode1B9CA0 **buckets = (UnkNode1B9CA0 **)(t + 1);
+    if (t != 0)
+    {
+        t->mCount00 = arg0;
+        t->mBuckets04 = buckets;
+        memset(buckets, 0, bytes);
+    }
+    return t;
+}

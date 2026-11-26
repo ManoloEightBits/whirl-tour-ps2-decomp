@@ -1,4 +1,5 @@
 #include "common/types.h"
+#include "common/libc.h"
 #include "game/FEScreen.h"
 
 // Functions of 0x00184000..0x00187FFF whose class and translation unit are not known yet.
@@ -344,4 +345,26 @@ void func_00185F50(UnkObj185F50 *arg0, UnkSub185F50 *arg1)
         arg0->mCount04 += 1;
     }
     arg0->mField29C += arg1->mField0C;
+}
+
+struct UnkObj187E78
+{
+    int mField00;
+    int mField04;
+    void *mField08;
+    int mField0C;
+};
+
+void *MemAlloc1BD958(int); // 0x001BD958
+
+UnkObj187E78 *func_00187E78(UnkObj187E78 *arg0, int arg1, int arg2, void *arg3, int arg4)
+{
+    int size = arg2 * 4;
+    arg0->mField00 = arg1;
+    arg0->mField04 = arg2;
+    void *buf = MemAlloc1BD958(size);
+    arg0->mField08 = buf;
+    memcpy(buf, arg3, size);
+    arg0->mField0C = arg4;
+    return arg0;
 }

@@ -110,3 +110,24 @@ UnkObj170898 *func_00170898(int arg0, int arg1, int arg2, int arg3)
     }
     return obj;
 }
+
+struct UnkObj170A78
+{
+    char pad00[0x90];
+    UnkObj170958 *mField90; // 0x90
+};
+
+void func_00170A78(UnkObj170A78 *arg0)
+{
+    UnkObj170958 *sub = arg0->mField90;
+    if (sub != 0)
+    {
+        if (sub->mField8 != 0)
+            MemFree1BD978(sub->mField8);
+        if (sub->mFieldC != 0)
+            MemFree1BD978(sub->mFieldC);
+        if (sub->mField10 != 0)
+            MemFree1BD978(sub->mField10);
+        MemFree1BD978(sub);
+    }
+}

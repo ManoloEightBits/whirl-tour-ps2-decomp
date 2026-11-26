@@ -302,3 +302,34 @@ int UnkParser::IsValueTrue1C3988()
     }
     return 1;
 }
+
+struct UnkBuf1C1008
+{
+    int mField00;
+    int mSize04;
+    int mField08;
+    void *mData0C;
+};
+
+void *MemAlloc1BD958(int);       // 0x001BD958
+void *func_001BD558(int, int);   // 0x001BD558
+void MemFree1BD978(void *);      // 0x001BD978
+
+UnkBuf1C1008 *func_001C1008(int arg0)
+{
+    UnkBuf1C1008 *p = (UnkBuf1C1008 *)MemAlloc1BD958(0x10);
+    if (p != 0)
+    {
+        p->mField00 = 0;
+        p->mSize04 = arg0;
+        p->mField08 = 0;
+        void *buf = func_001BD558(arg0, 7);
+        p->mData0C = buf;
+        if (buf == 0)
+        {
+            MemFree1BD978(p);
+            p = 0;
+        }
+    }
+    return p;
+}
