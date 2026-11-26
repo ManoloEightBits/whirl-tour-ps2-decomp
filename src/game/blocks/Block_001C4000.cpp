@@ -74,3 +74,11 @@ void func_001C5D50(f32 *m, f32 *v, f32 *out)
     out[1] = v[0] * m[1] + v[1] * m[4] + v[2] * m[7];
     out[2] = v[0] * m[2] + v[1] * m[5] + v[2] * m[8];
 }
+
+int func_001C4540(f32 *a, f32 *b)
+{
+    int ret = 0;
+    if (fabsf(a[3] - b[3]) < 0.0001f && fabsf(a[1] - b[1]) < 0.0001f && fabsf(a[2] - b[2]) < 0.0001f)
+        ret = 1;
+    return ret;
+}

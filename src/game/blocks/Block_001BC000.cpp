@@ -525,7 +525,6 @@ void func_001BFFA0(int);             // 0x001BFFA0
 
 int func_001BE460(int arg0, int arg1)
 {
-{
     int size;
     int obj = func_001BFEE0(arg1);
     if (obj != 0)
@@ -565,4 +564,36 @@ int func_001BE460(int arg0, int arg1)
     }
     return 0;
 }
+
+struct UnkEntry1BEAD8
+{
+    int mField00;
+    int mField04;
+    int mField08;
+};
+
+struct UnkObj1BEAD8
+{
+    char pad00[0x08];
+    int mCount08;             // 0x08
+    char pad0C[0x10];
+    UnkEntry1BEAD8 *mArr1C;   // 0x1C
+    int mBase20;              // 0x20
+};
+
+int func_001BEAD8(UnkObj1BEAD8 *arg0, int arg1, int *arg2, int *arg3)
+{
+    int ret;
+    if (arg1 < 0 || arg1 >= arg0->mCount08)
+        ret = 0;
+    else
+        ret = arg0->mBase20 + arg0->mArr1C[arg1].mField08;
+    if (ret != 0)
+    {
+        if (arg2 != 0)
+            *arg2 = arg0->mArr1C[arg1].mField00;
+        if (arg3 != 0)
+            *arg3 = arg0->mArr1C[arg1].mField04;
+    }
+    return ret;
 }

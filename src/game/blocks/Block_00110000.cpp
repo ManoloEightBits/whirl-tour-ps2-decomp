@@ -1,5 +1,6 @@
 #include "common/types.h"
 #include "common/libc.h"
+#include "game/GameCtx.h"
 
 // Functions of 0x00110000..0x00113FFF whose class and translation unit are not known yet.
 // Names are address based; move each function to its file once its TU is identified.
@@ -133,4 +134,35 @@ void *FindScreenDef113B48(void *arg0, const char *name)
         }
     }
     return found;
+}
+
+struct UnkObj111ED8
+{
+    char pad00[0x68];
+    int mField68;  // 0x68
+    void *mField6C; // 0x6C
+};
+
+int func_001433F8(void *);               // 0x001433F8
+void func_001431D8(void *);              // 0x001431D8
+void *func_00143100(const char *, int);  // 0x00143100
+void func_001432A0(void *, f32);         // 0x001432A0
+
+void func_00111ED8(UnkObj111ED8 *arg0, int arg1)
+{
+    if (arg0->mField68 != 0)
+    {
+        if (arg0->mField6C != 0)
+        {
+            if (func_001433F8(arg0->mField6C) != 0)
+                func_001431D8(arg0->mField6C);
+        }
+        else if (arg1 != 0)
+        {
+            void *snd = func_00143100("BGM:pean_hip", 4);
+            arg0->mField6C = snd;
+            if (snd != 0)
+                func_001432A0(snd, gGameCtx262250->mMusicVolume);
+        }
+    }
 }

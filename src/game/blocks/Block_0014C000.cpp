@@ -271,3 +271,28 @@ void UnkObj14CAF0::Draw14CCB0()
     DrawModel196110(mModel78);
     glPopMatrix();
 }
+
+struct UnkObj14EB68
+{
+    char pad00[0xA4];
+    void *mFieldA4; // 0xA4
+    char padA8[0x08];
+};
+
+void *func_001BD558(int, int);                  // 0x001BD558
+void func_0014EBE0(UnkObj14EB68 *, int, void *); // 0x0014EBE0
+void *ArrayCreate1BB0E0(int);                   // 0x001BB0E0
+void func_001BB1B0(void *, int);                // 0x001BB1B0
+
+UnkObj14EB68 *func_0014EB68(int arg0)
+{
+    UnkObj14EB68 *obj = (UnkObj14EB68 *)func_001BD558(0xB0, 4);
+    if (obj != 0)
+    {
+        func_0014EBE0(obj, arg0, func_001BD558(arg0 << 7, 4));
+        void *arr = ArrayCreate1BB0E0(0x94);
+        obj->mFieldA4 = arr;
+        func_001BB1B0(arr, 0x64);
+    }
+    return obj;
+}

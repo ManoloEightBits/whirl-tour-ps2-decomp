@@ -310,3 +310,38 @@ void func_00185458(UnkObj185458 *arg0, int arg1, f32 arg2)
         arg0->mArr20[arg0->mField10] = 0.0f;
     }
 }
+
+struct UnkEntry185F50
+{
+    int mField00;
+    void *mField04;
+};
+
+struct UnkSub185F50
+{
+    char pad00[0x0C];
+    int mField0C; // 0x0C
+};
+
+struct UnkObj185F50
+{
+    int mField00;            // 0x00
+    int mCount04;            // 0x04
+    UnkEntry185F50 *mArr08;  // 0x08
+    char pad0C[0x290];
+    int mField29C;           // 0x29C
+};
+
+void func_00187650(int); // 0x00187650
+
+void func_00185F50(UnkObj185F50 *arg0, UnkSub185F50 *arg1)
+{
+    func_00187650(arg0->mField00);
+    if (arg0->mCount04 < 0x28)
+    {
+        arg0->mArr08[arg0->mCount04].mField00 = -1;
+        arg0->mArr08[arg0->mCount04].mField04 = arg1;
+        arg0->mCount04 += 1;
+    }
+    arg0->mField29C += arg1->mField0C;
+}

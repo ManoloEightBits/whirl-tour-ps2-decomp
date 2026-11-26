@@ -1,4 +1,5 @@
 #include "common/types.h"
+#include "common/libc.h"
 
 // Functions of 0x00150000..0x00153FFF whose class and translation unit are not known yet.
 // Names are address based; move each function to its file once its TU is identified.
@@ -283,4 +284,32 @@ UnkObj1520D8 *func_00152330(Vec4f *arg0, Vec3f *arg1, int arg2, int arg3, UnkObj
         obj->mField04 |= 0x80000000;
     }
     return obj;
+}
+
+struct UnkSub152420
+{
+    char pad00[0x6E];
+    u8 mCount6E;     // 0x6E
+    char pad6F[0x79];
+    int mArrE8[1];   // 0xE8
+};
+
+struct UnkObj152420
+{
+    char pad00[0x08];
+    UnkSub152420 *mField08; // 0x08
+    char pad0C[0x70];
+    int mField7C;           // 0x7C
+};
+
+int func_00194DE0(int); // 0x00194DE0
+
+void func_00152420(UnkObj152420 *arg0)
+{
+    if (arg0->mField7C == 0)
+    {
+        UnkSub152420 *sub = arg0->mField08;
+        if (sub->mCount6E != 0)
+            arg0->mField7C = func_00194DE0(sub->mArrE8[rand() % arg0->mField08->mCount6E]);
+    }
 }

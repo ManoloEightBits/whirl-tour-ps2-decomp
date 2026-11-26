@@ -170,3 +170,18 @@ void UnkObj1B7CA8::ByteSwap1B7CA8()
     mField00 = func_001C13D0(mField00);
     mField02 = func_001C13D0(mField02);
 }
+
+void func_001B4E18(f32 *a, f32 *b)
+{
+    f32 x = a[0];
+    f32 y = a[1];
+    f32 z = a[2];
+    f32 w = a[3];
+    if (x * b[0] + y * b[1] + z * b[2] + w * b[3] < 0.0f)
+    {
+        a[0] = -x;
+        a[1] = -y;
+        a[2] = -z;
+        a[3] = -w;
+    }
+}
