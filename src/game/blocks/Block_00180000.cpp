@@ -189,3 +189,20 @@ int func_001835D0(int *arg0)
 {
     return *arg0;
 }
+
+struct UnkObj1835A8
+{
+    int mType00;        // 0x00
+    char pad04[0x30];
+    int mSub34;         // 0x34: a sub-object (size unknown)
+};
+
+// The sub-object at +0x34 when the type at +0x00 is 2 or 3, else null.
+void *func_001835A8(UnkObj1835A8 *obj)
+{
+    if ((u32)(obj->mType00 - 2) < 2U)
+    {
+        return &obj->mSub34;
+    }
+    return 0;
+}

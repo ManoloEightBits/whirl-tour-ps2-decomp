@@ -107,3 +107,18 @@ void func_00129D40()
     func_00198210(data_0025DE20);
     data_0025DE20 = 0;
 }
+
+int HashStringCRC32(const char *); // 0x001B1CD0
+
+struct UnkNamed128C80
+{
+    u32 mCrc00;          // 0x00: CRC32 of mName04
+    char mName04[0x20];  // 0x04: length unknown
+};
+
+// Sets an object's name and its CRC32.
+void func_00128C80(UnkNamed128C80 *obj, const char *name)
+{
+    strcpy(obj->mName04, name);
+    obj->mCrc00 = HashStringCRC32(name);
+}

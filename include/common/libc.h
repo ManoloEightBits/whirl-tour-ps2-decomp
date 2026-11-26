@@ -13,6 +13,7 @@ int rand(void);                                           /* 0x00230700: seed * 
 int sprintf(char *buf, const char *fmt, ...);            /* 0x00231300: vfprintf to a string FILE, then the 0 */
 int strcmp(const char *a, const char *b);                 /* 0x002317B4: returns (u8)*a - (u8)*b */
 char *strcpy(char *dst, const char *src);                 /* 0x002318F8: 16 bytes at a time (EE MMI) */
+int sscanf(const char *str, const char *format, ...);     /* 0x00231378 */
 unsigned int strlen(const char *s);                       /* 0x00231A0C: 16 bytes at a time (EE MMI) */
 }
 

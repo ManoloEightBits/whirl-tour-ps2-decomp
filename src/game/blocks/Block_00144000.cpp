@@ -43,3 +43,13 @@ void func_001461C0()
 {
     func_001974D8();
 }
+
+// Matched from the second m2c sweep (globals, switch tables): strings and float constants are
+// literals, variables are data_<addr> in config/symbols.txt.
+
+void func_00197AB8(int); // 0x00197AB8
+
+void func_00144F20(int arg0, int arg1)
+{
+    func_00197AB8(arg1 + 4);
+}

@@ -5,6 +5,37 @@
 
 void func_001B4390(int, int, int); // 0x001B4390
 
+// A size in bytes for each type 0..13 (8 for any other). The function list splits it after each
+// `jr $ra`; 0x001C4084..0x001C40AC are its cases.
+int func_001C4058(int type)
+{
+    switch (type)
+    {
+    case 0:
+    case 6:
+    case 7:
+    default:
+        return 8;
+    case 1:
+    case 4:
+    case 12:
+        return 16;
+    case 2:
+        return 20;
+    case 3:
+    case 10:
+        return 32;
+    case 5:
+    case 8:
+    case 13:
+        return 40;
+    case 9:
+        return 52;
+    case 11:
+        return 12;
+    }
+}
+
 void func_001C4788(int arg0, int arg1, int arg2)
 {
     func_001B4390(arg2, arg0 + 4, arg1 + 4);
@@ -17,4 +48,22 @@ void func_001C4CE8(int arg0, int arg1, int arg2)
 
 void func_001C4D18()
 {
+}
+
+// Matched from the second m2c sweep (globals, switch tables): strings and float constants are
+// literals, variables are data_<addr> in config/symbols.txt.
+
+int func_001C5070(int (*arg0)(int, int *, int), int arg1)
+{
+    int sp0;
+
+    arg0(arg1, &sp0, 4);
+    return sp0;
+}
+
+// out[i] = scale * in[i] for nine floats (a 3x3 matrix).
+void func_001C5EF8(f32 *out, f32 *in, f32 scale)
+{
+    for (int i = 0; i < 9; i++)
+        out[i] = scale * in[i];
 }

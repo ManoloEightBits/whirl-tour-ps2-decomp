@@ -23,6 +23,18 @@ map of the binary, regenerated with `tools/analysis/coverage.py --map docs/MAP.m
    428 more score >= 0.9; 126 still do not compile and 8 fail in m2c (was 193 / 178 / 219 / 649 / 175).
    Most of the new matches use globals (data variables, strings, float constants): write strings and floats
    as literals (`rebuild.py` checks them against the game's bytes) and declare variables as typed symbols.
+   - **Phase 4 done (2026-11-25):** of the 134 drafts left that match (98) or differ only in registers (36)
+     and read no struct fields, 57 more are in their block files, after hand fixes the drafts needed: m2c
+     counts pointer arithmetic in bytes (`int *p; p + 4` is `+4` bytes, not 16), omits parameters it sees
+     unused (a function that passes `$a0` through, or only uses `arg1`, still takes them: the callee's
+     arguments come out shifted otherwise), and types strings and buffers as `int`. New: `UnkParser`'s value
+     parsers (`ParseFloat3_1C37B0`..`IsValueTrue1C3988`, `sscanf` at `0x00231378`), `MemAlloc1BD958`
+     (`func_001BD558(size, 3)`), `EnvObjCleanup14FB70` (empty), `glMatrixMode`, the `FESub08`/`FESlider`
+     destructors, and the switch `func_001C4058` (a size per type 0..13; `0x001C4084..0x001C40AC` are its
+     cases). Left: 16 `__tf` copies (`__tf6EnvObj` and `__rtti_user` ones, one per translation unit: they
+     need the class of each TU), 8 `new`/`delete` helpers (runtime), the 6 sound-library functions, 3 whose
+     callee's symbol has another arity (`0x00141420`, `0x0016F8D0`, `0x001BFAC0`; fix the callers first),
+     about 15 that read data tables (type them first) and 5 that call methods of unknown classes.
    - **Phase 3 done:** 87 of those drafts that touch no struct fields are C++ at the end of their block file
      (section "Matched from the second m2c sweep"): strings and floats as literals, variables as
      `data_<addr>` in `config/symbols.txt`, callees declared with the signature of their symbol. Left out:
@@ -49,9 +61,8 @@ map of the binary, regenerated with `tools/analysis/coverage.py --map docs/MAP.m
      callers plus `0x00183CB8` (they need `EnvObj`/`UnkModel1B7` types), and 16 functions at addresses
      4 mod 8 (`0x00154EDC..0x00154F6C` float constants, `0x001C4084..0x001C40AC` int constants): they
      match in `verify.py`, but cc1plus aligns every function to 8 (`.align 3`), so `rebuild.py` cannot place
-     them. They are not functions: the float ones are the cases of `GetVersusTime154EA8`, a switch that
-     returns the versus time in seconds per option index, and the int ones at `0x001C4084`
-     are most likely the same; match the switches instead.
+     them. They are not functions: the float ones are the cases of `GetVersusTime154EA8` and the int ones
+     at `0x001C4084` the cases of `func_001C4058`; both switches are matched now.
    - **Phase 2, first part done:** 171 functions whose draft only touches fields of its first argument are
      methods of 96 `UnkObj<addr>` classes in the same block files. A class groups functions within 0x100 bytes
      of each other, with no matched function of another class between them and no field used with two

@@ -369,7 +369,7 @@ void UnkObj1BFAF0::Method1BFB60(int arg1)
 // Matched from the second m2c sweep (globals, switch tables): strings and float constants are
 // literals, variables are data_<addr> in config/symbols.txt.
 
-s8 *MemAlloc1BD958(int);  // 0x001BD958
+void *MemAlloc1BD958(int); // 0x001BD958
 extern int data_0027B6BC;
 extern int data_0027B6C4;
 
@@ -377,7 +377,7 @@ s8 *func_001BC448()
 {
     s8 *temp_v0;
 
-    temp_v0 = MemAlloc1BD958(0x101);
+    temp_v0 = (s8 *)MemAlloc1BD958(0x101);
     if (temp_v0 != NULL)
     {
         *temp_v0 = 0;
@@ -420,9 +420,86 @@ int func_001BFAB0(int *arg0)
     return *arg0 == 2;
 }
 
-
 int func_001BCF00(int *arg0)
 {
     return *arg0;
 }
 
+void func_001BD0C0(int);           // 0x001BD0C0
+void func_001BD228(void *);        // 0x001BD228
+void *func_001BE268(int, int *);   // 0x001BE268
+int func_001BFEE0(int);            // 0x001BFEE0
+void func_001C00F8(int, void *, int); // 0x001C00F8
+extern int data_0027B6C0;
+
+// For entries 1..256 of a byte table: bit 0 is copied to bit 1, and bit 2 is set when bit 0 is set and
+// bit 1 was clear.
+void func_001BC4B0(u8 *table)
+{
+    u8 *p = table + 1;
+    for (int i = 0; i < 256; i++)
+    {
+        u8 v = *p;
+        int bit = v & 1;
+        *p = bit | (bit * 2) | ((bit & ~((v >> 1) & 1)) * 4);
+        p++;
+    }
+}
+
+void func_001BC960()
+{
+    func_001BD0C0(data_0027B6BC);
+    func_001BD0C0(data_0027B6C0);
+    data_0027B6BC = 0;
+    data_0027B6C0 = 0;
+}
+
+struct UnkObj1BD038
+{
+    int mField00;       // 0x00
+    int mSub04[3];      // 0x04: set up by func_001BD228
+};
+
+// Allocates a UnkObj1BD038 and initializes it (as func_001BD120).
+UnkObj1BD038 *func_001BD038()
+{
+    UnkObj1BD038 *obj = (UnkObj1BD038 *)MemAlloc1BD958(0x10);
+    if (obj != 0)
+    {
+        obj->mField00 = 0;
+        func_001BD228(&obj->mSub04);
+    }
+    return obj;
+}
+
+void func_001BD120(UnkObj1BD038 *obj)
+{
+    obj->mField00 = 0;
+    func_001BD228(&obj->mSub04);
+}
+
+int func_001BF0C0(int arg0, int arg1)
+{
+    int size;
+
+    int obj = func_001BFEE0(arg1);
+    if (obj != 0)
+    {
+        void *data = func_001BE268(arg0, &size);
+        if (data != 0)
+        {
+            func_001C00F8(obj, data, size);
+            MemFree1BD978(data);
+        }
+        func_001BFFA0(obj);
+    }
+    return 0;
+}
+
+void *func_001BD558(int size, int kind); // 0x001BD558
+
+// The game's allocator: func_001BD558 with kind 3.
+void *MemAlloc1BD958(int size)
+{
+    return func_001BD558(size, 3);
+}

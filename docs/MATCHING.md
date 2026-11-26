@@ -220,3 +220,10 @@ file with `diff_func.py <file.cpp> <symbol> --variants <json>`. That command onl
   20.0f, 30.0f... Look up the jump table (`dump_data.py`): when its entries point into those pieces, write
   the whole `switch` at the first address (here `default:` shares `case 0:`'s body, which comes first).
   `rebuild.py` cuts by address range, so one C++ function may cover several pieces.
+- **Reading an m2c draft: byte offsets, dropped parameters, `int` for pointers.** m2c's pointer arithmetic
+  is in bytes: `s32 *p; ... p + 4` in a draft is `p + 4` bytes (a field at `+0x4`), and `var += 0x44` in a
+  loop is a 0x44-byte stride, so write a struct, not `int *` arithmetic. Parameters the body never names
+  are left out (`void f(s32 arg1)` uses `$a1`; a function that only forwards `$a0` to its callee shows
+  `callee(0x1F)` for `callee(a0, 0x1F)`), so check which argument registers the game sets before the
+  `jal`. Strings, buffers and allocations come out as `s32`; the callee's real types often show from the
+  call site (`sscanf(mValue3030, "%f", x)`).

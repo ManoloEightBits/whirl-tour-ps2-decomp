@@ -1,4 +1,5 @@
 #include "common/types.h"
+#include "game/Parser.h"
 #include "common/libc.h"
 
 // Functions of 0x001C0000..0x001C3FFF whose class and translation unit are not known yet.
@@ -7,9 +8,9 @@
 void MemFree1BD978(void *);       // 0x001BD978
 void func_00239BE0(int);          // 0x00239BE0
 int func_0023CE78(int, int, int); // 0x0023CE78
-int func_0023D320(int, int, int); // 0x0023D320
+int func_0023D320(int, void *, int); // 0x0023D320
 
-int func_001C00F8(int arg0, int arg1, int arg2)
+int func_001C00F8(int arg0, void *arg1, int arg2)
 {
     int result;
 
@@ -230,4 +231,74 @@ int func_001C0E78(int *arg0)
     return *arg0;
 }
 
+void func_001C1510(int, int);                       // 0x001C1510
 
+void func_001C14F0(int arg0)
+{
+    func_001C1510(arg0, 0x10);
+}
+
+// Swaps the bytes of n 16-bit values in place.
+// Swaps the bytes of n 16-bit values in place.
+void func_001C1578(u16 *values, int n)
+{
+    if (n > 0)
+    {
+        do
+        {
+            u16 v = *values;
+            n--;
+            *values = (v >> 8) | ((v & 0xFF) << 8);
+            values++;
+        } while (n != 0);
+    }
+}
+
+void UnkParser::ParseFloat3_1C37B0(f32 *x, f32 *y, f32 *z)
+{
+    sscanf(mValue3030, "%f %f %f", x, y, z);
+}
+
+void UnkParser::ParseFloat2_1C37E8(f32 *x, f32 *y)
+{
+    sscanf(mValue3030, "%f %f", x, y);
+}
+
+void UnkParser::ParseFloat1C3818(f32 *x)
+{
+    sscanf(mValue3030, "%f", x);
+}
+
+void UnkParser::ParseInt3_1C3840(int *x, int *y, int *z)
+{
+    sscanf(mValue3030, "%d %d %d", x, y, z);
+}
+
+void UnkParser::ParseInt2_1C3878(int *x, int *y)
+{
+    sscanf(mValue3030, "%d %d", x, y);
+}
+
+void UnkParser::ParseInt1C38A8(int *x)
+{
+    sscanf(mValue3030, "%d", x);
+}
+
+void UnkParser::ParseBool1C38F8(int *out)
+{
+    *out = 0;
+    if (strcmp("yes", mValue3030) == 0 || strcmp("on", mValue3030) == 0 || strcmp("true", mValue3030) == 0 ||
+        strcmp("1", mValue3030) == 0)
+    {
+        *out = 1;
+    }
+}
+
+int UnkParser::IsValueTrue1C3988()
+{
+    if (strcmp("yes", mValue3030) != 0 && strcmp("on", mValue3030) != 0 && strcmp("true", mValue3030) != 0)
+    {
+        return strcmp("1", mValue3030) == 0;
+    }
+    return 1;
+}

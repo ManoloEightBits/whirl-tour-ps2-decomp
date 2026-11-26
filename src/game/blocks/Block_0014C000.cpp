@@ -211,3 +211,23 @@ int func_0014C910(int *arg0, int *arg1)
 {
     return *arg1 - *arg0;
 }
+
+void func_00126620(int, int, int, int); // 0x00126620
+void func_00197AB8(int);           // 0x00197AB8
+
+void func_0014C3C0(int arg0, int arg1)
+{
+    func_00197AB8(arg1 + 4);
+}
+
+void func_0014F158(int arg0, int arg1, int arg2)
+{
+    func_00126620(arg1, arg0, arg2, 0);
+}
+
+struct EnvObj;
+
+// Empty in this build (the EnvObj delete helpers call it before freeing).
+void EnvObjCleanup14FB70(EnvObj *obj)
+{
+}

@@ -1,4 +1,5 @@
 #include "common/types.h"
+#include "common/libc.h"
 #include "game/UnkArray.h"
 
 // Functions of 0x001B8000..0x001BBFFF whose class and translation unit are not known yet.
@@ -150,4 +151,62 @@ int func_001BB0D8(int *arg0)
     return *arg0;
 }
 
+char *func_00151D70(char *dst, const char *src); // 0x00151D70: appends src (a strcat)
+void *MemAlloc1BD958(int);     // 0x001BD958
+extern int data_0027B528;
+extern int data_0027B52C;
+extern void *data_0027B530;   // an array of 8-byte entries: data_0027B528 used of data_0027B52C
+extern char data_0027B538[0x80];
+extern char data_0027B5B8[0x80];
+extern char data_0027B638[0x80];
 
+// Writes a, b and c one after another into dst.
+void func_001B92F8(char *dst, const char *a, const char *b, const char *c)
+{
+    strcpy(dst, a);
+    func_00151D70(dst, b);
+    func_00151D70(dst, c);
+}
+
+void func_001BBB58(const char *s)
+{
+    data_0027B538[0] = 0;
+    if (s != 0)
+    {
+        strcpy(data_0027B538, s);
+    }
+}
+
+void func_001BBB88(const char *s)
+{
+    data_0027B5B8[0] = 0;
+    if (s != 0)
+    {
+        strcpy(data_0027B5B8, s);
+    }
+}
+
+void func_001BBBB8(const char *s)
+{
+    data_0027B638[0] = 0;
+    if (s != 0)
+    {
+        strcpy(data_0027B638, s);
+    }
+}
+
+// Doubles the capacity of the data_0027B530 array; returns 1 when the allocation worked.
+int func_001BBE20()
+{
+    int ok = 0;
+    void *grown = MemAlloc1BD958(data_0027B52C * 0x10);
+    if (grown != 0)
+    {
+        ok = 1;
+        memcpy(grown, data_0027B530, data_0027B528 * 8);
+        MemFree1BD978(data_0027B530);
+        data_0027B530 = grown;
+        data_0027B52C *= 2;
+    }
+    return ok;
+}

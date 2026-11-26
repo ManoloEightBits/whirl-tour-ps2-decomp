@@ -1,4 +1,5 @@
 #include "common/types.h"
+#include "game/FEScreen.h"
 
 // Functions of 0x00184000..0x00187FFF whose class and translation unit are not known yet.
 // Names are address based; move each function to its file once its TU is identified.
@@ -164,4 +165,26 @@ int UnkObj187FD0::Method187FD0()
         mField0 = 0;
     }
     return mField0;
+}
+
+// Matched from the second m2c sweep (globals, switch tables): strings and float constants are
+// literals, variables are data_<addr> in config/symbols.txt.
+
+struct EnvObj;
+void EnvObjCleanup14FB70(EnvObj *); // 0x0014FB70
+void func_00186680(int);            // 0x00186680
+
+void func_00184480(EnvObj *obj)
+{
+    EnvObjCleanup14FB70(obj);
+    MemFree1BD978(obj);
+}
+
+void func_00186208(int *arg0)
+{
+    func_00186680(*arg0);
+}
+
+FESlider::~FESlider()
+{
 }

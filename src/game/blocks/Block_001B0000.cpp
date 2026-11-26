@@ -71,3 +71,17 @@ int UnkObj1B0F08::Method1B0F08()
 {
     return (mField34 * 8) + 0x38;
 }
+
+// Matched from the second m2c sweep (globals, switch tables): strings and float constants are
+// literals, variables are data_<addr> in config/symbols.txt.
+
+// Allocates n entries of 16 bytes after a 4-byte count (an array new), and stores n.
+int *func_001B2948(int n)
+{
+    int *block = (int *)MemAlloc1BD958((n * 0x10) | 4);
+    if (block != 0)
+    {
+        *block = n;
+    }
+    return block;
+}

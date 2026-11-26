@@ -305,3 +305,47 @@ void func_00199030()
     data_002659DC = 0;
 }
 
+void func_001BD260(int);     // 0x001BD260
+extern f32 data_002659E8;
+
+void func_001982F0(int arg0, int enable)
+{
+    if (enable != 0)
+    {
+        func_001BD240(arg0);
+    }
+}
+
+void func_00198310(int arg0, int enable)
+{
+    if (enable != 0)
+    {
+        func_001BD260(arg0);
+    }
+}
+
+struct UnkEntry1983C0
+{
+    int mFlags00;       // 0x00
+    char pad04[0x40];
+};
+
+struct UnkObj1983C0
+{
+    char pad00[0xD0];
+    UnkEntry1983C0 mEntries[8]; // 0xD0
+};
+
+// Clears bit 0 of the flags of eight entries of 0x44 bytes.
+void func_001983C0(UnkObj1983C0 *obj)
+{
+    for (int i = 0; i < 8; i++)
+        obj->mEntries[i].mFlags00 &= ~1;
+}
+
+void func_00199470(f32 fparg0, f32 fparg1, f32 fparg2)
+{
+    data_002659E0 = fparg0;
+    data_002659E4 = fparg1;
+    data_002659E8 = fparg2;
+}

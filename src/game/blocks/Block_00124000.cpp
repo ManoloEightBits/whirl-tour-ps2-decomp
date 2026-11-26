@@ -1,5 +1,7 @@
 #include "common/types.h"
 
+struct PickupDef;
+
 // Functions of 0x00124000..0x00127FFF whose class and translation unit are not known yet.
 // Names are address based; move each function to its file once its TU is identified.
 
@@ -276,3 +278,64 @@ void func_001266A0(int arg0)
     }
 }
 
+void func_0012CEA8(int, void *, int);              // 0x0012CEA8
+void func_0012D2F0(int, u32, int, void *);         // 0x0012D2F0
+void func_0012D398(int);                  // 0x0012D398
+void func_00182F88(int, int);             // 0x00182F88
+PickupDef *func_00182FD0(int, const char *);       // 0x00182FD0
+void func_001830A0(int, int);             // 0x001830A0
+void func_001830F0(int, int, int);        // 0x001830F0
+void func_001831F8(int, int, int, const char *);   // 0x001831F8
+
+void func_00126470(int arg0, int arg1)
+{
+    if (data_0025DC60 != 0)
+    {
+        func_001831F8(data_0025DC60, arg0, arg1, "db_fontset");
+    }
+}
+
+void func_001264F0(int arg0)
+{
+    func_00182F88(data_0025DC60, arg0);
+}
+
+// Looks a pickup type's definition up by name in the definition database (data_0025DC60).
+PickupDef *FindPickupDef(const char *name)
+{
+    return func_00182FD0(data_0025DC60, name);
+}
+
+void func_00126578(int arg0)
+{
+    func_001830A0(data_0025DC60, arg0);
+}
+
+void func_001265A0(int arg0, int arg1)
+{
+    func_001830F0(data_0025DC60, arg0, arg1);
+}
+
+void SendScriptEvent(u32 eventCrc, int arg1, void *arg2)
+{
+    if (data_0025DC64 != 0)
+    {
+        func_0012D2F0(data_0025DC64, eventCrc, arg1, arg2);
+    }
+}
+
+void func_00126708(void *arg0, int arg1)
+{
+    if (data_0025DC64 != 0)
+    {
+        func_0012CEA8(data_0025DC64, arg0, arg1);
+    }
+}
+
+void func_00126738()
+{
+    if (data_0025DC64 != 0)
+    {
+        func_0012D398(data_0025DC64);
+    }
+}

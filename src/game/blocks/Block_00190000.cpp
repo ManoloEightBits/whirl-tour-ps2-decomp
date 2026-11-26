@@ -206,4 +206,32 @@ int func_00191DD8(f32 fparg0, f32 fparg1, f32 fparg2)
     return temp_v0;
 }
 
+int *func_00190E80();    // 0x00190E80
+void func_00191510(int, int); // 0x00191510
 
+struct UnkObj190BC0
+{
+    char pad0000[0x1900];
+    char mPath1900[0x100]; // 0x1900: length unknown
+};
+
+// Whether the path at +0x1900 is the root, "/".
+int func_00190BC0(UnkObj190BC0 *obj)
+{
+    return strcmp(obj->mPath1900, "/") == 0;
+}
+
+void func_00190D50(int arg0)
+{
+    func_00191510(arg0, 0x1F);
+}
+
+int func_00190E98()
+{
+    return *func_00190E80();
+}
+
+void func_00191550(int *arg0, int arg1)
+{
+    *arg0 = arg1;
+}

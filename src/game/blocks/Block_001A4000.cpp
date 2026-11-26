@@ -36,3 +36,13 @@ void func_001A4E78(int arg0)
 {
     data_00265D3C = (arg0 == 0) ? 0 : 3;
 }
+
+void func_0019B798(int, int, int, int); // 0x0019B798
+void func_001A0C10();    // 0x001A0C10
+
+void func_001A4D78(int arg0, int arg1, int arg2)
+{
+    func_0019B798(arg0, arg1, arg2, 0x420000);
+    func_001A0C10();
+    func_001A4DA8();
+}

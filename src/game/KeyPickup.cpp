@@ -7,7 +7,7 @@ extern "C" char *func_00231F08(char *dst, const char *src, u32 n); // 0x00231F08
 extern UnkKeyword data_0025A230[]; // keywords of a pickups file: "pickups", "pickup", "mesh", ... "/pickup"
 
 u32 HashStringCRC32(const char *str);                    // 0x001B1CD0
-int SendScriptEvent(u32 eventCrc, int arg1, void *arg2); // 0x001266D0
+void SendScriptEvent(u32 eventCrc, int arg1, void *arg2); // 0x001266D0
 PickupDef *FindPickupDef(const char *name);              // 0x00126518
 void PickupHelper11B2A0(Pickup *);                       // 0x0011B2A0
 void PhysicsDestroy1F21A8(void *);                       // 0x001F21A8

@@ -212,4 +212,31 @@ void func_00143778(s8 *arg0)
     *arg0 = 0;
 }
 
+void EnvObjCleanup14FB70(EnvObj *); // 0x0014FB70
+void func_001BCAC0(int);            // 0x001BCAC0
+extern int * data_0025E5E0;
 
+void func_00142D10(int *arg0)
+{
+    int *var_a0;
+
+    var_a0 = arg0;
+    if (var_a0 == NULL)
+    {
+        var_a0 = data_0025E5E0;
+    }
+    func_001BCAC0(*var_a0);
+}
+
+// Cleans an EnvObj up and frees it (a non-virtual deleting destructor).
+void func_00143840(EnvObj *obj)
+{
+    EnvObjCleanup14FB70(obj);
+    MemFree1BD978(obj);
+}
+
+void func_00143A68(EnvObj *obj)
+{
+    EnvObjCleanup14FB70(obj);
+    MemFree1BD978(obj);
+}

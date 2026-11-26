@@ -65,3 +65,25 @@ int func_0013F6C0(int *arg0)
     return *arg0 == 0;
 }
 
+void func_001BB250(int, int *); // 0x001BB250
+extern int data_0025E5C4;
+
+struct UnkNamed13FA30
+{
+    char pad00[0x10];
+    char mName10[0x20]; // 0x10
+};
+
+// A qsort comparison: by the name at +0x10 of the objects two entries point to.
+int func_0013FA30(UnkNamed13FA30 **a, UnkNamed13FA30 **b)
+{
+    return strcmp((*a)->mName10, (*b)->mName10);
+}
+
+void func_0013FA58(int arg0, int arg1)
+{
+    int value;
+
+    value = arg1;
+    func_001BB250(data_0025E5C4, &value);
+}

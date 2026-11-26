@@ -1,4 +1,5 @@
 #include "common/types.h"
+#include "game/FEScreen.h"
 
 // Functions of 0x00130000..0x00133FFF whose class and translation unit are not known yet.
 // Names are address based; move each function to its file once its TU is identified.
@@ -89,4 +90,8 @@ void func_00130018()
 {
     data_0025E1A4 = 0;
     data_0025E1A0 = 0;
+}
+
+FESub08::~FESub08()
+{
 }
