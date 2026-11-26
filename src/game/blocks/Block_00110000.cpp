@@ -91,10 +91,10 @@ struct UnkObj1121A0
     int mField70; // 0x70
 };
 
-void func_001121A0(UnkObj1121A0 *arg0)
+void func_001121A0(int, UnkObj1121A0 *arg1)
 {
-    if (arg0->mField70 != 0)
-        func_001BCAC0(arg0->mField70);
+    if (arg1->mField70 != 0)
+        func_001BCAC0(arg1->mField70);
 }
 
 struct FEScreenDef
@@ -114,10 +114,10 @@ struct FEScreenTable
 
 void func_001139C0(FEScreenTable *table)
 {
-    table->mField00 = 0;
-    table->mField04 = 0;
     table->mCount124 = 0;
     table->mField08 = 0;
+    table->mField00 = 0;
+    table->mField04 = 0;
 }
 
 void *FindScreenDef113B48(void *arg0, const char *name)
