@@ -74,6 +74,7 @@ public:
     int func_00123208();                         // 0x00123208
     void *GetField28();                          // 0x00123230
     void Action17F288(void *a, void *b);         // 0x00123238
+    void Destroy123258();                        // 0x00123258
     void Action17F328();                         // 0x00123438
     void Action17F500();                         // 0x00123458
     void *GetPtr40();                            // 0x00123478
@@ -128,6 +129,9 @@ public:
     u8 mAmbientStateD2;     // 0xD2: 9 on entering an ambient area, 10 on leaving; 0x10 = entered again
     u8 mFieldD3;            // 0xD3
     int mFieldD4;           // 0xD4
+    char field_0xD8[4];     // 0xD8
+    void *mFieldDC;         // 0xDC
+    void *mFieldE0;         // 0xE0
 };
 
 Vec3f *func_00122DC8(Player *player);   // 0x00122DC8: the player's position

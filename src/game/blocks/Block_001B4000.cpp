@@ -154,3 +154,19 @@ void func_001B6710(int *arg0, int arg1)
 {
     *arg0 &= ~arg1;
 }
+
+int func_001C13D0(int); // 0x001C13D0
+
+struct UnkObj1B7CA8
+{
+    u16 mField00; // 0x00
+    u16 mField02; // 0x02
+
+    void ByteSwap1B7CA8(); // 0x001B7CA8
+};
+
+void UnkObj1B7CA8::ByteSwap1B7CA8()
+{
+    mField00 = func_001C13D0(mField00);
+    mField02 = func_001C13D0(mField02);
+}

@@ -61,3 +61,29 @@ void UnkObj18D1D8::Method18D1D8()
 {
     mField18 |= 0x100;
 }
+
+extern "C" int rand(); // 0x00230700
+
+struct UnkSub18E758
+{
+    char field_0x0;
+    u8 mField01; // 0x01
+};
+
+struct UnkObj18E758
+{
+    char field_0x0[0x18];
+    int mField18;             // 0x18
+    char field_0x1C[0x10];
+    UnkSub18E758 *mField2C;   // 0x2C
+    char field_0x30[0x28];
+    s8 mField58;              // 0x58
+
+    void Method18E758();      // 0x0018E758
+};
+
+void UnkObj18E758::Method18E758()
+{
+    mField18 = (mField18 | 0x30) & ~1;
+    mField58 = rand() % mField2C->mField01;
+}

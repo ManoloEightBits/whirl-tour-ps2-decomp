@@ -46,3 +46,15 @@ void func_001A4D78(int arg0, int arg1, int arg2)
     func_001A0C10();
     func_001A4DA8();
 }
+
+struct UnkGLState
+{
+    char field_0x0[0x11F9C];
+    int mField11F9C; // 0x11F9C
+};
+extern UnkGLState data_00267140;
+
+void func_001A4930(int arg0)
+{
+    data_00267140.mField11F9C = arg0 & 0xFF;
+}

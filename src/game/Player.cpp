@@ -16,6 +16,12 @@ void func_0017E2A0(Scooter *s, f32 val);             // 0x0017E2A0
 void func_00172060(Scooter *s);                      // 0x00172060
 void func_0017F288(Scooter *s, void *a, void *b);    // 0x0017F288
 f32 func_0017F728(Scooter *s);                       // 0x0017F728
+void Release198F38(void *);                          // 0x00198F38
+void func_00171DE0(Scooter *);                       // 0x00171DE0
+struct UnkObj11FA48 { void Destroy11FA48(); };
+struct EnvObj;
+void EnvObjCleanup14FB70(EnvObj *);                  // 0x0014FB70
+void MemFree1BD978(void *);                          // 0x001BD978
 
 Mat4x4f *Player::GetScooterPtr130()
 {
@@ -262,6 +268,18 @@ void *Player::GetField28()
 void Player::Action17F288(void *a, void *b)
 {
     func_0017F288(mScooter, a, b);
+}
+
+void Player::Destroy123258()
+{
+    if (mFieldDC != 0)
+        Release198F38(mFieldDC);
+    func_00171DE0(mScooter);
+    if (mField28 != 0)
+        ((UnkObj11FA48 *)mField28)->Destroy11FA48();
+    EnvObjCleanup14FB70((EnvObj *)this);
+    MemFree1BD978(mFieldE0);
+    MemFree1BD978(this);
 }
 
 void Player::Action17F328()

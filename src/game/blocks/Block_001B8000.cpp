@@ -210,3 +210,19 @@ int func_001BBE20()
     }
     return ok;
 }
+
+int func_001C1428(u32); // 0x001C1428
+
+struct UnkObj1B8108
+{
+    u32 mField00; // 0x00
+    u32 mField04; // 0x04
+
+    void ByteSwap1B8108(); // 0x001B8108
+};
+
+void UnkObj1B8108::ByteSwap1B8108()
+{
+    mField00 = func_001C1428(mField00);
+    mField04 = func_001C1428(mField04);
+}

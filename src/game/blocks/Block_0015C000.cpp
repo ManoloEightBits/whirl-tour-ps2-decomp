@@ -49,3 +49,16 @@ void func_0015EB20(UnkObj15EB20 *obj, int n, f32 value)
 {
     obj->mArr194[n] += value;
 }
+
+struct UnkObj15EFF8
+{
+    char field_0x0[0x20];
+    int mField20; // 0x20
+
+    void SetFlag15EFF8(); // 0x0015EFF8
+};
+
+void UnkObj15EFF8::SetFlag15EFF8()
+{
+    mField20 |= 0x20000000;
+}
