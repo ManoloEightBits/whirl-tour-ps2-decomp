@@ -4,7 +4,7 @@
 // Functions of 0x00128000..0x0012BFFF whose class and translation unit are not known yet.
 // Names are address based; move each function to its file once its TU is identified.
 
-void func_00154C58();         // 0x00154C58
+void DestroyGameCtx154C58(); // 0x00154C58
 
 void func_001285A8()
 {
@@ -34,7 +34,7 @@ void func_00129138()
 
 void func_00129CB8()
 {
-    func_00154C58();
+    DestroyGameCtx154C58();
 }
 
 void func_001BCAC0(int); // 0x001BCAC0

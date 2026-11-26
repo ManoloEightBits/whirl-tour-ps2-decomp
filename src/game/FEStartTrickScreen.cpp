@@ -1,7 +1,7 @@
 #include "game/FEScreen.h"
 #include "game/GL.h"
+#include "game/GameCtx.h"
 
-extern FEPad *gGameCtx262250; // 0x00262250
 
 void DrawBegin19A640();            // 0x0019A640
 void DrawEnd19A6B0();              // 0x0019A6B0
@@ -100,7 +100,7 @@ FETrickScreen::FETrickScreen(FEOwner *owner)
     mField16C = 1;
     mPad170 = gFEPad2659B0;
     mPad174 = gFEPad2659B4;
-    mSub164 = new FETrickSub164(gGameCtx262250->mButtons1C, &mField168, &mPad170, 1);
+    mSub164 = new FETrickSub164(gGameCtx262250->mCount1C, &mField168, &mPad170, 1);
 }
 
 FETrickScreen::~FETrickScreen()

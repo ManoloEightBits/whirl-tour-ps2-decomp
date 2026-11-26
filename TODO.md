@@ -154,6 +154,18 @@ map of the binary, regenerated with `tools/analysis/coverage.py --map docs/MAP.m
    `gGameCtx262250` has three partial views (`GameCtxFE` in `FEScreens.cpp`, `UnkGameCtx18` in
    `Scooter.cpp`, an `FEPad *` in `FEStartTrickScreen.cpp`): merge them into one header.
 
+8. **Game context (`GameCtx.h`, `GameCtx.cpp`).** `gGameCtx262250` now has one type, `GameCtx` (0x6E0
+   bytes), with what the menus and the progress functions show. `GameCtx.cpp` holds the module
+   `0x00153C10..0x001566F8` (it was `Block_00154000.cpp`): the destructor and `CreateGameCtx154C10`/
+   `DestroyGameCtx154C58`, the goals and level flags, the unlock-everything helpers (`func_00155030`,
+   `UnlockAllLevels155238`), mode tests and the playlist's current track. About 70 functions of the module
+   are left (most score 0.8-0.98); `mMode00` (0..7) still needs names for its values (Arcade, Story,
+   Entertainment, Multiplayer variants...): the tests show which modes count goals (0, 3, 7). Likely
+   0 Story and 2 Arcade: the level select (used by both) tests {0, 2}, and the level loaders that test
+   {0, 3} would be where collectibles appear, which happens in Story but not in Arcade (seen in play);
+   mode 4 uses Versus degradation. `UnlockScooterGlobal` (NON_MATCHING) unlocks one scooter per 20
+   collectibles found in all levels (`mScootersUnlocked48C`).
+
 ## Naming (most matched code still has address names)
 
 Matching gives the bytes, not what the code is for: the game has no symbols, and a small accessor says

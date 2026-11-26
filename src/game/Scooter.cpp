@@ -2,15 +2,10 @@
 #include "game/Scooter.h"
 #include "game/CollisionListeners.h"
 #include "game/Tricks.h"
+#include "game/GameCtx.h"
 
 int func_001850D0(void *obj, UnkTrickSeq *seq); // 0x001850D0: nonzero when obj accepts seq
 
-struct UnkGameCtx18
-{
-    char field_0x00[0x18];
-    int mField18; // 0x18
-};
-extern UnkGameCtx18 *gGameCtx262250; // 0x00262250
 
 void PhysicsClear1F34B0(void *obj, int flag); // 0x001F34B0
 void func_0011A3E0(void *obj, int id);        // 0x0011A3E0

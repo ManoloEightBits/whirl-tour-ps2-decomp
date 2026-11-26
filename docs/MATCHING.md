@@ -139,6 +139,12 @@ file with `diff_func.py <file.cpp> <symbol> --variants <json>`. That command onl
   (`0x0018CB38`). Declared as static members of `DD_Collision_Listener` in the header and defined with
   `inline` in the `.cpp` (before their callers), GCC inlines them in this TU and also emits the copies,
   because the class's key function is here. Other TUs, which see only the declaration, call the copies.
+- **An inline function with an out-of-line copy nobody calls, in a class without a vtable: `#pragma
+  interface`.** `GameCtx`'s destructor is expanded in `DestroyGameCtx154C58` and also exists on its own at
+  `0x00154B68` with no caller. Without a key function, g++ emits such a copy only under `#pragma interface`
+  in the header and `#pragma implementation` (no name, or the header's base name, not its path) in the
+  `.cpp`, and then for every inline member of the class: keep members the game has no copy of out of the
+  class (`GameCtx::Get` became a static function in `FEScreens.cpp`).
 - **`switch` case bodies come out in source order.** The jump table gives each case's address, so their
   order in the game is the order of the `case` labels in the original source. In
   `PickupDef::func_0011AD28` the `/fountains` case (token 6) comes before `fountain` (token 5).

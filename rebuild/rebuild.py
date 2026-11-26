@@ -72,8 +72,11 @@ def game_bytes(slus, address, length):
 
 def same_data(obj, ro_bytes, ro_relocs, symbols, ours, slus, theirs, text_index, base):
     if ours in ro_relocs:
+        first = ours
         while ours in ro_relocs:
             kind, sym = ro_relocs[ours]
+            if ours != first and (kind != verify.R_MIPS_32 or symbols[sym][4] != text_index):
+                break  # a jump table ends where the next function's starts (each has its own section)
             entry = game_bytes(slus, theirs, 4)
             if kind != verify.R_MIPS_32 or symbols[sym][4] != text_index or entry is None:
                 return False

@@ -1,65 +1,15 @@
 #include "common/libc.h"
 #include "game/GL.h"
 #include "game/FEScreen.h"
+#include "game/GameCtx.h"
 
-struct BGMInfo
+// FEPlaylistScreen reads the context through this (a fresh load each time).
+static inline GameCtx *GetGameCtx()
 {
-    char *mName00;
-    u8 mFlag04;
-    s8 mUnlocked05;
-    char pad06[2];
-};
+    extern GameCtx *gGameCtx262250;
+    return gGameCtx262250;
+}
 
-// One level's progress in the game context (12 bytes; GetLevelGoals1550D8 reads mGoals00).
-struct FELevelProgress
-{
-    int mGoals00;  // 0x00: goals done, of 7
-    int mField04;  // 0x04
-    int mField08;  // 0x08
-};
-
-struct GameCtxFE
-{
-    int pad00;
-    int mSlot04;
-    char pad08[0x0C];
-    int mField14;
-    int mField18;
-    int mCount1C;
-    char pad20[0x30];
-    int mNumTracks50;
-    int mTracks54[41];
-    // Options (FEOptionsScreen::InitMenu16C6D8; the item order is the menu's, as seen in the game)
-    int mActionCameras;  // 0xF8: string 0x2C, on/off
-    int mVibration;      // 0xFC: string 0x2D, on/off
-    int mBalanceMeter;   // 0x100: string 0x2E, on/off
-    char pad104[0x124];
-    FELevelProgress mLevels228[8]; // 0x228: Castle, Theme park, Suburbia, City in the sky, Subway,
-                                   // Deep water rig, Movie set, Tibet
-    int mArr288[23];
-    int mArr2E4[10];
-    int mArr30C[10];
-    char pad334[0x3C];
-    int mVersusTime;        // 0x370: 2 player options, string 0x37, an index for GetVersusTime154EA8
-    int mVersusDegradation; // 0x374: string 0x38, on/off
-    f32 mFxVolume;       // 0x378: audio options, string 0x34, a slider
-    f32 mMusicVolume;    // 0x37C: string 0x35, a slider
-    int mInGameMusic;    // 0x380: string 0x36, on/off
-    BGMInfo *mBGMTable384;
-    char pad388[0x14];
-    int mMaxLevel39C;    // 0x39C: the last level unlocked (0: only Castle)
-    char pad3A0[0x48];
-    u8 mScooterParts3E8[8][20]; // 0x3E8: the 20 "Scooters" collectibles of each level
-    char pad488[0x4C];
-    int mRaceOpen4D4[8]; // 0x4D4: the level can be played as a race (checkered flag on its icon)
-
-    static inline GameCtxFE *Get()
-    {
-        extern GameCtxFE *gGameCtx262250;
-        return gGameCtx262250;
-    }
-};
-extern GameCtxFE *gGameCtx262250;
 extern const int gOptionsMenuIds2627A8[];
 extern const int gOptionsMenuKinds2627C8[];
 extern const int gAudioMenuIds2627E8[];
@@ -297,9 +247,9 @@ FEPlaylistScreen::~FEPlaylistScreen()
 void FEPlaylistScreen::InitTracks112A78()
 {
     mCount16C = 0;
-    for (int i = 0; i < GameCtxFE::Get()->mNumTracks50; i++)
+    for (int i = 0; i < GetGameCtx()->mNumTracks50; i++)
     {
-        if (GameCtxFE::Get()->mBGMTable384[i].mUnlocked05 != 0)
+        if (GetGameCtx()->mBGMTable384[i].mUnlocked05 != 0)
         {
             mTracks174[mCount16C] = i;
             mCount16C++;
@@ -735,7 +685,7 @@ void FELevelScreen::UpdateLevels16A920()
 void FELevelScreen::VirtSlot4()
 {
     gGameCtx262250->mField18 = mField168;
-    gGameCtx262250->mField14 = mMenu0C->mSelected0C;
+    gGameCtx262250->mLevel14 = mMenu0C->mSelected0C;
 }
 #endif
 

@@ -315,7 +315,7 @@ public:
 // Select character, Select scooter, Trick setup (gPlayLevelMenuIds259E28); it shows each player's
 // character with their scooter.
 // What FEChooseScreen::mDefs1E0 points to: one per player, with texture ids at +0x1DC chosen by the
-// player's selection (GameCtxFE::mArr2E4).
+// player's selection (GameCtx::mArr2E4).
 struct FEChoosePair
 {
     void *mModel00; // 0x00
