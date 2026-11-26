@@ -1,4 +1,5 @@
 #include "common/types.h"
+#include "common/libc.h"
 #include "game/GL.h"
 #include "game/FEScreen.h"
 
@@ -184,6 +185,7 @@ struct UnkObj199C88
     void Method199C78(void *a, int b); // 0x00199C78
     void Method199C88(); // 0x00199C88
     void Method199CA8(int alignBits); // 0x00199CA8
+    u32 Method199CD8(int size, int alignBits); // 0x00199CD8
     void Method199D60(); // 0x00199D60
 };
 
@@ -218,6 +220,102 @@ void UnkObj199C88::Method199CA8(int alignBits)
     if (rem != 0)
         mField8 += align - rem;
 }
+
+u32 UnkObj199C88::Method199CD8(int size, int alignBits)
+{
+{
+    u32 align = 1 << alignBits;
+    u32 mask = align - 1;
+    u32 rem = mField8 & mask;
+    if (rem != 0)
+        mField8 += align - rem;
+    if (mField8 + size >= mField0 + mField4)
+    {
+        if (mFieldC < mField8)
+            mFieldC = mField8;
+        mField8 = mField0;
+        u32 rem0 = mField0 & mask;
+        if (rem0 != 0)
+            mField8 = mField0 + (align - rem0);
+    }
+    u32 cur = mField8;
+    mField8 = cur + size;
+    return cur;
+}
+}
+
+u32 func_00199740(int size, int alignBits)
+{
+    UnkObj199C88 *p = &data_00265CE8;
+    u32 align = 1 << alignBits;
+    u32 mask = align - 1;
+    u32 rem = p->mField8 & mask;
+    if (rem != 0)
+        p->mField8 += align - rem;
+    if (p->mField8 + size >= p->mField0 + p->mField4)
+    {
+        if (p->mFieldC < p->mField8)
+            p->mFieldC = p->mField8;
+        p->mField8 = p->mField0;
+        u32 rem0 = p->mField0 & mask;
+        if (rem0 != 0)
+            p->mField8 = p->mField0 + (align - rem0);
+    }
+    u32 cur = p->mField8;
+    p->mField8 = cur + size;
+    return cur;
+}
+
+#ifdef NON_MATCHING
+// func_001997D0: register differences; func_00199858: 52/55 match (slt count < padded hoisted
+// before ptr + bytes).
+u32 func_001997D0(int size)
+{
+    UnkObj199C88 *p = &data_00265CE8;
+    u32 rem = p->mField8 & 0xF;
+    if (rem != 0)
+        p->mField8 += 0x10 - rem;
+    if (p->mField8 + size >= p->mField0 + p->mField4)
+    {
+        if (p->mFieldC < p->mField8)
+            p->mFieldC = p->mField8;
+        p->mField8 = p->mField0;
+        u32 rem0 = p->mField0 & 0xF;
+        if (rem0 != 0)
+            p->mField8 = p->mField0 + (0x10 - rem0);
+    }
+    u32 cur = p->mField8;
+    p->mField8 = cur + size;
+    return cur;
+}
+
+void func_00199858(int count, int alignBits, void **outPtr)
+{
+    UnkObj199C88 *p = &data_00265CE8;
+    u32 align = 1 << alignBits;
+    u32 mask = align - 1;
+    int padded = (count + 3) & ~3;
+    u32 rem = p->mField8 & mask;
+    int bytes = padded * 0xC;
+    if (rem != 0)
+        p->mField8 += align - rem;
+    u32 ptr = p->mField8;
+    if (ptr + bytes >= p->mField0 + p->mField4)
+    {
+        if (p->mFieldC < ptr)
+            p->mFieldC = ptr;
+        p->mField8 = p->mField0;
+        u32 rem0 = p->mField0 & mask;
+        if (rem0 != 0)
+            p->mField8 = p->mField0 + (align - rem0);
+        ptr = p->mField8;
+    }
+    p->mField8 = ptr + bytes;
+    *outPtr = (void *)ptr;
+    if (count < padded)
+        memset((void *)(ptr + count * 0xC), 0, (padded - count) * 0xC);
+}
+#endif
 
 void func_00199D80(int alignBits)
 {
