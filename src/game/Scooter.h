@@ -140,6 +140,7 @@ public:
     void func_0017EDD0();                     // 0x0017EDD0
     void func_0017EDF0(int flag);             // 0x0017EDF0
     void func_0017EE28(int flag);             // 0x0017EE28
+    void func_0017EF30();                     // 0x0017EF30
     void Action1850D0(int seq);              // 0x0017F4C8: hands trick sequence seq to mField20C
     void func_0017F500(int a, int b);        // 0x0017F500
     void func_0017F568();                    // 0x0017F568
@@ -193,9 +194,11 @@ public:
     char field_0x214[0x68];
     int mField27C;             // 0x27C
     int mField280;             // 0x280
-    char field_0x284[0xE8];
+    char field_0x284[0xE4];
+    void *mField368;           // 0x368
     int mField36C;             // 0x36C: set to 1 by TakeDamage
-    char field_0x370[0x190];
+    struct UnkEffect *mField370; // 0x370
+    char field_0x374[0x18C];
     int mField500;             // 0x500
     int mField504;             // 0x504
     int mField508;             // 0x508

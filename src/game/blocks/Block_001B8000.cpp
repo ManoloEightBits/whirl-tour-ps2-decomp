@@ -226,3 +226,80 @@ void UnkObj1B8108::ByteSwap1B8108()
     mField00 = func_001C1428(mField00);
     mField04 = func_001C1428(mField04);
 }
+
+void func_001BDCA0(void *); // 0x001BDCA0
+struct UnkObj1B7010 { void Method1B7010(); };
+struct UnkObj1B6F00 { void Method1B6F00(); };
+
+struct UnkObj1B8B30
+{
+    char field_0x0[0xC];
+    UnkObj1B7010 *mField0C; // 0x0C
+    char field_0x10[0x24];
+    void *mField34;         // 0x34
+    UnkObj1B7010 *mField38; // 0x38
+    UnkObj1B7010 *mField3C; // 0x3C
+    void *mField40;         // 0x40
+    void *mField44;         // 0x44
+    void *mField48;         // 0x48
+
+    void Destroy1B8B30();   // 0x001B8B30
+};
+
+void UnkObj1B8B30::Destroy1B8B30()
+{
+    func_001BDCA0(mField34);
+    mField0C->Method1B7010();
+    mField38->Method1B7010();
+    mField3C->Method1B7010();
+    MemFree1BD978(mField40);
+    MemFree1BD978(mField44);
+    if (mField48 != 0)
+        MemFree1BD978(mField48);
+    MemFree1BD978(this);
+}
+
+struct UnkObj1B8BA0
+{
+    UnkObj1B6F00 *mField00; // 0x00
+    int mField04;           // 0x04
+    int mField08;           // 0x08
+    f32 mField0C;           // 0x0C
+    f32 mField10;           // 0x10
+    f32 mField14;           // 0x14
+    int mField18;           // 0x18
+    int mField1C;           // 0x1C
+    f32 mField20;           // 0x20
+    int mField24;           // 0x24
+
+    void Method1B8BA0(int a, int b, int c, f32 x, f32 y, f32 z); // 0x001B8BA0
+};
+
+void UnkObj1B8BA0::Method1B8BA0(int a, int b, int c, f32 x, f32 y, f32 z)
+{
+    mField04 = a;
+    mField08 = b;
+    mField0C = x;
+    mField10 = y;
+    mField14 = z;
+    mField18 = c;
+    mField20 = 1e-5f;
+    mField1C = 0;
+    mField24 = 0;
+    mField00->Method1B6F00();
+}
+
+struct UnkObj1B9B30
+{
+    int mField00;  // 0x00
+    void *mField04; // 0x04
+
+    void Method1B9B30(int count, void *buf); // 0x001B9B30
+};
+
+void UnkObj1B9B30::Method1B9B30(int count, void *buf)
+{
+    mField00 = count;
+    mField04 = buf;
+    memset(buf, 0, count * 4);
+}

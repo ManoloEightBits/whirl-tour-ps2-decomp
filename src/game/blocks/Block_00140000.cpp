@@ -1,4 +1,5 @@
 #include "common/types.h"
+#include "game/UnkEffect.h"
 
 // Functions of 0x00140000..0x00143FFF whose class and translation unit are not known yet.
 // Names are address based; move each function to its file once its TU is identified.
@@ -33,7 +34,7 @@ void func_001416B8()
 {
 }
 
-void func_00141A18()
+void UnkEffect::func_00141A18()
 {
     func_00142400();
 }
@@ -121,25 +122,13 @@ int UnkObj141140::GetField8()
     return mField8;
 }
 
-// UnkObj141A38 (0x00141A38..0x00141AD0): no RTTI; its layout is the fields these methods use.
-struct UnkObj141A38
-{
-    char field_0x0[0x24];
-    int mField24;                // 0x24
-    int mField28;                // 0x28
-    int mField2C;                // 0x2C
-
-    void Method141A38(int arg1); // 0x00141A38
-    void SetField28(int v);   // 0x00141AD0
-};
-
-void UnkObj141A38::Method141A38(int arg1)
+void UnkEffect::Method141A38(int arg1)
 {
     mField24 = arg1;
     mField2C |= 0x20;
 }
 
-void UnkObj141A38::SetField28(int v)
+void UnkEffect::SetField28(int v)
 {
     mField28 = v;
 }

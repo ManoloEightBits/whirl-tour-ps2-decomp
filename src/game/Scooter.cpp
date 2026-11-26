@@ -3,6 +3,9 @@
 #include "game/CollisionListeners.h"
 #include "game/Tricks.h"
 #include "game/GameCtx.h"
+#include "game/UnkEffect.h"
+
+int func_0011A940(void *obj); // 0x0011A940
 
 int func_001850D0(void *obj, UnkTrickSeq *seq); // 0x001850D0: nonzero when obj accepts seq
 
@@ -486,6 +489,17 @@ void Scooter::func_0017EDF0(int flag)
 void Scooter::func_0017EE28(int flag)
 {
     func_0011A3E0(mField1A0, !flag ? 0x110AD : 0x100AD);
+}
+
+void Scooter::func_0017EF30()
+{
+    int v = func_0011A940(mField368);
+    if (v != 0)
+    {
+        mField370->func_00141A18();
+        mField370->SetField28(v);
+        mField370->func_001419A0(0);
+    }
 }
 
 void Scooter::Action1850D0(int seq)
