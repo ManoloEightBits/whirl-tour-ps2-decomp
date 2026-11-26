@@ -49,7 +49,7 @@ struct GameCtx
     int mLevel14;            // 0x014: the level being played (0 Castle .. 7 Tibet)
     int mField18;            // 0x018
     int mCount1C;            // 0x01C
-    char pad20[0x28];
+    int mPad20[10];          // 0x020: each player's controller, an index into gFEPads2659A0
     int *mField48;           // 0x048
     int mTrack4C;            // 0x04C: the playlist track playing
     int mNumTracks50;        // 0x050
@@ -60,15 +60,21 @@ struct GameCtx
     int mBalanceMeter;       // 0x100: string 0x2E, on/off
     int pad104[5];
     int mNewScooter118;      // 0x118: set when collectibles unlock a scooter
-    char pad11C[0xA8];
+    int mField11C;           // 0x11C
+    char pad120[0xA4];
     int mArr1C4[6];          // 0x1C4
-    int pad1DC[2];
+    int mField1DC;           // 0x1DC
+    int mField1E0;           // 0x1E0
     int mField1E4;           // 0x1E4
     char pad1E8[0x40];
     LevelProgress mLevels228[8]; // 0x228: Castle, Theme park, Suburbia, City in the sky, Subway,
                                  // Deep water rig, Movie set, Tibet
-    int mArr288[23];         // 0x288
-    int mArr2E4[10];         // 0x2E4
+    // Per player (FECharacterScreen and FEScooterScreen store the choices)
+    int mCharacter288[10];   // 0x288: the character, an index into gCharacterNames261C50
+    int mArr2B0[10];         // 0x2B0: set with the character
+    s8 mScooterModel2D8[10]; // 0x2D8: the scooter, an index into gScooterModels261C90
+    char pad2E2[2];
+    int mArr2E4[10];         // 0x2E4: set with the scooter (a texture of FEScooterScreen)
     int mArr30C[10];         // 0x30C
     UnkObj125CD8 *mObjs334[10]; // 0x334
     char pad35C[0x14];
@@ -87,9 +93,13 @@ struct GameCtx
     int mScootersUnlocked48C[10]; // 0x48C: one more per 20 collectibles
     int mArr4B4[8];          // 0x4B4: one per level (func_00155250 sets them all)
     int mRaceOpen4D4[8];     // 0x4D4: the level can be played as a race (checkered flag on its icon)
-    char pad4F4[0x38];
+    char pad4F4[0x18];
+    int mCount50C;           // 0x50C: how many of mArr510 are set
+    int mArr510[7];          // 0x510
     int mArr52C[8];          // 0x52C: one per level (func_00155280 sets them all)
-    char pad54C[0x5C];
+    char pad54C[0x27];
+    s8 mScooterBits573[10][5]; // 0x573: five per scooter
+    char pad5A5[3];
     int mField5A8;           // 0x5A8: CreateScreen1101A8 adds a main-menu item when set
     GameCtxSub5AC *mSub5AC;  // 0x5AC
     char pad5B0[0x130];

@@ -503,7 +503,7 @@ MATCHED = set()  # filled by main() from whirl_paths.matched_addresses()
 
 def print_func_summary(info, show_dis=False, show_m2c=False, addr_to_sym=None):
     if info['addr'] in MATCHED:
-        status = 'MATCHED (%s)' % info['sym']
+        status = 'MATCHED (%s)' % (info['sym'] or 'inside a matched function')
     elif info['sym']:
         status = 'UNMATCHED (named %s)' % info['sym']
     else:

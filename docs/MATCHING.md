@@ -211,3 +211,12 @@ file with `diff_func.py <file.cpp> <symbol> --variants <json>`. That command onl
 - **Copying three float arguments into a local `Vec3f` before using them** (`Scooter::func_0017F898`):
   when a function taking `(f32 x, f32 y, f32 z)` spills `$f12..$f14` to `0x0($sp)..0x8($sp)` and reloads
   `$f13`/`$f14` into `$f1`, it assigned them to a local `Vec3f v; v.x = x; v.y = y; v.z = z;` first.
+- **Two independent stores come out in reverse source order.** `func_001562E8` stores 1 to `0x11C` and
+  then to `0x5A8` of `gGameCtx262250` (the second in the `jr` delay slot); the source writes `mField5A8`
+  first. With nothing ordering them, the scheduler swaps two stores through the same base, so when only
+  the order of a pair of stores differs, swap them in the source.
+- **A `switch` that only returns constants is one function, not several.** The function list splits
+  `GetVersusTime154EA8` after each `jr $ra`, so its eleven cases show up as 16-byte "functions" returning
+  20.0f, 30.0f... Look up the jump table (`dump_data.py`): when its entries point into those pieces, write
+  the whole `switch` at the first address (here `default:` shares `case 0:`'s body, which comes first).
+  `rebuild.py` cuts by address range, so one C++ function may cover several pieces.

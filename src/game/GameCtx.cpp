@@ -13,10 +13,18 @@ void func_00153AD8();           // 0x00153AD8
 void UnlockAllLevels155238();   // 0x00155238
 void func_00155250();           // 0x00155250
 void func_00155280();           // 0x00155280
-void func_00156158();           // 0x00156158
+void UnlockAllScooters156158();           // 0x00156158
 void func_00152610();           // 0x00152610
-extern const int data_00261C70[];
+extern const char *const gLevelNames261C70[];      // "castle", "themepark", ... "tibet"
 extern const int gLevelMenuIds2A2C50[];
+extern const char *const gCharacterNames261C50[];  // "gavin", "niki", ... "marcus"
+extern const int gCharacterTextIds2A2C30[];        // the characters' names in the text table
+extern const char *const gScooterModels261C90[];   // "scooter_model_1" .. "scooter_model_10"
+extern const int gScooterTextIds2A2C70[];          // the scooters' names in the text table
+extern const int data_002A2C98[];                  // one per level, -1 for Movie set
+extern const int data_002A2CB8[];                  // one per level, -1 for Movie set
+struct FEPad;
+extern FEPad *gFEPads2659A0[4];
 
 
 // Creates the context once (at start-up) and fills it (func_00152610).
@@ -73,9 +81,41 @@ void func_00154DE0(void *p)
     memset(p, 0, 0x74);
 }
 
-int func_00154F80()
+// The seconds of the "Versus time" option (2 player options); out of range gives 10.
+f32 GetVersusTime154EA8(int index)
 {
-    return 0xB;
+    switch (index)
+    {
+    default:
+    case 0:
+        return 10.0f;
+    case 1:
+        return 20.0f;
+    case 2:
+        return 30.0f;
+    case 3:
+        return 45.0f;
+    case 4:
+        return 60.0f;
+    case 5:
+        return 90.0f;
+    case 6:
+        return 120.0f;
+    case 7:
+        return 150.0f;
+    case 8:
+        return 180.0f;
+    case 9:
+        return 240.0f;
+    case 10:
+        return 300.0f;
+    }
+}
+
+// The number of Versus time choices.
+int GetVersusTimeCount154F80()
+{
+    return 11;
 }
 
 void func_00155030()
@@ -84,7 +124,7 @@ void func_00155030()
     func_00155250();
     func_00155280();
     func_00153AD8();
-    func_00156158();
+    UnlockAllScooters156158();
 }
 
 void func_00155A28()
@@ -287,9 +327,10 @@ void func_00155558(int n)
         gGameCtx262250->mFlags388[n] = 1;
 }
 
-const int *func_001551F0()
+// The levels' file names.
+const char *const *func_001551F0()
 {
-    return data_00261C70;
+    return gLevelNames261C70;
 }
 
 const int *GetLevelMenuIds155228()
@@ -396,3 +437,142 @@ char *GetCurrentTrackName155AD8()
     return 0;
 }
 
+
+// Per level, the goals done (GetLevelGoals1550D8 is at 0x001550D8).
+int GetLevelGoals1550D8(int level)
+{
+    return gGameCtx262250->mLevels228[level].mGoals00;
+}
+
+int func_00155EC0()
+{
+    return gGameCtx262250->mField1DC;
+}
+
+// Each player's choices (FECharacterScreen, FEScooterScreen) and controller.
+void SetPlayerCharacter155ED0(int player, int character, int arg2)
+{
+    gGameCtx262250->mCharacter288[player] = character;
+    gGameCtx262250->mArr2B0[player] = arg2;
+}
+
+const char *GetCharacterName155EF0(int player)
+{
+    return gCharacterNames261C50[gGameCtx262250->mCharacter288[player]];
+}
+
+const char *const *GetCharacterNames155F20()
+{
+    return gCharacterNames261C50;
+}
+
+const int *GetCharacterTextIds155F30()
+{
+    return gCharacterTextIds2A2C30;
+}
+
+void SetPlayerScooter155F40(int player, int model, int arg2)
+{
+    gGameCtx262250->mScooterModel2D8[player] = model;
+    gGameCtx262250->mArr2E4[player] = arg2;
+}
+
+s8 GetPlayerScooter155F68(int player)
+{
+    return gGameCtx262250->mScooterModel2D8[player];
+}
+
+void SetPlayerPad155F80(int player, int pad)
+{
+    gGameCtx262250->mPad20[player] = pad;
+}
+
+FEPad *GetPlayerPad155F98(int player)
+{
+    return gFEPads2659A0[gGameCtx262250->mPad20[player]];
+}
+
+int GetPlayerPadIndex155FC8(int player)
+{
+    return gGameCtx262250->mPad20[player];
+}
+
+int func_00155FE0()
+{
+    return gGameCtx262250->mCount50C;
+}
+
+// Sets entry n once; the count of set entries goes into every player's mArr30C.
+void func_00155FF0(int n)
+{
+    if (gGameCtx262250->mArr510[n] == 0)
+    {
+        gGameCtx262250->mArr510[n] = 1;
+        gGameCtx262250->mCount50C++;
+        for (int i = 0; i < 10; i++)
+            gGameCtx262250->mArr30C[i] = gGameCtx262250->mCount50C;
+    }
+}
+
+int func_00156050()
+{
+    if (gGameCtx262250->mField18 == 1)
+        return data_002A2C98[gGameCtx262250->mLevel14];
+    return -1;
+}
+
+int func_00156088()
+{
+    if (gGameCtx262250->mField18 == 1)
+        return data_002A2CB8[gGameCtx262250->mLevel14];
+    return -1;
+}
+
+// Whether collectible n of the level being played has been found.
+s8 GetScooterPart1560F0(int n)
+{
+    return gGameCtx262250->mScooterParts3E8[gGameCtx262250->mLevel14][n];
+}
+
+// The collectibles found in a level (of 20).
+int GetLevelScooters156118(int level)
+{
+    int count = 0;
+    for (int i = 0; i < 20; i++)
+    {
+        if (gGameCtx262250->mScooterParts3E8[level][i])
+            count++;
+    }
+    return count;
+}
+
+void UnlockAllScooters156158()
+{
+    for (int i = 0; i < 10; i++)
+    {
+        gGameCtx262250->mScootersUnlocked48C[i] = 1;
+        for (int j = 0; j < 5; j++)
+            gGameCtx262250->mScooterBits573[i][j] = 1;
+    }
+}
+
+const char *const *GetScooterModels1561B8()
+{
+    return gScooterModels261C90;
+}
+
+const int *GetScooterTextIds1561C8()
+{
+    return gScooterTextIds2A2C70;
+}
+
+const char *GetScooterModel1561D8(int player)
+{
+    return gScooterModels261C90[gGameCtx262250->mScooterModel2D8[player]];
+}
+
+void func_001562E8()
+{
+    gGameCtx262250->mField5A8 = 1;
+    gGameCtx262250->mField11C = 1;
+}

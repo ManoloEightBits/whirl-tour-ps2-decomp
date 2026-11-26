@@ -143,7 +143,7 @@ map of the binary, regenerated with `tools/analysis/coverage.py --map docs/MAP.m
    Vibration, Balance meter (on/off), 2 player options, Audio options, Playlist (`FEPlaylistScreen`,
    title 0x67), Default settings, Accept (PAL adds Language first); Audio: In-game music, Music volume,
    Fx volume; 2 player: Versus time (`GetVersusTime154EA8`), Versus degradation. The values live in
-   `GameCtxFE` (`mActionCameras`..`mInGameMusic`). Levels (Play level, `GetLevelMenuIds155228`): Castle,
+   `GameCtx` (`mActionCameras`..`mInGameMusic`). Levels (Play level, `GetLevelMenuIds155228`): Castle,
    Theme park, Suburbia, City in the sky, Subway, Deep water rig, Movie set, Tibet; only Castle is open at
    first (`mMaxLevel39C`). Each has 7 goals (`mLevels228[n].mGoals00`, `GetLevelGoals1550D8`) and 20
    "Scooters" collectibles that unlock a scooter (`mScooterParts3E8`, `GetLevelScooters156118`);
@@ -151,15 +151,18 @@ map of the binary, regenerated with `tools/analysis/coverage.py --map docs/MAP.m
    The level screen's two icons: a key (`GetLevelKey155310`, a flag per level; shown on every level so
    far, its effect unknown) and a checkered flag when the level can be played as a race
    (`mRaceOpen4D4`); winning the race puts a trophy on it (not found in the code yet).
-   `gGameCtx262250` has three partial views (`GameCtxFE` in `FEScreens.cpp`, `UnkGameCtx18` in
-   `Scooter.cpp`, an `FEPad *` in `FEStartTrickScreen.cpp`): merge them into one header.
 
 8. **Game context (`GameCtx.h`, `GameCtx.cpp`).** `gGameCtx262250` now has one type, `GameCtx` (0x6E0
    bytes), with what the menus and the progress functions show. `GameCtx.cpp` holds the module
    `0x00153C10..0x001566F8` (it was `Block_00154000.cpp`): the destructor and `CreateGameCtx154C10`/
    `DestroyGameCtx154C58`, the goals and level flags, the unlock-everything helpers (`func_00155030`,
-   `UnlockAllLevels155238`), mode tests and the playlist's current track. About 70 functions of the module
-   are left (most score 0.8-0.98); `mMode00` (0..7) still needs names for its values (Arcade, Story,
+   `UnlockAllLevels155238`), mode tests and the playlist's current track, the Versus time switch
+   (`GetVersusTime154EA8`: 10 to 300 seconds, 11 choices), and each player's choices: character
+   (`mCharacter288`, `gCharacterNames261C50` "gavin".."marcus"), scooter (`mScooterModel2D8`,
+   `gScooterModels261C90`) and controller (`mPad20`, an index into `gFEPads2659A0`). About 45 functions of
+   the module are left: `GameCtx::GameCtx` and `func_00152610` (filling it), the 0x00153C10..0x00154E80
+   run, `func_00156200`/`func_00156270`/`func_001565F0` (0.6-0.7) and `func_00156310` (`ldl`/`sdl`
+   copies); `mMode00` (0..7) still needs names for its values (Arcade, Story,
    Entertainment, Multiplayer variants...): the tests show which modes count goals (0, 3, 7). Likely
    0 Story and 2 Arcade: the level select (used by both) tests {0, 2}, and the level loaders that test
    {0, 3} would be where collectibles appear, which happens in Story but not in Arcade (seen in play);

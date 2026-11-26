@@ -109,7 +109,16 @@ extern f32 data_002B24F8;
 extern f32 data_002B24FC;
 extern int data_0025E720;
 extern int data_0025E738;
-extern int data_0025E73C;
+// The object at data_0025E73C; only the fields read by func_001519B0..func_001519D0 are known.
+struct UnkObj25E73C
+{
+    char pad00[0xCC];
+    int mFieldCC; // 0xCC
+    int mFieldD0; // 0xD0
+    int padD4;
+    int mFieldD8; // 0xD8
+};
+extern UnkObj25E73C *data_0025E73C;
 extern int data_00261C4C;
 
 void func_00150928(int arg0)
@@ -145,7 +154,22 @@ f32 func_00151758(f32 *arg0)
     return *arg0;
 }
 
-int func_00151D10()
+int func_001519B0()
+{
+    return data_0025E73C->mFieldCC;
+}
+
+int func_001519C0()
+{
+    return data_0025E73C->mFieldD0;
+}
+
+int func_001519D0()
+{
+    return data_0025E73C->mFieldD8;
+}
+
+UnkObj25E73C *func_00151D10()
 {
     return data_0025E73C;
 }

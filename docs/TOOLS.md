@@ -91,7 +91,9 @@ the other tools directly.
 
 A function counts as matched when it is in `build/matched.txt`. `config/symbols.txt` is not enough: it
 also names functions that matched code only calls. `inspect_tu.py` shows those as
-`UNMATCHED (named ...)`. Without `build/matched.txt` (run `tools/check_all.py` once), the tools fall back
+`UNMATCHED (named ...)`. An address inside a matched function counts as matched too: the function list
+splits a `switch` that returns from every case into pieces (`GetVersusTime154EA8`), and those pieces show
+as `MATCHED (inside a matched function)` and leave the sweep report. Without `build/matched.txt` (run `tools/check_all.py` once), the tools fall back
 to `symbols.txt` and print a note.
 
 Examples (venv active, from the repository root):

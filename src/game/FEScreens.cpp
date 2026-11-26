@@ -57,9 +57,9 @@ void func_00119560(void *actor, int, int);
 void func_00191F80(void *cam, Mat4x4f *view, Mat4x4f *m);
 void func_00191FD0(void *cam, Mat4x4f *proj);
 void func_00196430(void *model, void *tex);
-const int *func_00155F30();
-int func_00155FC8(int);
-const int *func_001561C8();
+const int *GetCharacterTextIds155F30();
+int GetPlayerPadIndex155FC8(int);
+const int *GetScooterTextIds1561C8();
 f32 GetVersusTime154EA8(int index);
 void func_00196E38(void *movie);
 void func_00192350(void *credits);
@@ -75,9 +75,9 @@ int GetLevelKey155310(int level);
 int GetLevelScooters156118(int level);
 void func_00158140(void *, void *, int, int, f32, f32);
 void func_00156200();
-void func_00155F40(int, int, int);
+void SetPlayerScooter155F40(int, int, int);
 void func_00141950(void *, int);
-void func_00155ED0(int, int, int);
+void SetPlayerCharacter155ED0(int, int, int);
 
 // 1. FEMcScreen
 FEMcScreen::FEMcScreen(FEOwner *owner, int mode, void *mc)
@@ -178,7 +178,7 @@ void FEMonsterScreen::VirtSlot2(f32 dt)
 // has its own) and all four constants (150, 350, 750, 50) in registers, which takes two more saved
 // registers than this; loop forms (for/while, the max as if or ternary) and the text macros did not
 // change it.
-// Lists the last (up to) six entries: number, score (func_00155FC8) and name, 50 units apart.
+// Lists the last (up to) six entries: number, score (GetPlayerPadIndex155FC8) and name, 50 units apart.
 void FEMonsterScreen::VirtSlot3()
 {
     char number[0x40];
@@ -193,7 +193,7 @@ void FEMonsterScreen::VirtSlot3()
     for (int i = n >= 0 ? n : 0; i < gGameCtx262250->mCount1C; i++)
     {
         sprintf(number, func_00151D40(0x6B), i + 1);
-        sprintf(score, func_00151D40(0x6C), func_00155FC8(i) + 1);
+        sprintf(score, func_00151D40(0x6C), GetPlayerPadIndex155FC8(i) + 1);
         mText164->mPos04.Set(150.0f, y, 0.0f);
         mText164->mString30 = number;
         DrawText19B758(mText164);
@@ -201,7 +201,7 @@ void FEMonsterScreen::VirtSlot3()
         mText164->mString30 = score;
         DrawText19B758(mText164);
         mText164->mPos04.Set(750.0f, y, 0.0f);
-        mText164->mString30 = func_00151D40(func_00155F30()[gGameCtx262250->mArr288[i]]);
+        mText164->mString30 = func_00151D40(GetCharacterTextIds155F30()[gGameCtx262250->mCharacter288[i]]);
         DrawText19B758(mText164);
         y -= 50.0f;
         }
@@ -1178,7 +1178,7 @@ void FEScooterScreen::VirtSlot3()
         int sel = mArr260[i];
         mText2B4->mPos04.Set(0.0f, -0.2f, 0.0f);
         mText2B4->mScale1C.Set(0.003f, 0.003f, 1.0f);
-        TEXT_SET_STRING(mText2B4, func_00151D40(func_001561C8()[sel]));
+        TEXT_SET_STRING(mText2B4, func_00151D40(GetScooterTextIds1561C8()[sel]));
         TEXT_ADD_ALIGN(mText2B4, 2);
         DrawText19B758(mText2B4);
         f32 angle = side * 40.0f;
@@ -1217,7 +1217,7 @@ FEScooterScreen::~FEScooterScreen()
 void FEScooterScreen::VirtSlot4()
 {
     for (int i = 0; i < mCount164; i++)
-        func_00155F40(mArr168[i], mArr260[i], mArr238[i]);
+        SetPlayerScooter155F40(mArr168[i], mArr260[i], mArr238[i]);
 }
 
 int FEScooterScreen::VirtSlot7()
@@ -1279,7 +1279,7 @@ void FECharacterScreen::VirtSlot3()
             func_00119560(mModels1D4[i], 0, 1);
         mText320->mPos04.Set(0.0f, 0.0f, 0.0f);
         mText320->mScale1C.Set(0.003f, 0.003f, 1.0f);
-        TEXT_SET_STRING(mText320, func_00151D40(func_00155F30()[mArr2C4[i]]));
+        TEXT_SET_STRING(mText320, func_00151D40(GetCharacterTextIds155F30()[mArr2C4[i]]));
         TEXT_ADD_ALIGN(mText320, 2);
         DrawText19B758(mText320);
         glPopMatrix();
@@ -1314,7 +1314,7 @@ void FECharacterScreen::VirtSlot4()
 {
     for (int i = 0; i < mCount164; i++)
     {
-        func_00155ED0(mArr168[i], mArr2C4[i], mArr274[i]);
+        SetPlayerCharacter155ED0(mArr168[i], mArr2C4[i], mArr274[i]);
         gGameCtx262250->mArr30C[mArr168[i]] = mArr29C[i];
     }
 }
