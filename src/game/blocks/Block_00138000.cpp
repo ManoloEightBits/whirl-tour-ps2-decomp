@@ -59,3 +59,21 @@ void func_001397E0(UnkObj1397E0A *arg0, UnkObj1397E0B *arg1)
     arg1->mField4A |= 0x20;
     arg0->mField03 = 0;
 }
+
+struct UnkData1397F8
+{
+    char pad00[0x20A];
+    u16 mField20A; // 0x20A
+};
+
+extern UnkData1397F8 *data_0025E5DC;
+void func_00119140(UnkObj1397E0B *); // 0x00119140
+
+void func_001397F8(u8 *arg0, UnkObj1397E0B *arg1)
+{
+    func_00119140(arg1);
+    arg1->mField4A |= 0x20;
+    *arg0 |= 0x80;
+    if (data_0025E5DC != 0)
+        data_0025E5DC->mField20A = 0;
+}

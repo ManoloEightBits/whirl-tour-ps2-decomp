@@ -333,3 +333,35 @@ UnkBuf1C1008 *func_001C1008(int arg0)
     }
     return p;
 }
+
+struct UnkSub1C0F90
+{
+    char pad00[0x0C];
+    void *mField0C; // 0x0C
+};
+
+struct UnkObj1C0F90
+{
+    char pad00[0x2C];
+    int mField2C;           // 0x2C
+    char pad30[0x30];
+    UnkSub1C0F90 *mField60; // 0x60
+    char pad64[0x08];
+    void *mField6C;         // 0x6C
+    int mField70;           // 0x70
+};
+
+void func_0023F9C8(void *);   // 0x0023F9C8
+void func_001BCAC0(int);      // 0x001BCAC0
+void ArrayDestroy1BB168(int); // 0x001BB168
+
+void func_001C0F90(UnkObj1C0F90 *arg0)
+{
+    UnkSub1C0F90 *sub = arg0->mField60;
+    MemFree1BD978(sub->mField0C);
+    MemFree1BD978(sub);
+    func_0023F9C8(arg0->mField6C);
+    func_001BCAC0(arg0->mField2C);
+    ArrayDestroy1BB168(arg0->mField70);
+    MemFree1BD978(arg0);
+}

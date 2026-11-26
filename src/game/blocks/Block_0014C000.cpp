@@ -337,3 +337,25 @@ void func_0014C128(UnkObj14C128 *arg0)
     MemFree1BD978(arg0);
     func_00126138(0);
 }
+
+struct UnkVec14FA78
+{
+    f32 x;
+    f32 y;
+    f32 z;
+};
+
+struct UnkObj14FA78
+{
+    char pad00[0xC0];
+    void *mFieldC0; // 0xC0
+};
+
+void *__builtin_new(u32);                        // 0x00100BE8
+void *func_00165100(void *, f32, f32, f32);      // 0x00165100
+
+void func_0014FA78(UnkObj14FA78 *arg0, UnkVec14FA78 *arg1)
+{
+    if (arg0->mFieldC0 == 0)
+        arg0->mFieldC0 = func_00165100(__builtin_new(0x138), arg1->x, arg1->y, arg1->z);
+}

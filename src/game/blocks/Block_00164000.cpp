@@ -97,3 +97,26 @@ void func_00166368(UnkObj166368 *arg0, UnkArg166368 *arg1)
     arg0->mField18 = arg0->mSub58->mField28;
     arg0->mFlags00 |= 0x80;
 }
+
+struct UnkObj1675D8
+{
+    char pad00[0x0C];
+    void *mField0C; // 0x0C
+    void *mField10; // 0x10
+    void *mField14; // 0x14
+    char pad18[0x0C];
+    void *mField24; // 0x24
+};
+
+void MemFree1BD978(void *); // 0x001BD978
+void __builtin_delete(void *); // 0x00100C08
+
+void func_001675D8(UnkObj1675D8 *arg0, int arg1)
+{
+    MemFree1BD978(arg0->mField0C);
+    MemFree1BD978(arg0->mField10);
+    MemFree1BD978(arg0->mField14);
+    MemFree1BD978(arg0->mField24);
+    if (arg1 & 1)
+        __builtin_delete(arg0);
+}

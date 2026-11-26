@@ -185,3 +185,16 @@ void func_001B4E18(f32 *a, f32 *b)
         a[3] = -w;
     }
 }
+
+f32 Sin1B1910(f32); // 0x001B1910
+f32 Cos1B19E8(f32); // 0x001B19E8
+
+void func_001B4948(f32 *q, f32 angle)
+{
+    f32 half = angle * 0.5f;
+    f32 s = Sin1B1910(half);
+    q[1] = 0.0f;
+    q[2] = 0.0f;
+    q[0] = s;
+    q[3] = Cos1B19E8(half);
+}

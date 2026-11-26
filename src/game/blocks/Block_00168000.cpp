@@ -120,3 +120,25 @@ UnkObj168900 *func_00168900(UnkObj168900 *arg0, int arg1, f32 fparg0)
     func_00168DF0((int)arg0);
     return arg0;
 }
+
+struct UnkObj1689C0
+{
+    char pad00[0x1C];
+    void *mField1C; // 0x1C
+    void *mField20; // 0x20
+    void *mField24; // 0x24
+    void *mField28; // 0x28
+};
+
+void MemFree1BD978(void *);    // 0x001BD978
+void __builtin_delete(void *); // 0x00100C08
+
+void func_001689C0(UnkObj1689C0 *arg0, int arg1)
+{
+    MemFree1BD978(arg0->mField20);
+    MemFree1BD978(arg0->mField24);
+    MemFree1BD978(arg0->mField28);
+    MemFree1BD978(arg0->mField1C);
+    if (arg1 & 1)
+        __builtin_delete(arg0);
+}

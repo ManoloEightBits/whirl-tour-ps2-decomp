@@ -597,3 +597,18 @@ int func_001BEAD8(UnkObj1BEAD8 *arg0, int arg1, int *arg2, int *arg3)
     }
     return ret;
 }
+
+extern int data_0027B6B8;
+void func_001BC508(void *, f32); // 0x001BC508
+
+void func_001BCEA0(f32 arg0)
+{
+    void **node = *(void ***)func_001BCEF8(data_0027B6B8);
+    void **next = (void **)*node;
+    while (next != 0)
+    {
+        func_001BC508(node, arg0);
+        node = next;
+        next = (void **)*next;
+    }
+}
