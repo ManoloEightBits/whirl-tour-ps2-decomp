@@ -67,3 +67,10 @@ void func_001C5EF8(f32 *out, f32 *in, f32 scale)
     for (int i = 0; i < 9; i++)
         out[i] = scale * in[i];
 }
+
+void func_001C5D50(f32 *m, f32 *v, f32 *out)
+{
+    out[0] = v[0] * m[0] + v[1] * m[3] + v[2] * m[6];
+    out[1] = v[0] * m[1] + v[1] * m[4] + v[2] * m[7];
+    out[2] = v[0] * m[2] + v[1] * m[5] + v[2] * m[8];
+}

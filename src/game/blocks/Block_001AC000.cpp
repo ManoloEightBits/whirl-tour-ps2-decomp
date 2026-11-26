@@ -118,3 +118,18 @@ void func_001AC2F8(UnkObj1AC2F8 *arg0)
         arg0->mFieldFC->Method1AD5F8();
     MemFree1BD978(arg0);
 }
+
+typedef void (*UnkCurveFn)(int, int, int, f32);
+UnkCurveFn func_001C47B8(int);                               // 0x001C47B8
+u16 func_001AD8E8(u8 *, u16, int, f32 *, int *, int *);      // 0x001AD8E8
+
+f32 func_001AF368(u8 *arg0, u16 *arg1, int arg2, int arg3)
+{
+    f32 sp0;
+    int sp4;
+    int sp8;
+    UnkCurveFn fn = func_001C47B8(*arg0);
+    *arg1 = func_001AD8E8(arg0, *arg1, arg2, &sp0, &sp4, &sp8);
+    fn(sp4, sp8, arg3, sp0);
+    return sp0;
+}

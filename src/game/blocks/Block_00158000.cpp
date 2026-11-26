@@ -45,3 +45,31 @@ void UnkObj158860::Method158888()
 {
     mField3C += 1;
 }
+
+struct UnkDialog1588D0
+{
+    char pad00[0x8];
+    int mField08;
+};
+
+struct UnkObj1588D0
+{
+    char pad00[0x8];
+    UnkDialog1588D0 *mDialog08;
+};
+
+UnkDialog1588D0 *CreateDialog130960(int, int, int, void *, int); // 0x00130960
+void CleanupDialog1309E0(void *); // 0x001309E0
+
+void func_001588D0(UnkObj1588D0 *arg0, int arg1, int arg2, int arg3, void *arg4, int arg5, int arg6)
+{
+    if (arg0->mDialog08 != 0)
+    {
+        CleanupDialog1309E0(arg0->mDialog08);
+        arg0->mDialog08 = 0;
+    }
+    UnkDialog1588D0 *d = CreateDialog130960(arg1, arg2, arg3, arg4, arg5);
+    arg0->mDialog08 = d;
+    if (d != 0)
+        d->mField08 = arg6;
+}

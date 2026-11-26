@@ -508,3 +508,61 @@ int func_001BFAC0(int arg0)
 {
     return *(int *)arg0 == 3;
 }
+
+struct UnkHdr1BE460
+{
+    u32 mField00;
+    u32 mField04;
+    u32 mField08;
+    u32 mField0C;
+    u32 mField10;
+    u32 mField14;
+};
+
+int func_001BFEE0(int);              // 0x001BFEE0
+void func_001C00F8(int, void *, int); // 0x001C00F8
+void func_001BFFA0(int);             // 0x001BFFA0
+
+int func_001BE460(int arg0, int arg1)
+{
+{
+    int size;
+    int obj = func_001BFEE0(arg1);
+    if (obj != 0)
+    {
+        UnkHdr1BE460 *hdr = (UnkHdr1BE460 *)func_001BE268(arg0, &size);
+        if (hdr != 0)
+        {
+            int ver = hdr->mField04;
+            int count = hdr->mField08;
+            hdr->mField00 = func_001C13A8(hdr->mField00);
+            hdr->mField04 = func_001C13A8(hdr->mField04);
+            hdr->mField08 = func_001C13A8(hdr->mField08);
+            hdr->mField0C = func_001C13A8(hdr->mField0C);
+            hdr->mField10 = func_001C13A8(hdr->mField10);
+            u32 *a = &hdr->mField14;
+            if (ver > 0x10001)
+            {
+                hdr->mField14 = func_001C13A8(hdr->mField14);
+                a = (u32 *)((u8 *)hdr + 0x18);
+            }
+            u32 *p = a;
+            if (count > 0)
+            {
+                do
+                {
+                    count--;
+                    p[0] = func_001C13A8(p[0]);
+                    p[2] = func_001C13A8(p[2]);
+                    p[1] = func_001C13A8(p[1]);
+                    p += 3;
+                } while (count != 0);
+            }
+            func_001C00F8(obj, hdr, size);
+            MemFree1BD978(hdr);
+        }
+        func_001BFFA0(obj);
+    }
+    return 0;
+}
+}

@@ -347,3 +347,31 @@ void func_001B8040(UnkObj1B8040 *arg0)
     arg0->mField4C = func_001C13A8(arg0->mField4C);
 }
 }
+
+struct UnkNode1B9CA0
+{
+    UnkNode1B9CA0 *mNext00;
+    int mField04;
+    int mField08;
+};
+
+struct UnkTable1B9CA0
+{
+    int mCount00;
+    UnkNode1B9CA0 **mBuckets04;
+};
+
+void func_001B9CA0(UnkTable1B9CA0 *arg0, void (*cb)(int, int))
+{
+    for (int i = 0; i < arg0->mCount00; i++)
+    {
+        UnkNode1B9CA0 *node = arg0->mBuckets04[i];
+        while (node != 0)
+        {
+            int a1 = node->mField08;
+            int a0 = node->mField04;
+            node = node->mNext00;
+            cb(a0, a1);
+        }
+    }
+}

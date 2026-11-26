@@ -267,3 +267,46 @@ int func_00187F30(UnkObj187F30 *arg0, UnkPad187F30 *arg1)
     }
     return arg0->mField00;
 }
+
+struct UnkObj185458
+{
+    char pad00[0x08];
+    int mField08;   // 0x08
+    int mField0C;   // 0x0C
+    int mField10;   // 0x10
+    int *mArr14;    // 0x14
+    f32 *mArr18;    // 0x18
+    int *mArr1C;    // 0x1C
+    f32 *mArr20;    // 0x20
+    int mField24;   // 0x24
+};
+
+void func_00185458(UnkObj185458 *arg0, int arg1, f32 arg2)
+{
+    int mask = arg0->mField24 & arg1;
+    arg0->mField24 = mask;
+    if (arg1 & mask)
+        arg1 &= ~mask;
+    int hi = arg1 & 0xF0000000;
+    arg0->mArr18[arg0->mField0C] += arg2;
+    arg0->mArr20[arg0->mField10] += arg2;
+    int idx0 = arg0->mField0C;
+    int *arr0 = arg0->mArr14;
+    if (arr0[idx0] != hi)
+    {
+        int next = (idx0 + 1) % arg0->mField08;
+        arg0->mField0C = next;
+        arr0[next] = hi;
+        arg0->mArr18[arg0->mField0C] = 0.0f;
+    }
+    int idx1 = arg0->mField10;
+    int *arr1 = arg0->mArr1C;
+    int lo = arg1 & 0x3C0000;
+    if (arr1[idx1] != lo)
+    {
+        int next = (idx1 + 1) % arg0->mField08;
+        arg0->mField10 = next;
+        arr1[next] = lo;
+        arg0->mArr20[arg0->mField10] = 0.0f;
+    }
+}

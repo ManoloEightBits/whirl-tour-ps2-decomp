@@ -1,5 +1,6 @@
 #include "common/types.h"
 #include "game/FEScreen.h"
+#include "game/GameCtx.h"
 
 // Functions of 0x00130000..0x00133FFF whose class and translation unit are not known yet.
 // Names are address based; move each function to its file once its TU is identified.
@@ -94,4 +95,73 @@ void func_00130018()
 
 FESub08::~FESub08()
 {
+}
+
+struct UnkObj131320
+{
+    char pad00[0x28];
+    int mField28;         // 0x28
+    void *mField2C;       // 0x2C
+    char pad30[0x0C];
+    char mField3C[0x40];  // 0x3C
+    f32 mField7C;         // 0x7C
+    char pad80[0x4A4];
+    char mBuf524[0x100];  // 0x524
+    char mBuf624[0x100];  // 0x624
+    char mBuf724[0x100];  // 0x724
+};
+
+void *func_00143100(const char *, int); // 0x00143100
+void func_00143170(void *, int);        // 0x00143170
+void func_001432A0(void *, f32);        // 0x001432A0
+const char *func_00153360();            // 0x00153360
+char *GetCurrentTrackName155AD8();      // 0x00155AD8
+extern "C" void func_00231F08(char *, const char *, int); // 0x00231F08
+
+void func_00131320(UnkObj131320 *arg0, int arg1)
+{
+    if (gGameCtx262250->mInGameMusic != 0)
+    {
+        if (arg0->mField2C != 0)
+        {
+            func_00143170(arg0->mField2C, 4);
+            arg0->mField2C = 0;
+        }
+        const char *track = (arg1 != 0) ? func_00153360() : GetCurrentTrackName155AD8();
+        if (track != 0)
+        {
+            void *snd = func_00143100(track + 0x60, 4);
+            arg0->mField2C = snd;
+            if (snd != 0)
+                func_001432A0(snd, gGameCtx262250->mMusicVolume);
+            arg0->mField7C = 2.0f;
+            func_00231F08(arg0->mBuf524, track, 0x100);
+            func_00231F08(arg0->mBuf624, track + 0x20, 0x100);
+            func_00231F08(arg0->mBuf724, track + 0x40, 0x100);
+        }
+        else
+        {
+            gGameCtx262250->mInGameMusic = 0;
+        }
+    }
+    else
+    {
+        if (arg0->mField28 != 0 && arg0->mField3C[0] != 0)
+        {
+            if (arg0->mField2C != 0)
+            {
+                func_00143170(arg0->mField2C, 4);
+                arg0->mField2C = 0;
+            }
+            void *snd = func_00143100(arg0->mField3C, 4);
+            arg0->mField2C = snd;
+            if (snd != 0)
+                func_001432A0(snd, gGameCtx262250->mMusicVolume);
+        }
+        else if (arg0->mField2C != 0)
+        {
+            func_00143170(arg0->mField2C, 4);
+            arg0->mField2C = 0;
+        }
+    }
 }

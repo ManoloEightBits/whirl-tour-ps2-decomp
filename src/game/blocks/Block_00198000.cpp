@@ -733,3 +733,20 @@ void func_00198210(int arg0)
     func_00197BC8(arg0);
     MemFree1BD978(obj);
 }
+
+void func_001984B8(UnkObj198158 *arg0, int arg1)
+{
+    UnkObj198628 *cur = arg0->mHead18;
+    UnkObj198628 *next = *(UnkObj198628 **)cur;
+    while (next != 0)
+    {
+        if (arg1 == cur->mField0C)
+        {
+            if (cur->mField00 != 0 || cur->mField04 != 0)
+                func_001BD360(cur);
+            MemFree1BD978(cur);
+        }
+        cur = next;
+        next = *(UnkObj198628 **)next;
+    }
+}
