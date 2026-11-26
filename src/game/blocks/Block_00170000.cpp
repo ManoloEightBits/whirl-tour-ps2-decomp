@@ -84,3 +84,29 @@ void *UnkObj171050::Method171050()
     mArray4 = ArrayCreate1BB0E0(0x80);
     return this;
 }
+
+void *MemAlloc1BD958(int);     // 0x001BD958
+void *func_001BD558(int, int); // 0x001BD558
+
+struct UnkObj170898
+{
+    int mField00;   // 0x00
+    int mField04;   // 0x04
+    void *mField08; // 0x08
+    void *mField0C; // 0x0C
+    void *mField10; // 0x10
+};
+
+UnkObj170898 *func_00170898(int arg0, int arg1, int arg2, int arg3)
+{
+    UnkObj170898 *obj = (UnkObj170898 *)MemAlloc1BD958(0x14);
+    if (obj != 0)
+    {
+        obj->mField00 = arg0;
+        obj->mField04 = arg1;
+        obj->mField08 = func_001BD558(arg1 * 0xC, 4);
+        obj->mField0C = (arg2 != 0) ? func_001BD558(arg1 * 8, 4) : 0;
+        obj->mField10 = (arg3 != 0) ? func_001BD558(arg1 * 4, 4) : 0;
+    }
+    return obj;
+}

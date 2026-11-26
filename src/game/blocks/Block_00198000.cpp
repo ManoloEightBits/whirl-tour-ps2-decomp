@@ -531,3 +531,80 @@ void func_00198E08(int arg0, int arg1, int arg2, int arg3, int arg4, int arg5, i
     obj->mField28 = 0;
 }
 }
+
+struct UnkObj1974D8
+{
+    UnkObj1974D8 *mNext; // 0x00
+    void Method1974D8(); // 0x001974D8
+};
+
+struct UnkObj198158
+{
+    UnkObj1974D8 *mHead00;  // 0x00
+    char pad04[0x08];
+    UnkObj1974D8 *mHead0C;  // 0x0C
+    char pad10[0x08];
+    UnkObj198628 *mHead18;  // 0x18
+};
+
+void func_00198158(UnkObj198158 *arg0)
+{
+    UnkObj1974D8 *a = arg0->mHead00;
+    UnkObj1974D8 *next = a->mNext;
+    while (next != 0)
+    {
+        a->Method1974D8();
+        a = next;
+        next = next->mNext;
+    }
+    UnkObj1974D8 *b = arg0->mHead0C;
+    next = b->mNext;
+    while (next != 0)
+    {
+        b->Method1974D8();
+        b = next;
+        next = next->mNext;
+    }
+    UnkObj198628 *c = arg0->mHead18;
+    UnkObj198628 *nextC = *(UnkObj198628 **)c;
+    while (nextC != 0)
+    {
+        func_001BD360(c);
+        func_001985E0(c);
+        c = nextC;
+        nextC = *(UnkObj198628 **)nextC;
+    }
+    func_00197BC8((int)arg0);
+}
+
+void func_00198210(int arg0)
+{
+    UnkObj198158 *obj = (UnkObj198158 *)arg0;
+    UnkObj1974D8 *a = obj->mHead00;
+    UnkObj1974D8 *next = a->mNext;
+    while (next != 0)
+    {
+        a->Method1974D8();
+        a = next;
+        next = next->mNext;
+    }
+    UnkObj1974D8 *b = obj->mHead0C;
+    next = b->mNext;
+    while (next != 0)
+    {
+        b->Method1974D8();
+        b = next;
+        next = next->mNext;
+    }
+    UnkObj198628 *c = obj->mHead18;
+    UnkObj198628 *nextC = *(UnkObj198628 **)c;
+    while (nextC != 0)
+    {
+        func_001BD360(c);
+        func_001985E0(c);
+        c = nextC;
+        nextC = *(UnkObj198628 **)nextC;
+    }
+    func_00197BC8(arg0);
+    MemFree1BD978(obj);
+}

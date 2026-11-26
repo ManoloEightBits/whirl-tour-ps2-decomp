@@ -48,8 +48,46 @@ void func_001461C0()
 // literals, variables are data_<addr> in config/symbols.txt.
 
 void func_00197AB8(int); // 0x00197AB8
+void func_00145B20();    // 0x00145B20
+
+struct UnkPad145930
+{
+    char pad00[0x1C];
+    int mField1C; // 0x1C
+    int mField20; // 0x20
+};
+extern UnkPad145930 *gFEPad2659B0;
+
+struct UnkObj145930
+{
+    char pad00[0x94];
+    int mField94; // 0x94
+    char pad98[0x10];
+    int mFieldA8; // 0xA8
+};
 
 void func_00144F20(int arg0, int arg1)
 {
     func_00197AB8(arg1 + 4);
+}
+
+void func_00145930(UnkObj145930 *arg0)
+{
+    switch (arg0->mFieldA8)
+    {
+    case 0x100:
+        arg0->mFieldA8 = 0x200;
+        return;
+    case 0x200:
+        if (gFEPad2659B0->mField20 & 0x10000000)
+            arg0->mField94++;
+        if (gFEPad2659B0->mField20 & 0x40000000)
+            arg0->mField94--;
+        if (gFEPad2659B0->mField1C & 0x80000)
+            arg0->mFieldA8 = 0xF000;
+        break;
+    case 0xF000:
+        ((void (*)(void *, void *))func_00145B20)(arg0, arg0);
+        break;
+    }
 }

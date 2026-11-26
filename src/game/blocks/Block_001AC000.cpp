@@ -73,3 +73,48 @@ int func_001AF590(f32 *arg0, f32 *arg1)
 {
     return (int) (*arg0 - *arg1);
 }
+
+void MemFree1BD978(void *); // 0x001BD978
+extern "C" void func_001ACDC0(void *); // 0x001ACDC0
+extern "C" void func_0023F9C8(int);    // 0x0023F9C8
+extern "C" void func_0024BDA0(void *); // 0x0024BDA0
+extern "C" void func_0024BF18(void *); // 0x0024BF18
+
+struct UnkObj1AC2F8
+{
+    char pad00[0x10];
+    void *mField10; // 0x10
+    int mField14;   // 0x14
+    void *mField18; // 0x18
+    int mField1C;   // 0x1C
+    void *mField20; // 0x20
+    void *mField24; // 0x24
+    int mField28;   // 0x28
+    void *mField2C; // 0x2C
+    int mField30;   // 0x30
+    int mField34;   // 0x34
+    void *mField38; // 0x38
+    int mField3C;   // 0x3C
+    char pad40[0x08];
+    char mField48[0x48]; // 0x48
+    char mField90[0x6C]; // 0x90
+    UnkObj1AD5F8 *mFieldFC; // 0xFC
+};
+
+void func_001AC2F8(UnkObj1AC2F8 *arg0)
+{
+    func_001ACDC0(arg0->mField90);
+    func_0024BF18(arg0->mField48);
+    func_0024BDA0(arg0->mField48);
+    MemFree1BD978(arg0->mField18);
+    MemFree1BD978(arg0->mField10);
+    MemFree1BD978(arg0->mField20);
+    MemFree1BD978(arg0->mField24);
+    MemFree1BD978(arg0->mField2C);
+    func_0023F9C8(arg0->mField34);
+    MemFree1BD978(arg0->mField38);
+    func_0023F9C8(arg0->mField3C);
+    if (arg0->mFieldFC != 0)
+        arg0->mFieldFC->Method1AD5F8();
+    MemFree1BD978(arg0);
+}

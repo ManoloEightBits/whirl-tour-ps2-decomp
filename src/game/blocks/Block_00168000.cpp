@@ -1,4 +1,5 @@
 #include "common/types.h"
+#include "common/libc.h"
 #include "game/GL.h"
 
 // Functions of 0x00168000..0x0016BFFF whose class and translation unit are not known yet.
@@ -82,4 +83,40 @@ void func_00168DF0(int arg0)
 
     sp0 = arg0;
     func_001BB250(*data_002624B0, &sp0);
+}
+
+void *func_001BD558(int, int); // 0x001BD558
+
+struct UnkObj168900
+{
+    f32 mField00;  // 0x00
+    int mField04;  // 0x04
+    int mField08;  // 0x08
+    int mField0C;  // 0x0C
+    int mField10;  // 0x10
+    f32 mField14;  // 0x14
+    int mField18;  // 0x18
+    void *mField1C; // 0x1C
+    void *mField20; // 0x20
+    void *mField24; // 0x24
+    void *mField28; // 0x28
+};
+
+UnkObj168900 *func_00168900(UnkObj168900 *arg0, int arg1, f32 fparg0)
+{
+    arg0->mField08 = arg1;
+    int sz = arg1 * 8;
+    arg0->mField18 = arg1;
+    arg0->mField04 = 0;
+    arg0->mField0C = 0;
+    arg0->mField10 = 0;
+    arg0->mField00 = fparg0;
+    arg0->mField14 = 0.1f;
+    arg0->mField20 = func_001BD558(arg1 * 0x18, 4);
+    arg0->mField24 = func_001BD558(sz, 4);
+    arg0->mField28 = func_001BD558(arg1 * 0x10, 4);
+    arg0->mField1C = func_001BD558(sz, 4);
+    memset(arg0->mField24, 0, sz);
+    func_00168DF0((int)arg0);
+    return arg0;
 }

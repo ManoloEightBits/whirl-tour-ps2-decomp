@@ -477,3 +477,11 @@ void glAlphaFunc(unsigned int func, f32 ref)
     data_00267140.mField11FB0 = (u8)(int)(ref * 128.0f);
 }
 #endif
+
+void func_001A4F80(Mat4x4f *m, Vec4f *v, Mat4x4f *out)
+{
+    out->row[0].x = v->x * m->row[0].x + v->y * m->row[0].y + v->z * m->row[0].z + v->w * m->row[0].w;
+    out->row[1].x = v->x * m->row[1].x + v->y * m->row[1].y + v->z * m->row[1].z + v->w * m->row[1].w;
+    out->row[2].x = v->x * m->row[2].x + v->y * m->row[2].y + v->z * m->row[2].z + v->w * m->row[2].w;
+    out->row[3].x = v->x * m->row[3].x + v->y * m->row[3].y + v->z * m->row[3].z + v->w * m->row[3].w;
+}

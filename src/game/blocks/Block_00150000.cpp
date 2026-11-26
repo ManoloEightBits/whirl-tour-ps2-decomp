@@ -194,3 +194,93 @@ void func_00151CF0()
 {
     data_0025E73C->mFieldC8 &= ~1;
 }
+
+struct EnvObj;
+struct UnkObjDef;
+
+void *func_00116560(UnkObjDef *, const Vec3f *, const Vec4f *, int); // 0x00116560
+void func_0014FB08(EnvObj *, UnkObjDef *, int);          // 0x0014FB08
+extern "C" int func_001B07C8(void *, int);               // 0x001B07C8
+extern "C" int func_001B08A0(void *);                    // 0x001B08A0
+extern "C" void func_001B3BE8(void *, void *, void *);   // 0x001B3BE8
+void *func_001BD558(int, int);                // 0x001BD558
+
+struct UnkObj1520D8
+{
+    int mField00;     // 0x00
+    int mField04;     // 0x04
+    char pad08[0x18];
+    char mField20[0x40]; // 0x20
+    int mField60;     // 0x60
+    f32 mField64;     // 0x64
+    void *mField68;   // 0x68
+    int mField6C;     // 0x6C
+    int mField70;     // 0x70
+    int mField74;     // 0x74
+    int mField78;     // 0x78
+    int mField7C;     // 0x7C
+};
+
+struct UnkSrc1520D8
+{
+    int mField00;     // 0x00
+    char pad04[0x14];
+    Vec3f mField18;   // 0x18
+    Vec4f mField24;   // 0x24
+    char pad34[0x0C];
+    f32 mField40;     // 0x40
+};
+
+struct UnkSub1520D8
+{
+    char pad00[0xA8];
+    void *mFieldA8;   // 0xA8
+};
+
+void func_001520D8(UnkObj1520D8 *arg0, UnkSrc1520D8 *arg1, UnkObjDef *arg2)
+{
+    Vec4f *v24 = &arg1->mField24;
+    Vec3f *v18 = &arg1->mField18;
+    int s3 = func_001B07C8(arg1, 0);
+    int s4 = func_001B08A0(arg1);
+    f32 f20 = arg1->mField40;
+    func_0014FB08((EnvObj *)arg0, arg2, 0);
+    func_001B3BE8(arg0->mField20, v24, v18);
+    arg0->mField64 = f20;
+    arg0->mField70 = s3;
+    arg0->mField60 = 0;
+    arg0->mField68 = 0;
+    arg0->mField6C = 0;
+    arg0->mField74 = 0;
+    arg0->mField78 = 0;
+    arg0->mField7C = 0;
+    UnkSub1520D8 *sub = (UnkSub1520D8 *)func_00116560(arg2, v18, v24, s4);
+    arg0->mField68 = sub;
+    if (sub != 0)
+        sub->mFieldA8 = arg0;
+    arg0->mField00 = arg1->mField00;
+}
+
+UnkObj1520D8 *func_00152330(Vec4f *arg0, Vec3f *arg1, int arg2, int arg3, UnkObjDef *arg4, f32 fparg0)
+{
+    UnkObj1520D8 *obj = (UnkObj1520D8 *)func_001BD558(0x80, 4);
+    if (obj != 0)
+    {
+        func_0014FB08((EnvObj *)obj, arg4, 0);
+        func_001B3BE8(obj->mField20, arg0, arg1);
+        obj->mField64 = fparg0;
+        obj->mField70 = arg2;
+        obj->mField60 = 0;
+        obj->mField68 = 0;
+        obj->mField6C = 0;
+        obj->mField74 = 0;
+        obj->mField78 = 0;
+        obj->mField7C = 0;
+        UnkSub1520D8 *sub = (UnkSub1520D8 *)func_00116560(arg4, arg1, arg0, arg3);
+        obj->mField68 = sub;
+        if (sub != 0)
+            sub->mFieldA8 = obj;
+        obj->mField04 |= 0x80000000;
+    }
+    return obj;
+}

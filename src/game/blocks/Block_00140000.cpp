@@ -240,3 +240,61 @@ int func_00141728(UnkObj141728 **arg0)
 {
     return (*arg0)->mField08;
 }
+
+void *MemAlloc1BD958(int); // 0x001BD958
+struct UnkObj1C3BA8
+{
+    s16 Method1C3BA8(); // 0x001C3BA8
+    int Method1C3BC8(); // 0x001C3BC8
+};
+extern "C" void func_001A7018(int);                 // 0x001A7018
+extern "C" void func_001A7E88(int, int, int);       // 0x001A7E88
+extern "C" void func_001A9298(int, int);            // 0x001A9298
+s16 func_001A9370(int);                             // 0x001A9370
+extern "C" void func_001A9AD8(void *, int, int, int); // 0x001A9AD8
+extern "C" void func_00231F08(void *, void *, int); // 0x00231F08
+extern "C" int func_0023F860(int);                  // 0x0023F860
+extern "C" void func_0023F9C8(int);                 // 0x0023F9C8
+
+struct UnkRes143438
+{
+    int mField00;     // 0x00
+    int mField04;     // 0x04
+    int mField08;     // 0x08
+    s16 mField0C;     // 0x0C
+    s16 mField0E;     // 0x0E
+    char mField10[0x20]; // 0x10
+};
+
+struct UnkSrc143438
+{
+    char pad00[0x1E];
+    u8 mField1E;      // 0x1E
+    u8 pad1F;
+    char mField20[0x20]; // 0x20
+    char mField40[0x10]; // 0x40
+};
+
+UnkRes143438 *func_00143438(UnkSrc143438 *arg0, int arg1, int arg2, int arg3)
+{
+    UnkRes143438 *res = (UnkRes143438 *)MemAlloc1BD958(0x30);
+    if (res != 0)
+    {
+        res->mField04 = arg1;
+        res->mField00 = 1;
+        res->mField0C = func_001A9370(((UnkObj1C3BA8 *)arg0)->Method1C3BC8());
+        res->mField0E = ((UnkObj1C3BA8 *)arg0)->Method1C3BA8();
+        res->mField08 = arg0->mField1E & 1;
+        func_00231F08(res->mField10, arg0->mField20, 0x1F);
+        int h = func_0023F860(arg2);
+        if (h != 0)
+        {
+            func_001A9AD8(arg0->mField40, h, arg2, 1);
+            func_001A7E88(h, arg3, arg2);
+            func_001A9298(arg1, arg3);
+            func_001A7018(0);
+            func_0023F9C8(h);
+        }
+    }
+    return res;
+}

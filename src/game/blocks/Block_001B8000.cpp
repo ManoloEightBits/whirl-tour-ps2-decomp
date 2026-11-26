@@ -303,3 +303,47 @@ void UnkObj1B9B30::Method1B9B30(int count, void *buf)
     mField04 = buf;
     memset(buf, 0, count * 4);
 }
+
+int func_001C13A8(u32);          // 0x001C13A8
+extern "C" f32 func_001C13E8(f32); // 0x001C13E8
+int func_001C1428(u32);          // 0x001C1428
+
+struct UnkPair1B8040
+{
+    u32 mField00; // 0x00
+    u32 mField04; // 0x04
+};
+
+struct UnkObj1B8040
+{
+    char pad00[0x40];
+    f32 mField40;           // 0x40
+    f32 mField44;           // 0x44
+    int mCount48;           // 0x48
+    int mField4C;           // 0x4C
+    u32 mField50;           // 0x50
+    UnkPair1B8040 mPairs54[1]; // 0x54
+};
+
+void func_001B8040(UnkObj1B8040 *arg0)
+{
+{
+    int i = 0;
+    if (arg0->mCount48 > 0)
+    {
+        UnkPair1B8040 *p = arg0->mPairs54;
+        do
+        {
+            i++;
+            p->mField00 = func_001C1428(p->mField00);
+            p->mField04 = func_001C1428(p->mField04);
+            p++;
+        } while (i < arg0->mCount48);
+    }
+    arg0->mField40 = func_001C13E8(arg0->mField40);
+    arg0->mField44 = func_001C13E8(arg0->mField44);
+    arg0->mField50 = func_001C1428(arg0->mField50);
+    arg0->mCount48 = func_001C13A8(arg0->mCount48);
+    arg0->mField4C = func_001C13A8(arg0->mField4C);
+}
+}

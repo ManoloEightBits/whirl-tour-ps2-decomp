@@ -188,3 +188,82 @@ void func_00186208(int *arg0)
 FESlider::~FESlider()
 {
 }
+
+void PlaySoundCRC141520(u32); // 0x00141520
+
+struct UnkItem187500
+{
+    char pad00[0x14];
+    f32 mField14; // 0x14
+    char pad18[0x0C];
+    int mField24; // 0x24
+};
+
+struct UnkSub187500
+{
+    f32 mField00; // 0x00
+    f32 mField04; // 0x04
+    f32 mField08; // 0x08
+};
+
+struct UnkObj187500
+{
+    UnkItem187500 *mItems00; // 0x00
+    int mField04;            // 0x04
+    int mCount08;            // 0x08
+    int mField0C;            // 0x0C
+    int mStart10;            // 0x10
+    char pad14[0x7C];
+    UnkSub187500 *mSub90;    // 0x90
+};
+
+void func_00187500(UnkObj187500 *arg0)
+{
+    for (int i = 0; i < arg0->mCount08; i++)
+    {
+        UnkItem187500 *item = &arg0->mItems00[(arg0->mStart10 + i) % 20];
+        f32 t = item->mField14 + arg0->mSub90->mField08;
+        item->mField14 = t;
+        if (arg0->mSub90->mField00 < t && item->mField24 == 2)
+            item->mField24 = 1;
+    }
+}
+
+struct UnkObj187F30
+{
+    int mField00; // 0x00
+    int mField04; // 0x04
+    int mField08; // 0x08
+    u32 mField0C; // 0x0C
+};
+
+struct UnkPad187F30
+{
+    char pad00[0x20];
+    int mField20; // 0x20
+};
+
+int func_00187F30(UnkObj187F30 *arg0, UnkPad187F30 *arg1)
+{
+    int btns = arg1->mField20;
+    if (btns < 0)
+    {
+        if (arg0->mField0C != 0)
+            PlaySoundCRC141520(arg0->mField0C);
+        int cur = arg0->mField00;
+        if (cur <= 0)
+            cur = arg0->mField04;
+        arg0->mField00 = cur - 1;
+    }
+    else if (btns & 0x20000000)
+    {
+        if (arg0->mField0C != 0)
+            PlaySoundCRC141520(arg0->mField0C);
+        int cur = arg0->mField00;
+        if (cur < arg0->mField04 - 1)
+            arg0->mField00 = cur + 1;
+        else
+            arg0->mField00 = 0;
+    }
+    return arg0->mField00;
+}
