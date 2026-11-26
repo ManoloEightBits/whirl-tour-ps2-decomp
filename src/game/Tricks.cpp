@@ -28,34 +28,34 @@ extern void *data_0025DC60;
 // 0x001255C8
 f32 func_001255C8()
 {
-    return data_0025A398.mField00;
+    return data_0025A398.mSickMax00;
 }
 
 // 0x001255D8
 f32 func_001255D8()
 {
-    return data_0025A398.mField04;
+    return data_0025A398.mSickDec04;
 }
 
 // 0x001255E8
 f32 func_001255E8()
 {
-    return data_0025A398.mField08;
+    return data_0025A398.mAdrenalineMax08;
 }
 
 // 0x001255F8
 f32 func_001255F8()
 {
-    return data_0025A398.mField0C;
+    return data_0025A398.mAdrenalineDec0C;
 }
 
 // 0x00125608
 f32 func_00125608(u32 idx)
 {
-    u32 maxIdx = data_0025A398.mCount10 - 1;
+    u32 maxIdx = data_0025A398.mSpinMultCount10 - 1;
     if (idx < maxIdx)
         maxIdx = idx;
-    return data_0025A398.mArr14[maxIdx];
+    return data_0025A398.mSpinMultipliers14[maxIdx];
 }
 
 #ifdef NON_MATCHING
@@ -64,38 +64,38 @@ f32 func_00125608(u32 idx)
 // 0x00125630
 int func_00125630(int idx)
 {
-    u32 maxIdx = data_0025A398.mCount8C - 1;
+    u32 maxIdx = data_0025A398.mSpinSwitchCount8C - 1;
     if ((u32)idx < maxIdx)
         maxIdx = idx;
-    return (int)data_0025A398.mArr90[maxIdx];
+    return (int)data_0025A398.mSpinSwitchBonus90[maxIdx];
 }
 
 // 0x00125670
 int func_00125670(int idx)
 {
-    u32 maxIdx = data_0025A398.mCount108 - 1;
+    u32 maxIdx = data_0025A398.mTrickVarCount108 - 1;
     if ((u32)idx < maxIdx)
         maxIdx = idx;
-    return (int)data_0025A398.mArr10C[maxIdx];
+    return (int)data_0025A398.mTrickVarBonus10C[maxIdx];
 }
 
 // 0x001256B0
 int func_001256B0(int idx)
 {
-    u32 maxIdx = data_0025A398.mCount184 - 1;
+    u32 maxIdx = data_0025A398.mSickVarCount184 - 1;
     if ((u32)idx < maxIdx)
         maxIdx = idx;
-    return (int)data_0025A398.mArr188[maxIdx];
+    return (int)data_0025A398.mSickVarBonus188[maxIdx];
 }
 #endif
 
 // 0x001256F0
 f32 func_001256F0(u32 idx)
 {
-    u32 maxIdx = data_0025A398.mCount200 - 1;
+    u32 maxIdx = data_0025A398.mTrickDegradCount200 - 1;
     if (idx < maxIdx)
         maxIdx = idx;
-    return data_0025A398.mArr204[maxIdx];
+    return data_0025A398.mTrickDegradMult204[maxIdx];
 }
 
 #ifdef NON_MATCHING
@@ -103,18 +103,18 @@ f32 func_001256F0(u32 idx)
 int func_00125718(int arg0, f32 arg1)
 {
     f32 total = 0.0f;
-    f32 mult = data_0025A398.mField280;
+    f32 mult = data_0025A398.mHoldMultiplier280;
     if (arg1 > 0.0f)
     {
         f32 timer = 1.0f;
         do
         {
-            arg1 -= data_0025A398.mField27C;
+            arg1 -= data_0025A398.mHoldInterval27C;
             total += (f32)arg0 * mult;
-            if (timer >= data_0025A398.mField284)
+            if (timer >= data_0025A398.mHoldIncreaseInterval284)
             {
                 timer = 0.0f;
-                mult += data_0025A398.mField288;
+                mult += data_0025A398.mHoldIncreaseMultiplier288;
             }
             timer += 1.0f;
         } while (arg1 > 0.0f);
@@ -207,7 +207,7 @@ int func_00125998(int idx)
 int func_001259C8(int idx)
 {
     if (idx >= 0 && idx < NUM_TRICKS)
-        return data_0025ABC0[idx].mField28;
+        return data_0025ABC0[idx].mScore28;
     return 0;
 }
 
@@ -215,7 +215,7 @@ int func_001259C8(int idx)
 int func_001259F8(int idx)
 {
     if (idx >= 0 && idx < NUM_TRICKS)
-        return data_0025ABC0[idx].mField44;
+        return data_0025ABC0[idx].mPrev44;
     return 0;
 }
 
@@ -223,7 +223,7 @@ int func_001259F8(int idx)
 f32 func_00125A28(int idx)
 {
     if (idx >= 0 && idx < NUM_TRICKS)
-        return data_0025ABC0[idx].mField2C;
+        return data_0025ABC0[idx].mAngleFs2C;
     return 0.0f;
 }
 
@@ -231,7 +231,7 @@ f32 func_00125A28(int idx)
 f32 func_00125A58(int idx)
 {
     if (idx >= 0 && idx < NUM_TRICKS)
-        return data_0025ABC0[idx].mField30;
+        return data_0025ABC0[idx].mAngleBs30;
     return 0.0f;
 }
 
@@ -255,7 +255,7 @@ int func_00125AB8(int idx)
 int func_00125AE8(int idx)
 {
     if (idx >= 0 && idx < NUM_TRICKS)
-        return data_0025ABC0[idx].mField48;
+        return data_0025ABC0[idx].mReverseFs48;
     return 0;
 }
 
@@ -271,22 +271,20 @@ int func_00125B58(int idx)
 int func_00125B88(int idx)
 {
     if (idx >= 0 && idx < NUM_TRICKS)
-        return data_0025ABC0[idx].mField40;
+        return data_0025ABC0[idx].mNext40;
     return 0;
 }
 
 // 0x00125B18
 int func_00125B18(int idx)
 {
-{
     if ((u32)idx < NUM_TRICKS)
     {
-        if (data_0025ABC0[idx].mField4C != 0)
-            return data_0025ABC0[idx].mField4C;
-        return data_0025ABC0[idx].mField48;
+        if (data_0025ABC0[idx].mReverseBs4C != 0)
+            return data_0025ABC0[idx].mReverseBs4C;
+        return data_0025ABC0[idx].mReverseFs48;
     }
     return 0;
-}
 }
 
 // 0x00125BB8

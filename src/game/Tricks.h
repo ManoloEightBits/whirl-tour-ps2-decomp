@@ -16,45 +16,45 @@ struct UnkTrickList
     int mSequence144[NUM_TRICKS];  // 0x144: func_00124280 of the "sequence" string, -1 if not listed
 };
 
-// Score settings table at 0x0025A398 (filled by func_00123CD0).
+// Score settings table at 0x0025A398 (filled by func_00123CD0, keywords @0x0025A638).
 struct UnkTrickScores
 {
-    f32 mField00;          // 0x000
-    f32 mField04;          // 0x004
-    f32 mField08;          // 0x008
-    f32 mField0C;          // 0x00C
-    int mCount10;          // 0x010
-    f32 mArr14[30];        // 0x014
-    int mCount8C;          // 0x08C
-    f32 mArr90[30];        // 0x090
-    int mCount108;         // 0x108
-    f32 mArr10C[30];       // 0x10C
-    int mCount184;         // 0x184
-    f32 mArr188[30];       // 0x188
-    int mCount200;         // 0x200
-    f32 mArr204[30];       // 0x204
-    f32 mField27C;         // 0x27C
-    f32 mField280;         // 0x280
-    f32 mField284;         // 0x284
-    f32 mField288;         // 0x288
+    f32 mSickMax00;                  // 0x000: "sick_meter" -> "max"
+    f32 mSickDec04;                  // 0x004: "sick_meter" -> "dec"
+    f32 mAdrenalineMax08;            // 0x008: "adrenaline_meter" -> "max"
+    f32 mAdrenalineDec0C;            // 0x00C: "adrenaline_meter" -> "dec"
+    int mSpinMultCount10;            // 0x010
+    f32 mSpinMultipliers14[30];      // 0x014: "spin_multipliers"
+    int mSpinSwitchCount8C;          // 0x08C
+    f32 mSpinSwitchBonus90[30];      // 0x090: "spin_switch_bonus"
+    int mTrickVarCount108;           // 0x108
+    f32 mTrickVarBonus10C[30];       // 0x10C: "trick_variation_bonus"
+    int mSickVarCount184;            // 0x184
+    f32 mSickVarBonus188[30];        // 0x188: "sick_variation_bonus"
+    int mTrickDegradCount200;        // 0x200
+    f32 mTrickDegradMult204[30];     // 0x204: "trick_degredation_multipliers"
+    f32 mHoldInterval27C;            // 0x27C: "hold_bonus" -> "interval"
+    f32 mHoldMultiplier280;          // 0x280: "hold_bonus" -> "multiplier"
+    f32 mHoldIncreaseInterval284;    // 0x284: "hold_bonus" -> "increase_interval"
+    f32 mHoldIncreaseMultiplier288;  // 0x288: "hold_bonus" -> "increase_multiplier"
 };
 
 // Trick entry (0x50 bytes) in the 81-entry table at 0x0025ABC0 (filled by func_00124750).
 struct UnkTrickDef
 {
-    char mName00[32];      // 0x00
+    char mName00[32];      // 0x00: "name"
     int mField20;          // 0x20
     int mField24;          // 0x24
-    int mField28;          // 0x28
-    f32 mField2C;          // 0x2C
-    f32 mField30;          // 0x30
+    int mScore28;          // 0x28: "score"
+    f32 mAngleFs2C;        // 0x2C: "anglefs"
+    f32 mAngleBs30;        // 0x30: "anglebs"
     int mField34;          // 0x34
     int mField38;          // 0x38
     int mField3C;          // 0x3C
-    int mField40;          // 0x40
-    int mField44;          // 0x44
-    int mField48;          // 0x48
-    int mField4C;          // 0x4C
+    int mNext40;           // 0x40: "next"
+    int mPrev44;           // 0x44: "prev"
+    int mReverseFs48;      // 0x48: "reversefs"
+    int mReverseBs4C;      // 0x4C: "reversebs"
 };
 
 // 0x40-byte entry in the table at 0x0025C510 (accessed by func_001258F8, func_00125910).
