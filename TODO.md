@@ -23,6 +23,10 @@ map of the binary, regenerated with `tools/analysis/coverage.py --map docs/MAP.m
    428 more score >= 0.9; 126 still do not compile and 8 fail in m2c (was 193 / 178 / 219 / 649 / 175).
    Most of the new matches use globals (data variables, strings, float constants): write strings and floats
    as literals (`rebuild.py` checks them against the game's bytes) and declare variables as typed symbols.
+   - **Tools:** `tools/analysis/draft_to_cpp.py` does these batches (`plan` lists what converts and the
+     traps below), `edit_funcs.py` the hand fixes, `body_variants.py` the variant searches (docs/TOOLS.md).
+     `draft_to_cpp.py plan --region physics` finds 176 drafts of the physics engine that convert as they
+     are (no struct fields), if the physics code is taken in (see Open decisions).
    - **Phase 4 done (2026-11-25):** of the 134 drafts left that match (98) or differ only in registers (36)
      and read no struct fields, 57 more are in their block files, after hand fixes the drafts needed: m2c
      counts pointer arithmetic in bytes (`int *p; p + 4` is `+4` bytes, not 16), omits parameters it sees
@@ -233,6 +237,9 @@ nothing about its field. Names have to come from evidence, roughly in this order
 - `FEScreen::FEScreen` `0x0016E458`, 7/85 (`FEScreen.cpp`): the constants 1, 8 and 9 of `mField18..24`
   get other registers; the member initializer list fixes the stores and the vtable pointer.
 - `func_001240F8` (`tricklist` parser), 93/97 (`Tricks.cpp`): one pointer in `$s0` instead of `$v0`.
+- `UnlockScooterGlobal` `0x00153C10`, 38/55 (`GameCtx.cpp`): a `nop` after the outer loop's `mult` and before
+  the inner loop's first load, and the second loop's divide by 20 laid out differently; a row pointer, a
+  local context pointer and the count in a local did not help.
 
 ## Unverified names
 

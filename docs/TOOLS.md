@@ -88,6 +88,16 @@ the other tools directly.
 | `m2c_ee.py <m2c arguments>` | m2c with fixes for ee-gcc code (also applied by `inspect_tu.py --m2c` and `m2c_sweep.py`): the address of the stack slot at offset 0 (`daddu $a1, $sp, $zero`) is `&sp0`, not a bare `sp` passed as an outgoing argument. |
 | `keyword_fields.py [--range A B \| --func A] [--class C] [--all] [--tables]` | Names for fields from the game's script parsers: for each call to `UnkParser::func_001C3270` (read a float) or `func_001C2C78` (read a string) it prints the key string (`"speed"`, `"accmax"`, ...) and where the value goes as an incoming argument plus offset (`arg1+0x1C`), following registers in address order and a stack buffer to the store that copies it. `--tables` adds the `{id, "name"}` keyword tables passed to `func_001C1D28`, which name the cases of the switch on `mToken14`. A hint: match the object to a struct by offsets and types, keep the offset in the name when a key repeats. |
 | `find_pattern.py '<re1>; <re2>; ...' [--range A B] [--context N] [--count]` | Searches `.text` for a sequence of instructions (one regex per instruction, `*` matches any). Each hit is labelled with the nearest known symbol. About 0.5 s for the whole binary. Put the pattern in single quotes so the shell keeps `\$`. |
+| `draft_to_cpp.py plan\|emit\|fixcompile\|syms\|prune\|status` | Turns sweep drafts that read no struct fields into C++ in `src/game/blocks/Block_<16 KB>.cpp`, in batches (phases 3 and 4 of the sweep in `TODO.md`). `plan [--range A B \| --region R] [--status match,regs] [--list] [--write F]` says which drafts convert, why the others do not (struct fields, tables of data, callee or own symbol with another parameter count or types, vtable slots, the sound library, addresses 4 mod 8...) and the m2c traps each shows: byte offsets on typed pointers (`s32 *p; p + 4` is 4 bytes), parameters the draft leaves out (`f(s32 arg1)`), ints it dereferences. `emit --from F` writes the functions with their callees' and globals' declarations (strings and floats as literals, other globals `data_<addr>`); `fixcompile` drops the ones that do not compile; `syms` adds their symbols (`--drop-stale` removes lines this working tree added to `symbols.txt` that no object uses any more); `prune` runs `verify.py` and drops those that differ; `status` lists the batch and what was skipped. The batch state is `<sweep>/draft_to_cpp.json`. Order: plan, emit, fixcompile, syms, prune, syms --drop-stale, `check_all.py`; then fix by hand what was dropped (with `edit_funcs.py`). |
+| `edit_funcs.py FILE <<'SPEC' ... SPEC` | Replaces (`=== func NAME`), deletes (`=== drop NAME`), adds (`=== after NAME`, `=== append`) whole functions, and replaces or adds declaration lines (`=== decl NAME`, `=== top` after the includes), from a spec on stdin; NAME may be `Class::Method`. For batches of hand fixes in one or several functions of a file. |
+| `insert_methods.py SPEC.json\|-` | Inserts methods into a class in address order: the declaration before the first declared method with a higher `// 0x<ADDR>`, the definition before that method's definition in the .cpp. SPEC: `{"header", "cpp", "class", "methods": [{"addr", "decl", "def", "note"}]}`. |
+| `body_variants.py FILE FUNC [--sub 'RE=>REP'] [--alt 'TEXT=>A1\|\|A2'] [--per-match] [--text-macros VAR] [--max N] [-o OUT]` | Writes every combination of a set of rewrites of a function's body, separated by `---`, for `diff_func.py --bodies OUT`; `OUT.names` lists the choices of each variant in order. `--sub` applies a regex or not (each match separately with `--per-match`), `--alt` swaps a text for alternatives, `--text-macros VAR` tries each `TEXT_SET_*` macro of `FEScreen.h` on the statements of a text pointer. |
+
+The sweep's `regs` status means the same mnemonics with different registers *or immediates*: a wrong
+field offset or a constant counts as `regs` too. To try a change to `m2c_sweep.py` or `m2c_ee.py` on a few
+functions without touching the real results, point `WHIRL_SWEEP` at a scratch folder:
+`WHIRL_SWEEP=/tmp/sw python3 tools/analysis/m2c_sweep.py run --range A B` (then `report`/`show` with the
+same variable), and compare with the real `report`.
 
 A function counts as matched when it is in `build/matched.txt`. `config/symbols.txt` is not enough: it
 also names functions that matched code only calls. `inspect_tu.py` shows those as
@@ -111,4 +121,8 @@ python3 tools/analysis/find_pattern.py 'b\S*; *; sw; nop; jr \$ra; nop'    # sam
 python3 tools/analysis/find_pattern.py 'jr \$ra; *' --count                # 7069 returns
 python3 tools/analysis/dump_data.py 284090 --vtable                        # a vtable's slots
 python3 tools/analysis/dump_data.py 284460 -n 8                            # a switch's jump table
+python3 tools/analysis/body_variants.py src/game/GameCtx.cpp func_001562E8 --per-match \
+    --sub '(?m)^(\s*)(gGameCtx\w+->\w+ = 1;)$=>\1do { \2 } while (0);' -o /tmp/v.txt
+python3 tools/analysis/diff_func.py src/game/GameCtx.cpp func_001562E8__Fv --bodies /tmp/v.txt
+python3 tools/analysis/draft_to_cpp.py plan --range 140000 150000 --list   # which drafts convert, traps
 ```

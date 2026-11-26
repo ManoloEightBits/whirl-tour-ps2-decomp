@@ -23,8 +23,8 @@ and can trip output filters.
   the few instructions the diff cannot explain. `--range A B` lists a TU; an address inside a function
   is reported and replaced by that function's start.
 - `diff_func.py file.cpp <mangled>` shows only the differing lines. To try rewrites, pass bodies on stdin:
-  `diff_func.py file.cpp <mangled> --bodies - [--apply] <<'BODIES' ... --- ... BODIES` (one line per
-  candidate; `--apply` keeps the best). Pick a heredoc delimiter that does not appear in the text.
+  `diff_func.py file.cpp <mangled> --bodies - [--apply] <<'BODIES' ... --- ... BODIES` (candidates
+  separated by lines holding only `---`; it prints one line per candidate; `--apply` keeps the best). Pick a heredoc delimiter that does not appear in the text.
 - `m2c_sweep.py report [--range A B] [--status match|regs]` ranks unmatched functions by how close their raw
   m2c draft compiles to the game (refresh with `m2c_sweep.py run`, unattended); `show ADDR` prints the draft.
 - `keyword_fields.py --func A` names fields from the script keys a parser reads into them (`"speed"` ->
@@ -32,6 +32,10 @@ and can trip output filters.
 - `dump_data.py ADDR` for tables (vtables, jump tables, keyword tables), `coverage.py` and `docs/MAP.md`
   to choose what to work on, `gen_accessors.py --range A B --class C` to draft runs of trivial methods,
   `scratch_cc.py --regs` for register-allocation questions and `--cflag` for compiler-flag experiments.
+- Batches: `draft_to_cpp.py plan|emit|fixcompile|syms|prune` turns sweep drafts without struct fields into
+  C++ in the block files; `edit_funcs.py FILE <<'SPEC'` rewrites, drops or adds whole functions and
+  declarations; `insert_methods.py` adds methods to a class in address order; `body_variants.py` writes
+  the combinations of several rewrites of a body for `diff_func.py --bodies`.
 - `check_all.py` prints four lines; use `--no-rebuild` while iterating and the full run before a commit.
 
 ## Loop for one function
@@ -54,7 +58,10 @@ and can trip output filters.
 - Never commit game data, disassembly listings or build output (`tools/check_repo.py` and the pre-commit
   hook enforce it). Names come from evidence (RTTI, strings, keyword tables, callers) or are offset or
   address based (`func_<addr>`, `mField<off>`, `Action<callee>` for one-call wrappers).
-- When a one-off script turns out reusable, make it a documented tool in `tools/analysis/` (it reads the
-  game at run time and stores none of it) and add it to `docs/TOOLS.md`.
+- Every script you use for the work (batch conversions, file editors, variant generators, classifiers)
+  becomes a documented tool in `tools/analysis/` before the work is committed (it reads the game at run
+  time and stores none of it; paths from `whirl_paths.py`), with a row in `docs/TOOLS.md`. A script in a
+  scratch folder must not be the only copy of how something was done. Throwaway snippets that only hold
+  one function's text need not be kept.
 - Record what you learn where the next agent will look: patterns in `docs/MATCHING.md`, open work in
   `TODO.md`, tool changes in `docs/TOOLS.md`, not only in private notes.
