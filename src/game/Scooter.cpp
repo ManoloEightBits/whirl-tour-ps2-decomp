@@ -16,8 +16,6 @@ void func_0011A590(void *obj);                // 0x0011A590
 void func_001BC438(void *obj, f32 a, f32 b);  // 0x001BC438
 f32 func_001255C8();                          // 0x001255C8: the adrenaline cap
 int func_00125968(int id);                    // 0x00125968
-int func_00125808();                          // 0x00125808
-int func_001257E0();                          // 0x001257E0
 void func_00186080(int value);                // 0x00186080
 int func_001860F0(int obj);                   // 0x001860F0
 void func_00185E20(int obj, int arg);         // 0x00185E20

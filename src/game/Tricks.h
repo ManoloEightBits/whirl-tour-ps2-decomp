@@ -33,6 +33,10 @@ struct UnkTrickScores
     f32 mArr188[30];       // 0x188
     int mCount200;         // 0x200
     f32 mArr204[30];       // 0x204
+    f32 mField27C;         // 0x27C
+    f32 mField280;         // 0x280
+    f32 mField284;         // 0x284
+    f32 mField288;         // 0x288
 };
 
 // Trick entry (0x50 bytes) in the 81-entry table at 0x0025ABC0 (filled by func_00124750).
@@ -89,7 +93,16 @@ f32 func_001255D8();                 // 0x001255D8
 f32 func_001255E8();                 // 0x001255E8
 f32 func_001255F8();                 // 0x001255F8
 f32 func_00125608(u32 idx);          // 0x00125608
+int func_00125630(int idx);          // 0x00125630
+int func_00125670(int idx);          // 0x00125670
+int func_001256B0(int idx);          // 0x001256B0
 f32 func_001256F0(u32 idx);          // 0x001256F0
+int func_00125718(int arg0, f32 arg1); // 0x00125718
+int func_001257B8();                 // 0x001257B8
+int func_001257E0();                 // 0x001257E0
+int func_00125808();                 // 0x00125808
+int func_00125830();                 // 0x00125830
+int func_00125858();                 // 0x00125858
 int func_00125880(const char *name); // 0x00125880: index of the trick with this name, or -1
 UnkTrickSeq *func_001258F8(int idx); // 0x001258F8
 int func_00125910(int idx);          // 0x00125910
@@ -103,13 +116,17 @@ f32 func_00125A58(int idx);          // 0x00125A58
 int func_00125A88(int idx);          // 0x00125A88
 int func_00125AB8(int idx);          // 0x00125AB8
 int func_00125AE8(int idx);          // 0x00125AE8
+int func_00125B18(int idx);          // 0x00125B18
 int func_00125B58(int idx);          // 0x00125B58
 int func_00125B88(int idx);          // 0x00125B88
 int func_00125BB8(int idx);          // 0x00125BB8
 int func_00125BD0(int idx);          // 0x00125BD0
 int func_00125BE8(int idx);          // 0x00125BE8
 int func_00125C00(int idx);          // 0x00125C00
+void func_00125E00(u8 *arg0, int arg1, u32 arg2, int arg3); // 0x00125E00
+int func_00125E50(s8 *arg0, u32 arg1); // 0x00125E50
 void func_00125F38();                // 0x00125F38
 void func_00125F70();                // 0x00125F70
+void func_00125FA8(int arg0, const char *arg1, int arg2, int arg3); // 0x00125FA8
 
 #endif

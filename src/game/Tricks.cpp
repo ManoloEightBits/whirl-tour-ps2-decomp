@@ -7,8 +7,16 @@ extern "C" void func_00124A28(void *);
 void DrawModel196110(void *model); // 0x00196110
 extern "C" void *func_00182258();
 extern "C" void func_00183480(void *);
+extern "C" void func_001834A0(void *, int, const char *, int, int);
+void func_001B92F8(char *dst, const char *a, const char *b, const char *c);
+extern "C" int func_002320C8(const char *, const char *);
 
 extern UnkTrickScores data_0025A398;
+extern f32 data_0025A624;
+extern f32 data_0025A628;
+extern f32 data_0025A62C;
+extern f32 data_0025A630;
+extern f32 data_0025A634;
 extern UnkTrickDef data_0025ABC0[NUM_TRICKS];
 extern UnkTrickSeq data_0025C510[];
 extern int data_0025D9C8[];
@@ -50,6 +58,37 @@ f32 func_00125608(u32 idx)
     return data_0025A398.mArr14[maxIdx];
 }
 
+#ifdef NON_MATCHING
+// Return-value sign extension (dsll32; dsra32 after mfc1) is emitted in the game for these
+// float-to-int getters/loop, whereas int return omits it and s64 changes caller Scooter.cpp.
+// 0x00125630
+int func_00125630(int idx)
+{
+    u32 maxIdx = data_0025A398.mCount8C - 1;
+    if ((u32)idx < maxIdx)
+        maxIdx = idx;
+    return (int)data_0025A398.mArr90[maxIdx];
+}
+
+// 0x00125670
+int func_00125670(int idx)
+{
+    u32 maxIdx = data_0025A398.mCount108 - 1;
+    if ((u32)idx < maxIdx)
+        maxIdx = idx;
+    return (int)data_0025A398.mArr10C[maxIdx];
+}
+
+// 0x001256B0
+int func_001256B0(int idx)
+{
+    u32 maxIdx = data_0025A398.mCount184 - 1;
+    if ((u32)idx < maxIdx)
+        maxIdx = idx;
+    return (int)data_0025A398.mArr188[maxIdx];
+}
+#endif
+
 // 0x001256F0
 f32 func_001256F0(u32 idx)
 {
@@ -58,6 +97,61 @@ f32 func_001256F0(u32 idx)
         maxIdx = idx;
     return data_0025A398.mArr204[maxIdx];
 }
+
+#ifdef NON_MATCHING
+// 0x00125718
+int func_00125718(int arg0, f32 arg1)
+{
+    f32 total = 0.0f;
+    f32 mult = data_0025A398.mField280;
+    if (arg1 > 0.0f)
+    {
+        f32 timer = 1.0f;
+        do
+        {
+            arg1 -= data_0025A398.mField27C;
+            total += (f32)arg0 * mult;
+            if (timer >= data_0025A398.mField284)
+            {
+                timer = 0.0f;
+                mult += data_0025A398.mField288;
+            }
+            timer += 1.0f;
+        } while (arg1 > 0.0f);
+    }
+    return (int)total;
+}
+
+// 0x001257B8
+int func_001257B8()
+{
+    return (int)data_0025A624;
+}
+
+// 0x001257E0
+int func_001257E0()
+{
+    return (int)data_0025A628;
+}
+
+// 0x00125808
+int func_00125808()
+{
+    return (int)data_0025A62C;
+}
+
+// 0x00125830
+int func_00125830()
+{
+    return (int)data_0025A630;
+}
+
+// 0x00125858
+int func_00125858()
+{
+    return (int)data_0025A634;
+}
+#endif
 
 // 0x00125880
 int func_00125880(const char *name)
@@ -181,6 +275,20 @@ int func_00125B88(int idx)
     return 0;
 }
 
+// 0x00125B18
+int func_00125B18(int idx)
+{
+{
+    if ((u32)idx < NUM_TRICKS)
+    {
+        if (data_0025ABC0[idx].mField4C != 0)
+            return data_0025ABC0[idx].mField4C;
+        return data_0025ABC0[idx].mField48;
+    }
+    return 0;
+}
+}
+
 // 0x00125BB8
 int func_00125BB8(int idx)
 {
@@ -235,6 +343,73 @@ void *UnkTrickState::GetPtrEA()
     return mSubEA;
 }
 
+// 0x00125E00
+void func_00125E00(u8 *arg0, int arg1, u32 arg2, int arg3)
+{
+    u8 *base;
+    switch (arg2)
+    {
+    case 0:
+    case 1:
+    case 2:
+    default:
+        base = arg0;
+        break;
+    case 3:
+    case 4:
+        base = arg0 + 0x4E;
+        break;
+    case 5:
+        base = arg0 + 0x9C;
+        break;
+    case 6:
+        base = arg0 + 0xEA;
+        break;
+    }
+    base[arg1] = arg3;
+}
+
+// 0x00125E50
+int func_00125E50(s8 *arg0, u32 arg1)
+{
+{
+    s8 *base = 0;
+    int cat = (arg1 < NUM_TRICKS) ? data_0025ABC0[arg1].mField20 : -1;
+    switch (cat)
+    {
+    case 0:
+    case 1:
+    case 2:
+        base = arg0;
+        break;
+    case 3:
+    case 4:
+        base = arg0 + 0x4E;
+        break;
+    case 5:
+        base = arg0 + 0x9C;
+        break;
+    case 6:
+        base = arg0 + 0xEA;
+        break;
+    case 7:
+    default:
+        break;
+    }
+    if (base != 0)
+    {
+        s8 *ptr = base;
+        for (int i = 0; i < 0x4E; i++, ptr++)
+        {
+            if (*ptr == (int)arg1)
+                return i;
+        }
+        return -1;
+    }
+    return -1;
+}
+}
+
 // 0x00125F08
 void UnkObj125F::Method125F08()
 {
@@ -267,6 +442,23 @@ void func_00125F70()
         data_0025DC60 = 0;
     }
 }
+
+// 0x00125FA8
+#ifdef NON_MATCHING
+// Stack frame is 0x170 vs 0x160 because GCC CSEs ".ddf" and ".ps2" into $s registers.
+// 0x00125FA8
+void func_00125FA8(int arg0, const char *arg1, int arg2, int arg3)
+{
+    if (data_0025DC60 == 0)
+        return;
+    char buf[256];
+    if (func_002320C8(arg1, ".ddf") != 0)
+        func_001B92F8(buf, arg1, ".ps2", ".ps2");
+    else
+        func_001B92F8(buf, arg1, ".ps2", ".ddf");
+    func_001834A0(data_0025DC60, arg0, buf, arg2, arg3);
+}
+#endif
 
 
 #ifdef NON_MATCHING
