@@ -241,6 +241,8 @@ nothing about its field. Names have to come from evidence, roughly in this order
 - `glScissor` `0x001A3B18`, 2/17 (`Block_001A0000.cpp`): `mField11F84` gets `$t0` instead of `$v1`.
 - `glRotatef` `0x001A3858`, 57/59 (`Block_001A0000.cpp`): scheduling/register order of angle, x, y, z and quaternion stores.
 - `glFrustum` `0x001A3CA0`, 52/64 (`Block_001A0000.cpp`): subexpression scheduling for invDz/invDx/invDy.
+- `func_001A42F8` (`glClear`), 2/30 (`Block_001A4000.cpp`): `$v0` vs `$v1` for `mArr1038[idx]`.
+- `glAlphaFunc` `0x001A4950`, 7/65 (`Block_001A4000.cpp`): `cvt.w.s` + `mfc1` + `dsll32`/`dsra32` on `ref * 128.0f`.
 
 ## Unverified names
 

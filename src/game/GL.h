@@ -20,6 +20,8 @@
 #define GL_BLEND               0x0BE2
 #define GL_SCISSOR_TEST        0x0C11
 #define GL_VIEWPORT            0x0BA2
+#define GL_MODELVIEW_MATRIX    0x0BA6
+#define GL_PROJECTION_MATRIX   0x0BA7
 #define GL_TEXTURE_2D          0x0DE1
 #define GL_UNSIGNED_BYTE       0x1401
 #define GL_FLOAT               0x1406
@@ -82,8 +84,15 @@ void glVertexPointer(int size, unsigned int type, int stride, const void *ptr); 
 void glColorPointer(int size, unsigned int type, int stride, const void *ptr);      /* 0x001A43F8 */
 void glEnableClientState(unsigned int array);                                       /* 0x001A4410 */
 void glDisableClientState(unsigned int array);                                      /* 0x001A4490 */
+void glTexImage2D(int target, int level, int internalformat, int width, int height,
+                  int border, int format, int type, const void *pixels);            /* 0x001A4508 */
+void glTexSubImage2D(unsigned int target, int level, int xoffset, int yoffset,
+                     int width, int height, int format, int type,
+                     const void *pixels);                                           /* 0x001A4630 */
 void glLightModelfv(unsigned int pname, const f32 *params);                         /* 0x001A46F0 */
 void glGetIntegerv(unsigned int pname, int *params);                                /* 0x001A47D8 */
+void glGetFloatv(unsigned int pname, f32 *params);                                  /* 0x001A4820 */
+void glAlphaFunc(unsigned int func, f32 ref);                                       /* 0x001A4950 */
 void glBlendFunc(unsigned int sfactor, unsigned int dfactor);                       /* 0x001A4A60 */
 }
 

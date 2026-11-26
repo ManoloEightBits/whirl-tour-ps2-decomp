@@ -61,7 +61,11 @@ struct UnkGLState
     f32 mField74;     // 0x74: GL_LIGHT_MODEL_AMBIENT g
     f32 mField78;     // 0x78: GL_LIGHT_MODEL_AMBIENT b
     f32 mField7C;     // 0x7C: GL_LIGHT_MODEL_AMBIENT a
-    char field_0x80[0x568];
+    char field_0x80[0x540];
+    int mField5C0;      // 0x5C0
+    Mat4x4f *mField5C4; // 0x5C4: projection stack top
+    Mat4x4f *mField5C8; // 0x5C8: modelview stack top
+    char field_0x5CC[0x1C];
     f32 mField5E8;    // 0x5E8
     f32 mField5EC;    // 0x5EC
     f32 mField5F0;    // 0x5F0
@@ -80,12 +84,15 @@ struct UnkGLState
     int mField618;         // 0x618: vertex size
     int mField61C;         // 0x61C: texcoord size
     int mField620;         // 0x620: color size
-    char field_0x624[0x11978];
+    struct UnkTex624 *mField624; // 0x624
+    int mField628;         // 0x628
+    char field_0x62C[0x11970];
     int mField11F9C;  // 0x11F9C
     unsigned int mField11FA0; // 0x11FA0
     int mField11FA4;  // 0x11FA4
     int mField11FA8;  // 0x11FA8
-    char field_0x11FAC[0x8];
+    int mField11FAC;  // 0x11FAC: alpha func
+    int mField11FB0;  // 0x11FB0: alpha ref
     int mField11FB4;  // 0x11FB4: GL_TEXTURE_COORD_ARRAY
     int mField11FB8;  // 0x11FB8: GL_COLOR_ARRAY
     int mField11FBC;  // 0x11FBC: GL_VERTEX_ARRAY
@@ -93,6 +100,26 @@ struct UnkGLState
     int mField11FC4;  // 0x11FC4: viewport y
     int mField11FC8;  // 0x11FC8: viewport w
     int mField11FCC;  // 0x11FCC: viewport h
+    char field_0x11FD0[0x30];
+    int mField12000;  // 0x12000
+    int mField12004;  // 0x12004
+    int mField12008;  // 0x12008
+    int mField1200C;  // 0x1200C
+};
+
+struct UnkTex624
+{
+    int mField00;
+    int mWidth04;       // 0x04
+    int mHeight08;      // 0x08
+    int mLogW0C;        // 0x0C
+    int mLogH10;        // 0x10
+    int mFormat14;      // 0x14
+    const void *mData18; // 0x18
+    char field_0x1C[0x20];
+    int mField3C;       // 0x3C
+    int mField40;       // 0x40
+    int mField44;       // 0x44
 };
 extern UnkGLState data_00267140;
 
@@ -320,3 +347,133 @@ void glGetIntegerv(unsigned int pname, int *params)
         *params = data_00267140.mField11FCC;
     }
 }
+
+void func_001A0618(int, int); // 0x001A0618
+void func_0019EEB8(int);      // 0x0019EEB8
+void func_0019F088(int);      // 0x0019F088
+
+struct Unk2B2530
+{
+    char field_0x0[0x1038];
+    u64 mArr1038[13]; // 0x1038
+    int mField10A0;   // 0x10A0
+};
+extern Unk2B2530 data_002B2530;
+extern u64 data_002B3578;
+
+#ifdef NON_MATCHING
+// 2 of 30 instructions differ: addu/ld uses $v0 instead of $v1 for mArr1038[idx].
+void func_001A42F8(int mask)
+{
+    if (mask != 0x100)
+    {
+        if (mask == 0x4000)
+        {
+            int idx = data_002B2530.mField10A0;
+            func_0019F088((int)(data_002B2530.mArr1038[idx] & 0x1FF));
+        }
+    }
+    else
+    {
+        func_0019EEB8((int)(data_002B3578 & 0x1FF));
+    }
+}
+#endif
+
+void glTexImage2D(int target, int level, int internalformat, int width, int height,
+                  int border, int format, int type, const void *pixels)
+{
+    data_00267140.mField624->mWidth04 = width;
+    data_00267140.mField624->mHeight08 = height;
+    data_00267140.mField624->mData18 = pixels;
+    data_00267140.mField624->mField3C = 0;
+    data_00267140.mField624->mField40 = 0;
+    data_00267140.mField624->mLogW0C = 0;
+    int w = data_00267140.mField624->mWidth04;
+    while (w != 1)
+    {
+        w >>= 1;
+        data_00267140.mField624->mLogW0C++;
+    }
+    data_00267140.mField624->mLogH10 = 0;
+    int h = data_00267140.mField624->mHeight08;
+    while (h != 1)
+    {
+        h >>= 1;
+        data_00267140.mField624->mLogH10++;
+    }
+    if (format == 0x1900)
+        data_00267140.mField624->mFormat14 = 0x13;
+    else if (type == 0x8034)
+        data_00267140.mField624->mFormat14 = 2;
+    else if (format == 0x1908)
+        data_00267140.mField624->mFormat14 = 0;
+    else
+        data_00267140.mField624->mFormat14 = 1;
+    func_001A0618(data_00267140.mField624->mField44, data_00267140.mField628);
+}
+
+void glTexSubImage2D(unsigned int target, int level, int xoffset, int yoffset, int width,
+                     int height, int format, int type, const void *pixels)
+{
+    func_001A0618(data_00267140.mField624->mField44, data_00267140.mField628);
+    data_00267140.mField624->mData18 = pixels;
+    glBindTexture(target, data_00267140.mField628);
+}
+
+void func_001A4740(unsigned int pname, int arg1, int val)
+{
+    switch (pname)
+    {
+    case 0x2000:
+        data_00267140.mField12000 = val;
+        return;
+    case 0x2001:
+        data_00267140.mField12004 = val;
+        return;
+    case 0x2002:
+        data_00267140.mField12008 = val;
+        return;
+    case 0x2003:
+        data_00267140.mField1200C = val;
+        return;
+    }
+}
+
+void glGetFloatv(unsigned int pname, f32 *params)
+{
+    switch (pname)
+    {
+    case GL_MODELVIEW_MATRIX:
+        *(Mat4x4f *)params = *data_00267140.mField5C8;
+        break;
+    case GL_PROJECTION_MATRIX:
+        *(Mat4x4f *)params = *data_00267140.mField5C4;
+        break;
+    case GL_LIGHT_MODEL_AMBIENT:
+        params[0] = data_00267140.mField70 * 0.0078125f;
+        params[1] = data_00267140.mField74 * 0.0078125f;
+        params[2] = data_00267140.mField78 * 0.0078125f;
+        params[3] = data_00267140.mField7C * 0.0078125f;
+        break;
+    }
+}
+
+#ifdef NON_MATCHING
+// 7 of 65 instructions differ at the end: cvt.w.s + mfc1 + dsll32/dsra32 vs andi 0xFF.
+void glAlphaFunc(unsigned int func, f32 ref)
+{
+    switch (func)
+    {
+    case 0x200: data_00267140.mField11FAC = 0; break;
+    case 0x207: data_00267140.mField11FAC = 1; break;
+    case 0x201: data_00267140.mField11FAC = 2; break;
+    case 0x203: data_00267140.mField11FAC = 3; break;
+    case 0x202: data_00267140.mField11FAC = 4; break;
+    case 0x206: data_00267140.mField11FAC = 5; break;
+    case 0x204: data_00267140.mField11FAC = 6; break;
+    case 0x205: data_00267140.mField11FAC = 7; break;
+    }
+    data_00267140.mField11FB0 = (u8)(int)(ref * 128.0f);
+}
+#endif
