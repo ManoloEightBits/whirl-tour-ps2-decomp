@@ -274,3 +274,29 @@ void func_00181800(f32 x, f32 y, f32 z, f32 r, f32 segs)
     } while (a <= 6.2831855f);
     glEnd();
 }
+
+struct UnkObj1BFAF0
+{
+    int GetField8(); // 0x001BFAF8
+};
+
+struct UnkObj182B80
+{
+    char pad00[0x08];
+    UnkObj1BFAF0 *mField08; // 0x08
+    int mField0C;           // 0x0C
+    int mField10;           // 0x10
+    char pad14[0x0C];
+    u8 mSub20[4];           // 0x20
+};
+
+UnkObj1BFAF0 *func_001BF6E8(void *); // 0x001BF6E8
+
+int func_00182B80(UnkObj182B80 *arg0)
+{
+    UnkObj1BFAF0 *p = func_001BF6E8(arg0->mSub20);
+    arg0->mField08 = p;
+    arg0->mField0C = p->GetField8();
+    arg0->mField10 = 0;
+    return arg0->mField08 != 0;
+}

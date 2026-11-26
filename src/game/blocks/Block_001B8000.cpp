@@ -391,3 +391,14 @@ UnkTable1B9CA0 *func_001B9B60(int arg0)
     }
     return t;
 }
+
+void func_001B9D30(int arg0, int arg1)
+{
+    UnkNode1B9CA0 *node = (UnkNode1B9CA0 *)MemAlloc1BD958(0xC);
+    if (node != 0)
+    {
+        node->mField04 = arg0;
+        node->mField08 = arg1;
+        node->mNext00 = 0;
+    }
+}

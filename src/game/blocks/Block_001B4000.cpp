@@ -198,3 +198,26 @@ void func_001B4948(f32 *q, f32 angle)
     q[0] = s;
     q[3] = Cos1B19E8(half);
 }
+
+struct UnkBuf1B6548
+{
+    int mCap00;  // 0x00
+    int mLen04;  // 0x04
+    char *mStr08; // 0x08
+    char mBuf0C[1]; // 0x0C
+};
+
+void *MemAlloc1BD958(int); // 0x001BD958
+
+UnkBuf1B6548 *func_001B6548(int arg0)
+{
+    UnkBuf1B6548 *p = (UnkBuf1B6548 *)MemAlloc1BD958(arg0 + 0xD);
+    if (p != 0)
+    {
+        p->mCap00 = arg0;
+        p->mStr08 = p->mBuf0C;
+        p->mLen04 = 0;
+        p->mBuf0C[0] = 0;
+    }
+    return p;
+}

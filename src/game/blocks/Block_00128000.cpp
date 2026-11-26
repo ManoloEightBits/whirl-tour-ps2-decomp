@@ -198,3 +198,19 @@ void func_00128C80(UnkNamed128C80 *obj, const char *name)
     strcpy(obj->mName04, name);
     obj->mCrc00 = HashStringCRC32(name);
 }
+
+struct UnkObj1290B8
+{
+    char pad00[0x1884];
+    f32 mField1884; // 0x1884
+    f32 mField1888; // 0x1888
+    u32 mField188C; // 0x188C
+};
+
+void func_001290B8(UnkObj1290B8 *arg0, const char *arg1, f32 arg2, f32 arg3)
+{
+    u32 crc = HashStringCRC32(arg1);
+    arg0->mField1888 = arg3;
+    arg0->mField1884 = arg2;
+    arg0->mField188C = crc;
+}

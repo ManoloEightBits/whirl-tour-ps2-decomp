@@ -166,3 +166,16 @@ void func_00111ED8(UnkObj111ED8 *arg0, int arg1)
         }
     }
 }
+
+void func_00143270(void *); // 0x00143270
+void func_00143170(void *, int); // 0x00143170
+
+void func_00111F60(UnkObj111ED8 *arg0)
+{
+    if (arg0->mField6C != 0)
+    {
+        func_00143270(arg0->mField6C);
+        func_00143170(arg0->mField6C, 4);
+        arg0->mField6C = 0;
+    }
+}

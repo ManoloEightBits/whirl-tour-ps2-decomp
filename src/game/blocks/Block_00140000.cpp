@@ -403,3 +403,37 @@ UnkEntry143078 *func_00143078(const char *arg0, int arg1, f32 arg2)
     }
     return p;
 }
+
+void Release198F38(void *);     // 0x00198F38
+void func_00191E40(void *);    // 0x00191E40
+void __builtin_delete(void *); // 0x00100C08
+void func_00142400();          // 0x00142400
+
+void func_00140A40(void **arg0, int arg1)
+{
+    Release198F38(*arg0);
+    if (arg1 & 1)
+        __builtin_delete(arg0);
+}
+
+struct UnkObj140FA8
+{
+    void *mField00; // 0x00
+    void *mField04; // 0x04
+};
+
+void func_00140FA8(UnkObj140FA8 *arg0, int arg1)
+{
+    Release198F38(arg0->mField00);
+    func_00191E40(arg0->mField04);
+    if (arg1 & 1)
+        __builtin_delete(arg0);
+}
+
+void func_00141950(void *arg0, int arg1)
+{
+    ((UnkEffect1424 *)arg0)->mField2C |= 0x10;
+    func_00142400();
+    if (arg1 & 1)
+        __builtin_delete(arg0);
+}

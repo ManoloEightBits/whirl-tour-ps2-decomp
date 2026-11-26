@@ -189,3 +189,18 @@ void func_0012E280(UnkObj12E280 *arg0, int arg1, u16 *arg2, int arg3)
     func_001AF368(arg0->mFieldC0, arg2, arg1, (int)&sp0);
     func_001B3928(arg0->mSub40, &sp0, arg3);
 }
+
+struct UnkObj12FE80
+{
+    char pad00[0x2C];
+    void *mField2C; // 0x2C
+};
+
+void __builtin_delete(void *); // 0x00100C08
+
+void func_0012FE80(UnkObj12FE80 *arg0, int arg1)
+{
+    MemFree1BD978(arg0->mField2C);
+    if (arg1 & 1)
+        __builtin_delete(arg0);
+}

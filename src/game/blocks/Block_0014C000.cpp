@@ -359,3 +359,30 @@ void func_0014FA78(UnkObj14FA78 *arg0, UnkVec14FA78 *arg1)
     if (arg0->mFieldC0 == 0)
         arg0->mFieldC0 = func_00165100(__builtin_new(0x138), arg1->x, arg1->y, arg1->z);
 }
+
+struct UnkSub14EB20
+{
+    char pad00[0xCC];
+    int mFieldCC; // 0xCC
+    char padD0[0x10];
+    int mFieldE0; // 0xE0
+    int mFieldE4; // 0xE4
+};
+
+struct UnkObj14EB20
+{
+    char pad00[0x68];
+    UnkSub14EB20 *mSub68; // 0x68
+};
+
+int func_0014EB20(UnkObj14EB20 *arg0, UnkObj14EB20 *arg1)
+{
+    UnkSub14EB20 *a = arg0->mSub68;
+    if (a != 0)
+    {
+        UnkSub14EB20 *b = arg1->mSub68;
+        if (b != 0 && a->mFieldCC != 0 && b->mFieldCC != 0)
+            return a->mFieldE0 - a->mFieldE4;
+    }
+    return 0;
+}

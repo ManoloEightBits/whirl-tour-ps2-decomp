@@ -120,3 +120,16 @@ void func_001675D8(UnkObj1675D8 *arg0, int arg1)
     if (arg1 & 1)
         __builtin_delete(arg0);
 }
+
+struct UnkObj165D28
+{
+    char pad00[0x18];
+    void *mField18; // 0x18
+};
+
+void func_00165D28(UnkObj165D28 *arg0, int arg1)
+{
+    __builtin_delete(arg0->mField18);
+    if (arg1 & 1)
+        __builtin_delete(arg0);
+}

@@ -379,3 +379,15 @@ void func_001265D0()
         }
     }
 }
+
+extern int data_0025DC60;
+u32 HashStringCRC32(const char *); // 0x001B1CD0
+int func_00182F38(int, u32);       // 0x00182F38
+
+int FindFont1264A8(const char *name)
+{
+    int ret = 0;
+    if (data_0025DC60 != 0)
+        ret = func_00182F38(data_0025DC60, HashStringCRC32(name));
+    return ret;
+}
