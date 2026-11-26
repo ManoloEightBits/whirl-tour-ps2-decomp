@@ -216,6 +216,7 @@ struct UnkBox1810C8
     Vec3f mMax; // 0x0C
 };
 
+// Draws a wireframe axis-aligned bounding box (min/max).
 void func_001810C8(UnkBox1810C8 *box)
 {
 {
@@ -247,6 +248,7 @@ void func_001810C8(UnkBox1810C8 *box)
 }
 }
 
+// Draws a wireframe sphere as three orthogonal circles.
 void func_00181800(f32 x, f32 y, f32 z, f32 r, f32 segs)
 {
     if (segs <= 0.1f)

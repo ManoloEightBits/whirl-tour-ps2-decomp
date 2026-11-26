@@ -205,8 +205,11 @@ nothing about its field. Names have to come from evidence, roughly in this order
    `wheelradius`), `UnkPedParams` (`speed`, `probability`, `timein`, `timeout`, `stoprange`, `time`,
    `lookatrange`) and `UnkScooterParams1C0` (`startacc`, `speedmin`, `adrenaline` (the multiplier applied
    while `Scooter::mFlags18 & 0x400`), `ramplaunch`, `wedgelaunch`), and their accessors (`GetSpeed04`,
-   `ScaleRampLaunch`, `RandomStartAcc124`, ...). Declared from their parsers, not used by matched code
-   yet: `UnkRaceParams` (0x28 bytes, parser `0x0010B338`) and `UnkBossParams` (0x20C bytes, parser
+   `ScaleRampLaunch`, `RandomStartAcc124`, ...), `UnkTrickScores` (0x00123CD0: `sick_meter`,
+   `adrenaline_meter`, `spin_multipliers`, `spin_switch_bonus`, `trick_variation_bonus`,
+   `sick_variation_bonus`, `trick_degredation_multipliers`, `hold_bonus`) and `UnkTrickDef`
+   (0x00124750: `score`, `anglefs`, `anglebs`, `next`, `prev`, `reversefs`, `reversebs`). Declared
+   from their parsers, not used by matched code yet: `UnkRaceParams` (0x28 bytes, parser `0x0010B338`) and `UnkBossParams` (0x20C bytes, parser
    `0x0015DD70`); the level loader `0x0012BBB0` parses each into a stack buffer and copies it into a heap
    object of that size. Open: which pointer of `AI_Race`/`AI_Boss` holds them (`AI_Boss::mAttack1D8` may
    be the boss one: its +0x10 is the damage dealt to the player, as `mCollisionDamage10`), which of the

@@ -12,11 +12,11 @@ void func_001B92F8(char *dst, const char *a, const char *b, const char *c);
 extern "C" int func_002320C8(const char *, const char *);
 
 extern UnkTrickScores data_0025A398;
-extern f32 data_0025A624;
-extern f32 data_0025A628;
-extern f32 data_0025A62C;
-extern f32 data_0025A630;
-extern f32 data_0025A634;
+extern f32 data_0025A624; // "health_bonus"
+extern f32 data_0025A628; // "attack" -> "score"
+extern f32 data_0025A62C; // "attack" -> "kill"
+extern f32 data_0025A630; // "combo" -> "score"
+extern f32 data_0025A634; // "combo" -> "kill"
 extern UnkTrickDef data_0025ABC0[NUM_TRICKS];
 extern UnkTrickSeq data_0025C510[];
 extern int data_0025D9C8[];
