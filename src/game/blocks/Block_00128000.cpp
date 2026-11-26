@@ -159,6 +159,33 @@ void func_00129D40()
 
 int HashStringCRC32(const char *); // 0x001B1CD0
 
+struct UnkEntry128F38
+{
+    char field_0x0[0x50];
+    int mField50; // +0xDB4 from base 0xD64
+    u16 mField54;
+    u16 mField56; // +0xDBA from base 0xD64
+};
+
+struct UnkObj128F38
+{
+    char field_0x0[0xD64];
+    UnkEntry128F38 mEntries[1]; // 0xD64
+
+    void SetFieldDB4(int idx, int val); // 0x00128F38
+    void SetFieldDBA(int idx, u16 val); // 0x00129058
+};
+
+void UnkObj128F38::SetFieldDB4(int idx, int val)
+{
+    mEntries[idx].mField50 = val;
+}
+
+void UnkObj128F38::SetFieldDBA(int idx, u16 val)
+{
+    mEntries[idx].mField56 = val;
+}
+
 struct UnkNamed128C80
 {
     u32 mCrc00;          // 0x00: CRC32 of mName04

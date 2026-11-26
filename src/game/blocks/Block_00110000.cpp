@@ -59,3 +59,25 @@ int UnkObj111EB8::GetField68()
 {
     return mField68;
 }
+
+void func_00136C20(int, f32); // 0x00136C20
+
+struct UnkObj112140
+{
+    char field_0x0[0x8];
+    void *mField08;  // 0x08
+    char field_0xC[0x10];
+    f32 mField1C;    // 0x1C
+
+    void Method112140(); // 0x00112140
+};
+
+void func_00112120(UnkObj112140 *arg0, int arg1)
+{
+    func_00136C20(arg1, arg0->mField1C);
+}
+
+void UnkObj112140::Method112140()
+{
+    mField08 = (void *)func_00112120;
+}

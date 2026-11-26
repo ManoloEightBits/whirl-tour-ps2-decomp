@@ -235,3 +235,44 @@ void func_00191550(int *arg0, int arg1)
 {
     *arg0 = arg1;
 }
+
+struct UnkElem190B88
+{
+    char field_0x0[0x40];
+};
+
+struct UnkObj190B88
+{
+    char field_0x0[0x54];
+    u16 mField54; // 0x54
+};
+
+int func_00190B88(int arg0, int arg1)
+{
+    return ((UnkObj190B88 *)(arg0 + (arg1 << 6)))->mField54 & 0x20;
+}
+
+struct UnkElem190EB8
+{
+    char field_0x0[0x84];
+    int mField84; // 0x84
+    int mField88; // 0x88
+    int mField8C; // 0x8C
+    int mField90; // 0x90
+    char field_0x94[0x1A00 - 0x94];
+};
+
+int func_00190EB8(int arg0, int arg1)
+{
+    return ((UnkElem190EB8 *)((char *)arg0 + arg1 * 0x1A00))->mField84;
+}
+
+int func_00190ED0(int arg0, int arg1)
+{
+    return ((UnkElem190EB8 *)((char *)arg0 + arg1 * 0x1A00))->mField90;
+}
+
+int func_001911B0(int arg0, int arg1)
+{
+    return ((UnkElem190EB8 *)((char *)arg0 + arg1 * 0x1A00))->mField88;
+}

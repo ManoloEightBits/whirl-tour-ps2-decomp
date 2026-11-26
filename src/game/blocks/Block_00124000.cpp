@@ -339,3 +339,24 @@ void func_00126738()
         func_0012D398(data_0025DC64);
     }
 }
+
+extern int data_0025DC68;
+
+void *func_00127038()
+{
+    return &data_0025DC68;
+}
+
+struct UnkObj127048
+{
+    int mField0; // 0x00
+    int mField4; // 0x04
+
+    void SetFields4_0(int a, int b); // 0x00127048
+};
+
+void UnkObj127048::SetFields4_0(int a, int b)
+{
+    mField0 = b;
+    mField4 = a;
+}

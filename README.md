@@ -11,12 +11,12 @@ A hobby reverse-engineering project for the US PS2 release of *Whirl Tour* (`SLU
 <!-- progress:begin -->
 | Metric | Matched / Confirmed | Total in `.text` | Share | Progress |
 | :--- | ---: | ---: | ---: | :--- |
-| **Total `.text` bytes** | **74,612 B** | 1,401,448 B | **5.324%** | `██░░░░░░░░░░░░░░░░░░` |
-| **Game logic bytes** (`0x100000..0x1C62CF`) | **70,208 B** | 811,728 B | **8.649%** | `██░░░░░░░░░░░░░░░░░░` |
-| **Matched functions (`verify.py`)** | **1557** | ~7,125 | **21.853%** | `█████░░░░░░░░░░░░░░░` |
+| **Total `.text` bytes** | **74,804 B** | 1,401,448 B | **5.338%** | `██░░░░░░░░░░░░░░░░░░` |
+| **Game logic bytes** (`0x100000..0x1C62CF`) | **70,400 B** | 811,728 B | **8.673%** | `██░░░░░░░░░░░░░░░░░░` |
+| **Matched functions (`verify.py`)** | **1567** | ~7,125 | **21.993%** | `█████░░░░░░░░░░░░░░░` |
 | **Confirmed vtable slots (`verify_vtables.py`)** | **246** | ~889 | **27.672%** | `██████░░░░░░░░░░░░░░` |
 | **Confirmed RTTI classes (`vtables.txt`)** | **51** | 193 | **26.425%** | `██████░░░░░░░░░░░░░░` |
-| **Full binary relink (`rebuild.py`)** | **1557 linked** | `02f39f20...0744` | **SHA-1 MATCH** | `████████████████████` |
+| **Full binary relink (`rebuild.py`)** | **1567 linked** | `02f39f20...0744` | **SHA-1 MATCH** | `████████████████████` |
 <!-- progress:end -->
 
 ### Binary `.text` Map (`0x00100000..0x00256268`)
