@@ -173,10 +173,10 @@ map of the binary, regenerated with `tools/analysis/coverage.py --map docs/MAP.m
    `UnlockAllLevels155238`), mode tests and the playlist's current track, the Versus time switch
    (`GetVersusTime154EA8`: 10 to 300 seconds, 11 choices), and each player's choices: character
    (`mCharacter288`, `gCharacterNames261C50` "gavin".."marcus"), scooter (`mScooterModel2D8`,
-   `gScooterModels261C90`) and controller (`mPad20`, an index into `gFEPads2659A0`). About 45 functions of
-   the module are left: `GameCtx::GameCtx` and `func_00152610` (filling it), the 0x00153C10..0x00154E80
-   run, `func_00156200`/`func_00156270`/`func_001565F0` (0.6-0.7) and `func_00156310` (`ldl`/`sdl`
-   copies); `mMode00` (0..7) still needs names for its values (Arcade, Story,
+   `gScooterModels261C90`) and controller (`mPad20`, an index into `gFEPads2659A0`). About 33 functions of
+   the module are left: `GameCtx::GameCtx` and `func_00152610` (filling it), the `0x00153E10`/`0x00154400`
+   `ldl`/`sdl` functions, `func_00154E00` (18/31 diffs, under `#ifdef NON_MATCHING`), `func_00155DA0` and
+   `func_00156310`/`func_00156478` (`ldl`/`sdl` copies); `mMode00` (0..7) still needs names for its values (Arcade, Story,
    Entertainment, Multiplayer variants...): the tests show which modes count goals (0, 3, 7). Likely
    0 Story and 2 Arcade: the level select (used by both) tests {0, 2}, and the level loaders that test
    {0, 3} would be where collectibles appear, which happens in Story but not in Arcade (seen in play);

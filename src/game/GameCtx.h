@@ -34,9 +34,37 @@ struct UnkObj125CD8
     ~UnkObj125CD8(); // 0x00125CD8
 };
 
-struct GameCtxSub5AC
+struct GameCtxSub1C
+{
+    f32 mField00;
+    int mField04;
+    int mField08;
+    char mName0C[0x10];
+};
+
+struct GameCtxSub74
+{
+    int mCount00;
+    GameCtxSub1C mArr04[4];
+};
+
+struct GameCtxSub14
 {
     int mField00;
+    f32 mField04;
+    u8 mPad08[0x0C];
+};
+
+struct GameCtxSub5AC
+{
+    int mField00;            // 0x000
+    u8 mPad04[0xB4];         // 0x004
+    GameCtxSub74 mSubB8[4];  // 0x0B8
+    GameCtxSub14 mArr288[8]; // 0x288
+    u8 mPad328[0x18];         // 0x328
+    GameCtxSub74 mSub340;    // 0x340
+    GameCtxSub14 mArr3B4[8]; // 0x3B4
+    u8 mPad454[0x18];         // 0x454
 };
 
 struct GameCtxEvent124
@@ -61,7 +89,8 @@ struct GameCtx
     int *mField48;           // 0x048
     int mTrack4C;            // 0x04C: the playlist track playing
     int mNumTracks50;        // 0x050
-    int mTracks54[41];       // 0x054: the playlist, on/off per track
+    int mTracks54[40];       // 0x054: the playlist, on/off per track
+    int mFieldF4;            // 0x0F4
     // Options (FEOptionsScreen::InitMenu16C6D8; the item order is the menu's, as seen in the game)
     int mActionCameras;      // 0x0F8: string 0x2C, on/off
     int mVibration;          // 0x0FC: string 0x2D, on/off
@@ -75,7 +104,8 @@ struct GameCtx
     int mField1DC;           // 0x1DC
     int mField1E0;           // 0x1E0
     int mField1E4;           // 0x1E4
-    char pad1E8[0x40];
+    char mName1E8[0x10];     // 0x1E8
+    char pad1F8[0x30];
     LevelProgress mLevels228[8]; // 0x228: Castle, Theme park, Suburbia, City in the sky, Subway,
                                  // Deep water rig, Movie set, Tibet
     // Per player (FECharacterScreen and FEScooterScreen store the choices)
@@ -87,7 +117,10 @@ struct GameCtx
     int mArr30C[10];         // 0x30C
     UnkObj125CD8 *mObjs334[10]; // 0x334
     int mField35C;           // 0x35C
-    char pad360[0x10];
+    int mField360;           // 0x360
+    int mField364;           // 0x364
+    int mField368;           // 0x368
+    int mField36C;           // 0x36C
     int mVersusTime;         // 0x370: 2 player options, string 0x37, an index for GetVersusTime154EA8
     int mVersusDegradation;  // 0x374: string 0x38, on/off
     f32 mFxVolume;           // 0x378: audio options, string 0x34, a slider

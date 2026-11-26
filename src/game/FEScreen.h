@@ -171,7 +171,8 @@ struct FEMenu
 struct FEPad
 {
     int mConnected00; // 0x00: the front end greys out Multiplayer while pad 2's is 0 (func_00110B60)
-    char field_0x04[0x18];
+    int mFlags04;     // 0x04
+    char field_0x08[0x14];
     u32 mButtons1C; // 0x1C
     int mPressed20; // 0x20
 };

@@ -1,12 +1,15 @@
 #pragma implementation
 #include "common/types.h"
 #include "game/GameCtx.h"
+#include "game/FEScreen.h"
 #include "common/libc.h"
 
 // The game context (GameCtx, gGameCtx262250): its life cycle, the mode tests and each level's progress
 // (0x00153C10..0x001566F8, after the constructor at 0x00152528). Functions not understood yet keep
 // address names.
 
+void func_00125D00(UnkObj125CD8 *); // 0x00125D00
+void func_00125FA8(int, const char *, int, int); // 0x00125FA8
 void func_00126138(int);        // 0x00126138
 const char *func_00151D40(u16); // 0x00151D40
 void func_00153AD8();           // 0x00153AD8
@@ -15,6 +18,8 @@ void func_00155250();           // 0x00155250
 void func_00155280();           // 0x00155280
 void UnlockAllScooters156158();           // 0x00156158
 void func_00152610();           // 0x00152610
+void func_0022FCC8(int, int, int, int); // 0x0022FCC8
+int func_00155B48(f32 *, f32 *); // 0x00155B48
 extern const char *const gLevelNames261C70[];      // "castle", "themepark", ... "tibet"
 extern const int gLevelMenuIds2A2C50[];
 extern const char *const gCharacterNames261C50[];  // "gavin", "niki", ... "marcus"
@@ -23,7 +28,8 @@ extern const char *const gScooterModels261C90[];   // "scooter_model_1" .. "scoo
 extern const int gScooterTextIds2A2C70[];          // the scooters' names in the text table
 extern const int data_002A2C98[];                  // one per level, -1 for Movie set
 extern const int data_002A2CB8[];                  // one per level, -1 for Movie set
-struct FEPad;
+extern const int data_002A2CD8[8][7];
+extern const int gUnlockGoals261CB8[];
 extern FEPad *gFEPads2659A0[4];
 
 
@@ -732,4 +738,262 @@ int func_00155BB8()
         ret = 1;
     return ret;
 }
+}
+
+void func_00154A70(u32 arg0)
+{
+    int id = arg0 + 0x3E9;
+    switch (arg0)
+    {
+    case 0:
+        func_00125FA8(id, "DATA:scoot_01", 0, 0);
+        break;
+    case 1:
+        func_00125FA8(id, "DATA:scoot_02", 0, 0);
+        break;
+    case 2:
+        func_00125FA8(id, "DATA:scoot_03", 0, 0);
+        break;
+    case 3:
+        func_00125FA8(id, "DATA:scoot_04", 0, 0);
+        break;
+    case 4:
+        func_00125FA8(id, "DATA:scoot_05", 0, 0);
+        break;
+    case 5:
+        func_00125FA8(id, "DATA:scoot_06", 0, 0);
+        break;
+    case 6:
+        func_00125FA8(id, "DATA:scoot_07", 0, 0);
+        break;
+    case 7:
+        func_00125FA8(id, "DATA:scoot_08", 0, 0);
+        break;
+    case 8:
+        func_00125FA8(id, "DATA:scoot_09", 0, 0);
+        break;
+    case 9:
+        func_00125FA8(id, "DATA:scoot_10", 0, 0);
+        break;
+    }
+}
+
+void func_00154CF8(GameCtxSub5AC *p, int arg1)
+{
+{
+    int i;
+    memset(p, 0, 0xB8);
+    for (i = 0; i < 4; i++)
+        func_00154DE0(&p->mSubB8[i]);
+    memset(p->mArr288, 0, 0xB8);
+    for (i = 0; i < 8; i++)
+        p->mArr288[i].mField04 = 1e9f;
+    func_00154DE0(&p->mSub340);
+    memset(p->mArr3B4, 0, 0xB8);
+    if (arg1 != 0)
+    {
+        for (i = 0; i < 8; i++)
+            p->mArr3B4[i].mField04 = 1e9f;
+    }
+}
+}
+
+#ifdef NON_MATCHING
+// 18/31 diffs: loop scheduling (addiu $a1, -1; addiu $a0, 4 before vs after lw/ori/sw) and 1 nop at +0x044.
+void func_00154E00(int arg0)
+{
+    gGameCtx262250->mField368 = arg0;
+    if (arg0 != 0)
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            FEPad *pad = gFEPads2659A0[i];
+            pad->mFlags04 |= 2;
+        }
+        return;
+    }
+    for (int i = 0; i < 4; i++)
+    {
+        FEPad *pad = gFEPads2659A0[i];
+        pad->mFlags04 &= ~2;
+    }
+}
+#endif
+
+void func_00154FD8()
+{
+    for (int i = 0; i < 10; i++)
+        func_00125D00(gGameCtx262250->mObjs334[i]);
+}
+
+const char *func_00155090(int arg0)
+{
+    return func_00151D40(data_002A2CD8[gGameCtx262250->mLevel14][arg0]);
+}
+
+int GetGoalsToUnlock155130()
+{
+    if (gGameCtx262250->mMaxLevel39C >= 6)
+        return 0;
+    int sum = 0;
+    for (int i = 0; i < 8; i++)
+        sum += gGameCtx262250->mLevels228[i].mGoals00;
+    return gUnlockGoals261CB8[gGameCtx262250->mMaxLevel39C] - sum;
+}
+
+int func_001555F8()
+{
+    int ret = -1;
+    for (int i = 0; i < 6; i++)
+    {
+        if (gGameCtx262250->mArr1C4[i] != 0)
+        {
+            gGameCtx262250->mArr1C4[i] = 0;
+            ret = i;
+            break;
+        }
+    }
+    return ret;
+}
+
+void func_00155690()
+{
+    if (gGameCtx262250->mRaceOpen4D4[gGameCtx262250->mLevel14] == 0)
+    {
+        gGameCtx262250->mRaceOpen4D4[gGameCtx262250->mLevel14] = 1;
+        int all = 1;
+        for (int i = 0; i < 8; i++)
+        {
+            if (gGameCtx262250->mRaceOpen4D4[i] == 0)
+                all = 0;
+        }
+        if (all != 0)
+        {
+            gGameCtx262250->mArr4F4[3] = 1;
+            gGameCtx262250->mArr1C4[3] = 1;
+        }
+    }
+}
+
+void func_00155A50()
+{
+    int unlocked = 0;
+    for (int i = 0; i < gGameCtx262250->mNumTracks50; i++)
+    {
+        if (unlocked < 3)
+        {
+            if (gGameCtx262250->mBGMTable384[i].mUnlocked05 == 0)
+            {
+                gGameCtx262250->mBGMTable384[i].mUnlocked05 = 1;
+                gGameCtx262250->mBGMTable384[i].mFlag04 = 1;
+                unlocked++;
+            }
+        }
+    }
+}
+
+void func_00155C58(int arg0, int arg1, int arg2, f32 arg3)
+{
+    GameCtxSub74 *sub;
+    if (gGameCtx262250->mField18 == 0)
+        sub = &gGameCtx262250->mSub5AC[gGameCtx262250->mLevel14].mSubB8[arg0];
+    else if (gGameCtx262250->mField18 == 2)
+        return;
+    else if (arg0 == 0)
+        sub = &gGameCtx262250->mSub5AC[gGameCtx262250->mLevel14].mSub340;
+    else
+        return;
+    sub->mArr04[3].mField08 = arg2;
+    sub->mArr04[3].mField00 = arg3;
+    sub->mArr04[3].mField04 = arg1;
+    strcpy(sub->mArr04[3].mName0C, gGameCtx262250->mName1E8);
+    func_0022FCC8((int)sub->mArr04, 4, sizeof(GameCtxSub1C), (int)func_00155B48);
+    int n = sub->mCount00 + 1;
+    sub->mCount00 = (n < 4) ? n : 3;
+}
+
+int func_00155D30(int arg0)
+{
+    if (gGameCtx262250->mField18 == 0)
+        return gGameCtx262250->mSub5AC[gGameCtx262250->mLevel14].mSubB8[arg0].mCount00;
+    if (gGameCtx262250->mField18 == 2)
+        return 0;
+    if (arg0 == 0)
+        return gGameCtx262250->mSub5AC[gGameCtx262250->mLevel14].mSub340.mCount00;
+    return 0;
+}
+
+int func_00155768()
+{
+    int ret = 1;
+    switch (gGameCtx262250->mField18)
+    {
+    case 0:
+        break;
+    case 1:
+        ret = 0;
+        break;
+    case 2:
+        ret = func_001557C8(gGameCtx262250->mLevel14) == 0;
+        break;
+    }
+    return ret;
+}
+
+int func_00155BF0()
+{
+    if (gGameCtx262250->mField18 == 0)
+        return gGameCtx262250->mSub5AC[gGameCtx262250->mLevel14].mField00;
+    if (gGameCtx262250->mField18 == 2)
+        return gGameCtx262250->mSub5AC[gGameCtx262250->mLevel14].mArr3B4[0].mField00;
+    return gGameCtx262250->mSub5AC[gGameCtx262250->mLevel14].mArr288[0].mField00;
+}
+
+void func_00156200()
+{
+    gGameCtx262250->mFieldF4 = gGameCtx262250->mField35C;
+    gGameCtx262250->mActionCameras = gGameCtx262250->mField364;
+    gGameCtx262250->mVibration = gGameCtx262250->mField368;
+    gGameCtx262250->mBalanceMeter = gGameCtx262250->mField36C;
+    for (int i = 0; i < gGameCtx262250->mNumTracks50; i++)
+        gGameCtx262250->mTracks54[i] = gGameCtx262250->mBGMTable384[i].mFlag04;
+}
+
+void func_00156270()
+{
+    gGameCtx262250->mField35C = gGameCtx262250->mFieldF4;
+    gGameCtx262250->mField364 = gGameCtx262250->mActionCameras;
+    gGameCtx262250->mField368 = gGameCtx262250->mVibration;
+    gGameCtx262250->mField36C = gGameCtx262250->mBalanceMeter;
+    for (int i = 0; i < gGameCtx262250->mNumTracks50; i++)
+        gGameCtx262250->mBGMTable384[i].mFlag04 = gGameCtx262250->mTracks54[i];
+}
+
+void func_001565F0(u32 arg0)
+{
+    int id = arg0 + 0x65;
+    switch (arg0)
+    {
+    case 0:
+        func_00125FA8(id, "DATA:char_0", 0, 0);
+        break;
+    case 1:
+        func_00125FA8(id, "DATA:char_1", 0, 0);
+        break;
+    case 2:
+        func_00125FA8(id, "DATA:char_2", 0, 0);
+        break;
+    case 3:
+        func_00125FA8(id, "DATA:char_3", 0, 0);
+        break;
+    case 4:
+        func_00125FA8(id, "DATA:char_4", 0, 0);
+        break;
+    case 5:
+        func_00125FA8(id, "DATA:char_5", 0, 0);
+        break;
+    case 6:
+        func_00125FA8(id, "DATA:char_6", 0, 0);
+        break;
+    }
 }
