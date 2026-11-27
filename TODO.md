@@ -251,6 +251,12 @@ nothing about its field. Names have to come from evidence, roughly in this order
 - `glClear` `0x001A42F8`, 2/30 (`Block_001A4000.cpp`): `$v0` vs `$v1` for `mArr1038[idx]`.
 - `glAlphaFunc` `0x001A4950`, 7/65 (`Block_001A4000.cpp`): `cvt.w.s` + `mfc1` + `dsll32`/`dsra32` on `ref * 128.0f`.
 - `FENameSelectScreen::FENameSelectScreen` `0x0016C530`, 25/82 (`FEScreens.cpp`): division and `70.0f`/`80.0f` store scheduling.
+- `AI_Pedestrian::~AI_Pedestrian` `0x00106AC0` (236 B), `AI_Race::~AI_Race` `0x0010BB90` (144 B),
+  `AI_Vehicle::~AI_Vehicle` `0x0010E380` (188 B): bodies match 100%, gated until `AI_Agent : EnvObj`
+  is wired so `__tf8AI_Agent` matches.
+- IVP boundary `NON_MATCHING` (`Block_001F0000.cpp`, `Block_001F4000.cpp`): `func_001F1E40` (`0x001F1E40`,
+  96/111), `PhysicsDestroy1F21A8` (`0x001F21A8`, 70/97, VU0 `lqc2`/`sqc2`), `func_001F45C0`
+  (`0x001F45C0`, 70/75, VU0 `lqc2`/`sqc2` + spill), `func_001F48E0` (`0x001F48E0`, VU0 `vmulx`/`vadd`).
 
 ## Unverified names
 
