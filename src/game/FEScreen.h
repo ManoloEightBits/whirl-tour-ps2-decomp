@@ -333,7 +333,13 @@ struct FEChoosePair
 
 struct FEChooseDef
 {
-    char field_0x000[0x1DC];
+    char field_0x000[0x184];
+    int mCount184;     // 0x184
+    int mField188;     // 0x188
+    int mField18C;     // 0x18C
+    int mField190;     // 0x190
+    int mField194;     // 0x194
+    char field_0x198[0x44];
     int mTexIds1DC[1]; // 0x1DC
 };
 
@@ -514,7 +520,7 @@ public:
     virtual int VirtSlot7();                   // 0x0016C6C8
     virtual int VirtSlot8();                   // 0x0016C6D0
 
-    void *mText164;     // 0x164
+    TextObj *mText164;  // 0x164
     int mField168;      // 0x168
     int mField16C;      // 0x16C
     int mField170;      // 0x170

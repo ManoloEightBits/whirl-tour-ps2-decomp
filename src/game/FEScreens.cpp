@@ -51,6 +51,7 @@ void func_00197200(void *);
 void func_00192248(void *);
 const int *GetLevelMenuIds155228();
 const char *func_00151D40(u16 id);
+char *func_00151D70(char *dst, const char *src);
 void *func_001262E0(int);
 void *func_00126280(int id);
 void func_00119560(void *actor, int, int);
@@ -320,6 +321,92 @@ void FEPlaylistScreen::VirtSlot2(f32 dt)
     }
 }
 
+#ifdef NON_MATCHING
+// 245 of 250 instructions differ: register allocation ($s4/$s5/$f28) and loop/const hoisting.
+void FEPlaylistScreen::VirtSlot3()
+{
+{
+    FEScreen::VirtSlot3();
+    DrawBegin19A640();
+    mText184->mAlign00 &= ~0x22;
+    TEXT_SET_SCALE(mText184, 0.5f, 0.65f, 1.0f);
+    char buf[512];
+    TEXT_SET_STRING(mText184, buf);
+    f32 x = 100.0f;
+    f32 y = 730.0f;
+    int count = mCount16C;
+    int start = mSelected168 - 3;
+    if (count - 7 < start)
+        start = count - 7;
+    if (start < 0)
+        start = 0;
+    int end = start + 7;
+    if (end > count)
+        end = count;
+    for (int i = start; i < end; i++)
+    {
+        int trackIdx = mTracks174[i];
+        const char *track = GetGameCtx()->mBGMTable384[trackIdx].mName00;
+        int blink = 0;
+        if (i == mPlayingIdx188 && mStream194 != 0)
+            blink = mBlink190 & 1;
+        const char *icon;
+        if (blink != 0)
+            icon = "\x80\x17";
+        else if (mEnabled170[trackIdx] != 0)
+            icon = "\x80\x16";
+        else
+            icon = "\x80\x15";
+        sprintf(buf, "%s %s - %s", icon, track, track + 0x20);
+        if (i == mSelected168)
+            TEXT_SET_RGBA(mText184, 0x80007080);
+        else
+            TEXT_SET_RGBA(mText184, 0x80808080);
+        TEXT_SET_POS(mText184, x, y, 0.0f);
+        DrawText19B758(mText184);
+        if (i == mSelected168)
+        {
+            f32 y0 = y - 54.0f - 10.0f;
+            f32 y1 = y + 15.0f;
+            glEnable(GL_TEXTURE_2D);
+            glBindTexture(GL_TEXTURE_2D, 0x6EFC709F);
+            glEnable(GL_BLEND);
+            glBlendFunc(1, 1);
+            glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+            glBegin(GL_TRIANGLE_STRIP);
+            glTexCoord2f(0.0f, 0.0f);
+            glVertex3f(x, y0, 0.0f);
+            glTexCoord2f(1.0f, 0.0f);
+            glVertex3f(800.0f, y0, 0.0f);
+            glTexCoord2f(0.0f, 1.0f);
+            glVertex3f(x, y1, 0.0f);
+            glTexCoord2f(1.0f, 1.0f);
+            glVertex3f(800.0f, y1, 0.0f);
+            glEnd();
+            glDisable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            glDisable(GL_TEXTURE_2D);
+        }
+        y += -54.0f;
+    }
+    if (start > 0)
+    {
+        TEXT_SET_RGBA(mText184, 0x80668080);
+        TEXT_SET_STRING(mText184, "\x80\x03");
+        TEXT_SET_POS(mText184, x, 784.0f, 0.0f);
+        DrawText19B758(mText184);
+    }
+    if (end < count)
+    {
+        TEXT_SET_RGBA(mText184, 0x80668080);
+        TEXT_SET_STRING(mText184, "\x80\x07");
+        TEXT_SET_POS(mText184, x, 730.0f + 7 * -54.0f, 0.0f);
+        DrawText19B758(mText184);
+    }
+    DrawEnd19A6B0();
+}
+#endif
+
 int FEPlaylistScreen::VirtSlot7()
 {
     return mField178;
@@ -331,6 +418,81 @@ int FEPlaylistScreen::VirtSlot8()
 }
 
 // 4. FEChooseScreen
+const char *GetCharacterName155EF0(int player);
+const char *GetScooterModel1561D8(int player);
+void *FindPickupDef(const char *name);
+void *func_00119AF8(void *def);
+void *func_00191DD8(f32 x, f32 y, f32 z);
+void func_001918A0(void *cam);
+
+struct UnkFECam
+{
+    f32 mField00;
+    f32 mField04;
+    f32 mField08;
+    f32 mField0C;
+    char pad10[0x10];
+    f32 mField20;
+    f32 mField24;
+    f32 mField28;
+};
+
+struct UnkActor11A
+{
+    void SetFields38_0_3C_1(); // 0x0011A3C0
+    void SetField80(int v);    // 0x0011A248
+};
+
+#ifdef NON_MATCHING
+// 115 of 129 instructions differ: register allocation ($fp/$s0..$s7) and mPairs190/mDefs1E0 strength reduction.
+FEChooseScreen::FEChooseScreen(FEOwner *owner)
+    : FEScreen(0x19, 2, owner)
+{
+    mCount164 = gGameCtx262250->mCount1C;
+    char name[128];
+    for (int i = 0; i < mCount164; i++)
+    {
+        strcpy(name, "frontend_");
+        func_00151D70(name, GetCharacterName155EF0(i));
+        UnkActor11A *actor = (UnkActor11A *)func_00119AF8(FindPickupDef(name));
+        mModels168[i] = actor;
+        actor->SetFields38_0_3C_1();
+        ((UnkActor11A *)mModels168[i])->SetField80(gGameCtx262250->mArr2B0[i]);
+        func_00119210(mModels168[i], 0.0f);
+        FEChooseDef *def = (FEChooseDef *)FindPickupDef(GetScooterModel1561D8(i));
+        mDefs1E0[i] = def;
+        if (def != 0)
+        {
+            if ((u32)def->mCount184 >= 2)
+            {
+                mPairs190[i].mModel00 = func_001262E0(def->mField18C);
+                mPairs190[i].mModel04 = func_001262E0(mDefs1E0[i]->mField194);
+                if (mPairs190[i].mModel00 != 0 && mPairs190[i].mModel04 != 0)
+                {
+                    *(u32 *)mPairs190[i].mModel00 |= 0x40;
+                    *(u32 *)mPairs190[i].mModel04 |= 0x40;
+                }
+            }
+            else
+            {
+                mPairs190[i].mModel00 = 0;
+                mPairs190[i].mModel04 = 0;
+            }
+        }
+    }
+    UnkFECam *cam = (UnkFECam *)func_00191DD8(0.0f, 0.0f, -10.0f);
+    mCam208 = cam;
+    cam->mField00 = 0.0f;
+    cam->mField04 = 0.0f;
+    cam->mField08 = 0.0f;
+    cam->mField0C = 0.0f;
+    cam->mField20 = 5.0f;
+    cam->mField28 = 1.7278761f;
+    func_001918A0(mCam208);
+    mClosing20C = 0;
+}
+#endif
+
 // Draws each player's character (mModels168) and, behind it, the two models of mPairs190 with the
 // texture of the player's choice, through the screen's camera.
 void FEChooseScreen::VirtSlot3()
@@ -969,6 +1131,70 @@ void FEMenu::SetTexts(const char **strings)
 }
 
 // 8. FENameSelectScreen
+#ifdef NON_MATCHING
+// 52 of 257 instructions differ: mText164->mScale1C store scheduling and loop div/charset addressing.
+void FENameSelectScreen::VirtSlot3()
+{
+{
+    FEScreen::VirtSlot3();
+    mField394 = 100.0f;
+    mField398 = 75.0f;
+    DrawBegin19A640();
+    char buf[128];
+    strcpy(buf, &mField188);
+    if (mField184 != 0)
+        func_00151D70(buf, ".");
+    mText164->mAlign00 &= ~0x22;
+    TEXT_SET_POS(mText164, 350.0f, 720.0f, 0.0f);
+    TEXT_SET_SCALE(mText164, 1.0f, 1.0f, 1.0f);
+    TEXT_SET_RGBA(mText164, 0x80808080);
+    TEXT_SET_STRING(mText164, buf);
+    DrawText19B758(mText164);
+    mText164->mAlign00 |= 0x22;
+    for (int i = 0; i < mField174; i++)
+    {
+        TEXT_SET_POS(mText164, 255.0f + (i % mField178) * mField394, 590.0f - (i / mField178) * mField398, 0.0f);
+        buf[1] = 0;
+        buf[0] = mCharset288[i];
+        TEXT_SET_STRING(mText164, buf);
+        if (i == mField168)
+        {
+            TEXT_SET_RGBA(mText164, 0x80808080);
+            TEXT_SET_SCALE(mText164, 1.3f, 1.3f, 1.0f);
+        }
+        else
+        {
+            TEXT_SET_RGBA(mText164, 0x80595959);
+            TEXT_SET_SCALE(mText164, 0.9f, 0.9f, 1.0f);
+        }
+        DrawText19B758(mText164);
+    }
+    f32 cx = 255.0f + (mField168 % mField178) * mField394;
+    f32 cy = 590.0f - (mField168 / mField178) * mField398;
+    glColor4f(0.6f, 0.3f, 0.2f, 1.0f);
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, 0x47AFE6C5);
+    glEnable(GL_BLEND);
+    glBlendFunc(1, 1);
+    glBegin(GL_TRIANGLE_STRIP);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(cx - 60.0f, cy - 60.0f, 0.0f);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(cx + 60.0f, cy - 60.0f, 0.0f);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(cx - 60.0f, cy + 60.0f, 0.0f);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(cx + 60.0f, cy + 60.0f, 0.0f);
+    glEnd();
+    glDisable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glDisable(GL_TEXTURE_2D);
+    DrawEnd19A6B0();
+    if (mField390 == 6)
+        func_00158330((void *)mField39C, 1);
+}
+#endif
+
 #ifdef NON_MATCHING
 // 25 of 82 instructions differ: division and 70.0f/80.0f store scheduling.
 FENameSelectScreen::FENameSelectScreen(FEOwner *owner, int arg2) : FEScreen(0x1E, 1, owner)

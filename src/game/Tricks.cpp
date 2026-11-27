@@ -3,7 +3,8 @@
 
 extern UnkKeyword data_0025DC28[]; // "trickscores", "scoring", "trick", "/trickscores", "tricklist", "/tricklist"
 int func_00124280(const char *sequence);  // 0x00124280: parses a "sequence" string
-extern "C" void func_00124A28(void *);
+extern "C" void func_00124A28(void *, ...);
+void *FindPickupDef(const char *);
 void DrawModel196110(void *model); // 0x00196110
 extern "C" void *func_00182258();
 extern "C" void func_00183480(void *);
@@ -309,6 +310,97 @@ int func_00125BE8(int idx)
 int func_00125C00(int idx)
 {
     return data_0025DC00[idx];
+}
+
+struct UnkObj125CD8
+{
+    s8 mSub00[0x4E];            // 0x000
+    s8 mSub4E[0x4E];            // 0x04E
+    s8 mSub9C[0x4E];            // 0x09C
+    s8 mSubEA[0x4E];            // 0x0EA
+    int mField138;              // 0x138
+    int mField13C;              // 0x13C
+    int mField140;              // 0x140
+    int mField144;              // 0x144
+    int mField148;              // 0x148
+    u8 mUnlocked14C[NUM_TRICKS]; // 0x14C
+    char pad19D[3];             // 0x19D
+    UnkTrickList *mList1A0;     // 0x1A0
+
+    ~UnkObj125CD8();            // 0x00125CD8
+};
+
+void func_00125D00(UnkObj125CD8 *obj);
+
+#ifdef NON_MATCHING
+// 14 of 47 instructions differ: scheduling of mField138..148 stores and loop address setup.
+// 0x00125C18
+UnkObj125CD8 *func_00125C18(UnkObj125CD8 *obj, const char *name)
+{
+    if (name == 0)
+        name = "tricklist_default";
+    obj->mList1A0 = (UnkTrickList *)FindPickupDef(name);
+    obj->mField138 = 0;
+    obj->mField13C = 0;
+    obj->mField140 = 0;
+    obj->mField144 = 0;
+    obj->mField148 = 0;
+    for (int i = 0; i < 0x4E; i++)
+    {
+        obj->mSub00[i] = -1;
+        obj->mSub4E[i] = -1;
+        obj->mSub9C[i] = -1;
+        obj->mSubEA[i] = -1;
+    }
+    int i = NUM_TRICKS - 1;
+    u8 *p = &obj->mUnlocked14C[i];
+    do
+    {
+        *p-- = 0;
+        i--;
+    } while (i >= 0);
+    func_00125D00(obj);
+    return obj;
+}
+#endif
+
+// 0x00125CD8
+UnkObj125CD8::~UnkObj125CD8()
+{
+}
+
+// 0x00125D00
+void func_00125D00(UnkObj125CD8 *obj)
+{
+{
+    obj->mField138 = 0;
+    obj->mField13C = 0;
+    obj->mField140 = 0;
+    obj->mField144 = 0;
+    obj->mField148 = 0;
+    for (int i = 0; i < 0x4E; i++)
+    {
+        obj->mSub00[i] = -1;
+        obj->mSub4E[i] = -1;
+        obj->mSub9C[i] = -1;
+        obj->mSubEA[i] = -1;
+    }
+    int i = NUM_TRICKS - 1;
+    u8 *p = &obj->mUnlocked14C[i];
+    do
+    {
+        *p-- = 0;
+        i--;
+    } while (i >= 0);
+    if (obj->mList1A0 != 0)
+    {
+        for (i = 0; i < NUM_TRICKS; i++)
+        {
+            if (obj->mList1A0->mUnlocked000[i] != 0)
+                func_00124A28(obj, i);
+        }
+    }
+}
 }
 
 // 0x00125DC0
