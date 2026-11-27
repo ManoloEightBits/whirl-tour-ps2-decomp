@@ -655,6 +655,47 @@ struct UnkObj1BDCF8
     f32 mField04; // 0x04
 };
 
+void func_001BCAC0(int); // 0x001BCAC0
+
+struct UnkList1BD0C0
+{
+    char pad00[0x4];
+    void **mHead04; // 0x04
+};
+
+void func_001BD078(void *arg0)
+{
+    UnkList1BD0C0 *list = (UnkList1BD0C0 *)arg0;
+    void **cur = list->mHead04;
+    void **next = (void **)*cur;
+    if (next != 0)
+    {
+        do
+        {
+            func_001BCAC0((int)cur);
+            cur = next;
+            next = (void **)*next;
+        } while (next != 0);
+    }
+}
+
+void func_001BD0C0(int arg0Int)
+{
+    UnkList1BD0C0 *list = (UnkList1BD0C0 *)arg0Int;
+    void **cur = list->mHead04;
+    void **next = (void **)*cur;
+    if (next != 0)
+    {
+        do
+        {
+            func_001BCAC0((int)cur);
+            cur = next;
+            next = (void **)*next;
+        } while (next != 0);
+    }
+    MemFree1BD978(list);
+}
+
 void func_001BDCF8(void *arg0, f32 dt)
 {
     UnkObj1BDCF8 *obj = (UnkObj1BDCF8 *)arg0;

@@ -83,3 +83,10 @@ void func_001491D8(UnkObj1491D8 *arg0)
     MemFree1BD978(arg0);
     func_00126138(0);
 }
+
+extern "C" void func_00149478(); // 0x00149478
+
+void func_0014BCC0(UnkObj148F58 *arg0)
+{
+    func_00150FD0(0x8000, (void *)func_00149478, arg0, arg0->mField08->GetPtr50());
+}

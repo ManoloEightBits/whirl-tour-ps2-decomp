@@ -157,6 +157,17 @@ void func_00129D40()
     data_0025DE20 = 0;
 }
 
+int func_00198090(int);                // 0x00198090
+void func_001983F0(int, void *, int);  // 0x001983F0
+extern "C" void func_00129658();       // 0x00129658
+
+void func_00129CF8(int arg0)
+{
+    int p = func_00198090(0);
+    data_0025DE20 = p;
+    func_001983F0(p, (void *)func_00129658, arg0);
+}
+
 int HashStringCRC32(const char *); // 0x001B1CD0
 
 struct UnkEntry128F38
@@ -250,5 +261,29 @@ void UnkObj128DE8::Method128DE8(int arg1)
     temp_v1 = this->mField18A8;
     this->mArr18AC[temp_v1] = arg1;
     this->mField18A8 = (int) (temp_v1 + 1);
+}
+
+int HashStringCRC32(const char *);        // 0x001B1CD0
+int *func_001BEE68(int, int, int);        // 0x001BEE68
+
+struct UnkGlobal128780
+{
+    char pad00[0x14];
+    int mField14; // 0x14
+};
+
+extern UnkGlobal128780 *data_0025DD40;
+
+int func_00128780(const char *arg0)
+{
+    UnkGlobal128780 *g = data_0025DD40;
+    int ret = 0;
+    if (g != 0)
+    {
+        int *p = func_001BEE68(g->mField14, HashStringCRC32(arg0), 0);
+        if (p != 0)
+            ret = *p;
+    }
+    return ret;
 }
 

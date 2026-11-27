@@ -145,3 +145,14 @@ void func_00131320(UnkObj131320 *arg0, int arg1)
         }
     }
 }
+
+extern "C" void func_00130030();  // 0x00130030
+int func_001BC9D0(void *, int);    // 0x001BC9D0
+
+void func_001300F8()
+{
+    if (data_0025E1A0 == 0)
+    {
+        data_0025E1A0 = func_001BC9D0((void *)func_00130030, 0);
+    }
+}
