@@ -434,3 +434,17 @@ int func_0014E6D8(UnkObj14E830 **arg0, UnkObj14E830 **arg1)
         return -1;
     return b < a;
 }
+
+void func_001BB250(int, int *); // 0x001BB250
+
+struct UnkObj14EAF8
+{
+    char pad00[0xE4];
+    int mFieldE4; // 0xE4
+};
+
+void func_0014EAF8(UnkObj14EAF8 *arg0, int arg1)
+{
+    int sp0 = arg1;
+    func_001BB250(arg0->mFieldE4, &sp0);
+}

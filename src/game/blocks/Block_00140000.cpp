@@ -510,3 +510,51 @@ void PlaySoundCRC141520(u32 crc)
     func_00141548(crc, vol, vol);
 }
 
+void func_00141028(u32, f32, f32); // 0x00141028
+
+void func_001414F8(u32 crc)
+{
+    f32 vol = gGameCtx262250->mField378;
+    func_00141028(crc, vol, vol);
+}
+
+void func_001436B0(); // 0x001436B0
+
+struct UnkObj141670
+{
+    int *mPtr00;  // 0x00
+    char pad04[0x4];
+    int mField08; // 0x08
+};
+
+void func_00141670(UnkObj141670 *arg0)
+{
+    int *p = arg0->mPtr00;
+    if (*p == 1)
+        ((void (*)(int, int *))func_001436B0)(arg0->mField08, p);
+}
+
+struct UnkTable1B9CA0;
+void HashTableForEach1B9CA0(UnkTable1B9CA0 *, void (*)(int, int)); // 0x001B9CA0
+
+struct UnkGlobal1418B8
+{
+    char pad00[0xC];
+    UnkTable1B9CA0 *mTable0C; // 0x0C
+};
+
+void func_001418B8(void (*cb)(int, int))
+{
+    HashTableForEach1B9CA0(((UnkGlobal1418B8 *)data_0025E5E0)->mTable0C, cb);
+}
+
+void func_00143398(void *arg0)
+{
+    ((void (*)(int))func_001A6368)(func_00142E58(data_0025E5E0, arg0)->mField08);
+}
+
+void func_001433C8(void *arg0)
+{
+    ((void (*)(int))func_001A6458)(func_00142E58(data_0025E5E0, arg0)->mField08);
+}
+

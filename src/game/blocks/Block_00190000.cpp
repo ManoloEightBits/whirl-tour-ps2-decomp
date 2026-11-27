@@ -343,3 +343,14 @@ void func_00191520(u8 *arg0)
     *(int *)(arg0 + 0x14) = 0;
     *(u16 *)(arg0 + 0x1900) = data_002A55B0;
 }
+
+struct UnkObj1911C8
+{
+    char pad00[0xC];
+    int mField0C; // 0x0C
+};
+
+int func_001911C8()
+{
+    return ((UnkObj1911C8 *)func_00190E80())->mField0C != 0;
+}

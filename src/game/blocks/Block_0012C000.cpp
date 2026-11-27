@@ -284,3 +284,32 @@ int UnkObj12F248::Method12F248(int arg1)
     return this->mArr9C[arg1];
 }
 
+struct Player
+{
+    int GetScooterPtr84(); // 0x00122DA8
+};
+
+void func_00122DC8(Player *); // 0x00122DC8
+void func_0012DE00(int, f32); // 0x0012DE00
+
+void func_0012F258(UnkObj12F248 *arg0, int arg1)
+{
+    func_00122DC8((Player *)arg0->mArr9C[arg1]);
+}
+
+void func_0012F280(UnkObj12F248 *arg0, int arg1)
+{
+    ((Player *)arg0->mArr9C[arg1])->GetScooterPtr84();
+}
+
+struct UnkObj12E7B8
+{
+    char pad00[0x1C];
+    f32 mField1C; // 0x1C
+};
+
+void func_0012E7B8(UnkObj12E7B8 *arg0, int arg1)
+{
+    func_0012DE00(arg1, arg0->mField1C);
+}
+

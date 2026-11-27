@@ -41,3 +41,17 @@ int func_001FDD18(int arg0)
     return arg0;
 }
 
+struct UnkObj1FE830
+{
+    void func_001FE978();               // 0x001FE978
+    void func_001FE980();               // 0x001FE980
+    int GetField4();                    // 0x001FE9D0
+
+    char field_0x0[0x4];
+    int mField4;              // 0x4
+};
+
+void UnkObj1FE830::func_001FE978() {}
+void UnkObj1FE830::func_001FE980() {}
+int UnkObj1FE830::GetField4() { return mField4; }
+

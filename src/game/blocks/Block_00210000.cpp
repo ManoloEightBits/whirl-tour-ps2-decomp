@@ -76,3 +76,26 @@ int func_00212270(int arg0)
     return ((int) (arg0 & 0xC) >> 2) - 1;
 }
 
+struct UnkObj211F48
+{
+    void SetFieldC(int v);              // 0x00211F48
+    int GetFieldC();                    // 0x00211F50
+    void SetField0(u16 v);              // 0x00211F58
+    u16 GetField0();                    // 0x00211FA8
+    s16 GetFieldCb();                   // 0x00212160
+    int GetField4();                    // 0x00212188
+
+    u16 mField0;              // 0x0
+    char field_0x2[0x2];
+    int mField4;              // 0x4
+    char field_0x8[0x4];
+    int mFieldC;              // 0xC
+};
+
+void UnkObj211F48::SetFieldC(int v) { mFieldC = v; }
+int UnkObj211F48::GetFieldC() { return mFieldC; }
+void UnkObj211F48::SetField0(u16 v) { mField0 = v; }
+u16 UnkObj211F48::GetField0() { return mField0; }
+s16 UnkObj211F48::GetFieldCb() { return mFieldC; }
+int UnkObj211F48::GetField4() { return mField4; }
+

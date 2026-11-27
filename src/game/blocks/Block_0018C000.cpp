@@ -100,3 +100,35 @@ void func_0018F8D8(void **arg0, int arg1)
     if (arg1 & 1)
         __builtin_delete(arg0);
 }
+
+struct UnkObj18F920
+{
+    char pad00[0x24];
+    Vec3f mVec24; // 0x24
+    Vec3f mVec30; // 0x30
+    Vec3f mVec3C; // 0x3C
+};
+
+void func_0018F920(UnkObj18F920 *arg0, const Vec3f *arg1)
+{
+    Vec3f *v = &arg0->mVec24;
+    arg0->mVec24.x = arg1->x;
+    v->y = arg1->y;
+    v->z = arg1->z;
+}
+
+void func_0018F940(UnkObj18F920 *arg0, const Vec3f *arg1)
+{
+    Vec3f *v = &arg0->mVec30;
+    arg0->mVec30.x = arg1->x;
+    v->y = arg1->y;
+    v->z = arg1->z;
+}
+
+void func_0018F960(UnkObj18F920 *arg0, const Vec3f *arg1)
+{
+    Vec3f *v = &arg0->mVec3C;
+    arg0->mVec3C.x = arg1->x;
+    v->y = arg1->y;
+    v->z = arg1->z;
+}

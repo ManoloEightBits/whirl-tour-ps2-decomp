@@ -112,3 +112,15 @@ void func_001C43B0(UnkObj1C43B0 *arg0, u32 arg1, int arg2)
         break;
     }
 }
+
+struct UnkObj1C4C38
+{
+    char pad00[0x4];
+    f32 mField04; // 0x04
+};
+
+void func_001C4C38(UnkObj1C4C38 *arg0, UnkObj1C4C38 *arg1, f32 *out, f32 t)
+{
+    f32 a = arg0->mField04;
+    *out = a + t * (arg1->mField04 - a);
+}

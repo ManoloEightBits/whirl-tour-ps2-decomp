@@ -330,3 +330,19 @@ int func_00182A98(UnkObj182A68 *arg0, int idx, int a, int b, int c)
         ret = arg0->mScene94->LookupArr0CEx(idx, a, b, c);
     return ret;
 }
+
+void func_001BF820(int, void *, void *); // 0x001BF820
+
+struct UnkObj182CA8
+{
+    char pad00[0x8];
+    int mField08;  // 0x08
+    int mField0C;  // 0x0C
+    int mField10;  // 0x10
+    int mField14;  // 0x14
+};
+
+void func_00182CA8(UnkObj182CA8 *arg0)
+{
+    func_001BF820(arg0->mField08, &arg0->mField14, &arg0->mField0C);
+}

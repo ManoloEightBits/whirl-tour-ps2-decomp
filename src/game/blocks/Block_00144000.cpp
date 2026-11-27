@@ -106,3 +106,17 @@ void func_00145618(UnkObj145618 *arg0)
     CleanupDialog1309E0(arg0->mField9C);
     MemFree1BD978(arg0);
 }
+
+void Release198F38(void *); // 0x00198F38
+
+struct UnkObj145A00
+{
+    char pad00[0xA4];
+    void *mFieldA4; // 0xA4
+};
+
+void func_00145A00(UnkObj145A00 *arg0)
+{
+    Release198F38(arg0->mFieldA4);
+    MemFree1BD978(arg0);
+}

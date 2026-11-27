@@ -297,3 +297,47 @@ int func_001F3208(int arg0)
     return arg0 + 0x44;
 }
 
+struct UnkObj1F31F0
+{
+    int GetField80();                   // 0x001F31F0
+    int GetField20();                   // 0x001F31F8
+    int GetField28();                   // 0x001F3200
+    int GetField84();                   // 0x001F3210
+    int GetField94();                   // 0x001F3218
+    void SetField78(u8 v);              // 0x001F3220
+    f32 GetField98();                   // 0x001F3228
+    int GetField9C();                   // 0x001F3238
+    int GetFieldA4();                   // 0x001F3240
+    u8 GetField78();                    // 0x001F3248
+    int GetField1C();                   // 0x001F3268
+
+    char field_0x0[0x1C];
+    int mField1C;             // 0x1C
+    int mField20;             // 0x20
+    char field_0x24[0x4];
+    int mField28;             // 0x28
+    char field_0x2C[0x4C];
+    u8 mField78;              // 0x78
+    char field_0x79[0x7];
+    int mField80;             // 0x80
+    int mField84;             // 0x84
+    char field_0x88[0xC];
+    int mField94;             // 0x94
+    f32 mField98;             // 0x98
+    int mField9C;             // 0x9C
+    char field_0xA0[0x4];
+    int mFieldA4;             // 0xA4
+};
+
+int UnkObj1F31F0::GetField80() { return mField80; }
+int UnkObj1F31F0::GetField20() { return mField20; }
+int UnkObj1F31F0::GetField28() { return mField28; }
+int UnkObj1F31F0::GetField84() { return mField84; }
+int UnkObj1F31F0::GetField94() { return mField94; }
+void UnkObj1F31F0::SetField78(u8 v) { mField78 = v; }
+f32 UnkObj1F31F0::GetField98() { return mField98; }
+int UnkObj1F31F0::GetField9C() { return mField9C; }
+int UnkObj1F31F0::GetFieldA4() { return mFieldA4; }
+u8 UnkObj1F31F0::GetField78() { return mField78; }
+int UnkObj1F31F0::GetField1C() { return mField1C; }
+

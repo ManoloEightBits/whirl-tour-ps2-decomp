@@ -721,3 +721,43 @@ void func_001BDCF8(void *arg0, f32 dt)
         func_001BDD78(fabsf(dt));
     }
 }
+
+struct UnkNode1BD3F0
+{
+    char pad00[0x4];
+    UnkNode1BD3F0 *mField04; // 0x04
+};
+
+UnkNode1BD3F0 *func_001BD3F0(UnkNode1BD3F0 *arg0)
+{
+    if (arg0->mField04 != 0)
+    {
+        do
+        {
+            arg0 = arg0->mField04;
+        } while (arg0->mField04 != 0);
+    }
+    return arg0;
+}
+
+struct UnkNode1BD388
+{
+    UnkNode1BD388 *mPrev00; // 0x00
+    UnkNode1BD388 *mNext04; // 0x04
+};
+
+void func_001BD388(UnkNode1BD388 *arg0, UnkNode1BD388 *arg1)
+{
+    arg0->mNext04->mPrev00 = arg1;
+    arg1->mNext04 = arg0->mNext04;
+    arg0->mNext04 = arg1;
+    arg1->mPrev00 = arg0;
+}
+
+void func_001BD3A8(UnkNode1BD388 **arg0, UnkNode1BD388 *arg1)
+{
+    (*arg0)->mNext04 = arg1;
+    arg1->mPrev00 = *arg0;
+    *arg0 = arg1;
+    arg1->mNext04 = (UnkNode1BD388 *)arg0;
+}

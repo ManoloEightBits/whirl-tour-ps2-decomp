@@ -347,3 +347,15 @@ int func_00197318(int arg0, f32 fparg0, f32 fparg1, f32 fparg2)
     }
     return temp_v0;
 }
+
+struct UnkObj1978E0
+{
+    char pad00[0x8];
+    int mField08; // 0x08
+};
+
+void func_001978E0(UnkObj1978E0 *arg0)
+{
+    func_001BD360(arg0);
+    arg0->mField08 = 0;
+}

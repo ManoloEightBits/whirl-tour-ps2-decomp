@@ -320,3 +320,14 @@ void func_00128700(int *arg0)
     }
 }
 
+void func_00129070(int arg0, int arg1, f32 deg)
+{
+    *(f32 *)((arg1 * 0x58) + arg0 + 0xDC8) = deg * 0.017453294f;
+}
+
+void func_00128F50(int arg0, int arg1, int arg2)
+{
+    u8 *p = (u8 *)((arg1 * 0x58) + arg0);
+    *(u16 *)(p + 0xDB8) = *(u16 *)(p + 0xDB8) | (arg2 & 0xFF);
+}
+
