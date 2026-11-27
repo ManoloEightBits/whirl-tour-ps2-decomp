@@ -73,4 +73,26 @@ void func_0015F3C8(void *arg0)
     glPopMatrix();
 }
 
+int func_0012E848(int);            // 0x0012E848
+int func_001263D0(int);            // 0x001263D0
+void func_001BB250(int, int *);    // 0x001BB250
+
+struct UnkObj15F580
+{
+    int mField00; // 0x00
+    int mField04; // 0x04
+    int mField08; // 0x08
+};
+
+int func_0015F580(UnkObj15F580 *arg0, int unused1, int unused2, int arg3)
+{
+    if (arg0->mField04 == 3 && func_0012E848(arg0->mField08) == 0xA)
+    {
+        int sp0 = func_001263D0(arg0->mField00);
+        if (sp0 != 0)
+            func_001BB250(arg3, &sp0);
+    }
+    return 1;
+}
+
 

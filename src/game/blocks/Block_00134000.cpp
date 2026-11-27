@@ -204,3 +204,77 @@ void UnkObj136D98::Method136D98(int arg1)
     }
 }
 
+void func_0012EAF8();             // 0x0012EAF8
+void func_00168D28();             // 0x00168D28
+void Release198F38(void *);       // 0x00198F38
+void func_00143170(void *, int);  // 0x00143170
+void func_0012F470(void *);       // 0x0012F470
+struct UnkObj12E7D8 { void Method12E7D8(); }; // 0x0012E7D8
+void func_0013C000(void *);       // 0x0013C000
+void func_00198210(int);          // 0x00198210
+void func_00101E58(void *, int);  // 0x00101E58
+void func_00139730(void *, int);  // 0x00139730
+void func_00139FB8(void *, int);  // 0x00139FB8
+void func_0013FC20(void *, int);  // 0x0013FC20
+void func_00187A00(void *, int);  // 0x00187A00
+
+struct UnkObj134530
+{
+    char pad00[0xC];
+    void *mField0C;           // 0x0C
+    UnkObj12E7D8 *mField10;   // 0x10
+    void *mField14;           // 0x14
+    int mField18;             // 0x18
+    int mField1C;             // 0x1C
+    char pad20[0xC];
+    void *mField2C;           // 0x2C
+    char pad30[0x34];
+    void *mField64;           // 0x64
+    char pad68[0x4];
+    void *mField6C;           // 0x6C
+    char pad70[0x8];
+    void *mField78;           // 0x78
+    char pad7C[0x40];
+    void *mFieldBC;           // 0xBC
+    char padC0[0x48];
+    void *mField108;          // 0x108
+    void *mField10C;          // 0x10C
+    void *mField110;          // 0x110
+    char pad114[0xC];
+    void *mField120;          // 0x120
+};
+
+void func_00134530(int unused, UnkObj134530 *arg1)
+{
+    func_0012EAF8();
+    func_00168D28();
+    if (arg1->mField6C != 0)
+        Release198F38(arg1->mField6C);
+    if (arg1->mField2C != 0)
+        func_00143170(arg1->mField2C, 4);
+    if (arg1->mField14 != 0)
+        func_0012F470(arg1->mField14);
+    if (arg1->mField10 != 0)
+        arg1->mField10->Method12E7D8();
+    if (arg1->mField64 != 0)
+        func_0013C000(arg1->mField64);
+    if (arg1->mField18 != 0)
+        func_00198210(arg1->mField18);
+    if (arg1->mField1C != 0)
+        func_00198210(arg1->mField1C);
+    if (arg1->mField0C != 0)
+        func_00101E58(arg1->mField0C, 3);
+    if (arg1->mField78 != 0)
+        func_00139730(arg1->mField78, 3);
+    if (arg1->mFieldBC != 0)
+        func_00139FB8(arg1->mFieldBC, 3);
+    if (arg1->mField120 != 0)
+        func_0013FC20(arg1->mField120, 3);
+    if (arg1->mField108 != 0)
+        func_00187A00(arg1->mField108, 3);
+    if (arg1->mField10C != 0)
+        func_00187A00(arg1->mField10C, 3);
+    if (arg1->mField110 != 0)
+        func_00187A00(arg1->mField110, 3);
+}
+

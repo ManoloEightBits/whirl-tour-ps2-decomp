@@ -269,7 +269,11 @@ public:
 
 struct FETrickSub164
 {
-    char field_0x00[0x248];
+    int mCount00;              // 0x00
+    char field_0x04[0x210];
+    int mArr214[10];           // 0x214
+    int mField23C;             // 0x23C
+    char field_0x240[0x8];
     FETrickSub164(int a, int *b, FEPad **c, int d); // 0x00188088
     ~FETrickSub164();                               // 0x00188FC0
     void Update188390(f32 dt);                      // 0x00188390

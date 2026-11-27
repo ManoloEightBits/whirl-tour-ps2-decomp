@@ -120,3 +120,29 @@ void func_00145A00(UnkObj145A00 *arg0)
     Release198F38(arg0->mFieldA4);
     MemFree1BD978(arg0);
 }
+
+void func_00191E40(void *);  // 0x00191E40
+void func_0011A820(void *);  // 0x0011A820
+void func_00126138(int);     // 0x00126138
+
+struct UnkObj146148
+{
+    char pad00[0x94];
+    void *mField94;     // 0x94
+    char pad98[0x20];
+    void *mArrB8[7];    // 0xB8
+    void *mFieldD4;     // 0xD4
+};
+
+void func_00146148(UnkObj146148 *arg0)
+{
+    func_00191E40(arg0->mField94);
+    for (u32 i = 0; i < 7; i++)
+    {
+        if (arg0->mArrB8[i] != 0)
+            func_0011A820(arg0->mArrB8[i]);
+    }
+    CleanupDialog1309E0(arg0->mFieldD4);
+    MemFree1BD978(arg0);
+    func_00126138(0);
+}

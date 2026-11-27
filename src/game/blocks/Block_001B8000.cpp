@@ -424,3 +424,61 @@ f32 func_001B8CF0(UnkObj1B8CC0 *arg0)
 {
     return arg0->mField24 + arg0->mClip04->GetField40();
 }
+
+struct UnkTex1BA
+{
+    void Destroy1BAA50(); // 0x001BAA50
+};
+
+struct UnkObj1BAB90
+{
+    int mCrc00;           // 0x00
+    f32 mField04;         // 0x04
+    UnkTex1BA *mField08;  // 0x08
+    UnkTex1BA *mArr0C[0x80]; // 0x0C
+};
+
+void MemFree1BD978(void *);         // 0x001BD978
+void *MemAlloc1BD958(int);          // 0x001BD958
+int HashStringCRC32(const char *);  // 0x001B1CD0
+UnkTex1BA *func_001BA7A8(int, int, int, int, int, int, int); // 0x001BA7A8
+
+void func_001BAB90(UnkObj1BAB90 *arg0)
+{
+    arg0->mField08->Destroy1BAA50();
+    UnkTex1BA **p = arg0->mArr0C;
+    int i = 0x7F;
+    do
+    {
+        i--;
+        if (*p != 0)
+            (*p)->Destroy1BAA50();
+        p++;
+    } while (i >= 0);
+    MemFree1BD978(arg0);
+}
+
+UnkObj1BAB90 *func_001BAAB0(const char *arg0, int arg1, int arg2, int arg3, int arg4, int arg5, int arg6)
+{
+    UnkObj1BAB90 *obj = (UnkObj1BAB90 *)MemAlloc1BD958(sizeof(UnkObj1BAB90));
+    if (obj != 0)
+    {
+        obj->mCrc00 = HashStringCRC32(arg0);
+        obj->mField04 = 1.05f;
+        obj->mField08 = func_001BA7A8(0, arg1, arg2, arg3, arg4, arg5, arg6);
+        for (int i = 0x7F; i >= 0; i--)
+            obj->mArr0C[i] = 0;
+    }
+    return obj;
+}
+
+struct UnkObj1B95D8
+{
+    char pad00[0xC];
+    int *mArr0C[1]; // 0x0C
+};
+
+void func_001B95D8(UnkObj1B95D8 *arg0, int *arg1)
+{
+    arg0->mArr0C[*arg1] = arg1;
+}

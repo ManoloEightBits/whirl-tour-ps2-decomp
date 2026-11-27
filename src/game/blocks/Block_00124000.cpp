@@ -420,3 +420,38 @@ void UnkObj127310::Method127310(f32 fparg0, f32 fparg1)
     this->mField34 = fparg1;
 }
 
+struct UnkObj1272C8
+{
+    char pad00[0x38];
+    f32 mField38; // 0x38
+    char pad3C[0x4];
+    Vec3f mVec40; // 0x40
+    Vec3f mVec4C; // 0x4C
+    Vec3f mVec58; // 0x58
+};
+
+void func_001272C8(UnkObj1272C8 *arg0, f32 a, f32 x, f32 y, f32 z)
+{
+    Vec3f *v = &arg0->mVec40;
+    arg0->mField38 = a;
+    arg0->mVec40.x = x;
+    v->y = y;
+    v->z = z;
+}
+
+void func_001272E0(UnkObj1272C8 *arg0, f32 x, f32 y, f32 z)
+{
+    Vec3f *v = &arg0->mVec4C;
+    arg0->mVec4C.x = x;
+    v->y = y;
+    v->z = z;
+}
+
+void func_001272F8(UnkObj1272C8 *arg0, f32 x, f32 y, f32 z)
+{
+    Vec3f *v = &arg0->mVec58;
+    arg0->mVec58.x = x;
+    v->y = y;
+    v->z = z;
+}
+

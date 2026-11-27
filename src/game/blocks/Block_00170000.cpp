@@ -141,3 +141,17 @@ void func_001713C0()
     int sp0;
     func_00150FD0(8, (void *)func_001713B0, data_00262CB8, &sp0);
 }
+
+struct UnkObj170AE8
+{
+    char pad00[0x1C];
+    Vec3f mVec1C; // 0x1C
+};
+
+void func_00170AE8(UnkObj170AE8 *arg0, f32 x, f32 y, f32 z)
+{
+    Vec3f *v = &arg0->mVec1C;
+    arg0->mVec1C.x = x;
+    v->y = y;
+    v->z = z;
+}
