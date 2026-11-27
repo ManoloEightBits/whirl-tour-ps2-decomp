@@ -303,3 +303,29 @@ void UnkPtrList10C058::Destroy()
     mArray00->Destroy();
     mArray00 = NULL;
 }
+
+struct UnkObj125CD8
+{
+    ~UnkObj125CD8();                        // 0x00125CD8
+};
+
+void func_001BC318(void *);                 // 0x001BC318
+void func_001BDCA0(void *);                 // 0x001BDCA0
+void MemFree1BD978(void *);                 // 0x001BD978
+void func_00141950(void *, int);            // 0x00141950
+
+#ifdef NON_MATCHING
+// Matches 100% (36/36 insns); gated until AI_Agent : EnvObj is wired so __tf8AI_Agent matches.
+AI_Race::~AI_Race()
+{
+    if (mField148 != 0)
+        delete (UnkObj125CD8 *)mField148;
+    func_001BC318((void *)mFieldDC);
+    func_001BDCA0((void *)mFieldF4);
+    func_001BDCA0((void *)mFieldB0);
+    MemFree1BD978(mField118);
+    MemFree1BD978(mField114);
+    if (mField144 != 0)
+        func_00141950(mField144, 3);
+}
+#endif

@@ -121,13 +121,15 @@ public:
     int mFieldF4;              // 0xF4
     char mBlockF8[0x18];       // 0xF8
     Player *mPlayer110;        // 0x110: GetRow2, GetMatrix and GetPlayerRow0/1 return its matrix
-    char field_0x114[8];
+    void *mField114;           // 0x114
+    void *mField118;           // 0x118
     Vec3f mField11C;           // 0x11C
     Vec3f mPos128;             // 0x128: returned by vtable slot 5
     f32 mField134;             // 0x134
     f32 mField138;             // 0x138
     f32 mField13C;             // 0x13C
-    char field_0x140[8];
+    char field_0x140[4];
+    void *mField144;           // 0x144
     int mField148;             // 0x148
 };
 

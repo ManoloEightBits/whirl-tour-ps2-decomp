@@ -79,8 +79,11 @@ public:
     f32 mField10C;                 // 0x10C
     char field_0x110[0xC];
     UnkVehicleParams *mParams11C;  // 0x11C
-    char field_0x120[0x18];
+    void *mField120;               // 0x120
+    void *mField124;               // 0x124
+    char field_0x128[0x10];
     UnkNode *mNode138;             // 0x138
+    void *mField13C;               // 0x13C
 };
 
 #endif

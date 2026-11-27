@@ -467,3 +467,25 @@ void UnkObj140028::Method140028()
     this->mField04 = 0;
 }
 
+struct UnkObj143170
+{
+    char pad00[0x4];
+    int mField04; // 0x04
+    int mField08; // 0x08
+    int mField0C; // 0x0C
+};
+
+UnkObj143170 *func_00142E58(void *, void *); // 0x00142E58
+void func_00142DE0(void *, void *);          // 0x00142DE0
+void func_001A9500(int);                     // 0x001A9500
+void func_001AA230(int);                     // 0x001AA230
+
+void func_00143170(void *arg0, int arg1)
+{
+    UnkObj143170 *obj = func_00142E58(data_0025E5E0, arg0);
+    ((void (*)(int))func_001A8D50)(obj->mField08);
+    func_001A9500(obj->mField0C);
+    func_001AA230(obj->mField04);
+    func_00142DE0(data_0025E5E0, arg0);
+}
+

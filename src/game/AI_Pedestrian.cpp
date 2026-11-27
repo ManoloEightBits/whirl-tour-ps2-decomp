@@ -37,7 +37,7 @@ int AI_Pedestrian::GetField160()
 
 int AI_Pedestrian::GetField154()
 {
-    return mField154;
+    return (int)mField154;
 }
 
 int AI_Pedestrian::GetField158()
@@ -215,3 +215,44 @@ int AI_Pedestrian::GetField184()
 {
     return mField184;
 }
+
+struct EnvObj;
+struct UnkObj12FE80;
+void EnvObjCleanup14FB70(EnvObj *);         // 0x0014FB70
+void func_0012FE80(UnkObj12FE80 *, int);    // 0x0012FE80
+void func_0011A820(void *);                 // 0x0011A820
+void func_00151608(void *);                 // 0x00151608
+void PhysicsDestroy1F21A8(void *);          // 0x001F21A8
+void PhysicsClear1F34B0(void *, int);       // 0x001F34B0
+void PhysicsRelease1F3A70(void *);          // 0x001F3A70
+void func_00141950(void *, int);            // 0x00141950
+
+#ifdef NON_MATCHING
+// Matches 100% (59/59 insns); gated until AI_Agent : EnvObj is wired so __tf8AI_Agent matches.
+AI_Pedestrian::~AI_Pedestrian()
+{
+    if (mField140 != 0)
+        func_0012FE80((UnkObj12FE80 *)mField140, 3);
+    func_0011A820((void *)mField13C);
+    func_00151608(mField19C);
+    if (mField150 != 0)
+    {
+        PhysicsDestroy1F21A8(mField150);
+        PhysicsClear1F34B0(mField150, 0);
+        PhysicsRelease1F3A70(mField150);
+        mField150 = 0;
+    }
+    if (mField154 != 0)
+    {
+        PhysicsDestroy1F21A8(mField154);
+        PhysicsClear1F34B0(mField154, 0);
+        PhysicsRelease1F3A70(mField154);
+        mField154 = 0;
+    }
+    if (mField184 != 0)
+        func_00141950((void *)mField184, 3);
+    if (mField188 != 0)
+        func_00141950(mField188, 3);
+    EnvObjCleanup14FB70((EnvObj *)this);
+}
+#endif

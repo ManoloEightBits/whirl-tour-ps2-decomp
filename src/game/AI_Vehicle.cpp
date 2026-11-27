@@ -169,3 +169,42 @@ Mat4x4f *AI_Vehicle::GetMatrix()
 {
     return &mMatrixA0;
 }
+
+struct EnvObj;
+struct UnkObj194EC0;
+void EnvObjCleanup14FB70(EnvObj *);         // 0x0014FB70
+void PhysicsDestroy1F21A8(void *);          // 0x001F21A8
+void PhysicsClear1F34B0(void *, int);       // 0x001F34B0
+void PhysicsRelease1F3A70(void *);          // 0x001F3A70
+void func_00141950(void *, int);            // 0x00141950
+void func_00151608(void *);                 // 0x00151608
+void Method194EC0(UnkObj194EC0 *);          // 0x00194EC0 (wait: Method194EC0__12UnkObj194EC0)
+
+struct UnkObj194EC0
+{
+    void Method194EC0();                    // 0x00194EC0
+};
+
+#ifdef NON_MATCHING
+// Matches 100% (47/47 insns); gated until AI_Agent : EnvObj is wired so __tf8AI_Agent matches.
+AI_Vehicle::~AI_Vehicle()
+{
+    func_00151608(mField13C);
+    if (mFieldF0 != 0)
+    {
+        PhysicsDestroy1F21A8((void *)mFieldF0);
+        PhysicsClear1F34B0((void *)mFieldF0, 0);
+        PhysicsRelease1F3A70((void *)mFieldF0);
+        mFieldF0 = 0;
+    }
+    if (mField120 != 0)
+    {
+        func_00141950(mField120, 3);
+        if (mField124 != 0)
+            func_00141950(mField124, 3);
+    }
+    if (mNode138 != 0)
+        ((UnkObj194EC0 *)mNode138)->Method194EC0();
+    EnvObjCleanup14FB70((EnvObj *)this);
+}
+#endif

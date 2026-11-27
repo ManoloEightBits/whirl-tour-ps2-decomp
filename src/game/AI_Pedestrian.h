@@ -89,8 +89,8 @@ public:
     int mField144;             // 0x144
     int mField148;             // 0x148
     f32 mField14C;             // 0x14C
-    char field_0x150[4];
-    int mField154;             // 0x154
+    void *mField150;           // 0x150
+    void *mField154;           // 0x154
     int mField158;             // 0x158
     char field_0x15C[4];
     int mField160;             // 0x160
@@ -102,6 +102,9 @@ public:
     UnkPedParams *mParams17C;  // 0x17C
     int mField180;             // 0x180
     int mField184;             // 0x184
+    void *mField188;           // 0x188
+    char field_0x18C[0x10];
+    void *mField19C;           // 0x19C
 };
 
 #endif

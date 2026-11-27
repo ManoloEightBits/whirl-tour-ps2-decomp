@@ -121,3 +121,35 @@ void UnkObj139720::Method139720()
     mField04 = 0;
     mField08 = 0;
 }
+
+struct UnkNode;
+void func_00194F90(UnkNode *); // 0x00194F90
+
+struct UnkSub13B270
+{
+    char pad00[0x3C];
+    u8 mCount3C; // 0x3C
+};
+
+struct UnkObj13B270
+{
+    char pad00[0x18];
+    f32 mField18;          // 0x18
+    char pad1C[0x20];
+    UnkSub13B270 *mSub3C;  // 0x3C
+    char pad40[0x8];
+    UnkNode **mNodes48;    // 0x48
+};
+
+void func_0013B270(void *arg0, int arg1)
+{
+    UnkObj13B270 *obj = (UnkObj13B270 *)arg0;
+    u32 idx = arg1 & 0xFF;
+    if (idx < obj->mSub3C->mCount3C)
+    {
+        UnkNode *node = obj->mNodes48[idx];
+        if (node != 0)
+            func_00194F90(node);
+    }
+    obj->mField18 = obj->mField18 - 0.2f;
+}
