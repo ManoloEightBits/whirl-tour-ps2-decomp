@@ -9,10 +9,13 @@ void *malloc(unsigned int size);                          /* 0x0022E8E0: _malloc
 void *memcpy(void *dst, const void *src, unsigned int n); /* 0x0022F45C: 32/8/1-byte copy loops */
 void *memset(void *dst, int c, unsigned int n);           /* 0x0022F50C: 32/8/1-byte fill loops */
 int printf(const char *fmt, ...);                         /* 0x0022FC78: vfprintf(_stdout, fmt, ap) */
+void qsort(void *base, unsigned int nmemb, unsigned int size,
+           int (*compar)(const void *, const void *));    /* 0x0022FCC8 */
 int rand(void);                                           /* 0x00230700: seed * 1103515245 + 12345 */
 int sprintf(char *buf, const char *fmt, ...);            /* 0x00231300: vfprintf to a string FILE, then the 0 */
 int strcmp(const char *a, const char *b);                 /* 0x002317B4: returns (u8)*a - (u8)*b */
 char *strcpy(char *dst, const char *src);                 /* 0x002318F8: 16 bytes at a time (EE MMI) */
+char *strncpy(char *dst, const char *src, unsigned int n); /* 0x00231F08 */
 int sscanf(const char *str, const char *format, ...);     /* 0x00231378 */
 unsigned int strlen(const char *s);                       /* 0x00231A0C: 16 bytes at a time (EE MMI) */
 }

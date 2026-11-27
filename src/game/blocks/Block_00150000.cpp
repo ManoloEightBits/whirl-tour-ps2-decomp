@@ -316,13 +316,12 @@ void func_00152420(UnkObj152420 *arg0)
 }
 
 extern f32 data_002656F0[3][4];
-void func_001A27E8(int, int, f32 *); // 0x001A27E8
 
 void func_00151768()
 {
-    func_001A27E8(0x4000, 0x1201, data_002656F0[0]);
-    func_001A27E8(0x4001, 0x1201, data_002656F0[1]);
-    func_001A27E8(0x4002, 0x1201, data_002656F0[2]);
+    glLightfv(0x4000, 0x1201, data_002656F0[0]);
+    glLightfv(0x4001, 0x1201, data_002656F0[1]);
+    glLightfv(0x4002, 0x1201, data_002656F0[2]);
 }
 
 struct UnkObj151978
@@ -334,13 +333,12 @@ struct UnkObj151978
     void *mArr0C;  // 0x0C
 };
 
-extern "C" void func_00151578();
-void func_0022FCC8(int, int, int, int); // 0x0022FCC8
+extern "C" int func_00151578(const void *, const void *);
 
 void func_00151978(UnkObj151978 *arg0)
 {
     if (arg0->mFlags00 & 1)
-        func_0022FCC8((int)arg0->mArr0C, arg0->mCount06, 4, (int)func_00151578);
+        qsort(arg0->mArr0C, arg0->mCount06, 4, func_00151578);
 }
 
 extern int data_002B24E8[];

@@ -49,6 +49,7 @@ void glDrawArrays(unsigned int mode, int first, int count);                     
 void glBindTexture(unsigned int target, unsigned int texture);                      /* 0x001A2340 */
 void glEnable(unsigned int cap);                                                    /* 0x001A2DB8 */
 void glDisable(unsigned int cap);                                                   /* 0x001A2FB8 */
+void glLightfv(unsigned int light, unsigned int pname, const f32 *params);          /* 0x001A27E8 */
 void glMatrixMode(unsigned int mode);                                               /* 0x001A3638 */
 void glLoadMatrixf(const f32 *m);                                                   /* 0x001A3648 */
 void glLoadIdentity(void);                                                          /* 0x001A3708 */

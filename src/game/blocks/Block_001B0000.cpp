@@ -86,14 +86,14 @@ int *func_001B2948(int n)
     return block;
 }
 
-void func_001B3A20(Mat4x4f *m, Vec3f *v, Vec3f *out)
+void MulMat4x4Vec3f1B3A20(Mat4x4f *m, Vec3f *v, Vec3f *out)
 {
     out->x = v->x * m->row[0].x + v->y * m->row[0].y + v->z * m->row[0].z;
     out->y = v->x * m->row[1].x + v->y * m->row[1].y + v->z * m->row[1].z;
     out->z = v->x * m->row[2].x + v->y * m->row[2].y + v->z * m->row[2].z;
 }
 
-void func_001B3F40(Mat4x4f *out, Mat4x4f *in)
+void TransposeMat4x4_1B3F40(Mat4x4f *out, Mat4x4f *in)
 {
     Vec4f *dst = out->row;
     f32 *src = &in->row[0].x;

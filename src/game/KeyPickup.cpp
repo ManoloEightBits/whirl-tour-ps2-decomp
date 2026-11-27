@@ -3,7 +3,6 @@
 #include "game/Pickup.h"
 #include "game/CollisionListeners.h"
 
-extern "C" char *func_00231F08(char *dst, const char *src, u32 n); // 0x00231F08 (runtime library; probably strncpy)
 extern UnkKeyword data_0025A230[]; // keywords of a pickups file: "pickups", "pickup", "mesh", ... "/pickup"
 
 u32 HashStringCRC32(const char *str);                    // 0x001B1CD0
@@ -216,7 +215,7 @@ void TimerPickup::OnCollected(Player *)
 void PickupDef::func_0011AD28(char *name, UnkParser *p)
 {
     p->func_001C2C78("name", name);
-    func_00231F08(mName00, name, 0x3F);
+    strncpy(mName00, name, 0x3F);
     mNumCreation5C = 0;
     mNumDestruction60 = 0;
     for (int i = 0; i < 5; i++)
@@ -505,7 +504,7 @@ void Pickup::Update(f32 dt)
 
 void PickupDef::func_0011CAD0(const char *name)
 {
-    func_00231F08(mName00, name, 0x3F);
+    strncpy(mName00, name, 0x3F);
     mNumCreation5C = 0;
     mNumDestruction60 = 0;
     for (int i = 0; i < 5; i++)

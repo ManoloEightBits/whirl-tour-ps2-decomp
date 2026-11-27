@@ -62,20 +62,20 @@ int func_001C5070(int (*arg0)(int, int *, int), int arg1)
 }
 
 // out[i] = scale * in[i] for nine floats (a 3x3 matrix).
-void func_001C5EF8(f32 *out, f32 *in, f32 scale)
+void ScaleMat3x3_1C5EF8(f32 *out, f32 *in, f32 scale)
 {
     for (int i = 0; i < 9; i++)
         out[i] = scale * in[i];
 }
 
-void func_001C5D50(f32 *m, f32 *v, f32 *out)
+void MulMat3x3Vec3f1C5D50(f32 *m, f32 *v, f32 *out)
 {
     out[0] = v[0] * m[0] + v[1] * m[3] + v[2] * m[6];
     out[1] = v[0] * m[1] + v[1] * m[4] + v[2] * m[7];
     out[2] = v[0] * m[2] + v[1] * m[5] + v[2] * m[8];
 }
 
-int func_001C4540(f32 *a, f32 *b)
+int Vec3NearEqual1C4540(f32 *a, f32 *b)
 {
     int ret = 0;
     if (fabsf(a[3] - b[3]) < 0.0001f && fabsf(a[1] - b[1]) < 0.0001f && fabsf(a[2] - b[2]) < 0.0001f)

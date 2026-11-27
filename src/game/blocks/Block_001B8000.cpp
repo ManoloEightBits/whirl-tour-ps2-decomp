@@ -49,8 +49,6 @@ int func_001BA658(int arg0)
     return result;
 }
 
-void func_0022FCC8(int, int, int, int); // 0x0022FCC8
-
 // UnkObj1B8D20 (0x001B8D20): no RTTI; its layout is the fields these methods use.
 struct UnkObj1B8D20
 {
@@ -129,7 +127,7 @@ void UnkObj1BB3E0::Method1BB3E0(int arg1)
     tmp = mField8;
     if (tmp != 0)
     {
-        func_0022FCC8(mFieldC, tmp, mField0, arg1);
+        qsort((void *)mFieldC, tmp, mField0, (int (*)(const void *, const void *))arg1);
     }
 }
 
@@ -361,7 +359,7 @@ struct UnkTable1B9CA0
     UnkNode1B9CA0 **mBuckets04;
 };
 
-void func_001B9CA0(UnkTable1B9CA0 *arg0, void (*cb)(int, int))
+void HashTableForEach1B9CA0(UnkTable1B9CA0 *arg0, void (*cb)(int, int))
 {
     for (int i = 0; i < arg0->mCount00; i++)
     {
@@ -378,7 +376,7 @@ void func_001B9CA0(UnkTable1B9CA0 *arg0, void (*cb)(int, int))
 
 void *MemAlloc1BD958(int); // 0x001BD958
 
-UnkTable1B9CA0 *func_001B9B60(int arg0)
+UnkTable1B9CA0 *HashTableCreate1B9B60(int arg0)
 {
     int bytes = arg0 * 4;
     UnkTable1B9CA0 *t = (UnkTable1B9CA0 *)MemAlloc1BD958(bytes + 8);
@@ -392,7 +390,7 @@ UnkTable1B9CA0 *func_001B9B60(int arg0)
     return t;
 }
 
-void func_001B9D30(int arg0, int arg1)
+void HashNodeAlloc1B9D30(int arg0, int arg1)
 {
     UnkNode1B9CA0 *node = (UnkNode1B9CA0 *)MemAlloc1BD958(0xC);
     if (node != 0)

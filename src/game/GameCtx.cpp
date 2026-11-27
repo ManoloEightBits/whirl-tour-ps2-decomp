@@ -18,7 +18,6 @@ void func_00155250();           // 0x00155250
 void func_00155280();           // 0x00155280
 void UnlockAllScooters156158();           // 0x00156158
 void func_00152610();           // 0x00152610
-void func_0022FCC8(int, int, int, int); // 0x0022FCC8
 int func_00155B48(f32 *, f32 *); // 0x00155B48
 extern const char *const gLevelNames261C70[];      // "castle", "themepark", ... "tibet"
 extern const int gLevelMenuIds2A2C50[];
@@ -907,7 +906,7 @@ void func_00155C58(int arg0, int arg1, int arg2, f32 arg3)
     sub->mArr04[3].mField00 = arg3;
     sub->mArr04[3].mField04 = arg1;
     strcpy(sub->mArr04[3].mName0C, gGameCtx262250->mName1E8);
-    func_0022FCC8((int)sub->mArr04, 4, sizeof(GameCtxSub1C), (int)func_00155B48);
+    qsort(sub->mArr04, 4, sizeof(GameCtxSub1C), (int (*)(const void *, const void *))func_00155B48);
     int n = sub->mCount00 + 1;
     sub->mCount00 = (n < 4) ? n : 3;
 }

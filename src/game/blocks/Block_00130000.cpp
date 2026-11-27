@@ -1,4 +1,5 @@
 #include "common/types.h"
+#include "common/libc.h"
 #include "game/FEScreen.h"
 #include "game/GameCtx.h"
 
@@ -116,7 +117,6 @@ void func_00143170(void *, int);        // 0x00143170
 void func_001432A0(void *, f32);        // 0x001432A0
 const char *func_00153360();            // 0x00153360
 char *GetCurrentTrackName155AD8();      // 0x00155AD8
-extern "C" void func_00231F08(char *, const char *, int); // 0x00231F08
 
 void func_00131320(UnkObj131320 *arg0, int arg1)
 {
@@ -135,9 +135,9 @@ void func_00131320(UnkObj131320 *arg0, int arg1)
             if (snd != 0)
                 func_001432A0(snd, gGameCtx262250->mMusicVolume);
             arg0->mField7C = 2.0f;
-            func_00231F08(arg0->mBuf524, track, 0x100);
-            func_00231F08(arg0->mBuf624, track + 0x20, 0x100);
-            func_00231F08(arg0->mBuf724, track + 0x40, 0x100);
+            strncpy(arg0->mBuf524, track, 0x100);
+            strncpy(arg0->mBuf624, track + 0x20, 0x100);
+            strncpy(arg0->mBuf724, track + 0x40, 0x100);
         }
         else
         {

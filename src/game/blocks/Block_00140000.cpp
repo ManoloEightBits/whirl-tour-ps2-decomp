@@ -1,4 +1,5 @@
 #include "common/types.h"
+#include "common/libc.h"
 #include "game/UnkEffect.h"
 
 // Functions of 0x00140000..0x00143FFF whose class and translation unit are not known yet.
@@ -252,7 +253,6 @@ extern "C" void func_001A7E88(int, int, int);       // 0x001A7E88
 extern "C" void func_001A9298(int, int);            // 0x001A9298
 s16 func_001A9370(int);                             // 0x001A9370
 extern "C" void func_001A9AD8(void *, int, int, int); // 0x001A9AD8
-extern "C" void func_00231F08(void *, void *, int); // 0x00231F08
 extern "C" int func_0023F860(int);                  // 0x0023F860
 extern "C" void func_0023F9C8(int);                 // 0x0023F9C8
 
@@ -285,7 +285,7 @@ UnkRes143438 *func_00143438(UnkSrc143438 *arg0, int arg1, int arg2, int arg3)
         res->mField0C = func_001A9370(((UnkObj1C3BA8 *)arg0)->Method1C3BC8());
         res->mField0E = ((UnkObj1C3BA8 *)arg0)->Method1C3BA8();
         res->mField08 = arg0->mField1E & 1;
-        func_00231F08(res->mField10, arg0->mField20, 0x1F);
+        strncpy(res->mField10, arg0->mField20, 0x1F);
         int h = func_0023F860(arg2);
         if (h != 0)
         {

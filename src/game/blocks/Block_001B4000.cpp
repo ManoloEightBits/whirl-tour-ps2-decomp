@@ -171,7 +171,7 @@ void UnkObj1B7CA8::ByteSwap1B7CA8()
     mField02 = func_001C13D0(mField02);
 }
 
-void func_001B4E18(f32 *a, f32 *b)
+void QuatAlignHemisphere1B4E18(f32 *a, f32 *b)
 {
     f32 x = a[0];
     f32 y = a[1];
@@ -189,7 +189,7 @@ void func_001B4E18(f32 *a, f32 *b)
 f32 Sin1B1910(f32); // 0x001B1910
 f32 Cos1B19E8(f32); // 0x001B19E8
 
-void func_001B4948(f32 *q, f32 angle)
+void QuatFromAngleX1B4948(f32 *q, f32 angle)
 {
     f32 half = angle * 0.5f;
     f32 s = Sin1B1910(half);
