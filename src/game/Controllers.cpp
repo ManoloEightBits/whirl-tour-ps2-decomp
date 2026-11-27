@@ -4,7 +4,7 @@
 extern "C" float sqrtf(float);
 extern "C" float fabsf(float);
 extern "C" void func_001F9FC8(void *, void *); // 0x001F9FC8
-void func_001B2DF0(Vec4f *out, void *arg); // 0x001B2DF0
+void MatToQuat1B2DF0(Vec4f *out, void *arg); // 0x001B2DF0
 
 struct Vec4f16
 {
@@ -118,7 +118,7 @@ MotionCtrl::~MotionCtrl()
 void IP_RotCtrl::func_00118300(void *arg)
 {
     Vec4f q;
-    func_001B2DF0(&q, arg);
+    MatToQuat1B2DF0(&q, arg);
     do
     {
         mQuat10.x = q.x;

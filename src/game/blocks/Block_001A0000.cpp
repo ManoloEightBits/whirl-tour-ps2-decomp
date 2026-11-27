@@ -66,7 +66,7 @@ void glLoadIdentity(void)
     data_002B3608 = 1;
 }
 
-void func_001B3EC8(Mat4x4f *dst, const Mat4x4f *a, const Mat4x4f *b); // 0x001B3EC8
+void Mat4x4Mul1B3EC8(Mat4x4f *dst, const Mat4x4f *a, const Mat4x4f *b); // 0x001B3EC8
 
 struct UnkGLState1A0
 {
@@ -142,11 +142,11 @@ void glScalef(f32 x, f32 y, f32 z)
     if (data_00267140.mField5C0 != GL_MODELVIEW)
     {
         if (data_00267140.mField5C0 == GL_PROJECTION)
-            func_001B3EC8(data_00267140.mField5C4, &m, data_00267140.mField5C4);
+            Mat4x4Mul1B3EC8(data_00267140.mField5C4, &m, data_00267140.mField5C4);
     }
     else
     {
-        func_001B3EC8(data_00267140.mField5C8, &m, data_00267140.mField5C8);
+        Mat4x4Mul1B3EC8(data_00267140.mField5C8, &m, data_00267140.mField5C8);
     }
     data_002B3608 = 1;
 }
@@ -216,11 +216,11 @@ void glMultMatrixf(const f32 *m)
     if (data_00267140.mField5C0 != GL_MODELVIEW)
     {
         if (data_00267140.mField5C0 == GL_PROJECTION)
-            func_001B3EC8(data_00267140.mField5C4, (const Mat4x4f *)m, data_00267140.mField5C4);
+            Mat4x4Mul1B3EC8(data_00267140.mField5C4, (const Mat4x4f *)m, data_00267140.mField5C4);
     }
     else
     {
-        func_001B3EC8(data_00267140.mField5C8, (const Mat4x4f *)m, data_00267140.mField5C8);
+        Mat4x4Mul1B3EC8(data_00267140.mField5C8, (const Mat4x4f *)m, data_00267140.mField5C8);
     }
     data_002B3608 = 1;
 }
@@ -229,7 +229,7 @@ void func_001A1070(); // 0x001A1070
 void func_001A4AF0(int, int, int, int); // 0x001A4AF0
 f32 Sin1B1910(f32);  // 0x001B1910
 f32 Cos1B19E8(f32);  // 0x001B19E8
-void func_001B3B48(Mat4x4f *dst, const f32 *q); // 0x001B3B48
+void QuatToMat1B3B48(Mat4x4f *dst, const f32 *q); // 0x001B3B48
 
 void glLoadMatrixf(const f32 *m)
 {
@@ -275,11 +275,11 @@ void glTranslatef(f32 x, f32 y, f32 z)
     if (data_00267140.mField5C0 != GL_MODELVIEW)
     {
         if (data_00267140.mField5C0 == GL_PROJECTION)
-            func_001B3EC8(data_00267140.mField5C4, &m, data_00267140.mField5C4);
+            Mat4x4Mul1B3EC8(data_00267140.mField5C4, &m, data_00267140.mField5C4);
     }
     else
     {
-        func_001B3EC8(data_00267140.mField5C8, &m, data_00267140.mField5C8);
+        Mat4x4Mul1B3EC8(data_00267140.mField5C8, &m, data_00267140.mField5C8);
     }
     data_002B3608 = 1;
 }
@@ -400,15 +400,15 @@ void glRotatef(f32 angle, f32 x, f32 y, f32 z)
     q[1] = y * s;
     q[2] = z * s;
     q[3] = Cos1B19E8(half);
-    func_001B3B48(&m, q);
+    QuatToMat1B3B48(&m, q);
     if (data_00267140.mField5C0 != GL_MODELVIEW)
     {
         if (data_00267140.mField5C0 == GL_PROJECTION)
-            func_001B3EC8(data_00267140.mField5C4, &m, data_00267140.mField5C4);
+            Mat4x4Mul1B3EC8(data_00267140.mField5C4, &m, data_00267140.mField5C4);
     }
     else
     {
-        func_001B3EC8(data_00267140.mField5C8, &m, data_00267140.mField5C8);
+        Mat4x4Mul1B3EC8(data_00267140.mField5C8, &m, data_00267140.mField5C8);
     }
     data_002B3608 = 1;
 }
@@ -429,11 +429,11 @@ void glOrtho(f32 left, f32 right, f32 bottom, f32 top, f32 zNear, f32 zFar)
     if (data_00267140.mField5C0 != GL_MODELVIEW)
     {
         if (data_00267140.mField5C0 == GL_PROJECTION)
-            func_001B3EC8(data_00267140.mField5C4, &m, data_00267140.mField5C4);
+            Mat4x4Mul1B3EC8(data_00267140.mField5C4, &m, data_00267140.mField5C4);
     }
     else
     {
-        func_001B3EC8(data_00267140.mField5C8, &m, data_00267140.mField5C8);
+        Mat4x4Mul1B3EC8(data_00267140.mField5C8, &m, data_00267140.mField5C8);
     }
     data_002B3608 = 1;
 }
@@ -466,11 +466,11 @@ void glFrustum(f32 left, f32 right, f32 bottom, f32 top, f32 zNear, f32 zFar)
     if (data_00267140.mField5C0 != GL_MODELVIEW)
     {
         if (data_00267140.mField5C0 == GL_PROJECTION)
-            func_001B3EC8(data_00267140.mField5C4, &m, data_00267140.mField5C4);
+            Mat4x4Mul1B3EC8(data_00267140.mField5C4, &m, data_00267140.mField5C4);
     }
     else
     {
-        func_001B3EC8(data_00267140.mField5C8, &m, data_00267140.mField5C8);
+        Mat4x4Mul1B3EC8(data_00267140.mField5C8, &m, data_00267140.mField5C8);
     }
     data_002B3608 = 1;
 }
@@ -501,11 +501,11 @@ void gluPerspective(f32 fovy, f32 aspect, f32 zNear, f32 zFar)
     if (data_00267140.mField5C0 != GL_MODELVIEW)
     {
         if (data_00267140.mField5C0 == GL_PROJECTION)
-            func_001B3EC8(data_00267140.mField5C4, &m, data_00267140.mField5C4);
+            Mat4x4Mul1B3EC8(data_00267140.mField5C4, &m, data_00267140.mField5C4);
     }
     else
     {
-        func_001B3EC8(data_00267140.mField5C8, &m, data_00267140.mField5C8);
+        Mat4x4Mul1B3EC8(data_00267140.mField5C8, &m, data_00267140.mField5C8);
     }
     data_002B3608 = 1;
 }

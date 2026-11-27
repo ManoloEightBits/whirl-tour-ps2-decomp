@@ -17,9 +17,9 @@ void EnvObjCleanup14FB70(EnvObj *);                      // 0x0014FB70
 void func_00193100(UnkNode *);                           // 0x00193100
 Mat4x4f *func_0012ECC0();                                // 0x0012ECC0
 void func_001F3F30(void *obj, void *a, void *b);                   // 0x001F3F30
-void func_001B40A0(Mat4x4f *m, f32 angle);                         // 0x001B40A0: rotation matrix
-void func_001B3EC8(Mat4x4f *out, const Mat4x4f *a, const Mat4x4f *b); // 0x001B3EC8: product
-void func_001B3900(Mat4x4f *dst, const Mat4x4f *src);              // 0x001B3900: copy
+void Mat4x4RotX1B40A0(Mat4x4f *m, f32 angle);                         // 0x001B40A0: rotation matrix
+void Mat4x4Mul1B3EC8(Mat4x4f *out, const Mat4x4f *a, const Mat4x4f *b); // 0x001B3EC8: product
+void Mat4x4Copy1B3900(Mat4x4f *dst, const Mat4x4f *src);              // 0x001B3900: copy
 void func_00192820(UnkNode *node, f32 dt);                         // 0x00192820: updates a node
 void DrawModel196110(void *model);                       // 0x00196110
 int func_001262B0(int id);                               // 0x001262B0
@@ -435,9 +435,9 @@ void Pickup::Update(f32 dt)
     p->y = pos.y;
     p->z = pos.z;
     Mat4x4f turn;
-    func_001B40A0(&turn, -1.5707964f);
+    Mat4x4RotX1B40A0(&turn, -1.5707964f);
     Mat4x4f m;
-    func_001B3EC8(&m, &turn, func_0012ECC0());
+    Mat4x4Mul1B3EC8(&m, &turn, func_0012ECC0());
     m.row[3].x += p->x;
     m.row[3].y += p->y + mHeightOffset74;
     m.row[3].z += p->z;
@@ -445,7 +445,7 @@ void Pickup::Update(f32 dt)
     {
         if (mArray3C[i] != 0)
         {
-            func_001B3900(&mArray3C[i]->mMatrix30, &m);
+            Mat4x4Copy1B3900(&mArray3C[i]->mMatrix30, &m);
             func_00192820(mArray3C[i], dt);
             if (mArray3C[i]->mFlags1C & 1)
             {
@@ -458,7 +458,7 @@ void Pickup::Update(f32 dt)
     {
         if (mArray40[i] != 0)
         {
-            func_001B3900(&mArray40[i]->mMatrix30, &m);
+            Mat4x4Copy1B3900(&mArray40[i]->mMatrix30, &m);
             func_00192820(mArray40[i], dt);
             if (mArray40[i]->mFlags1C & 1)
             {

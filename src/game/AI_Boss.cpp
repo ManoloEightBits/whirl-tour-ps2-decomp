@@ -9,7 +9,7 @@ struct UnkActor11A
 };
 
 void func_00161978(void *);    // 0x00161978
-f32 func_001B1048(f32, f32);   // 0x001B1048
+f32 FastAtan2_1B1048(f32, f32);   // 0x001B1048
 int func_0012F258(void *, int); // 0x0012F258
 int func_0012F280(void *, int); // 0x0012F280
 void func_0011A3E0(void *, int); // 0x0011A3E0
@@ -308,7 +308,7 @@ f32 AI_Boss::GetAttackField94(int i, int j)
 
 void AI_Boss::Method15ED98()
 {
-    mField170 = func_001B1048(mFieldD0, mFieldD8);
+    mField170 = FastAtan2_1B1048(mFieldD0, mFieldD8);
 }
 
 int AI_Boss::GetField208(int i)
