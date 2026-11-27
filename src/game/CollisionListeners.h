@@ -126,7 +126,7 @@ struct IVP_U_Float_Point
 {
     f32 k[3];
 
-    f32 func_00208178(); // 0x00208178 (IVP code; LunActCL clamps it to 1, probably the length)
+    f32 Length208178(); // 0x00208178 (IVP_U_Float_Point Euclidean length)
 
     inline void set_negative(const IVP_U_Float_Point *p)
     {

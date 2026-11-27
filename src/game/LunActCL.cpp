@@ -29,7 +29,7 @@ void LunActCL::event_pre_collision(IVP_Event_Collision *ev)
     }
     else
     {
-        t = MIN(c->mPoint10.func_00208178(), 1.0f);
+        t = MIN(c->mPoint10.Length208178(), 1.0f);
         mOwner08->field_0x20 = mOwner08->field_0x20 + t * 0.5f <? 1.0f;
         mOwner08->mFlags04 |= 2;
     }

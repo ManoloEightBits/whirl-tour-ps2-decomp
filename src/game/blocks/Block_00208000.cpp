@@ -14,10 +14,10 @@ struct IVP_U_Float_Point
     f32 y;
     f32 z;
 
-    f32 func_00208178(); // 0x00208178
+    f32 Length208178(); // 0x00208178
 };
 
-f32 IVP_U_Float_Point::func_00208178()
+f32 IVP_U_Float_Point::Length208178()
 {
     return sqrtf(x * x + y * y + z * z);
 }

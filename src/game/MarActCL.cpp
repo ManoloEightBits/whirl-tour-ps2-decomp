@@ -74,7 +74,7 @@ void *UnkBody::GetPtr60()
 
 f32 UnkBody::func_0014CB50()
 {
-    return ((IVP_U_Float_Point *)((char *)mObj70->field_0x9C + 0xB0))->func_00208178();
+    return ((IVP_U_Float_Point *)((char *)mObj70->field_0x9C + 0xB0))->Length208178();
 }
 
 void *UnkBody::GetPtr20()
