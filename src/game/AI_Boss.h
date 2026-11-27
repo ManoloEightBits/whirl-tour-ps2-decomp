@@ -10,6 +10,8 @@ struct UnkAttackActor
 {
     char field_0x00[0x10];
     f32 mField10; // 0x10
+    char field_0x14[0x3C];
+    f32 mArray50[1]; // 0x50
 };
 
 // What AI_Boss+0x1E0 points to: an object with a 4x4 matrix at +0x50, whose rows the boss returns (as
@@ -116,6 +118,10 @@ public:
     void SetField170(f32 v);            // 0x0015ED90
     int GetField134();                  // 0x0015EDC8
     int GetField1F0();                  // 0x0015EE08
+    f32 GetField194(int i);             // 0x0015EB00
+    void SetField194(int i, f32 v);     // 0x0015EB10
+    void AddField194(int i, f32 v);     // 0x0015EB20
+    f32 GetAttackField50(int i);        // 0x0015EB40
 
     char field_0xA0[0x10];
     int mFieldB0;             // 0xB0
@@ -144,7 +150,7 @@ public:
     int mField188;            // 0x188
     int mField18C;            // 0x18C
     int mField190;            // 0x190
-    char field_0x194[0x44];
+    f32 mArray194[0x11];      // 0x194
     UnkAttackActor *mAttack1D8; // 0x1D8: its +0x10 goes to Player::Action1722B0 (probably the current attack)
     int mField1DC;            // 0x1DC
     UnkBossObj1E0 *mObj1E0;   // 0x1E0

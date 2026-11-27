@@ -233,3 +233,22 @@ void func_00129108(UnkObj129108 *arg0, int *arg1)
     arg0->mField18DC = arg1[3];
     arg0->mField18D8 = arg1[4];
 }
+
+// Synthesized from m2c (0x00128DE8)
+struct UnkObj128DE8
+{
+    char pad00[0x18A8];
+    int mField18A8; // 0x18A8
+    int mArr18AC[1]; // 0x18AC
+    void Method128DE8(int arg1);
+};
+
+void UnkObj128DE8::Method128DE8(int arg1)
+{
+    int temp_v1;
+
+    temp_v1 = this->mField18A8;
+    this->mArr18AC[temp_v1] = arg1;
+    this->mField18A8 = (int) (temp_v1 + 1);
+}
+

@@ -257,3 +257,30 @@ int func_0012CE38(UnkObj12CE38 *arg0, int arg1)
         ret = obj->GetField8();
     return ret;
 }
+
+// Synthesized from m2c (0x0012F1E0)
+struct UnkObj12F1E0
+{
+    char pad00[0xC4];
+    int mArrC4[1]; // 0xC4
+    int Method12F1E0(int arg1);
+};
+
+int UnkObj12F1E0::Method12F1E0(int arg1)
+{
+    return this->mArrC4[arg1];
+}
+
+// Synthesized from m2c (0x0012F248)
+struct UnkObj12F248
+{
+    char pad00[0x9C];
+    int mArr9C[1]; // 0x9C
+    int Method12F248(int arg1);
+};
+
+int UnkObj12F248::Method12F248(int arg1)
+{
+    return this->mArr9C[arg1];
+}
+

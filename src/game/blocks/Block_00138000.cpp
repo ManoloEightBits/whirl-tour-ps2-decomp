@@ -105,3 +105,19 @@ int func_001398E0(UnkObj1398E0 *arg0)
         return arg0->mArr1C[idx].mInner04->mField18;
     return 0;
 }
+
+// Synthesized from m2c (0x00139720)
+struct UnkObj139720
+{
+    int mField00; // 0x00
+    int mField04; // 0x04
+    int mField08; // 0x08
+    void Method139720();
+};
+
+void UnkObj139720::Method139720()
+{
+    mField00 = 0;
+    mField04 = 0;
+    mField08 = 0;
+}

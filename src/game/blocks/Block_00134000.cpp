@@ -167,3 +167,25 @@ void func_00136E80(UnkObj136E80 *arg0)
     func_00141470();
     func_00126138(0);
 }
+
+// Synthesized from m2c (0x00136D98)
+struct UnkObj136D98
+{
+    char pad00[0x24];
+    u32 mField24; // 0x24
+    int mArr28[1]; // 0x28
+    void Method136D98(int arg1);
+};
+
+void UnkObj136D98::Method136D98(int arg1)
+{
+    u32 temp_v1;
+
+    temp_v1 = this->mField24;
+    if (temp_v1 < 3U)
+    {
+        this->mArr28[temp_v1] = arg1;
+        this->mField24 = (u32) (temp_v1 + 1);
+    }
+}
+

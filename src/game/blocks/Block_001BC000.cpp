@@ -631,3 +631,18 @@ int func_001BDAE0(UnkObj1BDAE0 *arg0, void *arg1)
     }
     return ret;
 }
+
+// Synthesized from m2c (0x001BC438)
+struct UnkObj1BC438
+{
+    char pad00[0xAC];
+    f32 mFieldAC; // 0xAC
+    f32 mFieldB0; // 0xB0
+    void Method1BC438(f32 a, f32 b);
+};
+
+void UnkObj1BC438::Method1BC438(f32 a, f32 b)
+{
+    mFieldAC = a;
+    mFieldB0 = b;
+}

@@ -404,3 +404,19 @@ int func_00126068()
         ret = ((UnkObj183480 *)data_0025DC60)->GetField8();
     return ret;
 }
+
+// Synthesized from m2c (0x00127310)
+struct UnkObj127310
+{
+    char pad00[0x30];
+    f32 mField30; // 0x30
+    f32 mField34; // 0x34
+    void Method127310(f32 fparg0, f32 fparg1);
+};
+
+void UnkObj127310::Method127310(f32 fparg0, f32 fparg1)
+{
+    this->mField30 = fparg0;
+    this->mField34 = fparg1;
+}
+

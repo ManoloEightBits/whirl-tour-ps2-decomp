@@ -38,18 +38,6 @@ int func_0015F578()
 // Matched from the second m2c sweep (globals, switch tables): strings and float constants are
 // literals, variables are data_<addr> in config/symbols.txt.
 
-struct UnkObj15EB20
-{
-    char pad000[0x194];
-    f32 mArr194[1]; // 0x194: length unknown
-};
-
-// Adds to entry n of a float array at +0x194.
-void func_0015EB20(UnkObj15EB20 *obj, int n, f32 value)
-{
-    obj->mArr194[n] += value;
-}
-
 struct UnkObj15EFF8
 {
     char field_0x0[0x20];

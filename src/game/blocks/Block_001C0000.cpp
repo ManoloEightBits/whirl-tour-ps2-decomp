@@ -365,3 +365,19 @@ void func_001C0F90(UnkObj1C0F90 *arg0)
     ArrayDestroy1BB168(arg0->mField70);
     MemFree1BD978(arg0);
 }
+
+// Synthesized from m2c (0x001C0FF8)
+struct UnkObj1C0FF8
+{
+    int mField00; // 0x00
+    char pad04[0x4];
+    int mField08; // 0x08
+    void Method1C0FF8();
+};
+
+void UnkObj1C0FF8::Method1C0FF8()
+{
+    this->mField08 = 0;
+    this->mField00 = 0;
+}
+

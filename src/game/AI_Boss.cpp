@@ -255,3 +255,23 @@ int AI_Boss::GetField1F0()
 void AI_Boss::VirtSlot3()
 {
 }
+
+f32 AI_Boss::GetField194(int i)
+{
+    return mArray194[i];
+}
+
+void AI_Boss::SetField194(int i, f32 v)
+{
+    mArray194[i] = v;
+}
+
+void AI_Boss::AddField194(int i, f32 v)
+{
+    mArray194[i] += v;
+}
+
+f32 AI_Boss::GetAttackField50(int i)
+{
+    return mAttack1D8->mArray50[i];
+}

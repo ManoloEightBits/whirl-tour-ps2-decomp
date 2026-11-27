@@ -437,3 +437,18 @@ void func_00141950(void *arg0, int arg1)
     if (arg1 & 1)
         __builtin_delete(arg0);
 }
+
+// Synthesized from m2c (0x00140028)
+struct UnkObj140028
+{
+    int mField00; // 0x00
+    int mField04; // 0x04
+    void Method140028();
+};
+
+void UnkObj140028::Method140028()
+{
+    this->mField00 = 0;
+    this->mField04 = 0;
+}
+

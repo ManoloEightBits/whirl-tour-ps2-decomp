@@ -107,3 +107,19 @@ void TransposeMat4x4_1B3F40(Mat4x4f *out, Mat4x4f *in)
         dst++;
     }
 }
+
+// Synthesized from m2c (0x001B0F60)
+struct UnkObj1B0F60
+{
+    int mField00; // 0x00
+    int mField04; // 0x04
+    int mField08; // 0x08
+    void Method1B0F60(int a);
+};
+
+void UnkObj1B0F60::Method1B0F60(int a)
+{
+    mField00 = 0;
+    mField04 = 0;
+    mField08 = a;
+}
