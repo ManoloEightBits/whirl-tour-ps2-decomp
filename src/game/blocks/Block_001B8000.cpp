@@ -402,3 +402,27 @@ void func_001B9D30(int arg0, int arg1)
         node->mNext00 = 0;
     }
 }
+
+struct UnkClip1B7
+{
+    f32 GetField40(); // 0x001B7D20
+};
+
+struct UnkObj1B8CC0
+{
+    int mField00;          // 0x00
+    UnkClip1B7 *mClip04;   // 0x04
+    char pad08[0x18];
+    f32 mField20;          // 0x20
+    f32 mField24;          // 0x24
+};
+
+f32 func_001B8CC0(UnkObj1B8CC0 *arg0)
+{
+    return arg0->mField20 + arg0->mClip04->GetField40();
+}
+
+f32 func_001B8CF0(UnkObj1B8CC0 *arg0)
+{
+    return arg0->mField24 + arg0->mClip04->GetField40();
+}

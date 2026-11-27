@@ -91,3 +91,18 @@ void func_00145930(UnkObj145930 *arg0)
         break;
     }
 }
+
+struct UnkObj145618
+{
+    char pad00[0x9C];
+    void *mField9C; // 0x9C
+};
+
+void CleanupDialog1309E0(void *); // 0x001309E0
+void MemFree1BD978(void *);       // 0x001BD978
+
+void func_00145618(UnkObj145618 *arg0)
+{
+    CleanupDialog1309E0(arg0->mField9C);
+    MemFree1BD978(arg0);
+}

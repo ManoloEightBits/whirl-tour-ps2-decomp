@@ -77,3 +77,31 @@ void func_001397F8(u8 *arg0, UnkObj1397E0B *arg1)
     if (data_0025E5DC != 0)
         data_0025E5DC->mField20A = 0;
 }
+
+struct UnkInner1398E0
+{
+    char pad00[0x18];
+    int mField18; // 0x18
+};
+
+struct UnkEntry1398E0
+{
+    int mField00;
+    UnkInner1398E0 *mInner04;
+};
+
+struct UnkObj1398E0
+{
+    char pad00[0x01];
+    s8 mIdx01;               // 0x01
+    char pad02[0x1A];
+    UnkEntry1398E0 *mArr1C;  // 0x1C
+};
+
+int func_001398E0(UnkObj1398E0 *arg0)
+{
+    s8 idx = arg0->mIdx01;
+    if (idx != -1)
+        return arg0->mArr1C[idx].mInner04->mField18;
+    return 0;
+}

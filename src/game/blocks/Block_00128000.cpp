@@ -214,3 +214,22 @@ void func_001290B8(UnkObj1290B8 *arg0, const char *arg1, f32 arg2, f32 arg3)
     arg0->mField1884 = arg2;
     arg0->mField188C = crc;
 }
+
+struct UnkObj129108
+{
+    char pad00[0x18D0];
+    int mField18D0; // 0x18D0
+    int mField18D4; // 0x18D4
+    int mField18D8; // 0x18D8
+    int mField18DC; // 0x18DC
+    int mField18E0; // 0x18E0
+};
+
+void func_00129108(UnkObj129108 *arg0, int *arg1)
+{
+    arg0->mField18D0 = arg1[0];
+    arg0->mField18E0 = arg1[1];
+    arg0->mField18D4 = arg1[2];
+    arg0->mField18DC = arg1[3];
+    arg0->mField18D8 = arg1[4];
+}

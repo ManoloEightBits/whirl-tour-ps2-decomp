@@ -391,3 +391,16 @@ int FindFont1264A8(const char *name)
         ret = func_00182F38(data_0025DC60, HashStringCRC32(name));
     return ret;
 }
+
+struct UnkObj183480
+{
+    int GetField8(); // 0x00183578
+};
+
+int func_00126068()
+{
+    int ret = 0;
+    if (data_0025DC60 != 0)
+        ret = ((UnkObj183480 *)data_0025DC60)->GetField8();
+    return ret;
+}

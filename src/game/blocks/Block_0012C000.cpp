@@ -204,3 +204,56 @@ void func_0012FE80(UnkObj12FE80 *arg0, int arg1)
     if (arg1 & 1)
         __builtin_delete(arg0);
 }
+
+struct UnkObj12D0B8
+{
+    const char *mStr00;
+    u32 mCrc04;
+    int mField08;
+};
+
+u32 HashStringCRC32(const char *); // 0x001B1CD0
+
+void func_0012D0B8(UnkObj12D0B8 *arg0, const char *arg1)
+{
+    arg0->mStr00 = arg1;
+    arg0->mCrc04 = HashStringCRC32(arg1);
+    arg0->mField08 = 0;
+}
+
+struct UnkObj1BD870
+{
+    void *GetField8(); // 0x001BD8C8
+};
+
+struct UnkObj12CBA0
+{
+    char pad00[0x94];
+    UnkObj1BD870 *mField94; // 0x94
+};
+
+void func_0012CBA0(UnkObj12CBA0 *arg0)
+{
+    MemFree1BD978(arg0->mField94->GetField8());
+    MemFree1BD978(arg0);
+}
+
+struct UnkObj1BEAD0
+{
+    int GetField8(); // 0x001BEAD0
+};
+
+struct UnkObj12CE38
+{
+    char pad00[8];
+    UnkObj1BEAD0 *mArr08[1];
+};
+
+int func_0012CE38(UnkObj12CE38 *arg0, int arg1)
+{
+    UnkObj1BEAD0 *obj = arg0->mArr08[arg1];
+    int ret = 0;
+    if (obj != 0)
+        ret = obj->GetField8();
+    return ret;
+}

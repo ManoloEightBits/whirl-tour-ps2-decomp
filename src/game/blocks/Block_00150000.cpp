@@ -1,5 +1,6 @@
 #include "common/types.h"
 #include "common/libc.h"
+#include "game/GL.h"
 
 // Functions of 0x00150000..0x00153FFF whose class and translation unit are not known yet.
 // Names are address based; move each function to its file once its TU is identified.
@@ -322,4 +323,30 @@ void func_00151768()
     func_001A27E8(0x4000, 0x1201, data_002656F0[0]);
     func_001A27E8(0x4001, 0x1201, data_002656F0[1]);
     func_001A27E8(0x4002, 0x1201, data_002656F0[2]);
+}
+
+struct UnkObj151978
+{
+    int mFlags00;  // 0x00
+    u16 mField04;  // 0x04
+    u16 mCount06;  // 0x06
+    void *mField08; // 0x08
+    void *mArr0C;  // 0x0C
+};
+
+extern "C" void func_00151578();
+void func_0022FCC8(int, int, int, int); // 0x0022FCC8
+
+void func_00151978(UnkObj151978 *arg0)
+{
+    if (arg0->mFlags00 & 1)
+        func_0022FCC8((int)arg0->mArr0C, arg0->mCount06, 4, (int)func_00151578);
+}
+
+extern int data_002B24E8[];
+
+void func_00151A18()
+{
+    glGetIntegerv(0xBA2, data_002B24E8);
+    glViewport(0, 0, 0x80, 0x80);
 }

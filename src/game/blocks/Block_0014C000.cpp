@@ -402,3 +402,11 @@ void func_0014FA38(UnkObj14FA38 *arg0, int arg1, int arg2)
     if (sp0 != 0)
         func_001BB250(arg0->mFieldBC, &sp0);
 }
+
+extern "C" void func_00150FD0(int, void *, void *, void *); // 0x00150FD0
+extern "C" void Draw14CCB0__12UnkObj14CAF0();                // 0x0014CCB0
+
+void func_0014CCF0(UnkObj14CAF0 *arg0)
+{
+    func_00150FD0((*(int *)arg0->mModel78 >> 0xF) & 1, (void *)Draw14CCB0__12UnkObj14CAF0, arg0, &arg0->mMatrix20[12]);
+}

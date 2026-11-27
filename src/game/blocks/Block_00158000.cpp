@@ -73,3 +73,12 @@ void func_001588D0(UnkObj1588D0 *arg0, int arg1, int arg2, int arg3, void *arg4,
     if (d != 0)
         d->mField08 = arg6;
 }
+
+void func_00158898(UnkObj1588D0 *arg0)
+{
+    if (arg0->mDialog08 != 0)
+    {
+        CleanupDialog1309E0(arg0->mDialog08);
+        arg0->mDialog08 = 0;
+    }
+}
