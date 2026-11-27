@@ -82,3 +82,23 @@ void func_00158898(UnkObj1588D0 *arg0)
         arg0->mDialog08 = 0;
     }
 }
+
+void func_0018BA58();              // 0x0018BA58
+void Release198F38(void *);        // 0x00198F38
+extern "C" void __builtin_delete(void *);
+
+struct UnkObj158678
+{
+    void *mField00; // 0x00
+    int mField04;   // 0x04
+};
+
+void func_00158678(void *arg0, int arg1)
+{
+    UnkObj158678 *obj = (UnkObj158678 *)arg0;
+    func_00158898((UnkObj1588D0 *)obj);
+    ((void (*)(int))func_0018BA58)(obj->mField04);
+    Release198F38(obj->mField00);
+    if (arg1 & 1)
+        __builtin_delete(obj);
+}

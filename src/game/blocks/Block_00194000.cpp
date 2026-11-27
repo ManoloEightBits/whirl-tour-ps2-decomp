@@ -307,6 +307,34 @@ void func_00197468(int objInt, int nameInt)
     }
 }
 
+struct UnkArg194DE0
+{
+    char pad00[0x4];
+    int mCount04;  // 0x04
+    char pad08[0xC0];
+    int mFieldC8;  // 0xC8
+};
+
+struct UnkRes194DE0
+{
+    char pad00[0x10];
+    void *mArg10; // 0x10
+};
+
+void func_00192478(void *, int, void *); // 0x00192478
+
+void *func_00194DE0(int arg0Int)
+{
+    UnkArg194DE0 *arg0 = (UnkArg194DE0 *)arg0Int;
+    UnkRes194DE0 *res = (UnkRes194DE0 *)func_001BD558(arg0->mCount04 * 0x28 + 0xA0, 4);
+    if (res != 0)
+    {
+        res->mArg10 = arg0;
+        func_00192478(res, arg0->mFieldC8, (u8 *)res + 0xA0);
+    }
+    return res;
+}
+
 int func_00197318(int arg0, f32 fparg0, f32 fparg1, f32 fparg2)
 {
     int temp_v0;
