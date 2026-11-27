@@ -359,3 +359,14 @@ void func_00180198(int unused, UnkObj180198 *arg1)
 {
     func_00185578(arg1->mField20C);
 }
+
+struct UnkModel1B7
+{
+    static void InitPtrs1B7B08(); // 0x001B7B08
+};
+
+int func_00183CB8()
+{
+    UnkModel1B7::InitPtrs1B7B08();
+    return 1;
+}

@@ -156,3 +156,44 @@ void func_001300F8()
         data_0025E1A0 = func_001BC9D0((void *)func_00130030, 0);
     }
 }
+
+struct UnkObj130938
+{
+    int mField00;
+    int mField04;
+    int mField08;
+    int mField0C;
+    int mField10;
+    int mField14;
+    int mField18;
+    int mField1C;
+};
+
+void func_00130938(UnkObj130938 *arg0, int a1, int a2, int a3, int a4, int a5)
+{
+    arg0->mField00 = a1;
+    arg0->mField04 = a2;
+    arg0->mField0C = a3;
+    arg0->mField10 = a4;
+    arg0->mField14 = a5;
+    arg0->mField08 = 0;
+    arg0->mField18 = 0;
+    arg0->mField1C = 0;
+}
+
+struct UnkElem130B50
+{
+    int mFlags00; // 0x00
+    char pad04[0x0C];
+};
+
+struct UnkObj130B50
+{
+    char pad00[0x10];
+    UnkElem130B50 *mArr10; // 0x10
+};
+
+void func_00130B50(UnkObj130B50 *arg0, int arg1)
+{
+    arg0->mArr10[arg1].mFlags00 &= ~2;
+}

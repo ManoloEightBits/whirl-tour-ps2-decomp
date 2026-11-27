@@ -396,3 +396,11 @@ void func_001855F0(UnkObj1855F0 *arg0, int arg1, f32 arg2)
     ((void (*)(UnkObj1855F0 *, int, f32))func_00185458)(arg0, arg0->mField00->mField18, arg2);
     arg0->mField28 = 0;
 }
+
+extern "C" void __builtin_delete(void *);
+
+void func_00187A00(void *arg0, int arg1)
+{
+    if (arg1 & 1)
+        __builtin_delete(arg0);
+}

@@ -40,3 +40,23 @@ int UnkObj1A9768::GetField8()
 {
     return mField8;
 }
+
+extern "C" int printf(const char *, ...);
+
+void func_001AA4B0()
+{
+    printf("ERROR: SOUND_SetDTSMode\n");
+    func_001AB8C8();
+}
+
+void func_001AB430()
+{
+    printf("ERROR: SOUND_CreateDTS_RPCThread\n");
+    func_001AB8C8();
+}
+
+void func_001ABE60()
+{
+    printf("ERROR: SOUND_DTS_Thread\n");
+    func_001AB8C8();
+}

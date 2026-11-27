@@ -240,3 +240,10 @@ void func_001B6F58(UnkObj1B6F58 *arg0)
         arg0->mField08 = 0;
     }
 }
+
+extern "C" void *memcpy(void *, const void *, unsigned int);
+
+void func_001B6F30(UnkObj1B6F58 *arg0, UnkObj1B6F58 *arg1)
+{
+    memcpy(arg0->mField08, arg1->mField08, arg0->mField06);
+}

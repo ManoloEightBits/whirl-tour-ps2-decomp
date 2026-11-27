@@ -16,3 +16,11 @@ void func_0016FDB8(EnvObj *obj)
     EnvObjCleanup14FB70(obj);
     MemFree1BD978(obj);
 }
+
+extern "C" void __builtin_delete(void *);
+
+void func_0016FCC8(void *arg0, int arg1)
+{
+    if (arg1 & 1)
+        __builtin_delete(arg0);
+}

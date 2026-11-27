@@ -355,3 +355,17 @@ const char *func_00151D40(u16 id)
 {
     return data_00261C30[data_00261C4C][id];
 }
+
+struct UnkEntry150AB8
+{
+    char pad00[0x18];
+    f32 mField18; // 0x18
+};
+
+extern UnkEntry150AB8 data_00289810[];
+extern int data_0025E720;
+
+f32 func_00150AB8()
+{
+    return data_00289810[data_0025E720].mField18;
+}

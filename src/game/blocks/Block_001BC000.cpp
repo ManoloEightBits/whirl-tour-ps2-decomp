@@ -774,3 +774,38 @@ void func_001BD850(UnkObj1BD850 *arg0, int arg1)
 {
     func_001BD418(arg0, arg1, arg0->mField14);
 }
+
+struct UnkObj1BDC18
+{
+    int mField00; // 0x00
+    int mField04; // 0x04
+    int mField08; // 0x08
+    char pad0C[0x8];
+    int mField14; // 0x14
+};
+
+void func_001BDC18(UnkObj1BDC18 *arg0)
+{
+    int v = arg0->mField14;
+    arg0->mField00 = 0;
+    arg0->mField04 = v;
+    arg0->mField08 = v;
+}
+
+struct UnkObj1BF5D8
+{
+    char pad00[0x08];
+    int mField08; // 0x08
+    int mField0C; // 0x0C
+};
+
+extern UnkObj1BF5D8 *data_0027B6D0;
+
+void func_001BF5D8(int arg0)
+{
+    int tmp = data_0027B6D0->mField08 - data_0027B6D0->mField0C;
+    if (tmp == arg0)
+    {
+        data_0027B6D0->mField08 = tmp;
+    }
+}
