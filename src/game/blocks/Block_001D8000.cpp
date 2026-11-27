@@ -51,3 +51,8 @@ int func_001DBD40(int arg0)
     return arg0 + 0xC0;
 }
 
+int func_001DBD20(int arg0)
+{
+    return arg0 + 0x88;
+}
+

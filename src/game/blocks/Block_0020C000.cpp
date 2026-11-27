@@ -20,3 +20,8 @@ int func_0020F060(int arg0)
 {
     return arg0;
 }
+
+int func_0020D768(int arg0)
+{
+    return (((int) (arg0 * 0x3E9) >> 0x10) + (arg0 * 0x4B)) | 0x80000000;
+}

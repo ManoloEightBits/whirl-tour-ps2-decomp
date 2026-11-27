@@ -292,3 +292,8 @@ int PhysicsDestroy1F21A8(void *arg0)
 }
 #endif
 
+int func_001F3208(int arg0)
+{
+    return arg0 + 0x44;
+}
+

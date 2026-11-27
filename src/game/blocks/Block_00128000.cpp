@@ -304,3 +304,19 @@ void func_001286C8()
     }
 }
 
+void func_001BB250(int, int *); // 0x001BB250
+
+struct UnkGlobal128700
+{
+    char pad00[0x10];
+    int mField10; // 0x10
+};
+
+void func_00128700(int *arg0)
+{
+    if (data_0025DD40 != 0)
+    {
+        func_001BB250(((UnkGlobal128700 *)data_0025DD40)->mField10, arg0);
+    }
+}
+

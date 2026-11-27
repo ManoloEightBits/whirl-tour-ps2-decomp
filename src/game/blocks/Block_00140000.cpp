@@ -489,3 +489,24 @@ void func_00143170(void *arg0, int arg1)
     func_00142DE0(data_0025E5E0, arg0);
 }
 
+void func_001A6558(int); // 0x001A6558
+
+void func_00143270(void *arg0)
+{
+    func_001A6558(func_00142E58(data_0025E5E0, arg0)->mField04);
+}
+
+struct UnkGameCtx141520
+{
+    char pad00[0x378];
+    f32 mField378; // 0x378
+};
+
+extern UnkGameCtx141520 *gGameCtx262250;
+
+void PlaySoundCRC141520(u32 crc)
+{
+    f32 vol = gGameCtx262250->mField378;
+    func_00141548(crc, vol, vol);
+}
+
