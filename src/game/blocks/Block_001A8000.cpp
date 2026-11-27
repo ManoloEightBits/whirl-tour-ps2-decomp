@@ -60,3 +60,36 @@ void func_001ABE60()
     printf("ERROR: SOUND_DTS_Thread\n");
     func_001AB8C8();
 }
+
+extern int data_002795B0;
+extern int data_002795B4;
+
+void func_001AA1C0(s16 arg0)
+{
+    if (data_002795B4 != -1)
+    {
+        printf(">>>>> ERROR: SOUND_StartCommand\n");
+        printf("Previous command (%d) not completed\n", data_002795B4);
+        printf("To complete a command, it must end with SOUND_EndCommand\n");
+        return;
+    }
+    data_002795B4 = (int)arg0;
+    data_002795B0 = 0;
+}
+
+int func_001AA6C0()
+{
+    printf("ERROR: SOUND_GetDTSStatus\n");
+    func_001AB8C8();
+    return 0;
+}
+
+void func_001AB8C8()
+{
+    printf("ERROR: SOUND_Init_EE_DTS\n");
+    printf("DTS not enabled. Set SOUND_DTS_ENABLE to 1 (in Sound.C)\n");
+    printf("The DTS encode routine that you are attempting to call\n");
+    printf("is a propriety technology. In order to utilize this\n");
+    printf("technology a licensing agreement is required.\n");
+    printf("The DTS SDK can be obtained from DTS.\n");
+}

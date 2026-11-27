@@ -223,6 +223,7 @@ void func_0012D0B8(UnkObj12D0B8 *arg0, const char *arg1)
 
 struct UnkObj1BD870
 {
+    void Method1BD8B8(); // 0x001BD8B8
     void *GetField8(); // 0x001BD8C8
 };
 
@@ -332,5 +333,33 @@ void func_0012E7F8(int unused, UnkObj12E7F8 *arg1)
     if (arg1->mField08 != 0)
         MemFree1BD978(arg1->mField08);
     func_001984B8(arg1->mField18, (int)(void *)func_0012E5F8);
+}
+
+void *MemAlloc1BD958(int); // 0x001BD958
+
+UnkObj1BD870 *func_001BD7D8(void *, int); // 0x001BD7D8
+
+struct UnkObj12CAD0
+{
+    int mArr00[0x25]; // 0x00..0x90
+    UnkObj1BD870 *mField94; // 0x94
+};
+
+UnkObj12CAD0 *func_0012CAD0(int arg0)
+{
+    UnkObj12CAD0 *obj = (UnkObj12CAD0 *)MemAlloc1BD958(0x98);
+    if (obj != 0)
+    {
+        UnkObj1BD870 *sub = func_001BD7D8(MemAlloc1BD958(arg0), arg0);
+        sub->Method1BD8B8();
+        obj->mField94 = sub;
+        obj->mArr00[0] = 0;
+        obj->mArr00[1] = 0;
+        for (int i = 0x22; i >= 0; i--)
+        {
+            obj->mArr00[i + 2] = 0;
+        }
+    }
+    return obj;
 }
 

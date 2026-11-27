@@ -133,3 +133,20 @@ f32 func_001AF368(u8 *arg0, u16 *arg1, int arg2, int arg3)
     fn(sp4, sp8, arg3, sp0);
     return sp0;
 }
+
+int func_001AF590(f32 *, f32 *); // 0x001AF590
+extern "C" void qsort(void *, unsigned int, unsigned int, int (*)(const void *, const void *));
+
+struct UnkObj1AF5B0
+{
+    char pad00[0x01];
+    u8 mField01;  // 0x01
+    char pad02[0x0A];
+    u16 mField0C; // 0x0C
+};
+
+void func_001AF5B0(void *arg0)
+{
+    UnkObj1AF5B0 *obj = (UnkObj1AF5B0 *)arg0;
+    qsort((char *)arg0 + 0x10, obj->mField0C, obj->mField01 * 4, (int (*)(const void *, const void *))func_001AF590);
+}

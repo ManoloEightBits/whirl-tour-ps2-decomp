@@ -397,3 +397,104 @@ void func_00196460(UnkObj196430 *arg0, void *arg1, void *arg2)
             arg0->mArrE0[i] = arg2;
     }
 }
+
+struct UnkObj195AD0
+{
+    int mFlags00;  // 0x00
+    int mCount04;  // 0x04
+    u8 *mPtr08;    // 0x08
+    u8 *mPtr0C;    // 0x0C
+    u8 *mPtr10;    // 0x10
+    u8 *mPtr14;    // 0x14
+    int mCount18;  // 0x18
+    int mCount1C;  // 0x1C
+    u8 *mPtr20;    // 0x20
+    u8 *mPtr24;    // 0x24
+    u8 *mPtr28;    // 0x28
+};
+
+void func_00195AD0(UnkObj195AD0 *arg0)
+{
+    int count = arg0->mCount04;
+    u8 *base = (u8 *)arg0 + 0x2C;
+    arg0->mPtr08 = base;
+    int mode = arg0->mFlags00 & 0xF;
+    arg0->mPtr0C = 0;
+    arg0->mPtr10 = 0;
+    arg0->mPtr14 = 0;
+    u8 *cur = base + count * 0xC;
+    arg0->mPtr20 = 0;
+    arg0->mPtr24 = 0;
+    arg0->mPtr28 = 0;
+    switch (mode)
+    {
+    case 1:
+        break;
+    case 3:
+    {
+        u8 *p = arg0->mPtr08 + count * 0xC;
+        cur = p + count * 0xC;
+        arg0->mPtr0C = p;
+        break;
+    }
+    case 7:
+    {
+        u8 *p0 = arg0->mPtr08 + count * 0xC;
+        u8 *p1 = p0 + count * 0xC;
+        arg0->mPtr0C = p0;
+        cur = p1 + count * 4;
+        arg0->mPtr10 = p1;
+        break;
+    }
+    case 11:
+    {
+        u8 *p0 = arg0->mPtr08 + count * 0xC;
+        u8 *p1 = p0 + count * 0xC;
+        arg0->mPtr0C = p0;
+        cur = p1 + count * 8;
+        arg0->mPtr14 = p1;
+        break;
+    }
+    case 5:
+    {
+        u8 *p = arg0->mPtr08 + count * 0xC;
+        cur = p + count * 4;
+        arg0->mPtr10 = p;
+        break;
+    }
+    case 9:
+    {
+        u8 *p = arg0->mPtr08 + count * 0xC;
+        cur = p + count * 8;
+        arg0->mPtr14 = p;
+        break;
+    }
+    case 13:
+    {
+        u8 *p0 = arg0->mPtr08 + count * 0xC;
+        u8 *p1 = p0 + count * 4;
+        arg0->mPtr10 = p0;
+        cur = p1 + count * 8;
+        arg0->mPtr14 = p1;
+        break;
+    }
+    case 15:
+    {
+        u8 *p0 = arg0->mPtr08 + count * 0xC;
+        u8 *p1 = p0 + count * 0xC;
+        arg0->mPtr0C = p0;
+        u8 *p2 = p1 + count * 4;
+        arg0->mPtr10 = p1;
+        arg0->mPtr14 = p2;
+        cur = p2 + count * 8;
+        break;
+    }
+    }
+    arg0->mPtr24 = cur;
+    u8 *p20 = cur + arg0->mCount1C * 0x14;
+    arg0->mPtr20 = p20;
+    if (arg0->mFlags00 & 0x200)
+    {
+        arg0->mPtr28 = p20 + arg0->mCount18 * 2;
+    }
+}

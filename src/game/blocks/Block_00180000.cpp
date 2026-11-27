@@ -370,3 +370,44 @@ int func_00183CB8()
     UnkModel1B7::InitPtrs1B7B08();
     return 1;
 }
+
+void func_001BD360(void *);           // 0x001BD360
+void func_001B93D0(void *);           // 0x001B93D0
+struct UnkObj1BAB90;
+void func_001BAB90(UnkObj1BAB90 *);   // 0x001BAB90
+void MemFree1BD978(void *);           // 0x001BD978
+
+struct UnkObj1829B8
+{
+    int mField00;     // 0x00
+    int mField04;     // 0x04
+    char pad08[0x06];
+    u16 mRef0E;       // 0x0E
+    int mType10;      // 0x10
+    char pad14[0x80];
+    void *mData94;    // 0x94
+};
+
+void func_001829B8(UnkObj1829B8 *arg0, void (*arg1)(void *, int), int arg2)
+{
+{
+    if (--arg0->mRef0E == 0 || arg2 != 0)
+    {
+        if (arg0->mField00 != 0 || arg0->mField04 != 0)
+        {
+            func_001BD360(arg0);
+        }
+        if (arg0->mType10 == 0)
+        {
+            if (arg1 != 0)
+                arg1(arg0->mData94, 0);
+            func_001B93D0(arg0->mData94);
+        }
+        if (arg0->mType10 == 1)
+        {
+            func_001BAB90((UnkObj1BAB90 *)arg0->mData94);
+        }
+        MemFree1BD978(arg0);
+    }
+}
+}

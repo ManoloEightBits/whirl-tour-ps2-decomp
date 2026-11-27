@@ -247,3 +247,31 @@ void func_001B6F30(UnkObj1B6F58 *arg0, UnkObj1B6F58 *arg1)
 {
     memcpy(arg0->mField08, arg1->mField08, arg0->mField06);
 }
+
+struct UnkSub1B60C8
+{
+    int mMaxLen00; // 0x00
+    int mLen04;    // 0x04
+    char *mBuf08;  // 0x08
+};
+
+struct UnkObj1B60C8
+{
+    char pad00[0x10];
+    UnkSub1B60C8 *mSub10; // 0x10
+    char pad14[0x0C];
+    int mIndex20;         // 0x20
+    char pad24[0x04];
+    const char **mArr28;  // 0x28
+};
+
+void func_001B60C8(UnkObj1B60C8 *arg0)
+{
+    if (arg0->mIndex20 > 0)
+    {
+        arg0->mIndex20 = arg0->mIndex20 - 1;
+    }
+    UnkSub1B60C8 *sub = arg0->mSub10;
+    strncpy(sub->mBuf08, arg0->mArr28[arg0->mIndex20], sub->mMaxLen00);
+    sub->mLen04 = strlen(sub->mBuf08);
+}

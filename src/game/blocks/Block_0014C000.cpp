@@ -448,3 +448,11 @@ void func_0014EAF8(UnkObj14EAF8 *arg0, int arg1)
     int sp0 = arg1;
     func_001BB250(arg0->mFieldE4, &sp0);
 }
+
+int func_0014C910(int *, int *); // 0x0014C910
+extern "C" void qsort(void *, unsigned int, unsigned int, int (*)(const void *, const void *));
+
+void func_0014C940(void *arg0)
+{
+    qsort((char *)arg0 + 0x14, 0xB, 0xC, (int (*)(const void *, const void *))func_0014C910);
+}

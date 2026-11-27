@@ -1,4 +1,5 @@
 #include "common/types.h"
+#include "game/GL.h"
 #include "game/UnkArray.h"
 
 // Functions of 0x00170000..0x00173FFF whose class and translation unit are not known yet.
@@ -154,4 +155,33 @@ void func_00170AE8(UnkObj170AE8 *arg0, f32 x, f32 y, f32 z)
     arg0->mVec1C.x = x;
     v->y = y;
     v->z = z;
+}
+
+struct UnkObj1709C0
+{
+    unsigned int mMode00; // 0x00
+    int mCount04;         // 0x04
+    const void *mVerts08; // 0x08
+    const void *mTex0C;   // 0x0C
+    const void *mColor10; // 0x10
+};
+
+void func_001709C0(UnkObj1709C0 *arg0)
+{
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glVertexPointer(3, GL_FLOAT, 0, arg0->mVerts08);
+    if (arg0->mTex0C != 0)
+    {
+        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+        glTexCoordPointer(2, GL_FLOAT, 0, arg0->mTex0C);
+    }
+    if (arg0->mColor10 != 0)
+    {
+        glEnableClientState(GL_COLOR_ARRAY);
+        glColorPointer(4, GL_UNSIGNED_BYTE, 0, arg0->mColor10);
+    }
+    glDrawArrays(arg0->mMode00, 0, arg0->mCount04);
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    glDisableClientState(GL_COLOR_ARRAY);
 }
