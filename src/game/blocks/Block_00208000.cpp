@@ -6,3 +6,19 @@
 // Converted from m2c sweep drafts (tools/analysis/draft_to_cpp.py): strings and float constants
 // are literals, variables are data_<addr> in config/symbols.txt.
 
+extern "C" f32 sqrtf(f32);
+
+struct IVP_U_Float_Point
+{
+    f32 x;
+    f32 y;
+    f32 z;
+
+    f32 func_00208178(); // 0x00208178
+};
+
+f32 IVP_U_Float_Point::func_00208178()
+{
+    return sqrtf(x * x + y * y + z * z);
+}
+

@@ -10,3 +10,30 @@ int func_001F73F8(int *arg0)
 {
     return *arg0;
 }
+
+extern "C" void func_001F7B18(void *, void *); // 0x001F7B18
+extern "C" void func_001D9AD8(void *);         // 0x001D9AD8
+
+struct UnkIVPObj1F48A0
+{
+    char pad00[0x14];
+    void *mEnv14;         // 0x14
+    char pad18[0x60];
+    u8 mType78;           // 0x78
+    char pad79[0x23];
+    void *mCore9C;        // 0x9C
+    void *mFieldA0;       // 0xA0
+};
+
+void func_001F48A0(int objInt)
+{
+    UnkIVPObj1F48A0 *obj = (UnkIVPObj1F48A0 *)objInt;
+    if (obj->mType78 != 8)
+    {
+        func_001D9AD8(obj->mCore9C);
+    }
+    else
+    {
+        func_001F7B18(obj->mEnv14, obj->mFieldA0);
+    }
+}

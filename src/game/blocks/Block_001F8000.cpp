@@ -21,3 +21,30 @@ void func_001F98B0()
 
 }
 
+#include "game/Controllers.h"
+
+extern "C" void func_001F7B18(void *);         // 0x001F7B18
+extern "C" void func_001FA198(void *, void *); // 0x001FA198
+extern "C" void func_001FA248(void *, void *); // 0x001FA248
+
+struct UnkIVP1F9FC8
+{
+    char pad00[0xC];
+    void *mField0C; // 0x0C
+};
+
+extern "C" void func_001F9FC8(void *, UnkIVP1F9FC8 *arg1)
+{
+    func_001F7B18(arg1->mField0C);
+}
+
+void func_001FA148(IVP_Controller *controller, void *core)
+{
+    func_001FA248(core, controller);
+}
+
+void func_001FA170(IVP_Controller *controller, void *core)
+{
+    func_001FA198(core, controller);
+}
+
