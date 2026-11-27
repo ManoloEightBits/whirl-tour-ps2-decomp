@@ -7,7 +7,6 @@
 
 void *MemAlloc1BD958(int size); // 0x001BD958
 void MemFree1BD978(void *p);    // 0x001BD978
-void func_001A4930(int);        // 0x001A4930
 void func_00199858(int count, int alignBits, void **outPtr); // 0x00199858
 extern "C" f32 func_001BACA8(void *, int); // 0x001BACA8
 extern "C" void func_001BAD18(void *, int, void *); // 0x001BAD18
@@ -117,7 +116,7 @@ void DrawTextEx19B2C0(TextObj *text, f32 maxWidth)
         glDisable(0xB44);
         glEnable(0xBE2);
         glBlendFunc(0x302, 0x303);
-        func_001A4930(0);
+        glDepthMask(0);
         glColor4ubv((const u8 *)&text->mColor28);
         glEnableClientState(0x8074);
         glEnableClientState(0x8078);
@@ -191,7 +190,7 @@ void DrawTextEx19B2C0(TextObj *text, f32 maxWidth)
         glDisable(0xBE2);
         glDisable(0xDE1);
         glEnable(0xB44);
-        func_001A4930(1);
+        glDepthMask(1);
     }
 }
 #endif

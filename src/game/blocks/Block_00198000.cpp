@@ -116,9 +116,7 @@ void DrawEnd19A6B0()
 }
 
 void func_00197D98();                                       // 0x00197D98
-void func_001A3188(int, int, int, int, int, int, int, int); // 0x001A3188
 void func_001A3410(int);                                    // 0x001A3410
-void func_001A42F8(int);                                    // 0x001A42F8
 
 // UnkObj1982D0 (0x001982D0): no RTTI; its layout is the fields these methods use.
 struct UnkObj1982D0
@@ -152,8 +150,8 @@ void UnkObj198C78::Method198C78()
     glMatrixMode(GL_MODELVIEW);
     glPopMatrix();
     glBindTexture(GL_TEXTURE_2D, mField14C);
-    func_001A3188(0xDE1, 0, 0, 0, 0, 0, 0x80, 0x80);
-    func_001A42F8(0x100);
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, 0x80, 0x80);
+    glClear(GL_DEPTH_BUFFER_BIT);
     func_001A3410(0);
 }
 
@@ -411,7 +409,6 @@ void UnkObj199C88::Method199D60()
 // Matched from the second m2c sweep (globals, switch tables): strings and float constants are
 // literals, variables are data_<addr> in config/symbols.txt.
 
-void func_001A24D0(int, int *); // 0x001A24D0
 extern f32 data_002659E0;
 extern f32 data_002659E4;
 extern int data_002659D0;
@@ -461,7 +458,7 @@ void func_0019A618(int arg0)
     int sp0;
 
     sp0 = arg0;
-    func_001A24D0(1, &sp0);
+    glDeleteTextures(1, &sp0);
 }
 
 // The front end's start-up and shut-down: a memory pool of the given size (func_001996F8 prepares it),

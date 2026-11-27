@@ -13,7 +13,6 @@ void func_00168318()
 }
 
 void func_00168B38();                   // 0x00168B38
-void func_001A4930(int);                // 0x001A4930
 
 // UnkObj168A20 (0x00168A20..0x00168A40): no RTTI; its layout is the fields these methods use.
 struct UnkObj168A20
@@ -46,7 +45,7 @@ void UnkObj168A20::Method168A40()
         glEnable(GL_BLEND);
         glEnable(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, 0xCDEE3B39);
-        func_001A4930(0);
+        glDepthMask(0);
         glVertexPointer(3, GL_FLOAT, 0, mField20);
         glColorPointer(4, GL_UNSIGNED_BYTE, 0, mField24);
         glTexCoordPointer(2, GL_FLOAT, 0, mField28);
@@ -57,7 +56,7 @@ void UnkObj168A20::Method168A40()
         glDisableClientState(GL_VERTEX_ARRAY);
         glDisableClientState(GL_TEXTURE_COORD_ARRAY);
         glDisableClientState(GL_COLOR_ARRAY);
-        func_001A4930(1);
+        glDepthMask(1);
         glDisable(GL_TEXTURE_2D);
         glDisable(GL_BLEND);
     }

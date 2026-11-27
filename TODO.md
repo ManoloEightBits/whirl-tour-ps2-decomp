@@ -196,10 +196,13 @@ nothing about its field. Names have to come from evidence, roughly in this order
    `glBegin`, `glEnd`, `glVertex3f`, `glTexCoord2f`, `glColor3f`, `glColor4f`, `glMatrixMode`,
    `glPushMatrix`, `glPopMatrix`. The game's allocator and free: `MemAlloc1BD958(size)` (calls
    `func_001BD558(size, 3)`) and `MemFree1BD978(p)`. The dynamic array `UnkArray1BB0D0` (stride, count,
-   data; `GetCount`, `Clear`, `Destroy`) with `ArrayGetElement1BB098` and `ArrayGetCount1BB0D0`. Next:
-   `0x001A4930` (78 calls; a boolean in the render state, set to 0 before blended drawing and 1 after:
-   probably `glDepthMask`, unconfirmed), `0x0020A0E8` (171 calls, physics), and the rest of the GL layer
-   (`0x0019F000..0x001A5000`) by call count.
+   data; `GetCount`, `Clear`, `Destroy`) with `ArrayGetElement1BB098` and `ArrayGetCount1BB0D0`. In the
+   GL-style layer (`0x0019F000..0x001A5000`), confirmed and named from GS registers and OpenGL enums:
+   `glDepthMask` (`0x001A4930`, 78 calls; sets `ZBUF_1.ZMSK` in `0x0019DAC0`), `glTexParameteri`
+   (`0x001A25F0`, 24 calls), `glPolygonOffset` (`0x001A4B48`, matched), `glTexGeni` (`0x001A4740`),
+   `glTexGenfv` (`0x001A29D8`), `glDeleteTextures` (`0x001A24D0`), `glCopyTexImage2D` (`0x001A3188`),
+   `glTexCoord3fv` (`0x001A40B8`, matched), and `glClear` (`0x001A42F8`). Next: `0x0020A0E8` (171 calls,
+   physics), and the remaining helpers in `0x0019F000..0x001A5000`.
 2. **Keyword parsers (tool done, first names applied).** `tools/analysis/keyword_fields.py` lists, for
    each of the ~500 reads of `UnkParser`, the script key and the field it goes to. Applied where the
    object is a struct we already have, matched by offsets and types: `UnkVehicleParams` (`speed`,
@@ -245,7 +248,7 @@ nothing about its field. Names have to come from evidence, roughly in this order
 - `glScissor` `0x001A3B18`, 2/17 (`Block_001A0000.cpp`): `mField11F84` gets `$t0` instead of `$v1`.
 - `glRotatef` `0x001A3858`, 57/59 (`Block_001A0000.cpp`): scheduling/register order of angle, x, y, z and quaternion stores.
 - `glFrustum` `0x001A3CA0`, 52/64 (`Block_001A0000.cpp`): subexpression scheduling for invDz/invDx/invDy.
-- `func_001A42F8` (`glClear`), 2/30 (`Block_001A4000.cpp`): `$v0` vs `$v1` for `mArr1038[idx]`.
+- `glClear` `0x001A42F8`, 2/30 (`Block_001A4000.cpp`): `$v0` vs `$v1` for `mArr1038[idx]`.
 - `glAlphaFunc` `0x001A4950`, 7/65 (`Block_001A4000.cpp`): `cvt.w.s` + `mfc1` + `dsll32`/`dsra32` on `ref * 128.0f`.
 - `FENameSelectScreen::FENameSelectScreen` `0x0016C530`, 25/82 (`FEScreens.cpp`): division and `70.0f`/`80.0f` store scheduling.
 

@@ -9,6 +9,8 @@
    OpenGL's. */
 
 #define GL_TRIANGLE_STRIP      0x0005
+#define GL_DEPTH_BUFFER_BIT    0x0100
+#define GL_COLOR_BUFFER_BIT    0x4000
 #define GL_SRC_ALPHA           0x0302
 #define GL_ONE_MINUS_SRC_ALPHA 0x0303
 #define GL_FOG                 0x0B60
@@ -27,6 +29,20 @@
 #define GL_FLOAT               0x1406
 #define GL_MODELVIEW           0x1700
 #define GL_PROJECTION          0x1701
+#define GL_S                   0x2000
+#define GL_T                   0x2001
+#define GL_R                   0x2002
+#define GL_Q                   0x2003
+#define GL_OBJECT_PLANE        0x2501
+#define GL_EYE_PLANE           0x2502
+#define GL_NEAREST             0x2600
+#define GL_LINEAR              0x2601
+#define GL_TEXTURE_MAG_FILTER  0x2800
+#define GL_TEXTURE_MIN_FILTER  0x2801
+#define GL_TEXTURE_WRAP_S      0x2802
+#define GL_TEXTURE_WRAP_T      0x2803
+#define GL_CLAMP               0x2900
+#define GL_REPEAT              0x2901
 #define GL_POLYGON_OFFSET_FILL 0x8037
 #define GL_VERTEX_ARRAY        0x8074
 #define GL_COLOR_ARRAY         0x8076
@@ -47,9 +63,14 @@ extern "C" {
 void glEnd(void);                                                                   /* 0x001A1418 */
 void glDrawArrays(unsigned int mode, int first, int count);                         /* 0x001A1938 */
 void glBindTexture(unsigned int target, unsigned int texture);                      /* 0x001A2340 */
+void glDeleteTextures(int n, const int *textures);                                  /* 0x001A24D0 */
+void glTexParameteri(unsigned int target, unsigned int pname, int param);           /* 0x001A25F0 */
 void glEnable(unsigned int cap);                                                    /* 0x001A2DB8 */
 void glDisable(unsigned int cap);                                                   /* 0x001A2FB8 */
 void glLightfv(unsigned int light, unsigned int pname, const f32 *params);          /* 0x001A27E8 */
+void glTexGenfv(unsigned int coord, unsigned int pname, const f32 *params);         /* 0x001A29D8 */
+void glCopyTexImage2D(unsigned int target, int level, unsigned int internalformat,
+                      int x, int y, int width, int height, int border);             /* 0x001A3188 */
 void glMatrixMode(unsigned int mode);                                               /* 0x001A3638 */
 void glLoadMatrixf(const f32 *m);                                                   /* 0x001A3648 */
 void glLoadIdentity(void);                                                          /* 0x001A3708 */
@@ -70,6 +91,7 @@ void glVertex3fv(const f32 *v);                                                 
 void glTexCoord2f(f32 s, f32 t);                                                    /* 0x001A4010 */
 void glTexCoord3f(f32 s, f32 t, f32 r);                                             /* 0x001A4048 */
 void glTexCoord2fv(const f32 *v);                                                   /* 0x001A4078 */
+void glTexCoord3fv(const f32 *v);                                                   /* 0x001A40B8 */
 void glColor3f(f32 r, f32 g, f32 b);                                                /* 0x001A40F0 */
 void glColor4f(f32 r, f32 g, f32 b, f32 a);                                         /* 0x001A4138 */
 void glColor3fv(const f32 *v);                                                      /* 0x001A4180 */
@@ -79,6 +101,7 @@ void glColor4i(int r, int g, int b, int a);                                     
 void glColor4ub(u8 r, u8 g, u8 b, u8 a);                                            /* 0x001A4268 */
 void glColor4ubv(const u8 *v);                                                      /* 0x001A4298 */
 void glColor4iv(const int *v);                                                      /* 0x001A42C8 */
+void glClear(unsigned int mask);                                                    /* 0x001A42F8 */
 void glClearColor(f32 r, f32 g, f32 b, f32 a);                                      /* 0x001A4370 */
 void glTexCoordPointer(int size, unsigned int type, int stride, const void *ptr);   /* 0x001A43C8 */
 void glVertexPointer(int size, unsigned int type, int stride, const void *ptr);     /* 0x001A43E0 */
@@ -91,10 +114,13 @@ void glTexSubImage2D(unsigned int target, int level, int xoffset, int yoffset,
                      int width, int height, int format, int type,
                      const void *pixels);                                           /* 0x001A4630 */
 void glLightModelfv(unsigned int pname, const f32 *params);                         /* 0x001A46F0 */
+void glTexGeni(unsigned int coord, unsigned int pname, int param);                  /* 0x001A4740 */
 void glGetIntegerv(unsigned int pname, int *params);                                /* 0x001A47D8 */
 void glGetFloatv(unsigned int pname, f32 *params);                                  /* 0x001A4820 */
+void glDepthMask(int flag);                                                         /* 0x001A4930 */
 void glAlphaFunc(unsigned int func, f32 ref);                                       /* 0x001A4950 */
 void glBlendFunc(unsigned int sfactor, unsigned int dfactor);                       /* 0x001A4A60 */
+void glPolygonOffset(f32 factor, f32 units);                                        /* 0x001A4B48 */
 }
 
 #endif /* WHIRL_TOUR_GAME_GL_H */

@@ -122,7 +122,10 @@ struct UnkGLState
     int mField11FC4;  // 0x11FC4: viewport y
     int mField11FC8;  // 0x11FC8: viewport w
     int mField11FCC;  // 0x11FCC: viewport h
-    char field_0x11FD0[0x28];
+    char field_0x11FD0[0x10];
+    f32 mField11FE0;  // 0x11FE0: polygon offset factor
+    f32 mField11FE4;  // 0x11FE4: polygon offset units
+    char field_0x11FE8[0x10];
     const void *mField11FF8; // 0x11FF8
     char field_0x11FFC[0x4];
     int mField12000;  // 0x12000
@@ -133,9 +136,9 @@ struct UnkGLState
 
 extern UnkGLState data_00267140;
 
-void func_001A4930(int arg0)
+void glDepthMask(int flag)
 {
-    data_00267140.mField11F9C = arg0 & 0xFF;
+    data_00267140.mField11F9C = flag & 0xFF;
 }
 
 void glTexCoord3f(f32 s, f32 t, f32 r)
@@ -154,6 +157,25 @@ void glTexCoord2fv(const f32 *v)
     data_00267140.mField5F0 = 1.0f;
     data_00267140.mField5EC = t;
     *(u32 *)&data_00267140.mField5E8 &= 0xFFFFFFFEU;
+}
+
+void glTexCoord3fv(const f32 *v)
+{
+    f32 s = v[0];
+    f32 t = v[1];
+    f32 r = v[2];
+    data_00267140.mField5E8 = s;
+    data_00267140.mField5F0 = r;
+    data_00267140.mField5EC = t;
+    *(u32 *)&data_00267140.mField5E8 &= 0xFFFFFFFEU;
+}
+
+void glPolygonOffset(f32 factor, f32 units)
+{
+{
+    data_00267140.mField11FE0 = factor;
+    data_00267140.mField11FE4 = units;
+}
 }
 
 void glTexCoord2f(f32 s, f32 t)
@@ -373,11 +395,11 @@ extern u64 data_002B3578;
 
 #ifdef NON_MATCHING
 // 2 of 30 instructions differ: addu/ld uses $v0 instead of $v1 for mArr1038[idx].
-void func_001A42F8(int mask)
+void glClear(unsigned int mask)
 {
-    if (mask != 0x100)
+    if (mask != GL_DEPTH_BUFFER_BIT)
     {
-        if (mask == 0x4000)
+        if (mask == GL_COLOR_BUFFER_BIT)
         {
             int idx = data_002B2530.mField10A0;
             func_0019F088((int)(data_002B2530.mArr1038[idx] & 0x1FF));
@@ -431,21 +453,21 @@ void glTexSubImage2D(unsigned int target, int level, int xoffset, int yoffset, i
     glBindTexture(target, data_00267140.mField628);
 }
 
-void func_001A4740(unsigned int pname, int arg1, int val)
+void glTexGeni(unsigned int coord, unsigned int pname, int param)
 {
-    switch (pname)
+    switch (coord)
     {
-    case 0x2000:
-        data_00267140.mField12000 = val;
+    case GL_S:
+        data_00267140.mField12000 = param;
         return;
-    case 0x2001:
-        data_00267140.mField12004 = val;
+    case GL_T:
+        data_00267140.mField12004 = param;
         return;
-    case 0x2002:
-        data_00267140.mField12008 = val;
+    case GL_R:
+        data_00267140.mField12008 = param;
         return;
-    case 0x2003:
-        data_00267140.mField1200C = val;
+    case GL_Q:
+        data_00267140.mField1200C = param;
         return;
     }
 }
@@ -496,7 +518,6 @@ void func_001A4F80(Mat4x4f *m, Vec4f *v, Mat4x4f *out)
     out->row[3].x = v->x * m->row[3].x + v->y * m->row[3].y + v->z * m->row[3].z + v->w * m->row[3].w;
 }
 
-void func_001A25F0(int, int, int); // 0x001A25F0
 void func_0019E558();              // 0x0019E558
 
 #ifdef NON_MATCHING
@@ -519,10 +540,10 @@ void glBindTexture(unsigned int target, unsigned int texture)
         data_00267140.mField624 = &data_00267140.mTextures630[i];
         if (found)
         {
-            func_001A25F0(GL_TEXTURE_2D, 0x2801, data_00267140.mField624->mField1C);
-            func_001A25F0(GL_TEXTURE_2D, 0x2800, data_00267140.mField624->mField20);
-            func_001A25F0(GL_TEXTURE_2D, 0x2802, data_00267140.mField624->mField24);
-            func_001A25F0(GL_TEXTURE_2D, 0x2803, data_00267140.mField624->mField28);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, data_00267140.mField624->mField1C);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, data_00267140.mField624->mField20);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, data_00267140.mField624->mField24);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, data_00267140.mField624->mField28);
         }
         else
         {
@@ -530,10 +551,10 @@ void glBindTexture(unsigned int target, unsigned int texture)
             data_00267140.mTextures630[i].mField00 = texture;
             data_00267140.mField624->mField38 = 0;
             data_00267140.mField624->mField44 = 0;
-            func_001A25F0(GL_TEXTURE_2D, 0x2801, 0x2601);
-            func_001A25F0(GL_TEXTURE_2D, 0x2800, 0x2601);
-            func_001A25F0(GL_TEXTURE_2D, 0x2802, 0x2901);
-            func_001A25F0(GL_TEXTURE_2D, 0x2803, 0x2901);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
             glTexImage2D(GL_TEXTURE_2D, 0, 4, 64, 64, 0, 0x1908, 0x1401, data_00267140.mField11FF8);
         }
     }
