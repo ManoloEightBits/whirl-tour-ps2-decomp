@@ -747,3 +747,56 @@ void func_001984B8(UnkObj198158 *arg0, int arg1)
         next = *(UnkObj198628 **)next;
     }
 }
+
+extern "C" void glPushMatrix();               // 0x001A3738
+extern "C" void glPopMatrix();                // 0x001A3808
+extern "C" void glMultMatrixf(const f32 *);   // 0x001A3AB0
+
+struct UnkNode19A6F0
+{
+    UnkNode19A6F0 *mNext00;         // 0x00
+    char pad04[0x10];
+    u16 mFlags14;                   // 0x14
+    char pad16[0xA];
+    void (*mDrawCb20)(void *);      // 0x20
+    char pad24[0x1C];
+    UnkNode19A6F0 *mChildren40;     // 0x40
+    char pad44[0xC];
+    f32 mMatrix50[16];              // 0x50
+};
+
+void func_0019A6F0(void *arg0)
+{
+    UnkNode19A6F0 *node = (UnkNode19A6F0 *)arg0;
+    u16 flags = node->mFlags14;
+    if (flags & 1)
+    {
+        if (!(flags & 0x40))
+        {
+            glPushMatrix();
+            glMultMatrixf(node->mMatrix50);
+        }
+        if (node->mDrawCb20 != 0)
+        {
+            node->mDrawCb20(node);
+        }
+        if (node->mFlags14 & 8)
+        {
+            UnkNode19A6F0 *cur = node->mChildren40;
+            UnkNode19A6F0 *next = cur->mNext00;
+            if (next != 0)
+            {
+                do
+                {
+                    func_0019A6F0(cur);
+                    cur = next;
+                    next = next->mNext00;
+                } while (next != 0);
+            }
+        }
+        if (!(node->mFlags14 & 0x40))
+        {
+            glPopMatrix();
+        }
+    }
+}

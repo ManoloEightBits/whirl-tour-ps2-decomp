@@ -5,7 +5,7 @@
 
 void func_001562E8();    // 0x001562E8
 void func_00136FB8();    // 0x00136FB8
-void func_001BDCF8(int); // 0x001BDCF8
+void func_001BDCF8(void *, f32); // 0x001BDCF8
 void func_001BDE60(int); // 0x001BDE60
 
 void func_00135B58()
@@ -13,9 +13,9 @@ void func_00135B58()
     func_001562E8();
 }
 
-void func_00136C50(int arg0)
+void func_00136C50(int arg0, f32 dt)
 {
-    func_001BDCF8(arg0 + 0xC);
+    func_001BDCF8((void *)(arg0 + 0xC), dt);
 }
 
 void func_00136C70(int arg0)

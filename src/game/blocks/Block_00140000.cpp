@@ -446,6 +446,21 @@ struct UnkObj140028
     void Method140028();
 };
 
+int func_001423A0(void *); // 0x001423A0
+extern "C" void __builtin_delete(void *);
+
+void UnkEffect::func_001419A0(int arg1)
+{
+    if (arg1 != 0)
+        mField2C |= 4;
+    if (func_001423A0(this) == 0 && arg1 != 0 && this != 0)
+    {
+        mField2C |= 0x10;
+        ((void (*)(void *))func_00142400)(this);
+        __builtin_delete(this);
+    }
+}
+
 void UnkObj140028::Method140028()
 {
     this->mField00 = 0;

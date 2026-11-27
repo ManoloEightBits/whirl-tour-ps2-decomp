@@ -1,4 +1,5 @@
 #include "common/types.h"
+#include "common/libc.h"
 
 // Functions of 0x00194000..0x00197FFF whose class and translation unit are not known yet.
 // Names are address based; move each function to its file once its TU is identified.
@@ -56,7 +57,6 @@ int func_00196D80()
     return 0;
 }
 
-void func_001975D0();    // 0x001975D0
 void func_001AC198(int); // 0x001AC198
 void func_001AC398(int); // 0x001AC398
 void func_001AC3F0(int); // 0x001AC3F0
@@ -192,10 +192,19 @@ void UnkObj1972B0::Method1972F8()
 // UnkObj1974D8 (0x001974D8): no RTTI; its layout is the fields these methods use.
 struct UnkObj1974D8
 {
-    char field_0x0[0x14];
-    u16 mField14;         // 0x14
+    void *mField00;           // 0x00
+    void *mField04;           // 0x04
+    char field_0x8[0xC];
+    u16 mField14;             // 0x14
+    char field_0x16[0x6];
+    void (*mFreeCb1C)(void *); // 0x1C
+    char field_0x20[0x20];
+    UnkObj1974D8 *mChildren40; // 0x40
+    char field_0x44[0x4C];
+    char *mName90;            // 0x90
 
-    void Method1974D8();  // 0x001974D8
+    void Method1974D8();      // 0x001974D8
+    void Method1975D0();      // 0x001975D0
 };
 
 void UnkObj1974D8::Method1974D8()
@@ -208,7 +217,55 @@ void UnkObj1974D8::Method1974D8()
         mField14 = (u16) (tmp | 0x20);
         return;
     }
-    func_001975D0();
+    Method1975D0();
+}
+
+void func_001BD360(void *); // 0x001BD360
+void func_0019A6F0(void *); // 0x0019A6F0
+
+void UnkObj1974D8::Method1975D0()
+{
+    if (mName90 != 0)
+    {
+        MemFree1BD978(mName90);
+        mName90 = 0;
+    }
+    UnkObj1974D8 *cur = mChildren40;
+    UnkObj1974D8 *next = *(UnkObj1974D8 **)cur;
+    if (next != 0)
+    {
+        do
+        {
+            cur->Method1975D0();
+            cur = next;
+            next = *(UnkObj1974D8 **)next;
+        } while (next != 0);
+    }
+    if (mField00 != 0 || mField04 != 0)
+    {
+        func_001BD360(this);
+    }
+    if (mFreeCb1C != 0)
+    {
+        mFreeCb1C(this);
+        return;
+    }
+    MemFree1BD978(this);
+}
+
+void func_00197A70(void **arg0)
+{
+    void **cur = (void **)*arg0;
+    void **next = (void **)*cur;
+    if (next != 0)
+    {
+        do
+        {
+            func_0019A6F0(cur);
+            cur = next;
+            next = (void **)*next;
+        } while (next != 0);
+    }
 }
 
 // Matched from the second m2c sweep (globals, switch tables): strings and float constants are
@@ -230,6 +287,24 @@ int func_00195940(f32 fparg0, f32 fparg1, f32 fparg2, f32 fparg3)
         func_001959B8(temp_v0, fparg0, fparg1, fparg2, fparg3);
     }
     return temp_v0;
+}
+
+void func_00197468(int objInt, int nameInt)
+{
+    UnkObj1974D8 *obj = (UnkObj1974D8 *)objInt;
+    const char *name = (const char *)nameInt;
+    if (obj->mName90 != 0)
+    {
+        MemFree1BD978(obj->mName90);
+        obj->mName90 = 0;
+    }
+    if (name != 0)
+    {
+        char *buf = (char *)MemAlloc1BD958(strlen(name) + 1);
+        obj->mName90 = buf;
+        if (buf != 0)
+            strcpy(buf, name);
+    }
 }
 
 int func_00197318(int arg0, f32 fparg0, f32 fparg1, f32 fparg2)

@@ -646,3 +646,37 @@ void UnkObj1BC438::Method1BC438(f32 a, f32 b)
     mFieldAC = a;
     mFieldB0 = b;
 }
+
+void func_001BDD78(f32); // 0x001BDD78
+
+struct UnkObj1BDCF8
+{
+    f32 mField00; // 0x00
+    f32 mField04; // 0x04
+};
+
+void func_001BDCF8(void *arg0, f32 dt)
+{
+    UnkObj1BDCF8 *obj = (UnkObj1BDCF8 *)arg0;
+    f32 temp_f0;
+    f32 temp_f0_2;
+
+    if (dt >= 0.0f)
+    {
+        temp_f0 = obj->mField04 + dt;
+        obj->mField04 = temp_f0;
+        if (temp_f0 >= 1.0f)
+        {
+            do
+            {
+                temp_f0_2 = obj->mField04 - 1.0f;
+                obj->mField04 = temp_f0_2;
+                obj->mField00 = obj->mField00 + 1.0f;
+            } while (temp_f0_2 >= 1.0f);
+        }
+    }
+    else
+    {
+        func_001BDD78(fabsf(dt));
+    }
+}

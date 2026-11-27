@@ -276,3 +276,70 @@ int func_001911B0(int arg0, int arg1)
 {
     return ((UnkElem190EB8 *)((char *)arg0 + arg1 * 0x1A00))->mField88;
 }
+
+struct UnkSub190C88;
+void func_00190DC8(UnkSub190C88 *, const char *, const char *, int); // 0x00190DC8
+void func_00191510(int, int);                                        // 0x00191510
+void *func_001BC9D0(void *, int);                                    // 0x001BC9D0
+extern "C" void func_001914A8();                                     // 0x001914A8
+extern u16 data_002A55B0;
+
+struct UnkSub190C88
+{
+    int mField00;          // 0x00
+    char pad04[0x3C];
+    int mField40;          // 0x40
+    int mField44;          // 0x44
+    int mField48;          // 0x48
+    char pad4C[0x34];
+    u8 mItems80[2][0x1A00]; // 0x80
+    int mField3480;        // 0x3480
+};
+
+struct UnkAlloc190C88
+{
+    char pad00[0x14];
+    UnkSub190C88 *mPtr14; // 0x14
+};
+
+void *func_00190C88()
+{
+    UnkAlloc190C88 *alloc = (UnkAlloc190C88 *)func_001BC9D0((void *)&func_001914A8, 0x3A80);
+    if (alloc != 0)
+    {
+        UnkSub190C88 *sub = alloc->mPtr14;
+        sub->mField00 = 0;
+        sub->mField48 = 0;
+        sub->mField3480 = 0;
+        sub->mField44 = 0;
+        sub->mField40 = 1;
+        func_00191510((int)sub, 0);
+        func_00190DC8(sub, "short", "long", 0);
+        u8 *item = sub->mItems80[0];
+        int i = 1;
+        do
+        {
+            *(int *)(item + 0x00) = 1;
+            i--;
+            *(int *)(item + 0x04) = 0;
+            *(int *)(item + 0x08) = 0;
+            *(int *)(item + 0x0C) = 0;
+            *(int *)(item + 0x10) = 0;
+            *(int *)(item + 0x14) = 0;
+            *(u16 *)(item + 0x1900) = data_002A55B0;
+            item += 0x1A00;
+        } while (i >= 0);
+    }
+    return alloc->mPtr14;
+}
+
+void func_00191520(u8 *arg0)
+{
+    *(int *)(arg0 + 0x04) = 0;
+    *(int *)(arg0 + 0x00) = 1;
+    *(int *)(arg0 + 0x08) = 0;
+    *(int *)(arg0 + 0x0C) = 0;
+    *(int *)(arg0 + 0x10) = 0;
+    *(int *)(arg0 + 0x14) = 0;
+    *(u16 *)(arg0 + 0x1900) = data_002A55B0;
+}
