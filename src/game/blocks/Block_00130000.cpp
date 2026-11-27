@@ -13,23 +13,12 @@ void CleanupDialog1309E0(void *arg0)
     MemFree1BD978(arg0);
 }
 
-// UnkObj130608 (0x00130608): no RTTI; its layout is the fields these methods use.
-struct UnkObj130608
-{
-    char field_0x0[0x4];
-    int mField4;          // 0x4
-    char field_0x8[0x80];
-    int mField88;         // 0x88
-
-    int Method130608();   // 0x00130608
-};
-
-int UnkObj130608::Method130608()
+int FESub08::Method130608()
 {
     int var_a1;
     int var_v1;
 
-    var_v1 = mField4;
+    var_v1 = mField04;
     var_a1 = 1;
     if (var_v1 > 0)
     {
@@ -42,16 +31,7 @@ int UnkObj130608::Method130608()
     return var_a1;
 }
 
-// UnkObj130750 (0x00130750): no RTTI; its layout is the fields these methods use.
-struct UnkObj130750
-{
-    char field_0x0[0x88];
-    int mField88;         // 0x88
-
-    int Method130750();   // 0x00130750
-};
-
-int UnkObj130750::Method130750()
+int FESub08::Method130750()
 {
     return mField88 & 1;
 }

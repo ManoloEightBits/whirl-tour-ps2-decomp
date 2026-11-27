@@ -54,6 +54,26 @@ union GLVal5F4
     f32 f;
 };
 
+struct UnkTex624
+{
+    int mField00;
+    int mWidth04;       // 0x04
+    int mHeight08;      // 0x08
+    int mLogW0C;        // 0x0C
+    int mLogH10;        // 0x10
+    int mFormat14;      // 0x14
+    const void *mData18; // 0x18
+    int mField1C;       // 0x1C
+    int mField20;       // 0x20
+    int mField24;       // 0x24
+    int mField28;       // 0x28
+    char field_0x2C[0xC];
+    int mField38;       // 0x38
+    int mField3C;       // 0x3C
+    int mField40;       // 0x40
+    int mField44;       // 0x44
+};
+
 struct UnkGLState
 {
     char field_0x0[0x70];
@@ -86,7 +106,9 @@ struct UnkGLState
     int mField620;         // 0x620: color size
     struct UnkTex624 *mField624; // 0x624
     int mField628;         // 0x628
-    char field_0x62C[0x11970];
+    int mField62C;         // 0x62C
+    UnkTex624 mTextures630[1000]; // 0x630
+    char field_0x11F70[0x2C];
     int mField11F9C;  // 0x11F9C
     unsigned int mField11FA0; // 0x11FA0
     int mField11FA4;  // 0x11FA4
@@ -100,27 +122,15 @@ struct UnkGLState
     int mField11FC4;  // 0x11FC4: viewport y
     int mField11FC8;  // 0x11FC8: viewport w
     int mField11FCC;  // 0x11FCC: viewport h
-    char field_0x11FD0[0x30];
+    char field_0x11FD0[0x28];
+    const void *mField11FF8; // 0x11FF8
+    char field_0x11FFC[0x4];
     int mField12000;  // 0x12000
     int mField12004;  // 0x12004
     int mField12008;  // 0x12008
     int mField1200C;  // 0x1200C
 };
 
-struct UnkTex624
-{
-    int mField00;
-    int mWidth04;       // 0x04
-    int mHeight08;      // 0x08
-    int mLogW0C;        // 0x0C
-    int mLogH10;        // 0x10
-    int mFormat14;      // 0x14
-    const void *mData18; // 0x18
-    char field_0x1C[0x20];
-    int mField3C;       // 0x3C
-    int mField40;       // 0x40
-    int mField44;       // 0x44
-};
 extern UnkGLState data_00267140;
 
 void func_001A4930(int arg0)
@@ -485,3 +495,48 @@ void func_001A4F80(Mat4x4f *m, Vec4f *v, Mat4x4f *out)
     out->row[2].x = v->x * m->row[2].x + v->y * m->row[2].y + v->z * m->row[2].z + v->w * m->row[2].w;
     out->row[3].x = v->x * m->row[3].x + v->y * m->row[3].y + v->z * m->row[3].z + v->w * m->row[3].w;
 }
+
+void func_001A25F0(int, int, int); // 0x001A25F0
+void func_0019E558();              // 0x0019E558
+
+#ifdef NON_MATCHING
+// 59 of 99 instructions differ: register allocation of data_00267140 ($a1 vs $a2) and 1 nop at +0x044 in the texture lookup loop.
+void glBindTexture(unsigned int target, unsigned int texture)
+{
+    int found = 0;
+    if (data_00267140.mField628 != (int)texture)
+    {
+        int i = 0;
+        for (; i < data_00267140.mField62C; i++)
+        {
+            if (data_00267140.mTextures630[i].mField00 == (int)texture)
+            {
+                found = 1;
+                break;
+            }
+        }
+        data_00267140.mField628 = texture;
+        data_00267140.mField624 = &data_00267140.mTextures630[i];
+        if (found)
+        {
+            func_001A25F0(GL_TEXTURE_2D, 0x2801, data_00267140.mField624->mField1C);
+            func_001A25F0(GL_TEXTURE_2D, 0x2800, data_00267140.mField624->mField20);
+            func_001A25F0(GL_TEXTURE_2D, 0x2802, data_00267140.mField624->mField24);
+            func_001A25F0(GL_TEXTURE_2D, 0x2803, data_00267140.mField624->mField28);
+        }
+        else
+        {
+            data_00267140.mField62C = i + 1;
+            data_00267140.mTextures630[i].mField00 = texture;
+            data_00267140.mField624->mField38 = 0;
+            data_00267140.mField624->mField44 = 0;
+            func_001A25F0(GL_TEXTURE_2D, 0x2801, 0x2601);
+            func_001A25F0(GL_TEXTURE_2D, 0x2800, 0x2601);
+            func_001A25F0(GL_TEXTURE_2D, 0x2802, 0x2901);
+            func_001A25F0(GL_TEXTURE_2D, 0x2803, 0x2901);
+            glTexImage2D(GL_TEXTURE_2D, 0, 4, 64, 64, 0, 0x1908, 0x1401, data_00267140.mField11FF8);
+        }
+    }
+    func_0019E558();
+}
+#endif

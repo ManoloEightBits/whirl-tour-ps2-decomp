@@ -57,20 +57,25 @@ struct UnkRes126250
 
 struct FESub08
 {
-    char field_0x00[0x40];
+    char field_0x00[0x4];
+    int mField04;                           // 0x04
+    char field_0x08[0x38];
     Mat4x4f mMatrix40;                      // 0x40: where its menu item is drawn
     u32 mFlags80;                           // 0x80: 0x100 plays mSound84 (FEMenu::Update)
     u32 mSound84;                           // 0x84
-    char field_0x88[0x28];
+    int mField88;                           // 0x88
+    char field_0x8C[0x24];
 
     FESub08(int id, Vec3f *a, Vec3f *b);    // 0x00130138
     ~FESub08();                             // 0x001305E0
     f32 Method1304E8(int);                  // 0x001304E8
+    int Method130608();                     // 0x00130608
     void Method1306B0();                    // 0x001306B0
     void Update130348(f32 dt);              // 0x00130348
 
     Vec3f *GetPosition() { return (Vec3f *)&mMatrix40.row[3]; }
     void Method130720(f32);                 // 0x00130720
+    int Method130750();                     // 0x00130750
 };
 
 // A screen's definition, which CreateScreen1101A8 looks up by the screen's name ("main", "playlevel",

@@ -313,6 +313,34 @@ int func_00155460()
     return result;
 }
 
+int func_001554B8()
+{
+    int result = 0;
+    if (gGameCtx262250->mMode00 == 0 || gGameCtx262250->mMode00 == 3 || gGameCtx262250->mMode00 == 6 ||
+        gGameCtx262250->mMode00 == 7)
+        result = gGameCtx262250->mField18 == 0;
+    return result;
+}
+
+void func_001532C8()
+{
+    gGameCtx262250->mArr4F4[1] = 1;
+    gGameCtx262250->mArr1C4[1] = 1;
+    gGameCtx262250->mScootersUnlocked48C[9] = 1;
+    for (int i = 0; i < 5; i++)
+        gGameCtx262250->mScooterBits573[9][i] = 1;
+    int sum = 0;
+    for (int i = 0; i < 7; i++)
+        sum += gGameCtx262250->mLevels228[i].mGoals00;
+    if (sum >= 49)
+    {
+        gGameCtx262250->mArr4F4[2] = 1;
+        gGameCtx262250->mArr1C4[2] = 1;
+    }
+    gGameCtx262250->mArr4F4[5] = 1;
+    gGameCtx262250->mArr1C4[5] = 1;
+}
+
 int func_00155508()
 {
     int result = 0;

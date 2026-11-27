@@ -4,6 +4,19 @@
 #include "common/types.h"
 #include "game/AI_Agent.h"
 
+class UnkEffect;
+
+struct UnkBossSound1DC
+{
+    char field_0x00[0x10];
+    u8 mCount10;       // 0x10
+    char field_0x11[0x3];
+    u8 mCount14;       // 0x14
+    char field_0x15[0x5F];
+    int mArr74[5];     // 0x74
+    int mArr88[1];     // 0x88
+};
+
 // The actor of a boss attack ("player_hit_bossattack"): +0x10 is what the attack does to the
 // Scooter it hits.
 struct UnkAttackActor
@@ -12,6 +25,34 @@ struct UnkAttackActor
     f32 mField10; // 0x10
     char field_0x14[0x3C];
     f32 mArray50[1]; // 0x50
+    char field_0x54[0x40];
+    f32 mArray94[1][5]; // 0x94
+    char field_0xA8[0x154];
+    u8 mCount1FC; // 0x1FC
+};
+
+struct UnkBossPath
+{
+    char field_0x00;
+    u8 mStride01;    // 0x01
+    char field_0x02[0xA];
+    u16 mCount0C;    // 0x0C
+    u16 mField0E;    // 0x0E
+    char field_0x10[0x4];
+};
+
+struct UnkBossSub208_10
+{
+    char field_0x00[0x4C];
+    f32 mField4C; // 0x4C
+};
+
+struct UnkBossSub208
+{
+    char field_0x00[0x10];
+    UnkBossSub208_10 *mSub10; // 0x10
+    char field_0x14[0x5C];
+    f32 mField70; // 0x70
 };
 
 // What AI_Boss+0x1E0 points to: an object with a 4x4 matrix at +0x50, whose rows the boss returns (as
@@ -122,12 +163,27 @@ public:
     void SetField194(int i, f32 v);     // 0x0015EB10
     void AddField194(int i, f32 v);     // 0x0015EB20
     f32 GetAttackField50(int i);        // 0x0015EB40
+    f32 GetAttackField94(int i, int j); // 0x0015EB58
+    void Method15ED98();                // 0x0015ED98
+    int GetField208(int i);             // 0x0015EE10
+    void Method15AD10();                // 0x0015AD10
+    void Method15C890(int a, int b);    // 0x0015C890
+    void Method15D2F0();                // 0x0015D2F0
+    void Method15EE30();                // 0x0015EE30
+    void Method15EF08();                // 0x0015EF08
+    int Method15E9C0();                 // 0x0015E9C0
+    int Method15E9F8();                 // 0x0015E9F8
 
-    char field_0xA0[0x10];
+    void *mFieldA0;           // 0xA0
+    char field_0xA4[0xC];
     int mFieldB0;             // 0xB0
-    char field_0xB4[0x2C];
-    int mFieldE0;             // 0xE0
-    char field_0xE4[0xC];
+    char field_0xB4[0x1C];
+    f32 mFieldD0;             // 0xD0
+    f32 mFieldD4;             // 0xD4
+    f32 mFieldD8;             // 0xD8
+    int mFieldDC;             // 0xDC
+    Vec3f mPosE0;             // 0xE0
+    int mFieldEC;             // 0xEC
     int mFieldF0;             // 0xF0
     char field_0xF4[0x3C];
     int mField130;            // 0x130
@@ -143,8 +199,7 @@ public:
     f32 mField168;            // 0x168
     f32 mField16C;            // 0x16C
     f32 mField170;            // 0x170
-    int mField174;            // 0x174
-    char field_0x178[0x8];
+    Vec3f mPos174;            // 0x174
     f32 mField180;            // 0x180
     f32 mField184;            // 0x184
     int mField188;            // 0x188
@@ -152,11 +207,13 @@ public:
     int mField190;            // 0x190
     f32 mArray194[0x11];      // 0x194
     UnkAttackActor *mAttack1D8; // 0x1D8: its +0x10 goes to Player::Action1722B0 (probably the current attack)
-    int mField1DC;            // 0x1DC
+    UnkBossSound1DC *mSound1DC; // 0x1DC
     UnkBossObj1E0 *mObj1E0;   // 0x1E0
     int mField1E4;            // 0x1E4
     char field_0x1E8[0x8];
-    int mField1F0;            // 0x1F0
+    UnkEffect *mEffect1F0;    // 0x1F0
+    char field_0x1F4[0x14];
+    UnkBossSub208 **mArr208;  // 0x208
 };
 
 #endif

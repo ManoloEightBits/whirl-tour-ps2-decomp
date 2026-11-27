@@ -12,9 +12,12 @@
 class AI_Agent
 {
 public:
-    char field_0x00[0x20];
+    char field_0x00[0x1D];
+    s8 mField1D;                // 0x1D
+    char field_0x1E[0x2];
     u32 mFlags20;               // 0x20: AI_Race::func_0010BC20 tests 0x2000 and sets 8
-    char field_0x24[0x78];
+    char field_0x24[0x74];
+    void *mField98;             // 0x98
 
     virtual ~AI_Agent() = 0;            // slot 1
     virtual void VirtSlot2() = 0;       // slot 2

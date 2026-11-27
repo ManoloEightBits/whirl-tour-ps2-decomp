@@ -284,8 +284,6 @@ void glTranslatef(f32 x, f32 y, f32 z)
     data_002B3608 = 1;
 }
 
-#ifdef NON_MATCHING
-// 2 of 17 instructions differ: mField11F84 gets $t0 instead of $v1.
 void glScissor(int x, int y, int width, int height)
 {
     data_00267140.mField11FD0 = x;
@@ -295,7 +293,6 @@ void glScissor(int x, int y, int width, int height)
     if (data_00267140.mField11F84 != 0)
         func_001A4AF0(x, y, width, height);
 }
-#endif
 
 void glViewport(int x, int y, int width, int height)
 {

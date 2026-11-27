@@ -14,9 +14,10 @@ public:
     void Method141A38(int arg1);                             // 0x00141A38
     void SetField28(int v);                                  // 0x00141AD0
 
-    char pad_0x00[0x1C];
+    Vec3f mPos00;   // 0x00
+    char pad_0x0C[0x10];
     f32 field_0x1C; // func_00116B00 sets it to min(0.1 * (sum of both objects' field_0x150), 1)
-    char pad_0x20[0x4];
+    f32 mField20;   // 0x20
     int mField24;   // 0x24
     int mField28;   // 0x28
     int mField2C;   // 0x2C

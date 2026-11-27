@@ -38,15 +38,4 @@ int func_0015F578()
 // Matched from the second m2c sweep (globals, switch tables): strings and float constants are
 // literals, variables are data_<addr> in config/symbols.txt.
 
-struct UnkObj15EFF8
-{
-    char field_0x0[0x20];
-    int mField20; // 0x20
 
-    void SetFlag15EFF8(); // 0x0015EFF8
-};
-
-void UnkObj15EFF8::SetFlag15EFF8()
-{
-    mField20 |= 0x20000000;
-}

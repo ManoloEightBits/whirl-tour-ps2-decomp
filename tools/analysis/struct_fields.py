@@ -159,21 +159,53 @@ def annotate_m2c(text):
 def suggest_keyword_renames():
     """Cross-reference keyword_fields.py parser hits against mFieldXX fields in src/game/."""
     import keyword_fields as kf
+    import inspect_tu as itu
+    import verify
+
     structs, _ = _get_cache()
-    _, text, rodata = kf.load_binary() if hasattr(kf, 'load_binary') else (None, None, None)
-    if text is None:
-        import inspect_tu as itu
-        _, text, rodata = itu.load_binary()
-    # Check keyword_fields output by running its scanner if available
-    print(f'Parsed {len(structs)} structs from src/game/:')
+    data, text, _ = itu.load_binary()
+    starts = itu.parse_func_boundaries(text)
+    sym = verify.load_symbols()
+    a2s = {a: s for s, a in sym.items()}
+    rows, _ = kf.analyse(data, text, starts, itu.e.TEXT_BASE, itu.e.TEXT_BASE + itu.e.TEXT_SIZE)
+
+    # Group keyword hits by (class_name_or_func, offset)
+    by_class = {}
+    for _, fstart, typ, key, dest, _ in rows:
+        if not key or not dest or not dest.startswith('arg'):
+            continue
+        m = re.match(r'^arg\d+\+0x([0-9A-Fa-f]+)', dest)
+        if not m:
+            continue
+        off = int(m.group(1), 16)
+        fname = a2s.get(fstart, f'func_{fstart:08X}')
+        cm = re.search(r'__\d+([A-Za-z_]\w*)', fname)
+        cls = cm.group(1) if cm else fname
+        by_class.setdefault((cls, off), set()).add((typ, key))
+
     generic = []
     for sname, st in sorted(structs.items()):
         for off, (typ, fname) in sorted(st['fields'].items()):
             if re.match(r'^mField[0-9A-Fa-f]+$', fname):
                 generic.append((sname, off, typ, fname))
-    print(f'Generic mFieldXX fields: {len(generic)}')
-    for sname, off, typ, fname in generic[:40]:
-        print(f'  {sname} +0x{off:02X} ({typ}) {fname}')
+
+    print(f'Parsed {len(structs)} structs from src/game/; generic mFieldXX fields: {len(generic)}')
+    hits = []
+    for sname, off, typ, fname in generic:
+        if (sname, off) in by_class:
+            keys = ', '.join(f'{t} "{k}"' for t, k in sorted(by_class[(sname, off)]))
+            hits.append(f'  {sname} +0x{off:02X} ({typ}) {fname} <- {keys}')
+    if hits:
+        print(f'Direct class+offset keyword matches ({len(hits)}):')
+        for h in hits:
+            print(h)
+    else:
+        print('Direct class+offset keyword matches: 0 (known classes already renamed from keywords)')
+    print(f'Unmatched keyword->arg+offset hits by parser ({len(by_class)}):')
+    for (cls, off), kset in sorted(by_class.items()):
+        if cls not in structs:
+            keys = ', '.join(f'{t} "{k}"' for t, k in sorted(kset))
+            print(f'  {cls} +0x{off:02X} <- {keys}')
 
 
 def main():
