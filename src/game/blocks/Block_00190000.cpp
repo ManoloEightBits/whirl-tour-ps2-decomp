@@ -354,3 +354,41 @@ int func_001911C8()
 {
     return ((UnkObj1911C8 *)func_00190E80())->mField0C != 0;
 }
+
+void func_00191510(int arg0, int arg1)
+{
+    *(int *)(arg0 + 0x30) = arg1;
+    *(int *)(arg0 + 0x3C) = 0;
+    *(int *)(arg0 + 0x34) = 0;
+}
+
+struct UnkSub191350
+{
+    char pad00[0x4C];
+};
+
+struct UnkObj191350
+{
+    char pad00[0x3480];
+    int mCount3480;              // 0x3480
+    char pad3484[0x48];
+    UnkSub191350 mItems34CC[1];  // 0x34CC (val at +0x4C -> +0x34CC)
+};
+
+int func_00191350(UnkObj191350 *arg0)
+{
+    int n = arg0->mCount3480;
+    int sum = 0;
+    if (n > 0)
+    {
+        int *p = (int *)arg0->mItems34CC;
+        do
+        {
+            int v = *p;
+            n--;
+            p = (int *)((u8 *)p + 0x4C);
+            sum += v;
+        } while (n != 0);
+    }
+    return sum;
+}

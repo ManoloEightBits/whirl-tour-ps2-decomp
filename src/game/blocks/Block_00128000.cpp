@@ -331,3 +331,27 @@ void func_00128F50(int arg0, int arg1, int arg2)
     *(u16 *)(p + 0xDB8) = *(u16 *)(p + 0xDB8) | (arg2 & 0xFF);
 }
 
+struct UnkArray1BB0D0 { void Destroy(); };    // 0x001BB168
+struct UnkObj1BEC48 { void Method1BEC48(); }; // 0x001BEC48
+void func_00126138(int);                      // 0x00126138
+void func_00199030();                         // 0x00199030
+void func_001BBC50();                         // 0x001BBC50
+
+struct UnkObj128678
+{
+    char pad00[0xC];
+    UnkObj129CD8 *mField0C;   // 0x0C
+    UnkArray1BB0D0 *mField10; // 0x10
+    UnkObj1BEC48 *mField14;   // 0x14
+};
+
+void func_00128678(int unused, UnkObj128678 *arg1)
+{
+    arg1->mField0C->Method129CD8();
+    arg1->mField10->Destroy();
+    arg1->mField14->Method1BEC48();
+    func_00126138(0x2710);
+    func_00199030();
+    func_001BBC50();
+}
+

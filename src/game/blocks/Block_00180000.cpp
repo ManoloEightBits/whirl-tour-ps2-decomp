@@ -346,3 +346,16 @@ void func_00182CA8(UnkObj182CA8 *arg0)
 {
     func_001BF820(arg0->mField08, &arg0->mField14, &arg0->mField0C);
 }
+
+void func_00185578(int); // 0x00185578
+
+struct UnkObj180198
+{
+    char pad00[0x20C];
+    int mField20C; // 0x20C
+};
+
+void func_00180198(int unused, UnkObj180198 *arg1)
+{
+    func_00185578(arg1->mField20C);
+}

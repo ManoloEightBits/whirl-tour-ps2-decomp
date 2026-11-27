@@ -761,3 +761,16 @@ void func_001BD3A8(UnkNode1BD388 **arg0, UnkNode1BD388 *arg1)
     *arg0 = arg1;
     arg1->mNext04 = (UnkNode1BD388 *)arg0;
 }
+
+void func_001BD418(void *, int, int); // 0x001BD418
+
+struct UnkObj1BD850
+{
+    char pad00[0x14];
+    int mField14; // 0x14
+};
+
+void func_001BD850(UnkObj1BD850 *arg0, int arg1)
+{
+    func_001BD418(arg0, arg1, arg0->mField14);
+}

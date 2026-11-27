@@ -313,3 +313,24 @@ void func_0012E7B8(UnkObj12E7B8 *arg0, int arg1)
     func_0012DE00(arg1, arg0->mField1C);
 }
 
+struct UnkArray1BB0D0 { void Destroy(); }; // 0x001BB168
+void MemFree1BD978(void *);               // 0x001BD978
+struct UnkObj198158;
+void func_001984B8(UnkObj198158 *, int);  // 0x001984B8
+struct UnkObj12E7F8
+{
+    UnkArray1BB0D0 *mField00; // 0x00
+    char pad04[0x4];
+    void *mField08;           // 0x08
+    char pad0C[0xC];
+    UnkObj198158 *mField18;   // 0x18
+};
+
+void func_0012E7F8(int unused, UnkObj12E7F8 *arg1)
+{
+    arg1->mField00->Destroy();
+    if (arg1->mField08 != 0)
+        MemFree1BD978(arg1->mField08);
+    func_001984B8(arg1->mField18, (int)(void *)func_0012E5F8);
+}
+

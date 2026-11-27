@@ -377,3 +377,22 @@ void func_00187EE8(UnkObj187E78 *arg0, int arg1)
     if (arg1 & 1)
         __builtin_delete(arg0);
 }
+
+struct UnkSub1855F0
+{
+    char pad00[0x18];
+    int mField18; // 0x18
+};
+
+struct UnkObj1855F0
+{
+    UnkSub1855F0 *mField00; // 0x00
+    char pad04[0x24];
+    int mField28;            // 0x28
+};
+
+void func_001855F0(UnkObj1855F0 *arg0, int arg1, f32 arg2)
+{
+    ((void (*)(UnkObj1855F0 *, int, f32))func_00185458)(arg0, arg0->mField00->mField18, arg2);
+    arg0->mField28 = 0;
+}

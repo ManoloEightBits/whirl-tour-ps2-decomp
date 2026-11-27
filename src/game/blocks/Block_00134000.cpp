@@ -18,6 +18,21 @@ void func_00136C50(int arg0, f32 dt)
     func_001BDCF8((void *)(arg0 + 0xC), dt);
 }
 
+struct UnkObj136FD8
+{
+    char pad00[0x70];
+    int mField70; // 0x70
+};
+
+void func_001BCAC0(int); // 0x001BCAC0
+
+void func_00136FD8(int unused, UnkObj136FD8 *arg1)
+{
+    int p = arg1->mField70;
+    if (p != 0)
+        func_001BCAC0(p);
+}
+
 void func_00136C70(int arg0)
 {
     func_001BDE60(arg0 + 0xC);

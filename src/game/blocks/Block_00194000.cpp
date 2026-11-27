@@ -359,3 +359,41 @@ void func_001978E0(UnkObj1978E0 *arg0)
     func_001BD360(arg0);
     arg0->mField08 = 0;
 }
+
+struct UnkNode
+{
+    char pad00[0x24];
+    int mField24; // 0x24
+    char pad28[0x48];
+    int mField70; // 0x70
+};
+
+void func_00194F90(UnkNode *arg0)
+{
+    arg0->mField70 = 0;
+    arg0->mField24 = 0;
+}
+
+struct UnkObj196430
+{
+    char pad00[0xCC];
+    int mCountCC;   // 0xCC
+    char padD0[0x10];
+    void *mArrE0[1]; // 0xE0
+};
+
+void func_00196430(void *arg0Void, void *arg1)
+{
+    UnkObj196430 *arg0 = (UnkObj196430 *)arg0Void;
+    for (int i = 0; i < arg0->mCountCC; i++)
+        arg0->mArrE0[i] = arg1;
+}
+
+void func_00196460(UnkObj196430 *arg0, void *arg1, void *arg2)
+{
+    for (int i = 0; i < arg0->mCountCC; i++)
+    {
+        if (arg0->mArrE0[i] == arg1)
+            arg0->mArrE0[i] = arg2;
+    }
+}
