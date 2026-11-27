@@ -131,3 +131,13 @@ void func_00170A78(UnkObj170A78 *arg0)
         MemFree1BD978(sub);
     }
 }
+
+extern "C" void func_00150FD0(int, void *, void *, void *); // 0x00150FD0
+extern "C" void func_001713B0();                           // 0x001713B0
+extern void *data_00262CB8;
+
+void func_001713C0()
+{
+    int sp0;
+    func_00150FD0(8, (void *)func_001713B0, data_00262CB8, &sp0);
+}

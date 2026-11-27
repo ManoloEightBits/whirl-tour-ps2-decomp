@@ -287,3 +287,20 @@ int func_00128780(const char *arg0)
     return ret;
 }
 
+void func_001BCAC0(int); // 0x001BCAC0
+
+struct UnkGlobal1286C8
+{
+    char pad00[0x18];
+    int mField18; // 0x18
+};
+
+void func_001286C8()
+{
+    if (data_0025DD40 != 0)
+    {
+        func_001BCAC0(((UnkGlobal1286C8 *)data_0025DD40)->mField18);
+        data_0025DD40 = 0;
+    }
+}
+

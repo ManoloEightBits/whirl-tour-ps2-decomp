@@ -300,3 +300,33 @@ int func_00182B80(UnkObj182B80 *arg0)
     arg0->mField10 = 0;
     return arg0->mField08 != 0;
 }
+
+struct UnkScene1B9
+{
+    int LookupArr0C(int idx, int a);               // 0x001B9748
+    int LookupArr0CEx(int idx, int a, int b, int c); // 0x001B9780
+};
+
+struct UnkObj182A68
+{
+    char pad00[0x10];
+    int mField10;         // 0x10
+    char pad14[0x80];
+    UnkScene1B9 *mScene94; // 0x94
+};
+
+int func_00182A68(UnkObj182A68 *arg0, int idx, int a)
+{
+    int ret = 0;
+    if (arg0->mField10 == 0)
+        ret = arg0->mScene94->LookupArr0C(idx, a);
+    return ret;
+}
+
+int func_00182A98(UnkObj182A68 *arg0, int idx, int a, int b, int c)
+{
+    int ret = 0;
+    if (arg0->mField10 == 0)
+        ret = arg0->mScene94->LookupArr0CEx(idx, a, b, c);
+    return ret;
+}

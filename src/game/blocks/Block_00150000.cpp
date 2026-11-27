@@ -348,3 +348,10 @@ void func_00151A18()
     glGetIntegerv(0xBA2, data_002B24E8);
     glViewport(0, 0, 0x80, 0x80);
 }
+
+extern const char **data_00261C30[];
+
+const char *func_00151D40(u16 id)
+{
+    return data_00261C30[data_00261C4C][id];
+}

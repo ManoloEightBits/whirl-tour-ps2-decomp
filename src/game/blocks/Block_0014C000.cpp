@@ -410,3 +410,27 @@ void func_0014CCF0(UnkObj14CAF0 *arg0)
 {
     func_00150FD0((*(int *)arg0->mModel78 >> 0xF) & 1, (void *)Draw14CCB0__12UnkObj14CAF0, arg0, &arg0->mMatrix20[12]);
 }
+
+void PhysicsRelease1F3A70(void *); // 0x001F3A70
+void MemFree1BD978(void *);        // 0x001BD978
+
+struct UnkObj14E830
+{
+    char pad00[0x18];
+    void *mPhysics18; // 0x18
+};
+
+void func_0014E830(UnkObj14E830 *arg0)
+{
+    PhysicsRelease1F3A70(arg0->mPhysics18);
+    MemFree1BD978(arg0);
+}
+
+int func_0014E6D8(UnkObj14E830 **arg0, UnkObj14E830 **arg1)
+{
+    int a = (int)(*arg0)->mPhysics18;
+    int b = (int)(*arg1)->mPhysics18;
+    if (a < b)
+        return -1;
+    return b < a;
+}

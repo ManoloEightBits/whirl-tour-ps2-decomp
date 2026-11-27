@@ -1,4 +1,5 @@
 #include "common/types.h"
+#include "common/libc.h"
 
 // Functions of 0x00188000..0x0018BFFF whose class and translation unit are not known yet.
 // Names are address based; move each function to its file once its TU is identified.
@@ -83,4 +84,18 @@ void UnkObj18B7C0::Method18B7C0()
 int UnkObj18B7C0::GetField9C()
 {
     return mField9C;
+}
+
+struct UnkObj18B4F8
+{
+    int mField00;     // 0x00
+    int mField04;     // 0x04
+    char mName08[32]; // 0x08
+};
+
+void func_0018B4F8(UnkObj18B4F8 *arg0, int arg1, int arg2, const char *arg3)
+{
+    arg0->mField00 = arg2;
+    arg0->mField04 = arg1;
+    strncpy(arg0->mName08, arg3, 0x1F);
 }
