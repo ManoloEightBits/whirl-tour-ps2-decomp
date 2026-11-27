@@ -82,3 +82,33 @@ int func_001C4540(f32 *a, f32 *b)
         ret = 1;
     return ret;
 }
+
+struct UnkObj1C43B0
+{
+    int mField00;
+    int mField04;
+};
+
+void func_001C43B0(UnkObj1C43B0 *arg0, u32 arg1, int arg2)
+{
+    switch (arg1)
+    {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+    case 6:
+    case 7:
+    case 8:
+    case 9:
+    case 11:
+    case 12:
+    case 13:
+        break;
+    case 10:
+        arg0->mField04 &= ~arg2;
+        break;
+    }
+}

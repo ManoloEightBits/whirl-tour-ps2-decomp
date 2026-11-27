@@ -92,3 +92,18 @@ void func_001B3A20(Mat4x4f *m, Vec3f *v, Vec3f *out)
     out->y = v->x * m->row[1].x + v->y * m->row[1].y + v->z * m->row[1].z;
     out->z = v->x * m->row[2].x + v->y * m->row[2].y + v->z * m->row[2].z;
 }
+
+void func_001B3F40(Mat4x4f *out, Mat4x4f *in)
+{
+    Vec4f *dst = out->row;
+    f32 *src = &in->row[0].x;
+    for (int i = 0; i < 4; i++)
+    {
+        dst->x = src[0];
+        dst->y = src[4];
+        dst->z = src[8];
+        dst->w = src[12];
+        src++;
+        dst++;
+    }
+}

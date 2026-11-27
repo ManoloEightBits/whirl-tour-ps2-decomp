@@ -386,3 +386,19 @@ int func_0014EB20(UnkObj14EB20 *arg0, UnkObj14EB20 *arg1)
     }
     return 0;
 }
+
+struct UnkObj14FA38
+{
+    char pad00[0xBC];
+    int mFieldBC; // 0xBC
+};
+
+int func_00180968(int, int);   // 0x00180968
+void func_001BB250(int, int *); // 0x001BB250
+
+void func_0014FA38(UnkObj14FA38 *arg0, int arg1, int arg2)
+{
+    int sp0 = func_00180968(arg1, arg2);
+    if (sp0 != 0)
+        func_001BB250(arg0->mFieldBC, &sp0);
+}

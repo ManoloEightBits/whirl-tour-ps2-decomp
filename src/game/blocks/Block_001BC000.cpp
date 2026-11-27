@@ -612,3 +612,22 @@ void func_001BCEA0(f32 arg0)
         next = (void **)*next;
     }
 }
+
+struct UnkObj1BDAE0
+{
+    int mField00;
+    void *mField04;
+    int mField08;
+    int mSize0C;
+};
+
+int func_001BDAE0(UnkObj1BDAE0 *arg0, void *arg1)
+{
+    int ret = 0;
+    if (arg0->mField00 != 0)
+    {
+        memcpy(arg1, arg0->mField04, arg0->mSize0C);
+        ret = 1;
+    }
+    return ret;
+}

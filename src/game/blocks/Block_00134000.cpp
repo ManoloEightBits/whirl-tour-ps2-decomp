@@ -139,3 +139,31 @@ void func_00137818(UnkObj137818 *arg0)
 {
     arg0->mField1C->mField28 &= 0xFFFFFFFE;
 }
+
+struct UnkObj136E80;
+typedef void (*UnkCb136E80)(int, UnkObj136E80 *);
+
+struct UnkSub136E80
+{
+    char pad00[0x18E0];
+    UnkCb136E80 mCb18E0; // 0x18E0
+};
+
+struct UnkObj136E80
+{
+    UnkSub136E80 *mSub00; // 0x00
+    char pad04[0x68];
+    int mField6C;          // 0x6C
+};
+
+void func_00141470();   // 0x00141470
+void func_00126138(int); // 0x00126138
+
+void func_00136E80(UnkObj136E80 *arg0)
+{
+    UnkCb136E80 cb = arg0->mSub00->mCb18E0;
+    if (cb != 0)
+        cb(arg0->mField6C, arg0);
+    func_00141470();
+    func_00126138(0);
+}

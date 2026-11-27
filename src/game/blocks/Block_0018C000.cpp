@@ -91,3 +91,12 @@ void UnkObj18E758::Method18E758()
 void func_0018D270()
 {
 }
+
+void __builtin_delete(void *); // 0x00100C08
+
+void func_0018F8D8(void **arg0, int arg1)
+{
+    __builtin_delete(*arg0);
+    if (arg1 & 1)
+        __builtin_delete(arg0);
+}

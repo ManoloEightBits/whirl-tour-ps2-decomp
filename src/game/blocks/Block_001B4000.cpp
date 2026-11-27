@@ -221,3 +221,22 @@ UnkBuf1B6548 *func_001B6548(int arg0)
     }
     return p;
 }
+
+struct UnkObj1B6F58
+{
+    char pad00[0x06];
+    u16 mField06; // 0x06
+    void *mField08; // 0x08
+};
+
+void MemFree1BD978(void *); // 0x001BD978
+
+void func_001B6F58(UnkObj1B6F58 *arg0)
+{
+    arg0->mField06 = 0;
+    if (arg0->mField08 != 0)
+    {
+        MemFree1BD978(arg0->mField08);
+        arg0->mField08 = 0;
+    }
+}

@@ -368,3 +368,12 @@ UnkObj187E78 *func_00187E78(UnkObj187E78 *arg0, int arg1, int arg2, void *arg3, 
     arg0->mField0C = arg4;
     return arg0;
 }
+
+void __builtin_delete(void *); // 0x00100C08
+
+void func_00187EE8(UnkObj187E78 *arg0, int arg1)
+{
+    MemFree1BD978(arg0->mField08);
+    if (arg1 & 1)
+        __builtin_delete(arg0);
+}
