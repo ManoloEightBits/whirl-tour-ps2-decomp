@@ -536,6 +536,11 @@ def print_func_summary(info, show_dis=False, show_m2c=False, addr_to_sym=None):
     if show_m2c:
         m2c_out = decompile_m2c(info['addr'], info['words'], addr_to_sym or {})
         if m2c_out:
+            try:
+                import struct_fields
+                m2c_out = struct_fields.annotate_m2c(m2c_out)
+            except Exception:
+                pass
             print('  --- m2c (mipsee-gcc-c++) ---')
             for line in m2c_out.splitlines():
                 print('  ' + line)
